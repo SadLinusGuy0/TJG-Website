@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coming Soon</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>
+  @media (prefers-color-scheme: light) {
+    :root {
+      --text: #000;
+      --background: #d3e3f6;
+      --primary: #9dbadc;
+      --secondary: #b9cfeA;
+      --accent: #5a8cc6;
+    }
+  } 
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text: #fff;
+      --background: #1f1f1d;
+      --primary: #2c2c2e;
+      --secondary: #454545;
+      --accent: #61a2d4;
+    }
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .container {
+    text-align: center;
+  }
+  h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+  }
+  p {
+    margin-bottom: 40px;
+  }
+  .icon {
+    font-size: 8em;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  footer {
+    text-align: center;
+  }
+  footer a {
+    text-decoration: none;
+  }
+  .social-icon {
+    font-size: 25px;
+    color: var(--accent);
+    padding: 5px;
+    transition: all 0.2s ease-in;
+  }
+  .social-icon:hover {
+    color: var(--secondary);
+    transform: translateY(-5px);
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <i class="fas fa-cogs icon"></i>
+    <h1>Coming Soon</h1>
+    <p>We're working on something amazing!</p>
+  </div>
+  <footer>
+  	<h4>That Josh Guy</h4>
+      <a href="https://twitter.com/thatjoshguy69"><i class="fab fa-twitter social-icon"></i></a>
+      <a href="https://instagram.com/thatjoshguy69"><i class="fab fa-instagram social-icon"></i></a>
+      <a href="https://youtube.com/@thatjoshguy08"><i class="fab fa-youtube social-icon"></i></a>
+      <a href="https://t.me/thatjoshguy"><i class="fab fa-telegram social-icon"></i></a>
+  </footer>
+</body>
+</html>
