@@ -1,2 +1,3 @@
-# site
-This is where my site will be stored 
+# That Josh Guy's Website
+
+This is where my site will he stored. 
