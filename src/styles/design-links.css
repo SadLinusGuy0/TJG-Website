@@ -1,0 +1,35 @@
+/* Hyperlinks to Subpages of Designs (concepts.html, wallpapers.html, banners.html) */
+.categories {
+    list-style-type: none;
+    text-align: center;
+    margin-top: 1%;
+    padding: 0;
+}
+
+.categories li {
+    display: inline-block;
+    font-family: Inter, sans-serif;
+    padding: 4px 14px;
+    background-color: transparent;
+    border-radius: 20px;
+    border: 2px solid var(--accent);
+    margin-top: 8px;
+    margin-right: 2px;
+    transition: all .3s ease;
+}
+
+.categories li a {
+    display: block;
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.categories li:hover,
+.categories .active {
+    background-color: var(--accent);
+}
+
+.categories li:hover a,
+.categories .active a {
+    color: var(--background);
+}

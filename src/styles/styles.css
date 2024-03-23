@@ -1,0 +1,361 @@
+/* This file (styles.css) contains all the common styles used for all the webpages */
+/* Color Palettes */
+/*Light Mode*/
+@media (prefers-color-scheme: light) {
+    :root {
+        --text: #000;
+        --background: #d3e3f6;
+        --primary: #9dbadc;
+        --secondary: #b9cfeA;
+        --accent: #5a8cc6;
+        --background0: #c9ddff;
+        --blurBg: rgb(255, 255, 255, 0.5);
+    }
+
+    .divider {
+        background-color: var(--primary);
+    }
+}
+/*Dark Mode*/
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #fff;
+        --background: #1f1f1d;
+        --primary: #2c2c2e;
+        --secondary: #454545;
+        --accent: #61a2d4;
+        --background0: #222222;
+        --blurBg: rgb(0, 0, 0, 0.5);
+    }
+
+    .divider {
+        background-color: var(--secondary);
+    }
+}
+
+/* Animation On Load */
+* :not(.custom-nav) {
+    animation: load .5s ease-in;
+}
+
+/* Default Tags */
+body {
+    color: var(--text);
+    text-align: center;
+    overflow-x: hidden;
+    background: linear-gradient(45deg, var(--background0) 10%, transparent 11%, transparent 89%, var(--background0) 90%), linear-gradient(135deg, var(--background0) 10%, transparent 11%, transparent 89%, var(--background0) 90%), radial-gradient(circle, transparent 25%, var(--background) 26%), linear-gradient(45deg, transparent 46%, var(--background0) 47%, var(--background0) 52%, transparent 53%), linear-gradient(135deg, transparent 46%, var(--background0) 47%, var(--background0) 52%, transparent 53%);
+    background-color: var(--background);
+    background-size: 4em 4em;
+    /*background-attachment: fixed;*/
+}
+
+a {
+    text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: 'General Sans';
+    font-weight: 600;
+}
+
+h5,
+h6,
+li,
+a {
+    font-family: 'General Sans';
+    font-weight: thin;
+}
+
+/* NavPill (For Smaller Screens) */
+.custom-nav {
+    --bs-nav-pills-link-active-bg: var(--accent);
+    background-color: var(--blurBg);
+    border-radius: 25px;
+    position: fixed;
+    width: 80%;
+    bottom: 18px;
+    margin: 0 auto;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.17);
+    z-index: 10;
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    animation: appearBelow .5s forwards;
+}
+
+.custom-nav .nav-link.active {
+    border-radius: 25px !important;
+}
+
+.custom-nav .nav-link {
+    font-family: 'General Sans', sans-serif;
+    font-weight: bold;
+    color: var(--text) !important;
+}
+
+/* Sidebar (For Desktops) */
+.sidebar {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 20%;
+    text-align: left;
+    padding: 20px;
+    background-color: var(--blurBg);
+    z-index: 1050;
+    border-radius: 0 20px 20px 0;
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    animation: appearLeft .5s forwards;
+}
+
+/* Sidebar Heading */
+.sidebar h4 {
+    margin: 8px;
+}
+
+/* Styles for Hyperlinks */
+.sidebar .list-group-item {
+    border-radius: 18px !important;
+    background-color: var(--secondary);
+    color: var(--text);
+    margin: 8px !important;
+    border: none;
+    cursor: pointer;
+    transition: all .2s ease-in;
+}
+
+/* Styles for Hyperlink Icons */
+.sidebar .list-group-item .icon {
+    padding-right: 8px;
+    font-size: 16px;
+}
+
+.sidebar .list-group-item.active,
+.sidebar .list-group-item:hover {
+    background-color: var(--accent);
+}
+
+/* Logo */
+.logo {
+    width: 50%;
+    height: auto;
+    pointer-events: none;
+}
+
+/* Social Media Icons in Sidebar */
+.icons-container {
+    position: fixed;
+    padding-bottom: 10px;
+    bottom: 0;
+}
+
+/* Stlyes for Social Media Icons */
+.icons-container .social-icon {
+    font-size: 25px;
+    color: var(--accent);
+    padding: 5px;
+    transition: all 0.2s ease-in;
+}
+
+.icons-container .social-icon:hover {
+    transform: translateY(-5px);
+}
+
+/* Containers (Except 404 Page)*/
+/* Content container to wrap whole webpage content so that it can be adjusted when sidebar is visible*/
+.content {
+    margin-left: 0;
+    padding: 0;
+}
+
+/* Main Container for homepage in which logo and name is wrapped (index.html)*/
+.logo-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 80vh;
+}
+
+/* (Used in all Pages) */
+.section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 20px;
+}
+
+/* Container for inserting empty spaces between sections (Used in all Pages) */
+.empty {
+    padding: 15%;
+}
+
+/* Heading Container (concepts.html, wallpapers.html, banners.html, contact.html) */
+.heading {
+    padding-top: 16%;
+    text-align: center;
+    margin: 0 auto;
+}
+
+/* Grid Container (concepts.html, wallpapers.html, banners.html, contact.html) */
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 8px 0 8px;
+    grid-gap: 15px;
+}
+
+.grid a {
+    text-decoration: none;
+}
+
+/* Divider (Used in all pages) */
+.divider {
+    margin: 10px 5%;
+    --mask:
+        radial-gradient(7.71px at 50% calc(100% + 3px), #0000 calc(99% - 2px), #000 calc(101% - 2px) 99%, #0000 101%) calc(50% - 12px) calc(50% - 4px + .5px)/24px 8px repeat-x,
+        radial-gradient(7.71px at 50% -3px, #0000 calc(99% - 2px), #000 calc(101% - 2px) 99%, #0000 101%) 50% calc(50% + 4px)/24px 8px repeat-x;
+    -webkit-mask: var(--mask);
+    mask: var(--mask);
+}
+
+/* Footer (Used in all pages) */
+footer {
+    padding: 0 1%;
+}
+
+footer a,
+footer span {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+/* Styles for Bluesky Icon (contact.html) */
+.bluesky {
+    width: 48px;
+}
+
+.bluesky path {
+    fill: var(--accent);
+}
+
+/* 404 Page (404.html) */
+.err-container {
+    padding: 0 15%;
+}
+
+.error-icon {
+    font-size: 100px;
+    color: var(--accent);
+}
+
+/* Keyframes (Animations) */
+/* Fade In Animation when a page loads */
+@keyframes load {
+    from {
+        opacity: 0.2;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Slide/Appear from left animation for Sidebar */
+@keyframes appearLeft {
+    from {
+        transform: translateX(-30px);
+    }
+
+    to {
+        transform: translateX(0px);
+    }
+}
+
+/* Side/Appear from below animation for NavPill */
+@keyframes appearBelow {
+    from {
+        transform: translateY(30px);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* Media Queries */
+/* For Tablets */
+@media screen and (min-width: 720px) {
+    .custom-nav {
+        width: 45%;
+    }
+
+    .logo {
+        width: 25%;
+    }
+
+    .empty {
+        padding: 8%;
+    }
+
+    .heading {
+        padding-top: 8%;
+    }
+    
+    .grid {
+	    grid-gap: 25px;
+	}
+}
+
+/* For Desktops */
+@media screen and (min-width: 1024px) {
+    .custom-nav {
+        display: none;
+    }
+
+    .content {
+        margin-left: 20%;
+        padding: 20px;
+    }
+
+    .sidebar {
+        display: block;
+    }
+
+    .logo {
+        width: 25%;
+        margin-top: 0;
+    }
+
+    .empty {
+        padding: 5%;
+    }
+
+    .heading {
+        padding-top: 5%;
+    }
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}

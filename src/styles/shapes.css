@@ -1,0 +1,116 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* Coontainer to Wrap all the Roating Background Shapes */
+.svg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* Common Styles for all the animated shapes */
+.svg {
+    position: absolute;
+    transition: all 1s ease;
+    opacity: 0.6;
+    animation: 
+	    rotate 60s 1s infinite,
+        scaleAnimation 1s;
+}
+
+/* Positions for Children(Shapes) of svg-container */
+.svg:nth-child(1) {
+    width: 85%;
+    right: -30%;
+    top: -5%;
+    animation: 
+	    antiRotate 60s 1s infinite,
+	    scaleAnimation 1s;
+}
+
+.svg:nth-child(2) {
+    display: none;
+}
+
+.svg:nth-child(3) {
+    width: 25%;
+    top: -20px;
+    left: -4%;
+}
+
+/* Keyframes */
+/*Anticlockwise Rotating Animation for Shapes*/
+@keyframes antiRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+/*Clockwise Rotating Animation for Shapes*/
+@keyframes rotate {
+    from {
+        transform: rotate(-360deg);
+    }
+
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+/* Scale animation for Shapes on load */
+@keyframes scaleAnimation {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+/* For Tablets */
+@media screen and (min-width: 720px) {
+    .svg:nth-child(1) {
+        width: 50%;
+        right: -15%;
+    }
+
+    .svg:nth-child(3) {
+        width: 20%;
+    }
+}
+
+/* For Desktops */
+@media (min-width: 1024px) {
+    .svg:nth-child(1) {
+        width: 45%;
+        top: -50px;
+        right: -15%;
+    }
+
+    .svg:nth-child(2) {
+        display: block;
+        width: 15%;
+        bottom: -15px;
+        left: 15%;
+    }
+
+    .svg:nth-child(3) {
+        width: 15%;
+        top: -15px;
+        left: 15%;
+    }
+}
