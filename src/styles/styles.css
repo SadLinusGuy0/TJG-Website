@@ -46,7 +46,7 @@ body {
     background: linear-gradient(45deg, var(--background0) 10%, transparent 11%, transparent 89%, var(--background0) 90%), linear-gradient(135deg, var(--background0) 10%, transparent 11%, transparent 89%, var(--background0) 90%), radial-gradient(circle, transparent 25%, var(--background) 26%), linear-gradient(45deg, transparent 46%, var(--background0) 47%, var(--background0) 52%, transparent 53%), linear-gradient(135deg, transparent 46%, var(--background0) 47%, var(--background0) 52%, transparent 53%);
     background-color: var(--background);
     background-size: 4em 4em;
-    /*background-attachment: fixed;*/
+    background-attachment: fixed;
 }
 
 a {
