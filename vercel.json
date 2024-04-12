@@ -1,3 +1,6 @@
 {
   "cleanUrls": true
-}
+  "redirects": [
+    { "source": "store", "destination": "[https://joshdesign.gumroad.com/](https://joshdesign.gumroad.com/)" }
+  ]
+ }
