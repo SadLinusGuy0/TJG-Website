@@ -33,11 +33,6 @@
     }
 }
 
-/* Animation On Load */
-* :not(.custom-nav) {
-    animation: load .5s ease-in;
-}
-
 /* Default Tags */
 body {
     color: var(--text);
@@ -256,17 +251,6 @@ footer span {
 }
 
 /* Keyframes (Animations) */
-/* Fade In Animation when a page loads */
-@keyframes load {
-    from {
-        opacity: 0.2;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
 /* Slide/Appear from left animation for Sidebar */
 @keyframes appearLeft {
     from {
