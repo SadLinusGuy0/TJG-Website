@@ -83,6 +83,12 @@
     background-color: hsl(210, 46%, 10%);
 }
 
+/* Client Cards (clients.html)*/
+.client-card:nth-child(1) {
+    background-color: #ffffff;
+    align-items: left;
+}
+
 /* Wallpaper Cards (wallpapers.html) */
 .wallpaper-card:nth-child(1) {
     background-color: #5e1e1e;
