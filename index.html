@@ -15,15 +15,22 @@
         <meta property="og:image" content="https://thatjoshguy.me/src/images/preview.png">
         <!-- Twitter -->
         <meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:site" content="@thatjoshguy69">
-	<meta name="twitter:url" content="https://thatjoshguy.me">
-	<meta name="twitter:creator" content="@thatjoshguy69"> 
-	<meta name="twitter:title" content=" Josh Skinner's Portfolio">
-	<meta name="twitter:description" content="I'm a Graphics and UI Designer, Checkout my Portfolio"> 
-	<meta name="twitter:image" content="https://thatjoshguy.me/src/images/preview.png">
+	    <meta name="twitter:site" content="@thatjoshguy69">
+	    <meta name="twitter:url" content="https://thatjoshguy.me">
+	    <meta name="twitter:creator" content="@thatjoshguy69"> 
+	    <meta name="twitter:title" content=" Josh Skinner's Portfolio">
+	    <meta name="twitter:description" content="I'm a Graphics and UI Designer, Checkout my Portfolio"> 
+	    <meta name="twitter:image" content="https://thatjoshguy.me/src/images/preview.png">
+        <!-- React & ReactDOM -->
+        <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+        
         <!-- Bootstrap -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <!-- Font Awesome -->
+        <!-- Material Icons -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+	<!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer">
         <!-- FontShare -->
         <link href="https://api.fontshare.com/v2/css?f[]=general-sans@600,400&display=swap" rel="stylesheet">
@@ -40,7 +47,8 @@
             <!-- Hyperlinks -->
             <ul class="list-group">
                 <li class="list-group-item active" data-href="/index.html"><i class="fa-solid fa-house icon pr-4"></i>Home</li>
-                <li class="list-group-item" data-href="/designs/concepts.html"><i class="fa-solid fa-palette icon pr-5"></i>Designs</li>
+                <li class="list-group-item" data-href="/work/concepts.html"><i class="fa-solid fa-briefcase icon pr-5"></i>Work</li>
+		<li class="list-group-item" data-href="/shop.html"><i class="fa-solid fa-bag-shopping pr-5"></i>⠀Shop</li>
                 <li class="list-group-item pl-1" data-href="/contact.html"><i class="fa-solid fa-user icon pr-5"></i>Contact</li>
             </ul>
             <!-- Social Media Icons -->
@@ -58,8 +66,10 @@
                 <a class="nav-link active" href="/index.html" role="tab" aria-selected="true">Home</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" href="/designs/concepts.html" role="tab" aria-selected="false">Designs</a>
+                <a class="nav-link" href="/work/concepts.html" role="tab" aria-selected="false">Work</a>
             </li>
+	    <li class="nav-item" role="presentation">
+		<a class="nav-link" href="/shop.html" role="tab" aria-selected="false">Shop</a>
             <li class="nav-item" role="presentation">
                 <a class="nav-link" href="/contact.html" role="tab" aria-selected="false">Contact</a>
             </li>
@@ -91,7 +101,9 @@
             </main>
             
             <div class="empty"></div>
-            
+
+            <!-- About Me section -->
+		
             <section class="section">
                 <h5>I'm a</h5>
                 <h1>Graphic and UI Designer</h1>
@@ -101,13 +113,40 @@
             </section>
             
             <div class="empty"></div>
+
+	    <!-- My Tech section -->
+
+	    <section class="section">
+		<h3>My Tech</h3><br>
+		<div>
+	            <span class="material-symbols-rounded">Smartphone</span><br><h1>Google Pixel 6</h1>
+		</div><br>
+		<div>
+		    <span class="material-symbols-rounded">watch</span><br><h1>Galaxy Watch5 Pro</h1>
+		</div><br>
+		<div>
+		    <span class="material-symbols-rounded">headphones</span><br><h1>Pixel Buds A-Series</h1>
+		</div><br>
+		<div>
+		    <span class="material-symbols-rounded">head_mounted_device</span><br><h1>Meta Quest 2</h1>
+		</div><br>
+		<div>
+		    <span class="material-symbols-rounded">stadia_controller</span><br><h1>Xbox Series S</h1>
+		</div><br>
+		<div>
+		    <span class="material-symbols-rounded">videogame_asset</span><br><h1>Nintendo Switch Lite</h1>
+		</div>
+	    </section>
+
+	    <div class="empty"></div>
+		
             
             <!-- Footer (will be rebuilt in React soon) -->
             <footer>
                 <div class="divider">⠀</div>
                 <br>
-                <h6 class="px-4">Designed By <a href="https://thatjoshguy.me/helloworld" target="_blank" rel="noopener noreferrer" target="_blank">That Josh Guy</a> & Developed by <a href="https://bit.ly/dhirensculpts" target="_blank" rel="noopener noreferrer" target="_blank">Dhiren Vasnani</a></h6><br>
-                <h6 class="px-4">Protected by the <a href="" target="_blank" rel="noopener noreferrer">MIT License</a></h6>
+                <h6 class="px-4">Designed By <a href="https://thatjoshguy.me/helloworld">That Josh Guy</a> & Developed by <a href="https://dhirenv.art">Dhiren Vasnani</a></h6><br>
+                <h6 class="px-4">Protected by the <a href="">MIT License</a></h6>
             </footer>
             <div class="empty"></div>
         </div>

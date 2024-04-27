@@ -142,6 +142,10 @@ a {
     pointer-events: none;
 }
 
+/* Pixel 6 Icon */
+.pixel6 {
+    color: var(--text);
+}
 /* Social Media Icons in Sidebar */
 .icons-container {
     position: fixed;
