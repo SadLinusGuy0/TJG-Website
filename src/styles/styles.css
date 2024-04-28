@@ -91,8 +91,6 @@ a {
 
 .scrollable-content::-webkit-scrollbar {
   display: none;
-  &::-webkit-scrollbar-thumb {
-      background-color: #00ffffff;
 }
 
 .custom-nav .nav-link.active {
