@@ -86,11 +86,13 @@ a {
 .scrollable-content {
     scrollbar-width: none;
     ms-overflow-style: none;
-    scrollbar-color: #00FFFFFF #00FFFFFF;
+    scrollbar-color: #00ffffff #00ffffff;
 }
 
 .scrollable-content::-webkit-scrollbar {
   display: none;
+  &::-webkit-scrollbar-thumb {
+      background-color: #00ffffff;
 }
 
 .custom-nav .nav-link.active {
