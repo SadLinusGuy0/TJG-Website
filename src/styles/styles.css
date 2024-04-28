@@ -79,7 +79,12 @@ a {
     backdrop-filter: blur(15px);
     animation: appearBelow .5s forwards; 
     flex-wrap: nowrap;
-    overflow: hidden;
+    overflow-y: hidden;
+    overflow-x: scroll;
+}
+
+.scrollable-content::-webkit-scrollbar {
+  display: none;
 }
 
 .custom-nav .nav-link.active {
