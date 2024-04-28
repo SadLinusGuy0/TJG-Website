@@ -83,6 +83,10 @@ a {
     overflow-x: scroll;
 }
 
+.scroller {
+    scrollbar-width: none;
+}
+
 .scrollable-content {
     scrollbar-width: none;
     ms-overflow-style: none;
