@@ -86,7 +86,7 @@ a {
 .scrollable-content {
     scrollbar-width: none;
     ms-overflow-style: none;
-    scrollbar-color: #00FFFFFF
+    scrollbar-color: #00FFFFFF #00FFFFFF;
 }
 
 .scrollable-content::-webkit-scrollbar {
