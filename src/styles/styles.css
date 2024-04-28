@@ -83,6 +83,10 @@ a {
     overflow-x: scroll;
 }
 
+.scrollable-content {
+    background: hsl(0 0% 0%)
+}
+
 .scrollable-content::-webkit-scrollbar {
   display: none;
 }
