@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Snake Game</title>
+  <style>
+    body { background-color: #333; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    canvas { background-color: #eee; border: 2px solid #000; }
+    #score { color: white; font-size: 20px; position: absolute; top: 10px; left: 10px; }
+    #startScreen { 
+      background-color: rgba(0, 0, 0, 0.7); 
+      color: white; 
+      font-size: 24px; 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <div id="score">Score: 0</div>
+  <div id="startScreen">Touch to Start</div> 
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const gridSize = 20;
+    let snake = [{ x: 10, y: 10 }];
+    let food = {};
+    let score = 0;
+    let dx = 1, dy = 0;
+    let gameStarted = false;
+    let touchStartX, touchStartY;
+
+    function generateFood() {
+      food = {
+        x: Math.floor(Math.random() * (canvas.width / gridSize)),
+        y: Math.floor(Math.random() * (canvas.height / gridSize))
+      };
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < snake.length; i++) {
+        ctx.fillStyle = (i === 0) ? 'green' : 'lime';
+        ctx.fillRect(snake[i].x * gridSize, snake[i].y * gridSize, gridSize, gridSize);
+      }
+      ctx.fillStyle = 'red';
+      ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+    }
+
+    function update() {
+      const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+      snake.unshift(head);
+
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        document.getElementById('score').textContent = 'Score: ' + score;
+        generateFood();
+      } else {
+        snake.pop();
+      }
+
+      if (snake[0].x < 0 || snake[0].x >= canvas.width / gridSize || 
+          snake[0].y < 0 || snake[0].y >= canvas.height / gridSize || 
+          checkCollision()) {
+        alert('Game Over! Your score was: ' + score);
+        snake = [{ x: 10, y: 10 }];
+        score = 0;
+        dx = 1; dy = 0;
+        gameStarted = false;
+        document.getElementById('startScreen').style.display = 'flex';
+      }
+    }
+
+    function checkCollision() {
+      for (let i = 4; i < snake.length; i++) {
+        if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function startGame() {
+      gameStarted = true;
+      document.getElementById('startScreen').style.display = 'none';
+      generateFood();
+      setInterval(function() { 
+        update();
+        draw();
+      }, 100); 
+    }
+
+    document.addEventListener('touchstart', (event) => {
+      if (!gameStarted) {
+        startGame();
+      } else {
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+      }
+    });
+
+    document.addEventListener('touchmove', (event) => {
+      if (!touchStartX || !touchStartY || !gameStarted) return;
+
+      const touchEndX = event.touches[0].clientX;
+      const touchEndY = event.touches[0].clientY;
+
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        dx = (deltaX > 0) ? 1 : -1;
+        dy = 0;
+      } else {
+        dx = 0;
+        dy = (deltaY > 0) ? 1 : -1;
+      }
+
+      touchStartX = null;
+      touchStartY = null;
+    });
+  </script>
+</body>
+</html>
