@@ -24,7 +24,7 @@
 <body>
   <canvas id="gameCanvas" width="400" height="400"></canvas>
   <div id="score">Score: 0</div>
-  <div id="startScreen">Touch to Start</div> 
+  <div id="startScreen">Touch or Click to Start</div> 
 
   <script>
     const canvas = document.getElementById('gameCanvas');
@@ -97,14 +97,9 @@
       }, 100); 
     }
 
-    document.addEventListener('touchstart', (event) => {
-      if (!gameStarted) {
-        startGame();
-      } else {
-        touchStartX = event.touches[0].clientX;
-        touchStartY = event.touches[0].clientY;
-      }
-    });
+    // Event listeners for both touch and click
+    document.addEventListener('touchstart', startGame);
+    document.addEventListener('click', startGame);
 
     document.addEventListener('touchmove', (event) => {
       if (!touchStartX || !touchStartY || !gameStarted) return;
