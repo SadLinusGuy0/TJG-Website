@@ -97,29 +97,71 @@
       }, 100); 
     }
 
-    // Event listeners for both touch and click
-    document.addEventListener('touchstart', startGame);
-    document.addEventListener('click', startGame);
+    // Keyboard controls (arrow keys)
+    document.addEventListener('keydown', (event) => {
+        if (!gameStarted) return; // Ignore key presses before the game starts
+
+        const LEFT_KEY = 37;
+        const UP_KEY = 38;
+        const RIGHT_KEY = 39;
+        const DOWN_KEY = 40;
+
+        const keyPressed = event.keyCode;
+        const goingUp = dy === -1;
+        const goingDown = dy === 1;
+        const goingRight = dx === 1;
+        const goingLeft = dx === -1;
+
+        if (keyPressed === LEFT_KEY && !goingRight) {
+            dx = -1;
+            dy = 0;
+        }
+
+        if (keyPressed === UP_KEY && !goingDown) {
+            dx = 0;
+            dy = -1;
+        }
+
+        if (keyPressed === RIGHT_KEY && !goingLeft) {
+            dx = 1;
+            dy = 0;
+        }
+
+        if (keyPressed === DOWN_KEY && !goingUp) {
+            dx = 0;
+            dy = 1;
+        }
+    });
+
+    // Touch controls (swipe)
+    document.addEventListener('touchstart', (event) => {
+      if (!gameStarted) {
+        startGame();
+      } else {
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+      }
+    });
 
     document.addEventListener('touchmove', (event) => {
-      if (!touchStartX || !touchStartY || !gameStarted) return;
+        if (!touchStartX || !touchStartY || !gameStarted) return;
 
-      const touchEndX = event.touches[0].clientX;
-      const touchEndY = event.touches[0].clientY;
+        const touchEndX = event.touches[0].clientX;
+        const touchEndY = event.touches[0].clientY;
 
-      const deltaX = touchEndX - touchStartX;
-      const deltaY = touchEndY - touchStartY;
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
 
-      if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        dx = (deltaX > 0) ? 1 : -1;
-        dy = 0;
-      } else {
-        dx = 0;
-        dy = (deltaY > 0) ? 1 : -1;
-      }
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            dx = (deltaX > 0) ? 1 : -1;
+            dy = 0;
+        } else {
+            dx = 0;
+            dy = (deltaY > 0) ? 1 : -1;
+        }
 
-      touchStartX = null;
-      touchStartY = null;
+        touchStartX = null;
+        touchStartY = null;
     });
   </script>
 </body>
