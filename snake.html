@@ -24,7 +24,7 @@
 <body>
   <canvas id="gameCanvas" width="400" height="400"></canvas>
   <div id="score">Score: 0</div>
-  <div id="startScreen">Touch or Click to Start</div> 
+  <div id="startScreen">Touch to Start</div> 
 
   <script>
     const canvas = document.getElementById('gameCanvas');
@@ -97,43 +97,6 @@
       }, 100); 
     }
 
-    // Keyboard controls (arrow keys)
-    document.addEventListener('keydown', (event) => {
-        if (!gameStarted) return; // Ignore key presses before the game starts
-
-        const LEFT_KEY = 37;
-        const UP_KEY = 38;
-        const RIGHT_KEY = 39;
-        const DOWN_KEY = 40;
-
-        const keyPressed = event.keyCode;
-        const goingUp = dy === -1;
-        const goingDown = dy === 1;
-        const goingRight = dx === 1;
-        const goingLeft = dx === -1;
-
-        if (keyPressed === LEFT_KEY && !goingRight) {
-            dx = -1;
-            dy = 0;
-        }
-
-        if (keyPressed === UP_KEY && !goingDown) {
-            dx = 0;
-            dy = -1;
-        }
-
-        if (keyPressed === RIGHT_KEY && !goingLeft) {
-            dx = 1;
-            dy = 0;
-        }
-
-        if (keyPressed === DOWN_KEY && !goingUp) {
-            dx = 0;
-            dy = 1;
-        }
-    });
-
-    // Touch controls (swipe)
     document.addEventListener('touchstart', (event) => {
       if (!gameStarted) {
         startGame();
@@ -144,7 +107,7 @@
     });
 
     document.addEventListener('touchmove', (event) => {
-      if (!touchStartX || !touchStartY) return; // Removed !gameStarted condition
+      if (!touchStartX || !touchStartY || !gameStarted) return;
 
       const touchEndX = event.touches[0].clientX;
       const touchEndY = event.touches[0].clientY;

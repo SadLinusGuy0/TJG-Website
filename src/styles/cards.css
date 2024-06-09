@@ -42,7 +42,7 @@
     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Styles for WhatsApp Card (concepts.html) */
+/* Styles for WhatsApp Card (concepts) */
 .whatsapp {
     background-color: #F5FFF1;
 }
@@ -56,7 +56,7 @@
     background-color: #C1F99F;
 }
 
-/* Styles for Youtube Card (concepts.html) */
+/* Styles for Youtube Card (concepts) */
 .youtube {
     background-color: #f9ebe8;
 }
@@ -70,7 +70,7 @@
     ;
 }
 
-/* Styles for Twitter Card (concepts.html) */
+/* Styles for Twitter Card (concepts) */
 .twitter {
     background-color: #b4d6ff;
 }
@@ -83,13 +83,13 @@
     background-color: hsl(210, 46%, 10%);
 }
 
-/* Client Cards (clients.html)*/
+/* Client Cards (clients)*/
 .client-card:nth-child(1) {
     background-color: #ffffff;
     align-items: left;
 }
 
-/* Wallpaper Cards (wallpapers.html) */
+/* Wallpaper Cards (wallpapers) */
 .wallpaper-card:nth-child(1) {
     background-color: #D2E2F6;
 }
@@ -114,7 +114,7 @@
     background-color: #7a9983;
 }
 
-/* Banners (banners.html) */
+/* Banners (banners) */
 .banner {
     width: 85%;
     height: auto;
@@ -128,7 +128,7 @@
 }
 
 
-/* Social Cards (contact.html) */
+/* Social Cards (contact) */
 .social-card {
     justify-content: center;
     align-items: left;
@@ -168,7 +168,7 @@
     transform: scale(1.02) translateX(4px) translateY(-4px);
 }
 
-/* Class for applying Pulse animation to cards (wallpapers.html, socials.html) */
+/* Class for applying Pulse animation to cards (wallpapers, socials) */
 .animated {
     animation: pulse 2s infinite;
 }
