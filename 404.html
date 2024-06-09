@@ -1,67 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <!-- Meta Info -->
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Title -->
-        <title>That Josh Guy - Error 404</title>
-        <!-- Bootstrap -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer">
-        <!-- FontShare -->
-        <link href="https://api.fontshare.com/v2/css?f[]=general-sans@600,400&display=swap" rel="stylesheet">
-        <!-- Custom CSS -->
-        <link rel="stylesheet" href="/src/styles/styles.css">
-        <link rel="stylesheet" href="/src/styles/shapes.css">
-        <!-- Favicon -->
-        <link rel="icon" type="image/x-icon" href="favicon.ico">
-    </head>
-    <body>
-        <!-- Sidebar (Only visible in Bigger Screens including Desktops, etc) -->
-        <aside class="sidebar">
-            <h4>That Josh Guy</h4>
-            <!-- Hyperlinks -->
-            <ul class="list-group">
-                <li class="list-group-item" data-href="/index.html"><i class="fa-solid fa-house icon pr-4"></i>Home</li>
-                <li class="list-group-item" data-href="/designs/concepts.html"><i class="fa-solid fa-palette icon pr-5"></i>Designs</li>
-                <li class="list-group-item pl-1" data-href="/contact.html"><i class="fa-solid fa-user icon pr-5"></i>Contact</li>
-            </ul>
-            <!-- Social Media Icons -->
-            <div class="icons-container">
-                <a href="https://twitter.com/thatjoshguy69" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter social-icon"></i></a>
-                <a href="https://instagram.com/thatjoshguy69" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram social-icon"></i></a>
-                <a href="https://youtube.com/@thatjoshguy08" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube social-icon"></i></a>
-                <a href="https://t.me/thatjoshguy" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram social-icon"></i></a>
-            </div>
-        </aside>
-        <!-- NavPill (Only Visible for Smaller Screens including Mobiles, Tabllets, etc) -->
-        <ul class="nav nav-pills nav-fill gap-2 p-1 small fixed-bottom custom-nav">
+
+<head>
+    <!-- Meta Info -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title -->
+    <title>That Josh Guy - Error 404</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <!-- FontShare -->
+    <link href="https://api.fontshare.com/v2/css?f[]=general-sans@600,400&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/src/styles/styles.css">
+    <link rel="stylesheet" href="/src/styles/shapes.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <script src="/src/scripts/settings.js"></script>
+</head>
+
+<body>
+    <!-- NavPill -->
+    <nav>
+        <ul class="nav nav-pills nav-fill gap-1 p-2 small scroller">
+            <!-- Home -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link" href="/index.html" role="tab" aria-selected="true">Home</a>
+                <a title="Home" class="nav-link" href="/" role="tab" aria-selected="false">
+                    <span class="material-symbols-rounded">home</span>
+                    <h5 class="label">Home</h5>
+                </a>
             </li>
+            <!-- Works -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link" href="/designs/concepts.html" role="tab" aria-selected="false">Designs</a>
+                <a title="Works" class="nav-link" href="/work/concepts" role="tab" aria-selected="false">
+                    <span class="material-symbols-rounded">palette</span>
+                    <h5 class="label">Works</h5>
+                </a>
             </li>
+            <!-- Shop -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link" href="/contact.html" role="tab" aria-selected="false">Contact</a>
+                <a title="Shop" class="nav-link" href="/shop" role="tab" aria-selected="false">
+                    <span class="material-symbols-rounded">local_mall</span>
+                    <h5 class="label">Shop</h5>
+                </a>
+            </li>
+            <!-- Contact -->
+            <li class="nav-item" role="presentation">
+                <a title="Contact" class="nav-link" href="/contact" role="tab" aria-selected="false">
+                    <span class="material-symbols-rounded">alternate_email</span>
+                    <h5 class="label">Contact</h5>
+                </a>
+            </li>
+            <!-- Settings -->
+            <li class="nav-item" role="presentation">
+                <a title="Contact" class="nav-link" href="/settings" role="tab" aria-selected="false">
+                    <span class="material-symbols-rounded">settings</span>
+                    <h5 class="label">Settings</h5>
+                </a>
             </li>
         </ul>
-        <div class="content">
-            <main class="logo-container err-container">
-                <i class="fa-solid fa-face-dizzy error-icon"></i>
-                <br>
-                <h2>Error 404</h2>
-                <h2>This page doesn't exist</h2>
-                <br>
-                <h6>There's probably a typo in the URL</h6>
-                <h6>Don't worry, just click Home to start from scratch</h6>
-                <div class="divider">⠀</div>
-            </main>
-            <div class="empty"></div>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-        <script src="/src/myscript.js"></script>
-    </body>
+    </nav>
+
+    <main class="logo-container err-container">
+        <i class="fa-solid fa-face-dizzy error-icon"></i>
+        <br>
+        <h2>Error 404</h2>
+        <h2>This page doesn't exist</h2>
+        <br>
+        <h6>There's probably a typo in the URL</h6>
+        <h6>Don't worry, just click Home to start from scratch</h6>
+        <div class="divider">⠀</div>
+    </main>
+
+    <div class="empty"></div>
+</body>
+
 </html>

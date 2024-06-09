@@ -29,8 +29,8 @@ html {
 /* Positions for Children(Shapes) of svg-container */
 .svg:nth-child(1) {
     width: 85%;
-    right: -30%;
-    top: -5%;
+    right: -50%;
+    top: -15%;
     animation: 
 	    antiRotate 60s 1s infinite,
 	    scaleAnimation 1s;
@@ -105,12 +105,12 @@ html {
         display: block;
         width: 15%;
         bottom: -15px;
-        left: 15%;
+        left: 0;
     }
 
     .svg:nth-child(3) {
         width: 15%;
         top: -15px;
-        left: 15%;
+        left: 0;
     }
 }
