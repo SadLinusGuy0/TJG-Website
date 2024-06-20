@@ -83,7 +83,7 @@ h1,
 h2,
 h3,
 h4 {
-    font-family: 'General Sans', Arial;
+    font-family: 'Figtree', 'General Sans', Arial;
     font-weight: 600;
 }
 
@@ -91,8 +91,8 @@ h5,
 h6,
 li,
 a {
-    font-family: 'General Sans', Arial;
-    font-weight: thin;
+    font-family: 'Figtree', 'General Sans', Arial;
+    font-weight: 500;
 }
 
 /* NavPill */
@@ -263,23 +263,6 @@ footer a,
 footer span {
     color: var(--accent);
     font-weight: bold;
-}
-
-// <uniquifier>: Use a unique and descriptive class name
-// <weight>: Use a value from 300 to 900
-
-.figtree-med> {
-  font-family: "Figtree", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
-}
-
-.figtree-semibold> {
-  font-family: "Figtree", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 600;
-  font-style: normal;
 }
 
 /* Styles for Bluesky Icon (contact) */
