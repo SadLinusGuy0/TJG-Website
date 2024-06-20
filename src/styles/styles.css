@@ -265,6 +265,23 @@ footer span {
     font-weight: bold;
 }
 
+// <uniquifier>: Use a unique and descriptive class name
+// <weight>: Use a value from 300 to 900
+
+.figtree-med> {
+  font-family: "Figtree", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.figtree-semibold> {
+  font-family: "Figtree", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
 /* Styles for Bluesky Icon (contact) */
 .bluesky {
     width: 48px;
