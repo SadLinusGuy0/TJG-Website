@@ -19,8 +19,8 @@ html {
 /* Common Styles for all the animated shapes */
 .svg {
     position: absolute;
+    opacity: 0.8;
     transition: all 1s ease;
-    opacity: 0.6;
     animation: 
 	    rotate 60s 1s infinite,
         scaleAnimation 1s;
@@ -97,20 +97,20 @@ html {
 @media (min-width: 1024px) {
     .svg:nth-child(1) {
         width: 45%;
-        top: -50px;
-        right: -15%;
+        top: -70px;
+        right: -25%;
     }
 
     .svg:nth-child(2) {
         display: block;
         width: 15%;
-        bottom: -15px;
-        left: 0;
+        bottom: -50px;
+        left: -50px;
     }
 
     .svg:nth-child(3) {
         width: 15%;
-        top: -15px;
-        left: 0;
+        top: -50px;
+        left: -50px;
     }
 }

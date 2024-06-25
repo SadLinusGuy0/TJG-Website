@@ -21,7 +21,7 @@
 
 .card-content {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     width: 100%;
     padding: 15px;
@@ -33,7 +33,6 @@
     color: white;
     padding: 8px 12px;
     border-radius: 20px;
-    margin: 0 10px;
     box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
 }
@@ -67,7 +66,6 @@
 
 .youtube .button:hover {
     background-color: hsl(5, 68%, 10%);
-    ;
 }
 
 /* Styles for Twitter Card (concepts) */

@@ -36,8 +36,8 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/src/styles/styles.css">
-    <link rel="stylesheet" href="/src/styles/settings.css">
     <link rel="stylesheet" href="/src/styles/cards.css">
+    <link rel="stylesheet" href="/src/styles/settings.css">
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <!-- JS -->
@@ -58,11 +58,11 @@
                     <h5 class="label">Home</h5>
                 </a>
             </li>
-            <!-- Work -->
+            <!-- Works -->
             <li class="nav-item" role="presentation">
-                <a title="Work" class="nav-link" href="/work/concepts" role="tab" aria-selected="false">
+                <a title="Works" class="nav-link" href="/work/concepts" role="tab" aria-selected="false">
                     <span class="material-symbols-rounded">palette</span>
-                    <h5 class="label">Work</h5>
+                    <h5 class="label">Works</h5>
                 </a>
             </li>
             <!-- Shop -->
@@ -92,31 +92,39 @@
     <!-- WebPage Content -->
     <div class="section heading">
         <h1>Settings</h1>
-        <br>
+        <br><br><br>
     </div>
 
     <!-- Grid For Placing the Cards -->
-    <section class="grid">
+    <section>
         <form id="settings" action="/src/scripts/settings.js">
-            <section class="settingGroup" id="appearance">
-                <div class="setting">
-                    <ul>
-                        <li>
-                            <h5><span class="material-symbols-rounded">contrast</span><br>Theme</h5>
-                            <div>
-                                <input type="radio" id="auto" name="theme-color" value="auto" class="theme-option" checked>
-                                <label for="auto" class="auto button theme-label">Follow system</label>
-    
-                                <input type="radio" id="light" name="theme-color" value="light" class="theme-option">
-                                <label for="light" class="light button theme-label">Light</label>
-    
-                                <input type="radio" id="dark" name="theme-color" value="dark" class="theme-option">
-                                <label for="dark" class="dark button theme-label">Dark</label>
-                            </div>
-                        </li>
-                    </ul>
+            <div class="setting">
+                <h5>Theme</h5>
+                <div class="options">
+                    <input type="radio" id="auto" name="theme-color" value="auto" class="theme-option" checked>
+                    <label for="auto" class="auto button theme-label">Auto</label>
+
+                    <input type="radio" id="light" name="theme-color" value="light" class="theme-option">
+                    <label for="light" class="light button theme-label">Light</label>
+
+                    <input type="radio" id="dark" name="theme-color" value="dark" class="theme-option">
+                    <label for="dark" class="dark button theme-label">Dark</label>
                 </div>
-            </section>
+            </div>
+            <div class="setting">
+                <h5>Background Pattern</h5>
+                <label class="toggle">
+                    <input type="checkbox" id="gradient-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting">
+                <h5>Animations</h5>
+                <label class="toggle">
+                    <input type="checkbox" id="animation-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
         </form>
     </section>
 
@@ -125,11 +133,11 @@
     <footer>
         <div class="divider">⠀</div>
         <br>
-        <h6 class="px-4">Designed By <a href="https://thatjoshguy.me/personal" target="_blank" rel="noopener noreferrer"
+        <h6 class="px-4">Designed By <a href="https://thatjoshguy.me/snake" target="_blank" rel="noopener noreferrer"
                 target="_blank">That Josh Guy</a> & Developed by <a href="https://dhirenv.art" target="_blank"
                 rel="noopener noreferrer" target="_blank">Dhiren
                 Vasnani</a></h6><br>
-        <h6 class="px-4">Protected by the <a href="" target="_blank" rel="noopener noreferrer">MIT License</a></h6>
+        <h6 class="px-4">Protected by the <span>MIT License</span></h6>
     </footer>
     <div class="empty"></div>
 </body>
