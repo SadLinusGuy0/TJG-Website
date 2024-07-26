@@ -81,34 +81,32 @@
     background-color: hsl(210, 46%, 10%);
 }
 
-/* Client Cards (clients)*/
-.client-card:nth-child(1) {
-    background-color: #ffffff;
-    align-items: left;
-}
-
 /* Wallpaper Cards (wallpapers) */
 .wallpaper-card:nth-child(1) {
-    background-color: #D2E2F6;
+    background-color: #000000;
 }
 
 .wallpaper-card:nth-child(2) {
-    background-color: #5e1e1e;
+    background-color: #dee2f6;
 }
 
 .wallpaper-card:nth-child(3) {
-    background-color: #dff0ea;
+    background-color: #5e1e1e;
 }
 
 .wallpaper-card:nth-child(4) {
-    background-color: #15614c;
+    background-color: #dff0ea;
 }
 
 .wallpaper-card:nth-child(5) {
-    background-color: #9c927c;
+    background-color: #15614c;
 }
 
 .wallpaper-card:nth-child(6) {
+    background-color: #9c927c;
+}
+
+.wallpaper-card:nth-child(7) {
     background-color: #7a9983;
 }
 
