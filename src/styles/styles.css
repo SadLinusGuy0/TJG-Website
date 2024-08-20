@@ -402,6 +402,11 @@ footer span {
     color: var(--accent);
 }
 
+.footer-link {
+    font-family: 'Google Sans';
+    font-weight: 500;
+}
+
 /* Media Queries */
 /* For Tablets */
 @media screen and (min-width: 720px) {
