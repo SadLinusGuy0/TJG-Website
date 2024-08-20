@@ -284,26 +284,22 @@ ul.my-tech-list li::before {
 }
 
 ul.my-tech-list li:nth-child(1)::before {
-    content: 'laptop_mac';
-}
-
-ul.my-tech-list li:nth-child(2)::before {
     content: 'smartphone';
 }
 
-ul.my-tech-list li:nth-child(3)::before {
+ul.my-tech-list li:nth-child(2)::before {
     content: 'watch';
 }
 
-ul.my-tech-list li:nth-child(4)::before {
+ul.my-tech-list li:nth-child(3)::before {
     content: 'music_note';
 }
 
-ul.my-tech-list li:nth-child(5)::before {
+ul.my-tech-list li:nth-child(4)::before {
     content: 'head_mounted_device';
 }
 
-ul.my-tech-list li:nth-child(6)::before {
+ul.my-tech-list li:nth-child(5)::before {
     content: 'stadia_controller';
 }
 
