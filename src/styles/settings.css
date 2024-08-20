@@ -29,6 +29,8 @@
 }
 
 .theme-label {
+    font-family: 'Google Sans';
+    font-weight: 500;
     background-color: var(--primary);
     border: 2px solid var(--secondary);
     color: var(--text);
@@ -36,6 +38,8 @@
 }
 
 .theme-label:hover {
+    font-family: 'Google Sans';
+    font-weight: 500;
     background-color: var(--accent);
     color: #fff;
     border: 2px solid var(--accent);
