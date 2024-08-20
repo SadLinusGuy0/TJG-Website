@@ -172,10 +172,14 @@ h1 {
 }
 
 h2,
-h3,
-h4 {
+h3 {
     font-family: 'Google Sans', Arial;
     font-weight: 500;
+}
+
+h4 {
+    font-family: 'Google Sans', Arial;
+    font-weight: normal;
 }
 
 h5,
