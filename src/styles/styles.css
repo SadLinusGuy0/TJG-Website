@@ -103,9 +103,9 @@ html[data-animation="disabled"] .social-card:hover .arrow {
 /* Google Sans */
 @font-face {
     font-family: 'Google Sans';
-    src: url('GoogleSans-Bold.woff2') format('woff2'),
-        url('GoogleSans-Bold.woff') format('woff'),
-        url('GoogleSans-Bold.ttf') format('truetype');
+    src: url('src/fonts/GoogleSans-Bold.woff2') format('woff2'),
+         url('src/fonts/GoogleSans-Bold.woff') format('woff'),
+         url('src/fonts/GoogleSans-Bold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
     font-display: swap;
@@ -113,9 +113,9 @@ html[data-animation="disabled"] .social-card:hover .arrow {
 
 @font-face {
     font-family: 'Google Sans';
-    src: url('GoogleSans-Medium.woff2') format('woff2'),
-        url('GoogleSans-Medium.woff') format('woff'),
-        url('GoogleSans-Medium.ttf') format('truetype');
+    src: url('src/fonts/GoogleSans-Medium.woff2') format('woff2'),
+         url('src/fonts/GoogleSans-Medium.woff') format('woff'),
+         url('src/fonts/GoogleSans-Medium.ttf') format('truetype');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -123,9 +123,9 @@ html[data-animation="disabled"] .social-card:hover .arrow {
 
 @font-face {
     font-family: 'Google Sans Text';
-    src: url('GoogleSansText-Regular.woff2') format('woff2'),
-        url('GoogleSansText-Regular.woff') format('woff'),
-        url('GoogleSansText-Regular.ttf') format('truetype');
+    src: url('src/fonts/GoogleSansText-Regular.woff2') format('woff2'),
+         url('src/fonts/GoogleSansText-Regular.woff') format('woff'),
+         url('src/fonts/GoogleSansText-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -133,9 +133,9 @@ html[data-animation="disabled"] .social-card:hover .arrow {
 
 @font-face {
     font-family: 'Google Sans Text';
-    src: url('GoogleSansText-Medium.woff2') format('woff2'),
-        url('GoogleSansText-Medium.woff') format('woff'),
-        url('GoogleSansText-Medium.ttf') format('truetype');
+    src: url('src/fontsGoogleSansText-Medium.woff2') format('woff2'),
+         url('src/fonts/GoogleSansText-Medium.woff') format('woff'),
+         url('src/fonts/GoogleSansText-Medium.ttf') format('truetype');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -143,9 +143,9 @@ html[data-animation="disabled"] .social-card:hover .arrow {
 
 @font-face {
     font-family: 'Google Sans';
-    src: url('GoogleSans-Regular.woff2') format('woff2'),
-        url('GoogleSans-Regular.woff') format('woff'),
-        url('GoogleSans-Regular.ttf') format('truetype');
+    src: url('src/fonts/GoogleSans-Regular.woff2') format('woff2'),
+         url('src/fonts/GoogleSans-Regular.woff') format('woff'),
+         url('src/fonts/GoogleSans-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
