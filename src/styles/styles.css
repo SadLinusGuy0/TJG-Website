@@ -101,10 +101,57 @@ html[data-animation="disabled"] .social-card:hover .arrow {
 }
 
 /* Google Sans */
-@font-face { 
-    font-family: 'Google Sans Medium'; 
-    src: url('/src/font/GoogleSans-Medium.ttf'); 
+@font-face {
+    font-family: 'Google Sans';
+    src: url('GoogleSans-Bold.woff2') format('woff2'),
+        url('GoogleSans-Bold.woff') format('woff'),
+        url('GoogleSans-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
 }
+
+@font-face {
+    font-family: 'Google Sans';
+    src: url('GoogleSans-Medium.woff2') format('woff2'),
+        url('GoogleSans-Medium.woff') format('woff'),
+        url('GoogleSans-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Google Sans Text';
+    src: url('GoogleSansText-Regular.woff2') format('woff2'),
+        url('GoogleSansText-Regular.woff') format('woff'),
+        url('GoogleSansText-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Google Sans Text';
+    src: url('GoogleSansText-Medium.woff2') format('woff2'),
+        url('GoogleSansText-Medium.woff') format('woff'),
+        url('GoogleSansText-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Google Sans';
+    src: url('GoogleSans-Regular.woff2') format('woff2'),
+        url('GoogleSans-Regular.woff') format('woff'),
+        url('GoogleSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
 
 /* Default Tags */
 body {
@@ -122,7 +169,8 @@ a {
 }
 
 h1 {
-    font-family: 'Google Sans Medium', Arial;
+    font-family: 'Google Sans', Arial;
+    font-weight: bold;
 }
 
 h2,
