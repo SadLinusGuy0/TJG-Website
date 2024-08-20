@@ -284,27 +284,27 @@ ul.my-tech-list li::before {
 }
 
 ul.my-tech-list li:nth-child(1)::before {
-    content: 'smartphone';
+    content: 'laptop_mac';
 }
 
 ul.my-tech-list li:nth-child(2)::before {
-    content: 'watch';
+    content: 'smartphone';
 }
 
 ul.my-tech-list li:nth-child(3)::before {
-    content: 'headphones';
+    content: 'watch';
 }
 
 ul.my-tech-list li:nth-child(4)::before {
-    content: 'head_mounted_device';
+    content: 'music_note';
 }
 
 ul.my-tech-list li:nth-child(5)::before {
-    content: 'stadia_controller';
+    content: 'head_mounted_device';
 }
 
 ul.my-tech-list li:nth-child(6)::before {
-    content: 'videogame_asset';
+    content: 'stadia_controller';
 }
 
 /* Main Container for homepage in which logo and name is wrapped (index)*/
