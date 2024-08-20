@@ -167,23 +167,23 @@ a {
 }
 
 h1 {
-    font-family: 'Google Sans Text';
-    font-weight: normal;
+    font-family: 'Google Sans', Arial;
+    font-weight: bold;
 }
 
 h2,
 h3,
 h4 {
     font-family: 'Google Sans', Arial;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 h5,
 h6,
 li,
 a {
-    font-family: 'General Sans', Arial;
-    font-weight: thin;
+    font-family: 'Google Sans Text', Arial;
+    font-weight: 500;
 }
 
 /* NavPill */
