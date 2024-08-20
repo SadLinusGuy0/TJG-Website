@@ -116,6 +116,7 @@ html[data-animation="disabled"] .social-card:hover .arrow {
     src: url('./src/fonts/GoogleSans-Medium.woff2') format('woff2'),
          url('./src/fonts/GoogleSans-Medium.woff') format('woff'),
          url('./src/fonts/GoogleSans-Medium.ttf') format('truetype');
+    format('embedded-opentype');
     font-weight: 500;
     font-style: medium;
     font-display: swap;
@@ -126,6 +127,7 @@ html[data-animation="disabled"] .social-card:hover .arrow {
     src: url('./src/fonts/GoogleSansText-Regular.woff2') format('woff2'),
          url('./src/fonts/GoogleSansText-Regular.woff') format('woff'),
          url('./src/fonts/GoogleSansText-Regular.ttf') format('truetype');
+    format('embedded-opentype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
