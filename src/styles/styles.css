@@ -158,7 +158,7 @@ body {
     background-size: 4em 4em;
     color: var(--text);
     background-attachment: fixed;
-    text-align: center;
+    text-align: left;
     overflow-x: hidden;
 }
 
@@ -270,8 +270,8 @@ ul.my-tech-list {
 
 ul.my-tech-list li {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: left;
+    justify-content: left;
     font-size: 24px;
     margin-bottom: 20px;
 }
@@ -331,8 +331,8 @@ ul.my-tech-list li:nth-child(6)::before {
 .section {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: left;
     padding: 8px 20px;
     color: var(--text);
 }
@@ -345,7 +345,7 @@ ul.my-tech-list li:nth-child(6)::before {
 /* Heading Container (concepts, wallpapers, banners, contact) */
 .heading {
     padding-top: 16%;
-    text-align: center;
+    text-align: left;
     margin: 0 auto;
 }
 
@@ -353,7 +353,7 @@ ul.my-tech-list li:nth-child(6)::before {
 .grid {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: left;
     margin: 0 8px 0 8px;
     grid-gap: 15px;
 }
@@ -441,14 +441,14 @@ footer span {
         width: fit-content;
         padding: 0 10px;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: left;
+        align-items: left;
     }
 
     .nav-pills {
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: left;
+        align-items: left;
         position: static;
         flex-direction: column;
         height: fit-content;
