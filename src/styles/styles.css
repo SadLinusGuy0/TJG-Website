@@ -424,6 +424,7 @@ footer span {
 
     .heading {
         padding-top: 8%;
+        padding-left: 70px;
     }
 
     .grid {
@@ -439,7 +440,7 @@ footer span {
         left: 0;
         height: 100%;
         width: fit-content;
-        padding: 0 0 10px 70px;
+        padding: 0 10px;
         display: flex;
         justify-content: left;
         align-items: left;
@@ -480,5 +481,6 @@ footer span {
 
     .heading {
         padding-top: 5%;
+        padding-left: 70px;
     }
 }
