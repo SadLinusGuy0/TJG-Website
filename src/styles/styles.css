@@ -353,7 +353,7 @@ ul.my-tech-list li:nth-child(6)::before {
 .grid {
     display: flex;
     flex-wrap: wrap;
-    justify-content: left;
+    justify-content: center;
     margin: 0 8px 0 8px;
     grid-gap: 15px;
 }
@@ -439,7 +439,7 @@ footer span {
         left: 0;
         height: 100%;
         width: fit-content;
-        padding: 0 10px;
+        padding: 0 0 10px 70px;
         display: flex;
         justify-content: left;
         align-items: left;
