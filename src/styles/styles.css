@@ -448,8 +448,8 @@ footer span {
 
     .nav-pills {
         display: flex;
-        justify-content: left;
-        align-items: left;
+        justify-content: center;
+        align-items: center;
         position: static;
         flex-direction: column;
         height: fit-content;
