@@ -283,6 +283,7 @@ ul.my-tech-list li {
     justify-content: left;
     font-size: 24px;
     margin-bottom: 20px;
+    text-align: left;
 }
 
 ul.my-tech-list li::before {
