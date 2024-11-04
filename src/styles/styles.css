@@ -333,7 +333,7 @@ ul.my-tech-list li:nth-child(6)::before {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 8px 20px;
+    padding: 5% 20px;
     color: var(--text);
 }
 
