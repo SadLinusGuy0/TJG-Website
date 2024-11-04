@@ -13,7 +13,7 @@ html[data-theme="light"] {
     --background-gradient: linear-gradient(45deg, #c9ddff 10%, transparent 11%, transparent 89%, #c9ddff 90%), linear-gradient(135deg, #c9ddff 10%, transparent 11%, transparent 89%, #c9ddff 90%), radial-gradient(circle, transparent 25%, var(--background) 26%), linear-gradient(45deg, transparent 46%, #c9ddff 47%, #c9ddff 52%, transparent 53%), linear-gradient(135deg, transparent 46%, #c9ddff 47%, #c9ddff 52%, transparent 53%);
     --primary: #9dbadc;
     --secondary: #b9cfeA;
-    --accent: #5a8cc6;
+    --accent: #4fbd7f;
     --blurBg: rgb(255, 255, 255, 0.4);
     --color-scheme: light;
 }
@@ -50,7 +50,7 @@ html[data-theme="dark"] {
         --background-gradient: linear-gradient(45deg, #c9ddff 10%, transparent 11%, transparent 89%, #c9ddff 90%), linear-gradient(135deg, #c9ddff 10%, transparent 11%, transparent 89%, #c9ddff 90%), radial-gradient(circle, transparent 25%, var(--background) 26%), linear-gradient(45deg, transparent 46%, #c9ddff 47%, #c9ddff 52%, transparent 53%), linear-gradient(135deg, transparent 46%, #c9ddff 47%, #c9ddff 52%, transparent 53%);
         --primary: #9dbadc;
         --secondary: #b9cfeA;
-        --accent: #5a8cc6;
+        --accent: #4fbd7f;
         --blurBg: rgb(255, 255, 255, 0.4);
         --color-scheme: light;
     }
