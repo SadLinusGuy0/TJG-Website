@@ -15,8 +15,8 @@ const toggleTheme = (theme) => {
     localStorage.setItem('theme', theme);
 };
 
-// Initialize pattern from localStorage or default to 'enabled'
-const currentPattern = localStorage.getItem('gradient') || 'enabled';
+// Initialize pattern from localStorage or default to 'disabled'
+const currentPattern = localStorage.getItem('gradient') || 'disabled';
 if (currentPattern) {
     htmlEl.dataset.pattern = currentPattern;
 }
