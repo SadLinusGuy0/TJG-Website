@@ -71,7 +71,7 @@ html[data-theme="dark"] {
             linear-gradient(135deg, transparent 46%, #222 47%, #222 52%, transparent 53%);
         --primary: #2c2c2e;
         --secondary: #454545;
-        --accent: #61a2d4;
+        --accent: #4fbd7f;
         --blurBg: rgb(0, 0, 0, 0.4);
         --color-scheme: dark;
     }
