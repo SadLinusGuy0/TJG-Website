@@ -337,7 +337,7 @@ ul.my-tech-list li:nth-child(6)::before {
     flex-direction: column;
     justify-content: left;
     align-items: flex-start;
-    padding: 10% 20%;
+    padding: 10%;
     color: var(--text);
 }
 
@@ -478,6 +478,10 @@ footer span {
 
     .nav-pills:hover .nav-link h5.label {
         display: flex;
+    }
+
+    .section {
+        padding: 20% 10%;
     }
 
     .logo {
