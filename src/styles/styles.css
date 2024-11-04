@@ -270,8 +270,8 @@ ul.my-tech-list {
 
 ul.my-tech-list li {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: left;
+    justify-content: left;
     font-size: 24px;
     margin-bottom: 20px;
 }
@@ -331,9 +331,9 @@ ul.my-tech-list li:nth-child(6)::before {
 .section {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 5% 20px;
+    justify-content: left;
+    align-items: left;
+    padding: 20% 20px;
     color: var(--text);
 }
 
