@@ -176,7 +176,7 @@
 /* Keyframes */
 @keyframes pulse {
     0% {
-        box-shadow: 0 0 0 0 rgba(52, 172, 224, 0.7);
+        box-shadow: 0 0 0 0 rgba(52, 224, 138, 0.7);
     }
 
     70% {
