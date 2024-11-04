@@ -359,6 +359,10 @@ ul.my-tech-list li:nth-child(6)::before {
     padding: 5%;
 }
 
+.contact {
+    padding-top: 0%;
+}
+
 .grid a {
     text-decoration: none;
 }
@@ -425,6 +429,7 @@ footer span {
 
     .heading {
         padding-top: 8%;
+        padding-bottom: 0%;
     }
 
     .grid {
@@ -481,5 +486,6 @@ footer span {
 
     .heading {
         padding-top: 5%;
+        padding-bottom: 0%;
     }
 }
