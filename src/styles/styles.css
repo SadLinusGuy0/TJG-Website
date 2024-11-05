@@ -356,7 +356,7 @@ ul.my-tech-list li:nth-child(6)::before {
 .heading {
     padding-top: 16%;
     text-align: center;
-    padding: 60px 15%;
+    padding: 60px 7%;
 
 /* Grid Container (concepts, wallpapers, banners, contact) */
 .grid {
@@ -437,7 +437,7 @@ footer span {
     }
 
     .heading {
-        padding: 60px 6%;
+        padding: 60px 7%;
     }
 
     .grid {
@@ -497,7 +497,6 @@ footer span {
     }
 
     .heading {
-        padding-top: 5%;
-        padding-bottom: 0%;
+        padding: 60px 15%;
     }
 }
