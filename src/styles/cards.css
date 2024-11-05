@@ -194,6 +194,10 @@
     .card {
         width: 40%;
     }
+
+    .banner {
+        width: 40rem;
+    }
 }
 
 /* For Desktops */
@@ -203,11 +207,11 @@
     }
 
     .banner {
-        width: 30rem;
+        width: 28rem;
     }
 }
 
-@media (min-width: 1441px) {
+@media (min-width: 1024px) {
     .card {
         width: 450px;
     }

@@ -449,7 +449,7 @@ footer span {
 }
 
 /* For Desktops */
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1000px) {
     nav {
         position: fixed;
         top: 0;
