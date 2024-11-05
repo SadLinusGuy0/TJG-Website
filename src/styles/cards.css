@@ -192,7 +192,7 @@
 /* For Tablets */
 @media screen and (min-width: 769px) {
     .card {
-        width: 60%;
+        width: 50%;
     }
 }
 
