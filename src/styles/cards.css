@@ -116,7 +116,7 @@
 
 /* Banners (banners) */
 .banner {
-    width: 85%;
+    width: 100%;
     height: auto;
     border-radius: 18px;
     border: 8px solid var(--secondary);
