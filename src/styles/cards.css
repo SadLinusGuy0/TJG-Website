@@ -2,7 +2,7 @@
 .card {
     background-color: var(--secondary);
     color: var(--text);
-    width: 80%;
+    width: 100%;
     height: auto;
     border-radius: 18px;
     overflow: hidden;
@@ -192,7 +192,7 @@
 /* For Tablets */
 @media screen and (min-width: 769px) {
     .card {
-        width: 40%;
+        width: 60%;
     }
 }
 
