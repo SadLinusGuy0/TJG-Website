@@ -357,6 +357,9 @@ ul.my-tech-list li:nth-child(6)::before {
     padding-top: 16%;
     text-align: center;
     padding: 60px 7%;
+    margin: 0 auto;
+}
+
 
 /* Grid Container (concepts, wallpapers, banners, contact) */
 .grid {
