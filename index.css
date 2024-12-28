@@ -112,7 +112,6 @@
     padding: var(--padding-xl);
     position: relative;
     gap: var(--gap-xl);
-    margin-bottom: 10px;
 }
 .test-toggle-frame {
     align-self: stretch;
@@ -175,6 +174,8 @@
     flex-shrink: 0;
     font-size: var(--body-size);
     color: var(--dark-secondary);
+    font-family: 'One UI Sans';
+    font-weight: 400;
 }
 .test-toggle-parent {
     align-self: stretch;
