@@ -249,14 +249,13 @@
     gap: 4px;
     color: var(--dark-secondary);
     cursor: pointer;
-    font-family: 'One UI Sans';
-    font-weight: 600;
+
 }
 .nav-label-selected {
     position: relative;
     line-height: 12px;
     font-family: 'One UI Sans';
-    font-weight: 500;
+    font-weight: 600;
     color: var(--dark-primary);
 }
 .nav-icon-container-selected {
@@ -268,8 +267,6 @@
     gap: 4px;
     color: var(--dark-primary);
     cursor: pointer;
-    font-family: 'One UI Sans';
-    font-weight: 400;
 }
 .ic-oui-search-1-icon {
     width: 24px;
