@@ -175,23 +175,27 @@ a {
 }
 
 h1 {
-    font-family: 'One UI Sans', Arial;
-    font-weight: 600;
+    font-family: 'Google Sans', Arial;
+    font-weight: bold;
 }
 
 h2,
-h3,
+h3 {
+    font-family: 'Google Sans', Arial;
+    font-weight: 500;
+}
+
 h4 {
-    font-family: 'One UI Sans', Arial;
-    font-weight: 600;
+    font-family: 'Google Sans', Arial;
+    font-weight: normal;
 }
 
 h5,
 h6,
 li,
 a {
-    font-family: 'One UI Sans', Arial;
-    font-weight: 400;
+    font-family: 'Google Sans Text', Arial;
+    font-weight: 500;
 }
 
 /* NavPill */
