@@ -295,8 +295,7 @@
     bottom: 0px;
     left: 0px;
     background-color: var(--dark-background);
-    /* Remove width limit */
-    /* width: 412px; */
+    width: 100%; /* Make it take up the full width */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -316,4 +315,5 @@
     font-size: var(--subheading-size);
     color: var(--dark-primary);
     font-family: var(--body);
+    margin-bottom: 80px; /* Add bottom margin equal to the height of the nav element */
 }
