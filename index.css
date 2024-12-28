@@ -236,6 +236,8 @@
 .photos-label {
     position: relative;
     line-height: 12px;
+    font-family: 'One UI Sans';
+    font-weight: 500;
 }
 .photos-icon-container {
     width: 31px;
