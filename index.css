@@ -112,6 +112,7 @@
     padding: var(--padding-xl);
     position: relative;
     gap: var(--gap-xl);
+    margin-bottom: 10px;
 }
 .test-toggle-frame {
     align-self: stretch;
@@ -143,7 +144,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    margin-bottom: 10px;
+
 }
 .div {
     position: absolute;
