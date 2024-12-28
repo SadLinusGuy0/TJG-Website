@@ -57,16 +57,16 @@
 
 /* Styles for OneUI Card (concepts) */
 .oneui {
-    background-color: #F5FFF1;
+    background-color: #000;
 }
 
 .oneui .button {
-    background-color: #15603F;
+    background-color: #17171A;
 }
 
 .oneui .button:hover {
     color: #000000;
-    background-color: #C1F99F;
+    background-color: #454548;
 }
 
 /* Styles for Youtube Card (concepts) */
