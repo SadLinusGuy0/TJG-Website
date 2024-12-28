@@ -49,6 +49,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
+    padding: 0px var(--padding-xl);
     font-size: var(--subtitle-size);
 }
 .left-side-icon {
@@ -314,5 +315,4 @@
     font-size: var(--subheading-size);
     color: var(--dark-primary);
     font-family: var(--body);
-    margin-bottom: 80px; /* Add bottom margin equal to the height of the nav element */
 }
