@@ -220,7 +220,6 @@
     gap: var(--gap-11xs);
 }
 .containers {
-    position: absolute;
     top: 0px;
     left: 0px;
     background-color: var(--dark-background);
