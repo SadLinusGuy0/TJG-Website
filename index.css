@@ -314,4 +314,5 @@
     font-size: var(--subheading-size);
     color: var(--dark-primary);
     font-family: var(--body);
+    padding-bottom: 60px;
 }
