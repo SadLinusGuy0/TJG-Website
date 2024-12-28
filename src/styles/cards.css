@@ -55,6 +55,20 @@
     background-color: #C1F99F;
 }
 
+/* Styles for OneUI Card (concepts) */
+.oneui {
+    background-color: #F5FFF1;
+}
+
+.oneui .button {
+    background-color: #15603F;
+}
+
+.oneui .button:hover {
+    color: #000000;
+    background-color: #C1F99F;
+}
+
 /* Styles for Youtube Card (concepts) */
 .youtube {
     background-color: #f9ebe8;
