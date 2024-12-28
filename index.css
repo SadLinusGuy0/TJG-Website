@@ -28,6 +28,8 @@
 .body-text {
     align-self: stretch;
     position: relative;
+    font-family: 'One UI Sans';
+    font-weight: 400;
 }
 .container {
     align-self: stretch;
