@@ -7,6 +7,8 @@
 }
 .title {
     position: relative;
+    font-family: 'One UI Sans';
+    font-weight: 700;
 }
 .header-container {
     align-self: stretch;
