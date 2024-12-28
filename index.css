@@ -291,7 +291,7 @@
     justify-content: space-between;
 }
 .tab-container {
-    position: absolute;
+    position: fixed; /* Change to fixed */
     bottom: 0px;
     left: 0px;
     background-color: var(--dark-background);
