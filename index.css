@@ -233,13 +233,13 @@
     box-sizing: border-box;
     gap: var(--gap-xl);
 }
-.photos-label {
+.nav-label {
     position: relative;
     line-height: 12px;
     font-family: 'One UI Sans';
     font-weight: 500;
 }
-.photos-icon-container {
+.nav-icon-container {
     width: 31px;
     display: flex;
     flex-direction: column;
@@ -247,24 +247,6 @@
     justify-content: flex-start;
     gap: 4px;
     color: var(--dark-primary);
-}
-.albums-label {
-    width: 38px;
-    position: relative;
-    line-height: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 10px;
-    flex-shrink: 0;
-}
-.albums-icon-container {
-    align-self: stretch;
-    width: 31px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
     cursor: pointer;
 }
 .ic-oui-search-1-icon {
@@ -272,16 +254,6 @@
     position: relative;
     height: 24px;
     overflow: hidden;
-    flex-shrink: 0;
-}
-.search-label {
-    width: 35px;
-    position: relative;
-    line-height: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 10px;
     flex-shrink: 0;
 }
 .icon-container {
