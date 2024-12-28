@@ -1,172 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <!-- Primary Meta Tags -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Josh Skinner - Portfolio</title>
-    <meta name="title" content="Josh Skinner's Portfolio">
-    <meta name="description" content="I'm a Graphics and UI Designer, check out my Portfolio!">
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://thatjoshguy.me">
-    <meta property="og:title" content="Josh Skinner's Portfolio">
-    <meta property="og:description" content="I'm a Graphics and UI Designer, check out my Portfolio!">
-    <meta property="og:image" content="https://thatjoshguy.me/src/images/preview.png">
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@thatjoshguy69">
-    <meta name="twitter:url" content="https://thatjoshguy.me">
-    <meta name="twitter:creator" content="@thatjoshguy69">
-    <meta name="twitter:title" content=" Josh Skinner's Portfolio">
-    <meta name="twitter:description" content="I'm a Graphics and UI Designer, Checkout my Portfolio">
-    <meta name="twitter:image" content="https://thatjoshguy.me/src/images/preview.png">
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <!-- Material Icons -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer">
-    <!-- FontShare -->
-    <link href="https://api.fontshare.com/v2/css?f[]=general-sans@600,400&display=swap" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/src/styles/styles.css">
-    <link rel="stylesheet" href="/src/styles/shapes.css">
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <!-- Google Sans -->
-    <link rel="preload" href="src/styles/fonts/GoogleSans-Bold.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="src/styles/fonts/GoogleSans-Medium.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="src/styles/fonts/GoogleSansText-Regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="src/styles/fonts/GoogleSansText-Medium.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="src/styles/fonts/GoogleSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
-    <!-- JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
-    <script src="/src/scripts/settings.js"></script>
+  	<meta charset="utf-8">
+  	<meta name="viewport" content="initial-scale=1, width=device-width">
+  	
+  	
+  	<link rel="stylesheet" href="./global.css" />
+  	<link rel="stylesheet"  href="./index.css" />
+  	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=One UI Sans APP VF:wght@400&display=swap" />
+  	
+  	
+  	
 </head>
-
 <body>
-    <!-- NavPill -->
-    <nav>
-        <ul class="nav nav-pills nav-fill gap-1 p-2 small scroller">
-            <!-- Home -->
-            <li class="nav-item" role="presentation">
-                <a title="Home" class="nav-link active" href="/" role="tab" aria-selected="true">
-                    <span class="material-symbols-rounded">home</span>
-                    <h5 class="label">Home</h5>
-                </a>
-            </li>
-            <!-- Works -->
-            <li class="nav-item" role="presentation">
-                <a title="Works" class="nav-link" href="/work/concepts" role="tab" aria-selected="false">
-                    <span class="material-symbols-rounded">palette</span>
-                    <h5 class="label">Works</h5>
-                </a>
-            </li>
-            <!-- Shop -->
-            <li class="nav-item" role="presentation">
-                <a title="Shop" class="nav-link" href="/shop" role="tab" aria-selected="false">
-                    <span class="material-symbols-rounded">local_mall</span>
-                    <h5 class="label">Shop</h5>
-                </a>
-            </li>
-            <!-- Contact -->
-            <li class="nav-item" role="presentation">
-                <a title="Contact" class="nav-link" href="/contact" role="tab" aria-selected="false">
-                    <span class="material-symbols-rounded">alternate_email</span>
-                    <h5 class="label">Contact</h5>
-                </a>
-            </li>
-            <!-- Settings -->
-            <li class="nav-item" role="presentation">
-                <a title="Contact" class="nav-link" href="/settings" role="tab" aria-selected="false">
-                    <span class="material-symbols-rounded">settings</span>
-                    <h5 class="label">Settings</h5>
-                </a>
-            </li>
-        </ul>
-    </nav>
-
-    <!-- WebPage Content -->
-    <!-- SVG Container (Rotating Background shapes) -->
-    <div class="svg-container">
-        <svg class="svg" viewBox="0 0 668 664" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M239.48 27.0829C258.858 30.8411 278.933 26.5742 295.108 15.2589C318.462 -1.0792 349.538 -1.0792 372.892 15.2589C389.067 26.5742 409.142 30.8411 428.52 27.0829C456.501 21.6565 484.89 34.2962 499.58 58.7209C509.755 75.6369 526.358 87.6999 545.59 92.1487C573.359 98.5722 594.152 121.666 597.638 149.954C600.052 169.546 610.314 187.319 626.073 199.206C648.829 216.368 658.432 245.923 650.11 273.184C644.347 292.063 646.492 312.474 656.055 329.743C669.862 354.677 666.614 385.583 647.924 407.101C634.98 422.005 628.638 441.523 630.35 461.189C632.822 489.583 617.284 516.496 591.458 528.552C573.571 536.903 559.839 552.154 553.404 570.816C544.113 597.761 518.972 616.027 490.474 616.536C470.738 616.889 451.989 625.237 438.52 639.668C419.073 660.505 388.676 666.966 362.435 655.84C344.261 648.135 323.739 648.135 305.565 655.84C279.324 666.966 248.927 660.505 229.48 639.668C216.011 625.237 197.262 616.889 177.526 616.536C149.028 616.027 123.887 597.761 114.596 570.816C108.161 552.154 94.4291 536.903 76.5423 528.552C50.7158 516.496 35.1779 489.583 37.6498 461.189C39.3618 441.523 33.0199 422.005 20.0758 407.101C1.38602 385.583 -1.86229 354.677 11.945 329.743C21.5077 312.474 23.6529 292.063 17.8897 273.184C9.56821 245.923 19.1712 216.368 41.9265 199.206C57.6864 187.319 67.9478 169.546 70.3619 149.954C73.8476 121.666 94.6414 98.5722 122.41 92.1487C141.642 87.6999 158.245 75.6369 168.42 58.7209C183.11 34.2962 211.499 21.6565 239.48 27.0829Z"
-                stroke="#a2b1c4" stroke-width="5" fill="#a2b1c4">
-        </svg>
-        <svg class="svg" viewBox="0 0 136 136" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M116.678 34.1386C118.088 5.2072 83.6718 -10.8414 62.4156 8.8357L60.4094 10.6929C54.0327 16.5959 45.5484 19.6839 36.8692 19.2608L34.1386 19.1277C5.20719 17.7174 -10.8414 52.1337 8.8357 73.3899L10.6929 75.3961C16.5959 81.7729 19.6839 90.2571 19.2608 98.9363L19.1277 101.667C17.7174 130.598 52.1337 146.647 73.3899 126.97L75.3962 125.113C81.7729 119.21 90.2571 116.122 98.9363 116.545L101.667 116.678C130.598 118.088 146.647 83.6718 126.97 62.4156L125.113 60.4094C119.21 54.0327 116.122 45.5484 116.545 36.8692L116.678 34.1386Z"
-                fill="#4980BF">
-        </svg>
-        <svg class="svg" viewBox="0 0 129 129" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M123.63 59.6543C139.317 35.3041 117.536 4.19741 89.2889 10.6102L86.6228 11.2155C78.149 13.1392 69.2574 11.5714 61.9525 6.86541L59.6543 5.38482C35.3041 -10.3023 4.19741 11.4789 10.6102 39.7258L11.2155 42.3919C13.1392 50.8658 11.5714 59.7573 6.86542 67.0622L5.38482 69.3605C-10.3023 93.7106 11.4789 124.817 39.7258 118.405L42.3919 117.799C50.8658 115.875 59.7573 117.443 67.0622 122.149L69.3605 123.63C93.7106 139.317 124.817 117.536 118.405 89.2889L117.799 86.6228C115.875 78.149 117.443 69.2574 122.149 61.9525L123.63 59.6543Z"
-                fill="#5C728D">
-        </svg>
-    </div>
-
-    <!-- Main Container (Containing the logo and Name) -->
-    <br>
-    <main class="logo-container">
-        <img src="/src/images/logos/logo.svg" class="logo" alt="That Josh Guy logo">
-        <h4>Hi, I'm</h4>
-        <h1>That Josh Guy</h1>
-    </main>
-
-    <div class="empty"></div>
-
-    <!-- About Me section -->
-    <section class="section">
-        <h1>Who am I?</h1>
-        <br>
-        <div>
-            <h4>My name is</h4>
-            <h1>Josh Skinner</h1>
-            <h4>and I'm a</h4>
-            <h1>Graphic and Interface Designer</h1>
-            <h4>who uses the</h4>
-            <h1>Material You</h1>
-            <h4>design language</h4>
-        </div>
-    </section>
-
-    <div class="empty"></div>
-    <div class="divider">⠀</div>
-    <div class="empty"></div>
-
-    <!-- My Tech section -->
-    <section class="section">
-        <h1>My Tech</h1>
-        <br>
-        <ul class="my-tech-list">
-            <li>Galaxy Book3 Pro 360</li>
-            <li>Samsung Galaxy S24 Ultra</li>
-            <li>Galaxy Watch5 Pro</li>
-            <li>Galaxy Buds FE</li>
-            <li>Meta Quest 2</li>
-            <li>Xbox Series X</li>
-        </ul>
-    </section>
-
-    <div class="empty"></div>
-    <footer>
-        <div class="divider">⠀</div>
-        <br>
-        <h6 class="px-4">Designed By <a class="footer-link" href="/personal">That Josh Guy</a> & Developed by <a class="footer-link"
-                href="https://dhirenv.art">Dhiren Vasnani</a></h6><br>
-        <h6 class="px-4">Protected by the <span class="footer-link">MIT License</span></h6>
-        <a rel="me" href="https://mastodon.social/@ThatJoshGuy"></a>
-    </footer>
-    <div class="empty"></div>
-</body>
-
+  	
+  	<div class="index">
+    		<div class="containers">
+      			<div class="header-container">
+        				<img class="profile-image-icon" alt="" src="Profile Image.png">
+        				
+        				<div class="title">That Josh Guy</div>
+      			</div>
+      			<div class="container">
+        				<div class="body-text">
+          					<p class="containers-are-the">Containers are the backbone of One UI app design. It’s what wraps all elements into their respective slots. </p>
+          					<p class="containers-are-the">&nbsp;</p>
+          					<p class="containers-are-the">You can simply copy this frame, and adjust the corner radius, to implement into your own design. </p>
+        				</div>
+      			</div>
+      			<div class="container1">
+        				<div class="title">I am a...</div>
+      			</div>
+      			<div class="theme-container">
+        				<div class="list">
+          					<img class="left-side-icon" alt="" src="Left Side.png">
+          					
+          					<img class="right-side-icon" alt="" src="Right Side.png">
+          					
+          					<img class="seperation-icon" alt="" src="Seperation.png">
+          					
+          					<div class="test-toggle-wrapper">
+            						<div class="body-text">UI Designer</div>
+          					</div>
+          					<div class="others">
+          					</div>
+        				</div>
+        				<div class="list">
+          					<img class="left-side-icon" alt="" src="Left Side.png">
+          					
+          					<img class="right-side-icon" alt="" src="Right Side.png">
+          					
+          					<img class="seperation-icon" alt="" src="Seperation.png">
+          					
+          					<div class="test-toggle-wrapper">
+            						<div class="body-text">Wallpaper maker</div>
+          					</div>
+          					<div class="others">
+          					</div>
+        				</div>
+        				<div class="list2">
+          					<div class="test-toggle-frame">
+            						<div class="body-text">Student</div>
+          					</div>
+          					<div class="others2">
+          					</div>
+        				</div>
+      			</div>
+      			<div class="container1">
+        				<div class="title">About me</div>
+      			</div>
+      			<div class="list3">
+        				<div class="shape">
+          					<div class="div">16</div>
+        				</div>
+        				<div class="test-toggle-parent">
+          					<div class="body-text">Age</div>
+          					<div class="information-wrapper">
+            						<div class="information">16 years old</div>
+          					</div>
+        				</div>
+        				<div class="others2">
+        				</div>
+      			</div>
+      			<div class="list2">
+        				<div class="shape">
+          					<div class="shape-child">
+          					</div>
+        				</div>
+        				<div class="test-toggle-group">
+          					<div class="body-text">Name</div>
+          					<div class="information-wrapper">
+            						<div class="information">Josh Skinner</div>
+          					</div>
+        				</div>
+        				<div class="others2">
+        				</div>
+      			</div>
+    		</div>
+    		<div class="tab-container">
+      			<div class="icon-container">
+        				<div class="photos-icon-container">
+          					<img class="shape" alt="" src="Photos Icon.svg">
+          					
+          					<div class="photos-label">Home</div>
+        				</div>
+        				<div class="albums-icon-container" id="albumsIconContainer">
+          					<img class="shape" alt="" src="Albums Icon.svg">
+          					
+          					<div class="albums-label">Work</div>
+        				</div>
+        				<div class="albums-icon-container" id="searchIconContainer">
+          					<img class="ic-oui-search-1-icon" alt="" src="ic_oui_search 1.svg">
+          					
+          					<div class="search-label">Shop</div>
+        				</div>
+        				<div class="albums-icon-container" id="libraryIconContainer">
+          					<img class="shape" alt="" src="menu.svg">
+          					
+          					<div class="photos-label">Contact</div>
+        				</div>
+      			</div>
+    		</div>
+  	</div>
+  	
+  	
+  	
+  	
+  	<script>
+    		var albumsIconContainer = document.getElementById("albumsIconContainer");
+    		if(albumsIconContainer) {
+      			albumsIconContainer.addEventListener("click", function (e) {
+        				// Add your code here
+      			});
+    		}
+    		
+    		var searchIconContainer = document.getElementById("searchIconContainer");
+    		if(searchIconContainer) {
+      			searchIconContainer.addEventListener("click", function (e) {
+        				// Add your code here
+      			});
+    		}
+    		
+    		var libraryIconContainer = document.getElementById("libraryIconContainer");
+    		if(libraryIconContainer) {
+      			libraryIconContainer.addEventListener("click", function (e) {
+        				// Add your code here
+      			});
+    		}</script></body>
 </html>
