@@ -238,8 +238,28 @@
     line-height: 12px;
     font-family: 'One UI Sans';
     font-weight: 500;
+    color: var(--dark-secondary);
 }
 .nav-icon-container {
+    width: 31px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    color: var(--dark-secondary);
+    cursor: pointer;
+    font-family: 'One UI Sans';
+    font-weight: 500;
+}
+.nav-label-selected {
+    position: relative;
+    line-height: 12px;
+    font-family: 'One UI Sans';
+    font-weight: 500;
+    color: var(--dark-primary);
+}
+.nav-icon-container-selected {
     width: 31px;
     display: flex;
     flex-direction: column;
