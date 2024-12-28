@@ -248,6 +248,8 @@
     gap: 4px;
     color: var(--dark-primary);
     cursor: pointer;
+    font-family: 'One UI Sans';
+    font-weight: 500;
 }
 .ic-oui-search-1-icon {
     width: 24px;
