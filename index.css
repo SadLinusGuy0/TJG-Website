@@ -153,6 +153,8 @@
     display: inline-block;
     width: 22px;
     height: 23px;
+    font-family: 'One UI Sans';
+    font-weight: 600;
 }
 .shape {
     width: 24px;
