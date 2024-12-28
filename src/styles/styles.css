@@ -180,22 +180,18 @@ h1 {
 }
 
 h2,
-h3 {
-    font-family: 'Google Sans', Arial;
-    font-weight: 500;
-}
-
+h3,
 h4 {
-    font-family: 'Google Sans', Arial;
-    font-weight: normal;
+    font-family: 'One UI Sans', Arial;
+    font-weight: 600;
 }
 
 h5,
 h6,
 li,
 a {
-    font-family: 'Google Sans Text', Arial;
-    font-weight: 500;
+    font-family: 'One UI Sans', Arial;
+    font-weight: 400;
 }
 
 /* NavPill */
