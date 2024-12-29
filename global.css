@@ -1,4 +1,3 @@
-
 body {
     margin: 0;
     line-height: normal;
@@ -55,3 +54,6 @@ body {
         padding: 0 34%;
     }
 }
+
+/* Import index.css */
+@import url('./index.css');
