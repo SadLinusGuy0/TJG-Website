@@ -173,7 +173,6 @@
 .information-wrapper {
     width: 279px;
     position: relative;
-    height: 19px;
     overflow: hidden;
     flex-shrink: 0;
     font-size: var(--body-size);
