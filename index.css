@@ -330,6 +330,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
+    padding-top: 20px;
 }
 
 .top-app-bar-icon {
