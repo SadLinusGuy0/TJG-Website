@@ -172,6 +172,7 @@
 }
 .information-wrapper {
     width: 279px;
+    min-height: 19px;
     position: relative;
     overflow: hidden;
     flex-shrink: 0;
