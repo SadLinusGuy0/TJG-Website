@@ -311,3 +311,15 @@
     font-family: var(--body);
     padding-bottom: 70px;
 }
+
+@media screen and (max-width: 500px) {
+    .containers {
+        padding: 0 16%;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .containers {
+        padding: 0 34%;
+    }
+}
