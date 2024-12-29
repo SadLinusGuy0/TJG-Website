@@ -203,7 +203,7 @@
     padding: 20px;
     margin-bottom: 10px;
     gap: var(--gap-xl);
-    text-align: left;
+    text-align: center;
 }
 .list4 {
     align-self: stretch;
@@ -215,7 +215,7 @@
     justify-content: flex-start;
     padding: 20px 10px 10px;
     gap: var(--gap-xl);
-    text-align: center;
+    text-align: left;
 }
 .shape-child {
     position: absolute;
