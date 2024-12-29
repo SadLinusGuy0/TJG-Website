@@ -207,7 +207,7 @@
 }
 .list4 {
     align-self: stretch;
-    border-radius: var(--br-xl);
+    border-radius: var(--br-10xl);
     background-color: var(--dark-container-background);
     display: flex;
     flex-direction: column;
