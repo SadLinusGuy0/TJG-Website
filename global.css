@@ -1,3 +1,6 @@
+/* Import index.css */
+@import url('./index.css');
+
 body {
     margin: 0;
     line-height: normal;
@@ -55,5 +58,3 @@ body {
     }
 }
 
-/* Import index.css */
-@import url('./index.css');
