@@ -171,7 +171,7 @@
     width: 279px;
 }
 .information-wrapper {
-    width: 279px;
+    align-self: stretch;
     min-height: 19px;
     position: relative;
     overflow: hidden;
