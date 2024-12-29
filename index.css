@@ -168,7 +168,7 @@
     top: 0px;
     left: 0px;
     display: inline-block;
-    width: 279px;
+    align-self: stretch;
 }
 .information-wrapper {
     align-self: stretch;
