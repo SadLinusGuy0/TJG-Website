@@ -25,6 +25,11 @@ body {
     --dark-secondary: #848487;
     --dark-container-background: #17171a;
     --dark-primary: #fff;
+    --light-background: #f1f1f3;
+    --light-secondary: #99999d;
+    --light-container-background: #fff;
+    --light-primary: #000;
+    --accent: #387aff;
     
     /* Gaps */
     --gap-xl: 20px;

@@ -318,6 +318,24 @@
     margin-bottom: 20px;
 }
 
+.top-app-bar-container {
+    width: 100%;
+}
+
+.top-app-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.top-app-bar-icon {
+    width: 26px;
+    position: relative;
+    height: 26px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
 @media screen and (min-width: 500px) {
     .containers {
         padding: 0 16% 40px;
