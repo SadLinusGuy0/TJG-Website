@@ -339,6 +339,7 @@
     height: 26px;
     overflow: hidden;
     flex-shrink: 0;
+    padding-right: 20px;
 }
 @media screen and (min-width: 500px) {
     .containers {
