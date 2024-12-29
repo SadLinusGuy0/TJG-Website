@@ -203,7 +203,7 @@
     padding: 20px;
     margin-bottom: 10px;
     gap: var(--gap-xl);
-    text-align: center;
+    text-align: left;
 }
 .list4 {
     align-self: stretch;
