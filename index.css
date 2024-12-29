@@ -312,6 +312,11 @@
     padding-bottom: 70px;
 }
 
+.blank-div {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
 @media screen and (min-width: 500px) {
     .containers {
         padding: 0 16% 40px;
