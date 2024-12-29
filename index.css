@@ -200,20 +200,20 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    padding: 20px 10px 10px;
+    padding: 20px;
     margin-bottom: 10px;
     gap: var(--gap-xl);
     text-align: left;
 }
 .list4 {
     align-self: stretch;
-    border-radius: var(--br-10xl);
+    border-radius: var(--br-xl);
     background-color: var(--dark-container-background);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 20px;
+    padding: 20px 10px 10px;
     gap: var(--gap-xl);
     text-align: center;
 }
