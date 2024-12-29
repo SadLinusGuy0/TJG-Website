@@ -319,6 +319,8 @@
 }
 
 .top-app-bar-container {
+    display: flex;
+    justify-content: flex-end;
     width: 100%;
 }
 
