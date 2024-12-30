@@ -209,13 +209,22 @@
 			if (!document.fullscreenElement) {
 				document.documentElement.requestFullscreen();
 				document.getElementById('fullscreenButton').querySelector('.full-screen').textContent = 'Exit full screen';
+				localStorage.setItem('isFullscreen', 'true');
 			} else {
 				if (document.exitFullscreen) {
 					document.exitFullscreen();
 					document.getElementById('fullscreenButton').querySelector('.full-screen').textContent = 'Full screen';
+					localStorage.setItem('isFullscreen', 'false');
 				}
 			}
 		}
+
+		document.addEventListener('DOMContentLoaded', (event) => {
+			if (localStorage.getItem('isFullscreen') === 'true') {
+				document.documentElement.requestFullscreen();
+				document.getElementById('fullscreenButton').querySelector('.full-screen').textContent = 'Exit full screen';
+			}
+		});
 	</script>
 </body>
 
