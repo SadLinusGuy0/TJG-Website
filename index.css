@@ -73,6 +73,7 @@
     justify-content: center;
     padding: 10px 30px;
     gap: 10px; /* Added gap property */
+    width: auto; /* Make the box adapt to the text inside */
 }
 .button-container {
     width: 100%;
