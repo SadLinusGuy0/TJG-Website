@@ -70,11 +70,13 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 10px 30px;
+    gap: 10px; /* Added gap property */
 }
 .button-container {
     width: 100%;
+    top: 20px;
     position: relative;
     height: 47px;
     overflow: hidden;
