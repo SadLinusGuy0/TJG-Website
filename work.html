@@ -137,6 +137,14 @@
       			</div>
     			</nav>
 				<script>
+					document.addEventListener('DOMContentLoaded', (event) => {
+						if (localStorage.getItem('isFullscreen') === 'true') {
+							document.documentElement.requestFullscreen().then(() => {
+								document.getElementById('fullscreenButton').querySelector('.full-screen').textContent = 'Exit full screen';
+							});
+						}
+					});
+
 					function openFullscreen() {
 						if (!document.fullscreenElement) {
 							document.documentElement.requestFullscreen();
@@ -150,13 +158,6 @@
 							}
 						}
 					}
-
-					document.addEventListener('DOMContentLoaded', (event) => {
-						if (localStorage.getItem('isFullscreen') === 'true') {
-							document.documentElement.requestFullscreen();
-							document.getElementById('fullscreenButton').querySelector('.full-screen').textContent = 'Exit full screen';
-						}
-					});
 
 					document.addEventListener('fullscreenchange', (event) => {
 						if (!document.fullscreenElement) {
