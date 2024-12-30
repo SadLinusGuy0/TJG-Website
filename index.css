@@ -182,6 +182,7 @@
     font-weight: 400;
     white-space: pre-line;
 }
+
 .test-toggle-parent {
     align-self: stretch;
     flex: 1;
