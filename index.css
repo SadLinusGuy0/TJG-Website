@@ -171,7 +171,7 @@
     align-self: stretch;
 }
 .information-wrapper {
-    align-self: stretch;
+    align-self: normal;
     min-height: 19px;
     position: relative;
     overflow: hidden;
@@ -182,7 +182,6 @@
     font-weight: 400;
     white-space: pre-line;
 }
-
 .test-toggle-parent {
     align-self: stretch;
     flex: 1;
