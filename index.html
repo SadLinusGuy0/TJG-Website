@@ -225,12 +225,6 @@
 				document.getElementById('fullscreenButton').querySelector('.full-screen').textContent = 'Exit full screen';
 			}
 		});
-
-		document.addEventListener('fullscreenchange', (event) => {
-			if (!document.fullscreenElement) {
-				localStorage.setItem('isFullscreen', 'false');
-			}
-		});
 	</script>
 </body>
 
