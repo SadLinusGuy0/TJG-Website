@@ -53,6 +53,44 @@
     padding: 20px;
     font-size: var(--subtitle-size);
 }
+
+.button-icon {
+    width: 16.2px;
+    position: relative;
+    height: 24px;
+}
+.button-text {
+    position: relative;
+}
+.button {
+    align-self: stretch;
+    border-radius: 20px;
+    background-color: var(--accent);
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 30px;
+}
+.button-container {
+    width: 100%;
+    position: relative;
+    height: 47px;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 94px;
+    box-sizing: border-box;
+    text-align: left;
+    font-size: 20px;
+    color: #fff;
+    font-family: 'One UI Sans APP VF';
+}
+
 .left-side-icon {
     width: auto; /* Change to auto or a percentage */
     height: auto; /* Change to auto or a percentage */
