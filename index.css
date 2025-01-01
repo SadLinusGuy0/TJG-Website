@@ -48,6 +48,11 @@ form{
     padding: var(--padding-xl);
     font-size: var(--body-size);
 }
+
+.container .settings {
+    margin: 20px 0;
+}
+
 .container1 {
     align-self: stretch;
     display: flex;
