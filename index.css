@@ -249,6 +249,7 @@
     margin-bottom: 10px;
     gap: var(--gap-xll);
     text-align: center;
+    cursor: pointer;
 }
 .list4 {
     align-self: stretch;
