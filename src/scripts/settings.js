@@ -16,29 +16,6 @@ const toggleTheme = (theme) => {
 };
 
 // Initialize pattern from localStorage or default to 'enabled'
-const currentPattern = localStorage.getItem('gradient') || 'enabled';
-if (currentPattern) {
-    htmlEl.dataset.pattern = currentPattern;
-}
-
-const togglePattern = (pattern) => {
-    htmlEl.dataset.pattern = pattern;
-    localStorage.setItem('gradient', pattern);
-}
-
-// Initialize animation from localStorage or default to 'enabled'
-const currentAnimation = localStorage.getItem('animation') || 'enabled';
-if (currentAnimation) {
-    htmlEl.dataset.animation = currentAnimation;
-}
-
-const toggleAnimation = (animation) => {
-    htmlEl.dataset.animation = animation;
-    localStorage.setItem('animation', animation);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded and parsed.');
 
     // Theme settings
     const themeOptions = document.querySelectorAll('.theme-option');
@@ -58,22 +35,3 @@ document.addEventListener('DOMContentLoaded', () => {
             themeInput.checked = true;
         }
     }
-
-    // Pattern settings
-    const patternToggle = document.getElementById('gradient-toggle');
-    if (patternToggle) {
-        patternToggle.checked = currentPattern === 'enabled';
-        patternToggle.addEventListener('change', () => {
-            togglePattern(patternToggle.checked ? 'enabled' : 'disabled');
-        });
-    }
-
-    // Animation settings
-    const animationToggle = document.getElementById('animation-toggle');
-    if (animationToggle) {
-        animationToggle.checked = currentAnimation === 'enabled';
-        animationToggle.addEventListener('change', () => {
-            toggleAnimation(animationToggle.checked ? 'enabled' : 'disabled');
-        });
-    }
-});

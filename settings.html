@@ -6,10 +6,12 @@
     <title>Settings</title>
     <link rel="stylesheet" href="./global.css" />
     <link rel="stylesheet" href="./index.css" />
+    <script src="/src/scripts/settings.js"></script>
 </head>
 <body>
     <div class="index">
         <div class="containers">
+            <form id="settings" action="/src/scripts/settings.js"></form>
             <div class="header-container">
                 <div class="title" style="padding-bottom: 40px;">Settings</div>
             </div>
@@ -25,39 +27,22 @@
                     <label>
                         <input type="radio" name="theme" value="dark"> Dark
                     </label>
-                </div>
-                <button onclick="applyChanges()">Apply</button>
-            </div>
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const themeRadios = document.querySelectorAll('input[name="theme"]');
-            const currentTheme = localStorage.getItem('theme') || 'auto';
-            document.querySelector(`input[value="${currentTheme}"]`).checked = true;
-            applyTheme(currentTheme);
-
-            themeRadios.forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    const selectedTheme = event.target.value;
-                    localStorage.setItem('theme', selectedTheme);
-                    applyTheme(selectedTheme);
-                });
-            });
-        });
-
-        function applyTheme(theme) {
-            if (theme === 'auto') {
-                theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const currentTheme = localStorage.getItem('theme') || 'auto';
+            if (currentTheme) {
+                console.log(`Initial theme set to: ${currentTheme}`);
+                htmlEl.dataset.theme = currentTheme;
+            } else {
+                console.log("No theme found in localStorage, setting to 'auto'.");
             }
-            document.documentElement.setAttribute('data-theme', theme);
-        }
 
-        function applyChanges() {
-            const selectedTheme = document.querySelector('input[name="theme"]:checked').value;
-            applyTheme(selectedTheme);
-            location.reload();
-        }
+            const toggleTheme = (theme) => {
+                console.log(`Toggling theme to: ${theme}`);
+                htmlEl.dataset.theme = theme;
+                localStorage.setItem('theme', theme);
+            };
     </script>
 </body>
 </html>
