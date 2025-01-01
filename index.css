@@ -94,7 +94,7 @@ form{
     box-sizing: border-box;
     text-align: left;
     font-size: 20px;
-    color: var(--primary);
+    color: #fff;
     font-family: 'One UI Sans';
 }
 
