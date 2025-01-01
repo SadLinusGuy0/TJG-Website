@@ -173,6 +173,16 @@
         				</div>
       			</div>
     			</nav>
+
+				<script>
+					document.addEventListener('DOMContentLoaded', (event) => {
+						const savedTheme = localStorage.getItem('theme');
+						if (savedTheme) {
+							document.documentElement.setAttribute('data-theme', savedTheme);
+						}
+					});
+				</script>
+
 				<script>
 					document.addEventListener('DOMContentLoaded', (event) => {
 						if (localStorage.getItem('isFullscreen') === 'true') {

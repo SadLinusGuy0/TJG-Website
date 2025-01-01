@@ -4,13 +4,12 @@
 body {
     margin: 0;
     line-height: normal;
-    color: var(--text);
-    background-color: var(--background);
+    color: var(--dark-background);
 }
 
 a {
     text-decoration: none;
-    color: var(--secondary);
+    color: var(--dark-secondary);
 }
 
 :root {
@@ -27,11 +26,26 @@ a {
     
     /* Colors */
     
+    [data-theme="light"] {
+        --primary: var(--light-primary);
+        --secondary: var(--light-secondary);
+        --background: var(--light-background);
+        --text: var(--light-text);
+    }
+    
+    [data-theme="dark"] {
+        --primary: var(--dark-primary);
+        --secondary: var(--dark-secondary);
+        --background: var(--dark-background);
+        --text: var(--dark-text);
+    }
+    
 
     --dark-background: #000;
     --dark-secondary: #848487;
     --dark-container-background: #17171a;
     --dark-primary: #fff;
+    
     --light-background: #f1f1f3;
     --light-secondary: #99999d;
     --light-container-background: #fff;
@@ -50,26 +64,7 @@ a {
     --br-9xl: 28px;
     --br-10xl: 40px;
     --br-11xs: 2px;
-
-[data-theme="auto"] {
-    --primary: var(--dark-primary);
-    --secondary: var(--dark-secondary);
-    --background: var(--dark-background);
-    --text: var(--dark-text);
-}
-
-[data-theme="light"] {
-    --primary: var(--light-primary);
-    --secondary: var(--light-secondary);
-    --background: var(--light-background);
-    --text: var(--light-text);
-}
-
-[data-theme="dark"] {
-    --primary: var(--dark-primary);
-    --secondary: var(--dark-secondary);
-    --background: var(--dark-background);
-    --text: var(--dark-text);
+    
 }
 
 @font-face {
