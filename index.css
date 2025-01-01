@@ -69,7 +69,7 @@ form{
 .button {
     align-self: stretch;
     border-radius: 20px;
-    background-color: var(--accent);
+    background-color: #387aff;
     overflow: hidden;
     display: flex;
     flex-direction: row;
@@ -80,7 +80,6 @@ form{
     width: auto; /* Make the box adapt to the text inside */
 }
 .button-container {
-    background-color: var(--accent);
     width: 100%;
     top: 20px;
     position: relative;
