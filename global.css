@@ -4,12 +4,12 @@
 body {
     margin: 0;
     line-height: normal;
-    color: var(--dark-background);
+    color: var(--background);
 }
 
 a {
     text-decoration: none;
-    color: var(--dark-secondary);
+    color: var(--secondary);
 }
 
 :root {
@@ -28,17 +28,19 @@ a {
     
 
     [data-theme="light"] {
-        --primary: var(--light-primary);
-        --secondary: var(--light-secondary);
-        --background: var(--light-background);
-        --text: var(--light-text);
+        --primary: #fff;
+        --secondary: #99999d;
+        --background: #f1f1f3;
+        --container-background: #fff;
+        --text: #0000;
     }
     
     [data-theme="dark"] {
-        --primary: var(--dark-primary);
-        --secondary: var(--dark-secondary);
-        --background: var(--dark-background);
-        --text: var(--dark-text);
+        --primary: #fff;
+        --secondary: #848487;
+        --background: #000;
+        --container-background: #17171a;
+        --text: #fff;
     }
     
 
