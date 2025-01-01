@@ -191,6 +191,17 @@ form{
     justify-content: flex-start;
 
 }
+.theme-selection {
+    align-self: stretch;
+    display: flex;
+    flex-direction: columm;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--gap-xl);
+    font-family: 'One UI Sans';
+    font-weight: 400;
+    font-size: var(--body-size);
+}
 .div {
     position: absolute;
     top: calc(50% - 11px);
