@@ -70,7 +70,6 @@
 
     <!-- Grid For Placing the Cards -->
     <section>
-        <form id="settings" action="/src/scripts/settings.js">
             <div class="setting">
                 <h5>Theme</h5>
                 <div class="options">
@@ -84,6 +83,40 @@
                     <label for="dark" class="dark button theme-label">Dark</label>
                 </div>
             </div>
+            <div class="theme-selection">
+                <label>
+                    <input type="radio" name="theme" value="auto" checked> Auto
+                </label>
+                <label>
+                    <input type="radio" name="theme" value="light"> Light
+                </label>
+                <label>
+                    <input type="radio" name="theme" value="dark"> Dark
+                </label>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', (event) => {
+                    const themeRadios = document.querySelectorAll('input[name="theme"]');
+                    const currentTheme = localStorage.getItem('theme') || 'auto';
+                    document.querySelector(`input[value="${currentTheme}"]`).checked = true;
+                    applyTheme(currentTheme);
+
+                    themeRadios.forEach(radio => {
+                        radio.addEventListener('change', (event) => {
+                            const selectedTheme = event.target.value;
+                            localStorage.setItem('theme', selectedTheme);
+                            applyTheme(selectedTheme);
+                        });
+                    });
+                });
+
+                function applyTheme(theme) {
+                    if (theme === 'auto') {
+                        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    }
+                    document.documentElement.setAttribute('data-theme', theme);
+                }
+            </script>
         </div>
 </div>
 </body>
