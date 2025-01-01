@@ -9,7 +9,7 @@ body {
 
 a {
     text-decoration: none;
-    color: var(--dark-primary);
+    color: var(--dark-secondary);
 }
 
 :root {
