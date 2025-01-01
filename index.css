@@ -1,17 +1,5 @@
-[data-theme="light"] {
-    --primary: #fff;
-    --secondary: #99999d;
-    --background: #f1f1f3;
-    --container-background: #fff;
-    --text: #0000;
-}
-
-[data-theme="dark"] {
-    --primary: #fff;
-    --secondary: #848487;
-    --background: #000;
-    --container-background: #17171a;
-    --text: #fff;
+form{
+    width: 100%;
 }
 
 .profile-image-icon {
