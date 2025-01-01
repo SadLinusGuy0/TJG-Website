@@ -39,7 +39,7 @@ form{
 .container {
     align-self: stretch;
     border-radius: var(--br-9xl);
-    background-color: var(--dark-container-background);
+    background-color: var(--container-background);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -94,7 +94,7 @@ form{
     box-sizing: border-box;
     text-align: left;
     font-size: 20px;
-    color: #fff;
+    color: var(--primary);
     font-family: 'One UI Sans';
 }
 
@@ -150,7 +150,7 @@ form{
 .list {
     align-self: stretch;
     border-radius: var(--br-9xl);
-    background-color: var(--dark-container-background);
+    background-color: var(--container-background);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -175,7 +175,7 @@ form{
 .list2 {
     align-self: stretch;
     border-radius: var(--br-9xl);
-    background-color: var(--dark-container-background);
+    background-color: var(--container-background);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -221,7 +221,7 @@ form{
     overflow: hidden;
     flex-shrink: 0;
     font-size: var(--body-size);
-    color: var(--dark-secondary);
+    color: var(--secondary);
     font-family: 'One UI Sans';
     font-weight: 400;
 }
@@ -244,7 +244,7 @@ form{
 .list3 {
     align-self: stretch;
     border-radius: var(--br-9xl);
-    background-color: var(--dark-container-background);
+    background-color: var(--container-background);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -258,7 +258,7 @@ form{
 .list4 {
     align-self: stretch;
     border-radius: var(--br-10xl);
-    background-color: var(--dark-container-background);
+    background-color: var(--container-background);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -289,7 +289,7 @@ form{
 .containers {
     top: 0px;
     left: 0px;
-    background-color: var(--dark-background);
+    background-color: var(--background);
     /* Remove width limit */
     /* width: 412px; */
     display: flex;
@@ -305,7 +305,7 @@ form{
     line-height: 12px;
     font-family: 'One UI Sans';
     font-weight: 500;
-    color: var(--dark-secondary);
+    color: var(--secondary);
 }
 .nav-icon-container {
     width: 31px;
@@ -314,7 +314,7 @@ form{
     align-items: center;
     justify-content: flex-start;
     gap: 4px;
-    color: var(--dark-secondary);
+    color: var(--secondary);
     cursor: pointer;
 
 }
@@ -323,7 +323,7 @@ form{
     line-height: 12px;
     font-family: 'One UI Sans';
     font-weight: 600;
-    color: var(--dark-primary);
+    color: var(--primary);
 }
 .nav-icon-container-selected {
     width: 31px;
@@ -332,7 +332,7 @@ form{
     align-items: center;
     justify-content: flex-start;
     gap: 4px;
-    color: var(--dark-primary);
+    color: var(--primary);
     cursor: pointer;
 }
 .ic-oui-search-1-icon {
@@ -353,7 +353,7 @@ form{
     position: fixed; /* Change to fixed */
     bottom: 0px;
     left: 0px;
-    background-color: var(--dark-background);
+    background-color: var(--background);
     width: 100%; /* Make it take up the full width */
     display: flex;
     flex-direction: column;
@@ -363,7 +363,7 @@ form{
     box-sizing: border-box;
     text-align: center;
     font-size: var(--font-size-2xs);
-    color: var(--dark-secondary);
+    color: var(--secondary);
 }
 .index {
     /* Remove height limit */
@@ -372,7 +372,7 @@ form{
     position: relative;
     text-align: left;
     font-size: var(--subheading-size);
-    color: var(--dark-primary);
+    color: var(--primary);
     font-family: var(--body);
     padding-bottom: 80px;
 }
