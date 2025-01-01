@@ -224,6 +224,7 @@
 
 .information-wrapper .work {
     white-space: pre-line;
+    min-height: 36px;
 }
 
 .test-toggle-parent {
