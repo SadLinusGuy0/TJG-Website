@@ -224,7 +224,7 @@ form{
 }
 
 .theme-selection input[type="radio"]:checked {
-    border: 1px solid #387aff;
+    border: 2px solid #387aff;
     background: var(--container-background);
     position: relative;
 }
