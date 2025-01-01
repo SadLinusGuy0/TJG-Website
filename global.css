@@ -26,6 +26,22 @@ a {
     
     /* Colors */
     
+
+    [data-theme="light"] {
+        --primary: var(--light-primary);
+        --secondary: var(--light-secondary);
+        --background: var(--light-background);
+        --text: var(--light-text);
+    }
+    
+    [data-theme="dark"] {
+        --primary: var(--dark-primary);
+        --secondary: var(--dark-secondary);
+        --background: var(--dark-background);
+        --text: var(--dark-text);
+    }
+    
+
     --dark-background: #000;
     --dark-secondary: #848487;
     --dark-container-background: #17171a;
