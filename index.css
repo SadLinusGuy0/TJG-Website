@@ -313,6 +313,12 @@ form {
     text-align: center;
     cursor: pointer;
 }
+
+.list3 .settings {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .list4 {
     align-self: stretch;
     border-radius: var(--br-10xl);
