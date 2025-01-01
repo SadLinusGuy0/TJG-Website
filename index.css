@@ -210,6 +210,8 @@ form{
     width: 100%;
     padding: 10px;
     cursor: pointer;
+    font-size: var(--subheading-size);
+    font-weight: 500;
 }
 
 .theme-selection input[type="radio"] {
