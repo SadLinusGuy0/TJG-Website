@@ -4,12 +4,13 @@
 body {
     margin: 0;
     line-height: normal;
-    color: var(--dark-background);
+    color: var(--text);
+    background-color: var(--background);
 }
 
 a {
     text-decoration: none;
-    color: var(--dark-secondary);
+    color: var(--secondary);
 }
 
 :root {
@@ -25,6 +26,8 @@ a {
     --title-size: 36px;
     
     /* Colors */
+    
+
     --dark-background: #000;
     --dark-secondary: #848487;
     --dark-container-background: #17171a;
@@ -47,7 +50,26 @@ a {
     --br-9xl: 28px;
     --br-10xl: 40px;
     --br-11xs: 2px;
-    
+
+[data-theme="auto"] {
+    --primary: var(--dark-primary);
+    --secondary: var(--dark-secondary);
+    --background: var(--dark-background);
+    --text: var(--dark-text);
+}
+
+[data-theme="light"] {
+    --primary: var(--light-primary);
+    --secondary: var(--light-secondary);
+    --background: var(--light-background);
+    --text: var(--light-text);
+}
+
+[data-theme="dark"] {
+    --primary: var(--dark-primary);
+    --secondary: var(--dark-secondary);
+    --background: var(--dark-background);
+    --text: var(--dark-text);
 }
 
 @font-face {
