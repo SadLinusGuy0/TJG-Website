@@ -15,10 +15,11 @@
             </div>
             <div class="container">
                 <div class="body-text">Select Theme:</div>
-                <select id="themeSelector" onchange="changeTheme()">
+                <select id="themeSelector">
                     <option value="light">Light</option>
                     <option value="dark">Dark</option>
                 </select>
+                <button onclick="applyChanges()">Apply</button>
             </div>
         </div>
     </div>
@@ -35,6 +36,11 @@
             const selectedTheme = document.getElementById('themeSelector').value;
             document.documentElement.setAttribute('data-theme', selectedTheme);
             localStorage.setItem('theme', selectedTheme);
+        }
+
+        function applyChanges() {
+            changeTheme();
+            location.reload();
         }
     </script>
 </body>
