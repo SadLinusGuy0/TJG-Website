@@ -1,6 +1,47 @@
 /* Import index.css */
 @import url('./index.css');
 
+html {
+    scroll-behavior: smooth;
+    color-scheme: var(--color-scheme);
+}
+
+html[data-theme="dark"] {
+    --background: var(--dark-background);
+    --secondary: var(--dark-secondary);
+    --container-background: var(--dark-container-background);
+    --primary: var(--dark-primary);
+    --accent: var(--accent);
+}
+
+html[data-theme="light"] {
+    --background: var(--light-background);
+    --secondary: var(--light-secondary);
+    --container-background: var(--light-container-background);
+    --primary: var(--light-primary);
+    --accent: var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: var(--dark-background);
+        --secondary: var(--dark-secondary);
+        --container-background: var(--dark-container-background);
+        --primary: var(--dark-primary);
+        --accent: var(--accent);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --background: var(--light-background);
+        --secondary: var(--light-secondary);
+        --container-background: var(--light-container-background);
+        --primary: var(--light-primary);
+        --accent: var(--accent);
+    }
+}
+
 body {
     margin: 0;
     line-height: normal;
