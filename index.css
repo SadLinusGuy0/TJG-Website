@@ -247,7 +247,7 @@
     justify-content: flex-start;
     padding: 20px;
     margin-bottom: 10px;
-    gap: var(--gap-xl);
+    gap: var(--gap-xll);
     text-align: center;
 }
 .list4 {
