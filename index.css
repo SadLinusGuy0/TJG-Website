@@ -194,7 +194,7 @@ form{
 .theme-selection {
     align-self: stretch;
     display: flex;
-    flex-direction: columm;
+    flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     gap: var(--gap-xl);
