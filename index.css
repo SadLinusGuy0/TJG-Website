@@ -266,14 +266,14 @@ form {
     height: 24px;
 }
 .information {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    display: inline-block;
+    position: relative;
     align-self: stretch;
     text-align: left;
+    width: 100%;
+    height: auto;
 }
 .information-wrapper {
+    height: auto;
     align-self: normal;
     min-height: 19px;
     position: relative;
@@ -283,10 +283,11 @@ form {
     color: var(--secondary);
     font-family: 'One UI Sans';
     font-weight: 400;
-}
-
-.information-wrapper .work {
-    white-space: pre-line;
+    width: 100%;
+    height: auto;
+    min-height: fit-content;
+    display: flex;
+    flex-direction: column;
 }
 
 .test-toggle-parent {
@@ -298,7 +299,7 @@ form {
     align-items: flex-start;
     justify-content: flex-start;
     gap: var(--gap-11xs);
-    text-align: left;
+    width: 100%;
 }
 .list3 {
     align-self: stretch;
