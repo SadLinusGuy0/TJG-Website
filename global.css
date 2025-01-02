@@ -1,0 +1,182 @@
+/* Import index.css */
+@import url('./index.css');
+
+html {
+    scroll-behavior: smooth;
+    color-scheme: var(--color-scheme);
+    min-height: 100%;
+    background-color: var(--background);
+    /* Remove transition from html */
+}
+
+html[data-theme="dark"],
+html[data-theme="light"],
+:root,
+body,
+.container,
+.list3,
+.nav-icon-container,
+.nav-icon-container-selected,
+.nav-label,
+.nav-label-selected,
+.body-text,
+.information,
+.theme-selection input[type="radio"],
+.tab-container,
+svg path,
+.main-content,
+.containers,
+.index,
+.title,
+.containers-are-the,
+.information-wrapper {
+    transition: all 0.15s ease-out; /* Faster transition */
+}
+
+html[data-theme="dark"] {
+    --background: var(--dark-background);
+    --secondary: var(--dark-secondary);
+    --container-background: var(--dark-container-background);
+    --primary: var(--dark-primary);
+    --accent: var(--accent);
+}
+
+html[data-theme="light"] {
+    --background: var(--light-background);
+    --secondary: var(--light-secondary);
+    --container-background: var(--light-container-background);
+    --primary: var(--light-primary);
+    --accent: var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: var(--dark-background);
+        --secondary: var(--dark-secondary);
+        --container-background: var(--dark-container-background);
+        --primary: var(--dark-primary);
+        --accent: var(--accent);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --background: var(--light-background);
+        --secondary: var(--light-secondary);
+        --container-background: var(--light-container-background);
+        --primary: var(--light-primary);
+        --accent: var(--accent);
+    }
+}
+
+body {
+    margin: 0;
+    line-height: normal;
+    color: var(--background);
+    min-height: 100vh;
+    background-color: var(--background);
+    display: flex;
+    flex-direction: column;
+    transition: none; /* Remove individual transition */
+}
+
+a {
+    text-decoration: none;
+    color: var(--secondary);
+}
+
+:root {
+    
+    /* fonts */
+    --body: 'One UI Sans APP VF';
+    
+    /* font sizes */
+    --font-size-2xs: 11px;
+    --body-size: 14px;
+    --subheading-size: 18px;
+    --subtitle-size: 20px;
+    --title-size: 36px;
+    
+    /* Colors */
+
+    --dark-background: #000;
+    --dark-secondary: #848487;
+    --dark-container-background: #17171a;
+    --dark-primary: #fff;
+    --light-background: #f1f1f3;
+    --light-secondary: #99999d;
+    --light-container-background: #fff;
+    --light-primary: #000;
+    --accent: #387aff;
+    
+    /* Gaps */
+    --gap-xl: 10px;
+    --gap-xll: 20px;
+    --gap-11xs: 2px;
+    
+    /* Paddings */
+    --padding-xl: 20px;
+    
+    /* Border radiuses */
+    --br-9xl: 28px;
+    --br-10xl: 40px;
+    --br-11xs: 2px;
+    
+}
+
+@font-face {
+    font-family: 'One UI Sans';
+        src: url(src/styles/fonts/oneuisans.ttf) format('truetype supports variations');
+        src: url(src/styles/fonts/oneuisans.ttf) format('truetype-variations');
+        font-weight: 100 900;
+    }
+
+@media screen and (max-width: 500px) {
+    .containers {
+        padding: 0 16%;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .containers {
+        padding: 0 34%;
+    }
+}
+
+.tab-container {
+    width: 33%;
+    background-color: var(--background);
+    /* ...existing styles... */
+}
+
+.main-content {
+    margin-left: 33%;
+    background-color: var(--background);
+    /* ...existing styles... */
+}
+
+/* Ensure everything transitions together */
+.theme-transitioning,
+.theme-transitioning *,
+.theme-transitioning .body-text,
+.theme-transitioning .information,
+.theme-transitioning svg path,
+.theme-transitioning .nav-label,
+.theme-transitioning .title,
+.theme-transitioning .containers-are-the {
+    transition-duration: 0.15s !important;
+    transition-delay: 0s !important;
+    transition-timing-function: ease-out !important;
+}
+
+/* Remove any individual transition overrides */
+.body-text,
+.information,
+.nav-label,
+.nav-label-selected,
+svg path {
+    transition: none;
+}
+
+/* ...rest of existing code... */
+
