@@ -271,6 +271,7 @@ form {
     left: 0px;
     display: inline-block;
     align-self: stretch;
+    text-align: left;
 }
 .information-wrapper {
     align-self: normal;
