@@ -331,15 +331,6 @@ form {
     gap: var(--gap-xl);
     text-align: left;
 }
-.shape-child {
-    position: absolute;
-    top: calc(50% - 11.5px);
-    left: calc(50% - 12px);
-    border-radius: 37px;
-    background: radial-gradient(50% 50% at 50% 50%, #5f09a0, rgba(95, 9, 160, 0.44) 33.26%, rgba(95, 9, 160, 0.18) 68.06%, rgba(95, 9, 160, 0.08) 77.14%, rgba(95, 9, 160, 0)), radial-gradient(50% 50% at 50% 50%, #84ff84, rgba(132, 255, 132, 0.36) 55.53%, rgba(132, 255, 132, 0.21) 69.2%, rgba(132, 255, 132, 0.1) 84.92%, rgba(132, 255, 132, 0)), linear-gradient(180deg, #41bdff, #0b20db 96.67%);
-    width: 24px;
-    height: 24px;
-}
 .test-toggle-group {
     align-self: stretch;
     flex: 1;
@@ -681,6 +672,4 @@ form {
 .list3.settings {
     margin-top: 0;  /* Remove top margin since parent container has bottom margin */
     padding: var(--padding-xl);
-=======
-        padding: 0 34% 40px;
-    }
+}
