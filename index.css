@@ -578,12 +578,6 @@ form {
     }
 }
 
-@media screen and (min-width: 500px) {
-    .containers {
-        padding: 0 16% 40px;
-    }
-}
-
 @media screen and (min-width: 900px) {
     .containers {
         display: flex;
@@ -687,4 +681,6 @@ form {
 .list3.settings {
     margin-top: 0;  /* Remove top margin since parent container has bottom margin */
     padding: var(--padding-xl);
-}
+=======
+        padding: 0 34% 40px;
+    }
