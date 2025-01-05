@@ -1,0 +1,677 @@
+form {
+    width: 100%;
+}
+
+.profile-image-icon {
+    width: 100px;
+    position: relative;
+    border-radius: 50px;
+    height: 100px;
+    object-fit: cover;
+}
+.title {
+    position: relative;
+    font-family: 'One UI Sans';
+    font-weight: 700;
+}
+
+
+.header-container {
+    align-self: stretch;
+    height: 260px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 19px;
+    box-sizing: border-box;
+    gap: var(--gap-xl);
+    font-size: var(--title-size);
+}
+.containers-are-the {
+    margin: 0;
+}
+.body-text {
+    position: relative;
+    font-family: 'One UI Sans';
+    font-weight: 400;
+}
+.container {
+    align-self: stretch;
+    border-radius: var(--br-9xl);
+    background-color: var(--container-background);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: var(--padding-xl);
+    font-size: var(--body-size);
+}
+
+.container .settings {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.container1 {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 20px 20px 20px;
+    font-size: var(--subtitle-size);
+}
+
+.button-icon {
+    width: 16.2px;
+    position: relative;
+    height: 24px;
+}
+.button-text {
+    position: relative;
+}
+.button {
+    align-self: stretch;
+    border-radius: 20px;
+    background-color: #387aff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 30px;
+    gap: 10px; /* Added gap property */
+    width: auto; /* Make the box adapt to the text inside */
+}
+.button-container {
+    width: 100%;
+    top: 20px;
+    position: relative;
+    height: 47px;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0px auto;
+    box-sizing: border-box;
+    text-align: left;
+    font-size: 20px;
+    color: #fff;
+    font-family: 'One UI Sans';
+}
+
+.left-side-icon {
+    width: auto; /* Change to auto or a percentage */
+    height: auto; /* Change to auto or a percentage */
+    position: absolute;
+    margin: 0 !important;
+    bottom: 0px;
+    left: 0px;
+    object-fit: cover;
+    z-index: 0;
+}
+.right-side-icon {
+    width: auto; /* Change to auto or a percentage */
+    height: auto; /* Change to auto or a percentage */
+    position: absolute;
+    margin: 0 !important;
+    right: 0px;
+    bottom: 0px;
+    object-fit: cover;
+    z-index: 1;
+}
+.seperation-icon {
+    width: 100%;
+    height: auto; /* Change to auto or a percentage */
+    position: absolute;
+    margin: 0 !important;
+    top: 98.25%;
+    right: 0%;
+    left: 0%;
+    border-radius: var(--br-11xs);
+    max-width: 100%;
+    overflow: hidden;
+    object-fit: cover;
+    z-index: 2;
+}
+.test-toggle-wrapper {
+    align-self: stretch;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    z-index: 3;
+}
+.others {
+    width: 61px;
+    height: 22px;
+    z-index: 4;
+}
+.list {
+    align-self: stretch;
+    border-radius: var(--br-9xl);
+    background-color: var(--container-background);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: var(--padding-xl);
+    position: relative;
+    gap: var(--gap-xl);
+}
+.test-toggle-frame {
+    align-self: stretch;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.others2 {
+    width: 33px;
+    height: 22px;
+}
+.list2 {
+    align-self: stretch;
+    border-radius: var(--br-9xl);
+    background-color: var(--container-background);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: var(--padding-xl);
+    gap: var(--gap-xl);
+}
+.theme-container {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+}
+.theme-selection {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--gap-xl);
+    font-family: 'One UI Sans';
+    font-weight: 400;
+    font-size: var(--body-size);
+}
+
+.theme-selection label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    font-size: var(--subheading-size);
+    font-weight: 500;
+}
+
+.theme-selection input[type="radio"] {
+    appearance: none;
+    background-color: transparent;
+    margin: 0;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--secondary);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.theme-selection input[type="radio"]:checked {
+    border: 2px solid #387aff;
+    background: var(--container-background);
+    position: relative;
+}
+
+.theme-selection input[type="radio"]:checked::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #387aff;    ;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.div {
+    position: absolute;
+    top: calc(50% - 11px);
+    left: calc(50% - 11px);
+    line-height: 133.53%;
+    display: inline-block;
+    width: 22px;
+    height: 23px;
+    font-family: 'One UI Sans';
+    font-weight: 600;
+}
+.shape {
+    width: 24px;
+    position: relative;
+    height: 24px;
+}
+.information {
+    position: relative;
+    align-self: stretch;
+    text-align: left;
+    width: 100%;
+    height: auto;
+}
+.information-wrapper {
+    height: auto;
+    align-self: normal;
+    min-height: 19px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    font-size: var(--body-size);
+    color: var(--secondary);
+    font-family: 'One UI Sans';
+    font-weight: 400;
+    width: 100%;
+    height: auto;
+    min-height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.test-toggle-parent {
+    align-self: stretch;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: var(--gap-11xs);
+    width: 100%;
+}
+.list3 {
+    align-self: stretch;
+    border-radius: var(--br-9xl);
+    background-color: var(--container-background);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    margin-bottom: 10px;
+    gap: var(--gap-xll);
+    text-align: center;
+    cursor: pointer;
+}
+
+.list3 .settings {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.list4 {
+    align-self: stretch;
+    border-radius: var(--br-10xl);
+    background-color: var(--container-background);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px 10px 10px;
+    gap: var(--gap-xl);
+    text-align: left;
+}
+.test-toggle-group {
+    align-self: stretch;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: var(--gap-11xs);
+}
+.containers {
+    top: 0px;
+    left: 0px;
+    min-height: 100vh; /* Add this */
+    background-color: var(--background);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Add this */
+    justify-content: flex-start;
+    padding: 10px;
+    box-sizing: border-box;
+    gap: var(--gap-xl);
+    width: 100%; /* Add this */
+    overflow-x: hidden; /* Add this */
+    max-width: 500px; /* Add this for mobile */
+    margin: 0 auto; /* Add this for mobile */
+}
+.nav-label {
+    position: relative;
+    line-height: 12px;
+    font-family: 'One UI Sans';
+    font-weight: 500;
+    color: var(--secondary);
+}
+.nav-icon-container {
+    width: 31px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    color: var(--secondary);
+    cursor: pointer;
+
+}
+.nav-label-selected {
+    position: relative;
+    line-height: 12px;
+    font-family: 'One UI Sans';
+    font-weight: 600;
+    color: var(--primary);
+}
+.nav-icon-container-selected {
+    width: 31px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    color: var(--primary);
+    cursor: pointer;
+}
+.ic-oui-search-1-icon {
+    width: 24px;
+    position: relative;
+    height: 24px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.icon-container {
+    width: 100%; /* Change from 332px */
+    max-width: 332px; /* Add this */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto; /* Add this */
+}
+.tab-container {
+    position: fixed; /* Change to fixed */
+    bottom: 0px;
+    left: 0px;
+    background-color: var(--background);
+    width: 100%; /* Make it take up the full width */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: var(--padding-xl) 0; /* Reduce horizontal padding */
+    box-sizing: border-box;
+    text-align: center;
+    font-size: var(--font-size-2xs);
+    color: var(--secondary);
+    z-index: 1000; /* Add this to ensure nav stays on top */
+}
+.index {
+    /* Remove height limit */
+    /* height: 1071px; */
+    width: 100%;
+    min-height: 100vh; /* Add this */
+    position: relative;
+    text-align: left;
+    font-size: var(--subheading-size);
+    color: var(--primary);
+    font-family: var(--body);
+    padding-bottom: 80px;
+    background-color: var(--background); /* Add this */
+}
+
+.blank-div {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.top-app-bar-container {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.top-app-bar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: 20px;
+}
+
+.top-app-bar-icon {
+    width: 26px;
+    position: relative;
+    height: 26px;
+    overflow: hidden;
+    flex-shrink: 0;
+    padding-right: 10px;
+}
+.main-content {
+    padding-bottom: 100px; /* Add this to prevent content from being hidden under nav */
+    position: relative;
+    width: 100%;
+    max-width: 100%; /* Add this */
+    overflow-x: hidden; /* Add this */
+    display: flex; /* Add this */
+    flex-direction: column; /* Add this */
+    align-items: center; /* Add this */
+}
+
+.main-content > *:not(.top-app-bar) {
+    animation: fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+.fade-out {
+    animation: fadeOutDown 0.3s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+}
+
+.page-transition {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+/* Fix mobile centering */
+@media screen and (max-width: 899px) {
+    .containers {
+        padding: 10px;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        align-items: center;
+    }
+    
+    .main-content {
+        width: 100%;
+        max-width: 500px;
+        padding: 0 16px;
+        margin: 0 auto;
+    }
+
+    .container,
+    .container1,
+    .list3,
+    .list4,
+    .button-container,
+    .theme-container {
+        width: 100%;
+    }
+}
+
+/* Update mobile styles */
+@media screen and (max-width: 899px) {
+    .containers {
+        width: 100%;
+        max-width: none;
+        padding: 10px 20px;
+    }
+    
+    .main-content {
+        width: 100%;
+        padding: 0;
+    }
+
+    .list3,
+    .list4,
+    .container,
+    .container1,
+    .theme-container,
+    .button-container {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        box-sizing: border-box;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .containers {
+        display: flex;
+        flex-direction: row;
+        padding: 0;
+        justify-content: center; /* Add this */
+        max-width: 1600px; /* This will override mobile max-width */
+        margin: 0 auto; /* Add this */
+        align-items: flex-start; /* Reset alignment for desktop */
+    }
+
+    .main-content {
+        align-items: flex-start; /* Reset alignment for desktop */
+        margin-left: 420px; /* Change from 33% to fixed width */
+        width: 800px; /* Increased from 700px */
+        padding: 40px;
+        max-width: 100%; /* Update this */
+    }
+
+    .tab-container {
+        position: fixed;
+        top: 0;
+        left: max(0px, calc(50% - 800px)); /* Add this to anchor to center */
+        bottom: 0;
+        width: 33%;
+        max-width: 420px;
+        height: 100vh;
+        padding: 40px 20px;
+        background-color: var(--background);
+    }
+
+    .icon-container {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding-top: 60px;
+    }
+
+    .nav-icon-container,
+    .nav-icon-container-selected {
+        width: 100%;
+        height: 48px;
+        flex-direction: row;
+        align-items: center;
+        padding: 0 16px;
+        border-radius: 12px;
+        gap: 12px;
+    }
+
+    .nav-icon-container-selected {
+        background-color: var(--container-background);
+    }
+
+    .nav-label,
+    .nav-label-selected {
+        font-size: 16px;
+        line-height: 20px;
+    }
+
+    .main-content {
+        margin-left: 420px; /* Change from 33% to fixed width */
+        width: 800px; /* Increased from 700px */
+        padding: 40px;
+        max-width: 100%; /* Update this */
+    }
+}
+
+/* Add a larger breakpoint for ultra-wide screens */
+@media screen and (min-width: 1600px) {
+    .tab-container {
+        left: calc(50% - 800px); /* Lock to center on very wide screens */
+    }
+}
+
+@media screen and (max-width: 499px) {
+    .containers {
+        padding: 10px 16px; /* Add consistent padding */
+    }
+    
+    .tab-container {
+        padding: var(--padding-xl) 20px; /* Adjust padding for mobile */
+    }
+}
+
+/* Update settings container spacing */
+.container.settings {
+    margin-bottom: 20px;  /* Increase bottom margin to create space */
+    padding: var(--padding-xl);
+}
+
+/* Add proper spacing between paragraphs */
+.container.settings .body-text {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Adjust GitHub repo container spacing */
+.list3.settings {
+    margin-top: 0;  /* Remove top margin since parent container has bottom margin */
+    padding: var(--padding-xl);
+}
