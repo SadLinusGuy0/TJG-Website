@@ -15,6 +15,11 @@ form {
     font-weight: 700;
 }
 
+a  {
+    text-decoration: none;
+    color: var(--primary);
+    position: relative;
+}
 
 .header-container {
     align-self: stretch;
@@ -60,7 +65,7 @@ form {
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    padding: 0 20px 20px 20px;
+    padding: 20px;
     font-size: var(--subtitle-size);
 }
 
@@ -170,9 +175,10 @@ form {
     flex: 1;
     overflow: hidden;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
-    justify-content: flex-start;
+    justify-content: space-between;
+    margin-bottom: 8px;
 }
 .others2 {
     width: 33px;
@@ -312,18 +318,37 @@ form {
     padding: 20px;
     margin-bottom: 10px;
     gap: var(--gap-xll);
-    text-align: center;
+    text-align: left;
     cursor: pointer;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease;
+    font-size: var(--subheading-size);
+    color: var(--primary);
+    font-family: var(--body);
 }
-
 .list3 .settings {
     margin-top: 10px;
     margin-bottom: 10px;
 }
-
+.list3:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+.list3:hover {
+    background-color: var(--container-background-hover);
+}
+.list3:active {
+    background-color: var(--container-background-active);
+}
+.list3:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 .list4 {
     align-self: stretch;
-    border-radius: var(--br-10xl);
+    border-radius: 28px;
     background-color: var(--container-background);
     display: flex;
     flex-direction: column;
@@ -332,6 +357,24 @@ form {
     padding: 20px 10px 10px;
     gap: var(--gap-xl);
     text-align: left;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--primary);
+    transition: background-color 0.2s ease;
+    margin-bottom: 20px;
+}
+
+.list4:hover {
+    background-color: var(--container-background-hover);
+}
+
+.list4:active {
+    background-color: var(--container-background-active);
+}
+
+.list4:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
 }
 .test-toggle-group {
     align-self: stretch;
@@ -444,11 +487,11 @@ form {
 
 .blank-div {
     width: 100%;
-    margin-bottom: 20px;
 }
 
 .top-app-bar-container {
     display: flex;
+    align-items: flex-end;
     justify-content: flex-end;
     width: 100%;
 }
@@ -456,19 +499,20 @@ form {
 .top-app-bar {
     width: 100%;
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: flex-end;
     padding-top: 20px;
+    margin-bottom: 20px;
 }
 
 .top-app-bar-icon {
     width: 26px;
-    position: relative;
     height: 26px;
     overflow: hidden;
     flex-shrink: 0;
-    padding-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .main-content {
     padding-bottom: 100px; /* Add this to prevent content from being hidden under nav */
@@ -674,4 +718,10 @@ form {
 .list3.settings {
     margin-top: 0;  /* Remove top margin since parent container has bottom margin */
     padding: var(--padding-xl);
+}
+
+/* Add CSS variables for hover/active states */
+:root {
+    --container-background-hover: color-mix(in srgb, var(--container-background) 95%, var(--primary) 5%);
+    --container-background-active: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
 }
