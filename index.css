@@ -19,13 +19,7 @@ a  {
     text-decoration: none;
     color: var(--primary);
     position: relative;
-    transition: transform 400ms ease-out;
 }
-
-a:hover {
-    transition: transform 400ms ease-in;
-}
-
 
 .header-container {
     align-self: stretch;
@@ -84,7 +78,6 @@ a:hover {
     position: relative;
 }
 .button {
-    transition: transform 400ms ease-out;
     align-self: stretch;
     border-radius: 20px;
     background-color: #387aff;
@@ -98,8 +91,97 @@ a:hover {
     width: auto; /* Make the box adapt to the text inside */
 }
 
+/* Hover scale effect for links and buttons */
+a, 
+.button,
+.list3,
+.list4 {
+    transform: scale(1);
+    transition: transform 0.2s ease-out;
+}
+
+a:hover,
+.button:hover,
+.list3:hover,
+.list4:hover {
+    transform: scale(1.02);
+    transition: transform 0.2s ease-in;
+}
+
+/* Update and strengthen hover effect selectors */
+a.list3,
+button.list3,
+.button,
+.list4 {
+    transform: scale(1);
+    transition: transform 0.2s ease-out, background-color 0.2s ease;
+    will-change: transform, background-color;
+}
+
+a.list3:hover,
+button.list3:hover,
+.button:hover,
+.list4:hover {
+    transform: scale(1.02);
+    transition: transform 0.2s ease-in, background-color 0.2s ease;
+}
+
+/* Make hover effects apply universally with higher specificity */
+a.list3, 
+button.list3,
+a.list4,
+.button {
+    transform: scale(1) !important;
+    transition: transform 0.2s ease-out, background-color 0.2s ease !important;
+    will-change: transform, background-color;
+}
+
+a.list3:hover, 
+button.list3:hover,
+a.list4:hover,
 .button:hover {
-    transition: transform 400ms ease-in;
+    transform: scale(1.02) !important;
+    transition: transform 0.2s ease-in, background-color 0.2s ease !important;
+}
+
+/* Prevent scale effect on navigation elements */
+.nav-icon-container,
+.nav-icon-container-selected,
+.nav-icon-container a,
+.tab-container a {
+    transform: none !important;
+    transition: none !important;
+}
+
+/* For back button in settings and similar pages */
+.top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon {
+    transform: scale(1);
+    transition: transform 0.2s ease-out;
+    margin-right: 0;
+}
+
+.top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in;
+    rotate: 0deg; /* Override the rotation */
+    background-color: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
+}
+
+/* Keep the original behavior for the settings icon */
+.top-app-bar-icon {
+    transform: scale(1);
+    transition: transform 0.2s ease-out, rotate 0.2s ease, background-color 0.2s ease;
+    border-radius: 50%;
+    padding: 4px;
+    box-sizing: content-box;
+    cursor: pointer;
+}
+
+.top-app-bar-icon:hover {
+    transform: scale(1.1);
+    rotate: 90deg;
+    transition: transform 0.2s ease-in, rotate 0.2s ease, background-color 0.2s ease;
+    background-color: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
 }
 
 .button-container {
@@ -236,6 +318,12 @@ a:hover {
     cursor: pointer;
     font-size: var(--subheading-size);
     font-weight: 500;
+    border-radius: var(--br-9xl);
+    transition: background-color 0.2s ease;
+}
+
+.theme-selection label:hover {
+    background-color: var(--container-background-hover);
 }
 
 .theme-selection input[type="radio"] {
@@ -247,6 +335,15 @@ a:hover {
     border: 2px solid var(--secondary);
     border-radius: 50%;
     cursor: pointer;
+    transform: scale(1);
+    transition: transform 0.2s ease-out, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-selection input[type="radio"]:hover {
+    transform: scale(1.08);
+    background-color: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
+    border-color: color-mix(in srgb, var(--secondary) 80%, var(--primary) 20%);
+    transition: transform 0.2s ease-in, background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .theme-selection input[type="radio"]:checked {
@@ -503,8 +600,10 @@ a:hover {
 
 .top-app-bar-container {
     display: flex;
-    align-items: flex-end;
+    flex-direction: row;
+    align-items: center;
     justify-content: flex-end;
+    gap: 8px;
     width: 100%;
 }
 
@@ -526,6 +625,18 @@ a:hover {
     align-items: center;
     justify-content: center;
 }
+
+.title-container {
+    display: flex;
+    align-items: center;
+}
+
+.title-container .title {
+    font-size: var(--subheading-size);
+    padding: 0;
+    margin: 0;
+}
+
 .main-content {
     padding-bottom: 100px; /* Add this to prevent content from being hidden under nav */
     position: relative;
@@ -535,6 +646,7 @@ a:hover {
     display: flex; /* Add this */
     flex-direction: column; /* Add this */
     align-items: center; /* Add this */
+    overflow-x: visible;
 }
 
 .main-content > *:not(.top-app-bar) {
@@ -736,4 +848,26 @@ a:hover {
 :root {
     --container-background-hover: color-mix(in srgb, var(--container-background) 95%, var(--primary) 5%);
     --container-background-active: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
+}
+/* Update the CSS variables for hover/active states with mode-specific values */
+:root {
+    /* Base hover states - will be used for dark mode */
+    --container-background-hover: color-mix(in srgb, var(--container-background) 95%, var(--primary) 5%);
+    --container-background-active: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
+}
+
+/* Add darker hover effect specifically for light mode */
+@media (prefers-color-scheme: light) {
+    :root {
+        --container-background-hover: color-mix(in srgb, var(--container-background) 92%, #000000 8%);
+        --container-background-active: color-mix(in srgb, var(--container-background) 85%, #000000 15%);
+    }
+}
+
+/* Ensure dark mode keeps the original values */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --container-background-hover: color-mix(in srgb, var(--container-background) 95%, var(--primary) 5%);
+        --container-background-active: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
+    }
 }
