@@ -617,6 +617,8 @@ button.list3:hover {
     gap: 4px;
     color: var(--primary);
     cursor: pointer;
+    padding: 8px;
+    border-radius: 12px;
 }
 
 .ic-oui-search-1-icon {
