@@ -9,13 +9,14 @@ form {
     height: 100px;
     object-fit: cover;
 }
+
 .title {
     position: relative;
     font-family: 'One UI Sans';
     font-weight: 700;
 }
 
-a  {
+a {
     text-decoration: none;
     color: var(--primary);
     position: relative;
@@ -33,14 +34,17 @@ a  {
     gap: var(--gap-xl);
     font-size: var(--title-size);
 }
+
 .containers-are-the {
     margin: 0;
 }
+
 .body-text {
     position: relative;
     font-family: 'One UI Sans';
     font-weight: 400;
 }
+
 .container {
     align-self: stretch;
     border-radius: var(--br-9xl);
@@ -57,6 +61,7 @@ a  {
 .container .settings {
     margin-top: 10px;
     margin-bottom: 10px;
+    background-color: none;
 }
 
 .container1 {
@@ -74,9 +79,11 @@ a  {
     position: relative;
     height: 24px;
 }
+
 .button-text {
     position: relative;
 }
+
 .button {
     align-self: stretch;
     border-radius: 20px;
@@ -87,12 +94,14 @@ a  {
     align-items: center;
     justify-content: center;
     padding: 10px 30px;
-    gap: 10px; /* Added gap property */
-    width: auto; /* Make the box adapt to the text inside */
+    gap: 10px;
+    /* Added gap property */
+    width: auto;
+    /* Make the box adapt to the text inside */
 }
 
 /* Hover scale effect for links and buttons */
-a, 
+a,
 .button,
 .list3,
 .list4 {
@@ -109,39 +118,36 @@ a:hover,
 }
 
 /* Update and strengthen hover effect selectors */
+.list3,
 a.list3,
-button.list3,
-.button,
-.list4 {
+button.list3 {
     transform: scale(1);
-    transition: transform 0.2s ease-out, background-color 0.2s ease;
-    will-change: transform, background-color;
+    transition: transform 0.2s ease-out, background-color 0.2s ease-out !important;
 }
 
+.list3:hover,
 a.list3:hover,
-button.list3:hover,
-.button:hover,
-.list4:hover {
+button.list3:hover {
     transform: scale(1.02);
-    transition: transform 0.2s ease-in, background-color 0.2s ease;
+    background-color: var(--container-background-hover);
+    transition: transform 0.2s ease-in, background-color 0.2s ease-in !important;
 }
 
+/* Remove the old hover rules that might conflict */
 /* Make hover effects apply universally with higher specificity */
-a.list3, 
-button.list3,
-a.list4,
-.button {
+.list3,
+a.list3,
+button.list3 {
     transform: scale(1) !important;
-    transition: transform 0.2s ease-out, background-color 0.2s ease !important;
-    will-change: transform, background-color;
+    transition: transform 0.2s ease-out, background-color 0.2s ease-out !important;
 }
 
-a.list3:hover, 
-button.list3:hover,
-a.list4:hover,
-.button:hover {
+.list3:hover,
+a.list3:hover,
+button.list3:hover {
     transform: scale(1.02) !important;
-    transition: transform 0.2s ease-in, background-color 0.2s ease !important;
+    background-color: var(--container-background-hover) !important;
+    transition: transform 0.2s ease-in, background-color 0.2s ease-in !important;
 }
 
 /* Prevent scale effect on navigation elements */
@@ -154,21 +160,26 @@ a.list4:hover,
 }
 
 /* For back button in settings and similar pages */
-.top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon {
+.top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon,
+.top-app-bar-icon[onclick="window.history.back()"] {
     transform: scale(1);
-    transition: transform 0.2s ease-out;
+    transition: transform 0.2s ease-out, background-color 0.2s ease;
     margin-right: 0;
+    border-radius: 50%;
+    padding: 4px;
+    box-sizing: content-box;
+    cursor: pointer;
 }
 
-.top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon:hover {
+.top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon:hover,
+.top-app-bar-icon[onclick="window.history.back()"]:hover {
     transform: scale(1.1);
-    transition: transform 0.2s ease-in;
-    rotate: 0deg; /* Override the rotation */
+    transition: transform 0.2s ease-in, background-color 0.2s ease;
     background-color: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
 }
 
-/* Keep the original behavior for the settings icon */
-.top-app-bar-icon {
+/* Keep the original behavior for the settings icon only */
+.top-app-bar-icon:not([onclick="window.history.back()"]) {
     transform: scale(1);
     transition: transform 0.2s ease-out, rotate 0.2s ease, background-color 0.2s ease;
     border-radius: 50%;
@@ -177,9 +188,8 @@ a.list4:hover,
     cursor: pointer;
 }
 
-.top-app-bar-icon:hover {
-    transform: scale(1.1);
-    rotate: 90deg;
+.top-app-bar-icon:not([onclick="window.history.back()"]):hover {
+    transform: scale(1.1) rotate(90deg);
     transition: transform 0.2s ease-in, rotate 0.2s ease, background-color 0.2s ease;
     background-color: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
 }
@@ -204,8 +214,10 @@ a.list4:hover,
 }
 
 .left-side-icon {
-    width: auto; /* Change to auto or a percentage */
-    height: auto; /* Change to auto or a percentage */
+    width: auto;
+    /* Change to auto or a percentage */
+    height: auto;
+    /* Change to auto or a percentage */
     position: absolute;
     margin: 0 !important;
     bottom: 0px;
@@ -213,9 +225,12 @@ a.list4:hover,
     object-fit: cover;
     z-index: 0;
 }
+
 .right-side-icon {
-    width: auto; /* Change to auto or a percentage */
-    height: auto; /* Change to auto or a percentage */
+    width: auto;
+    /* Change to auto or a percentage */
+    height: auto;
+    /* Change to auto or a percentage */
     position: absolute;
     margin: 0 !important;
     right: 0px;
@@ -223,9 +238,11 @@ a.list4:hover,
     object-fit: cover;
     z-index: 1;
 }
+
 .seperation-icon {
     width: 100%;
-    height: auto; /* Change to auto or a percentage */
+    height: auto;
+    /* Change to auto or a percentage */
     position: absolute;
     margin: 0 !important;
     top: 98.25%;
@@ -237,6 +254,7 @@ a.list4:hover,
     object-fit: cover;
     z-index: 2;
 }
+
 .test-toggle-wrapper {
     align-self: stretch;
     flex: 1;
@@ -247,11 +265,13 @@ a.list4:hover,
     justify-content: flex-start;
     z-index: 3;
 }
+
 .others {
     width: 61px;
     height: 22px;
     z-index: 4;
 }
+
 .list {
     align-self: stretch;
     border-radius: var(--br-9xl);
@@ -264,6 +284,7 @@ a.list4:hover,
     position: relative;
     gap: var(--gap-xl);
 }
+
 .test-toggle-frame {
     align-self: stretch;
     flex: 1;
@@ -274,10 +295,12 @@ a.list4:hover,
     justify-content: space-between;
     margin-bottom: 8px;
 }
+
 .others2 {
     width: 33px;
     height: 22px;
 }
+
 .list2 {
     align-self: stretch;
     border-radius: var(--br-9xl);
@@ -289,6 +312,7 @@ a.list4:hover,
     padding: var(--padding-xl);
     gap: var(--gap-xl);
 }
+
 .theme-container {
     align-self: stretch;
     display: flex;
@@ -297,6 +321,7 @@ a.list4:hover,
     justify-content: flex-start;
 
 }
+
 .theme-selection {
     align-self: stretch;
     display: flex;
@@ -357,7 +382,8 @@ a.list4:hover,
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: #387aff;    ;
+    background: #387aff;
+    ;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -375,11 +401,13 @@ a.list4:hover,
     font-family: 'One UI Sans';
     font-weight: 600;
 }
+
 .shape {
     width: 24px;
     position: relative;
     height: 24px;
 }
+
 .information {
     position: relative;
     align-self: stretch;
@@ -387,6 +415,7 @@ a.list4:hover,
     width: 100%;
     height: auto;
 }
+
 .information-wrapper {
     height: auto;
     align-self: normal;
@@ -416,6 +445,7 @@ a.list4:hover,
     gap: var(--gap-11xs);
     width: 100%;
 }
+
 .list3 {
     align-self: stretch;
     border-radius: var(--br-9xl);
@@ -432,29 +462,38 @@ a.list4:hover,
     border: none;
     width: 100%;
     box-sizing: border-box;
-    transition: background-color 0.2s ease;
     font-size: var(--subheading-size);
     color: var(--primary);
     font-family: var(--body);
+    transform: scale(1);
+    transition: transform 0.2s ease-out, background-color 0.2s ease-out !important;
 }
+
 .list3 .settings {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
 .list3:focus {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
+
 .list3:hover {
     background-color: var(--container-background-hover);
+    transform: scale(1.02);
+    transition: transform 0.2s ease-in, background-color 0.2s ease-in !important;
 }
+
 .list3:active {
     background-color: var(--container-background-active);
 }
+
 .list3:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
+
 .list4 {
     align-self: stretch;
     border-radius: 28px;
@@ -469,12 +508,13 @@ a.list4:hover,
     cursor: pointer;
     text-decoration: none;
     color: var(--primary);
-    transition: background-color 0.2s ease;
+    transition: all 0.8s ease;
     margin-bottom: 20px;
 }
 
 .list4:hover {
     background-color: var(--container-background-hover);
+    transform: scale(1.02);
 }
 
 .list4:active {
@@ -485,6 +525,7 @@ a.list4:hover,
     outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
+
 .test-toggle-group {
     align-self: stretch;
     flex: 1;
@@ -495,23 +536,31 @@ a.list4:hover,
     justify-content: flex-start;
     gap: var(--gap-11xs);
 }
+
 .containers {
     top: 0px;
     left: 0px;
-    min-height: 100vh; /* Add this */
+    min-height: 100vh;
+    /* Add this */
     background-color: var(--background);
     display: flex;
     flex-direction: column;
-    align-items: center; /* Add this */
+    align-items: center;
+    /* Add this */
     justify-content: flex-start;
     padding: 10px;
     box-sizing: border-box;
     gap: var(--gap-xl);
-    width: 100%; /* Add this */
-    overflow-x: hidden; /* Add this */
-    max-width: 500px; /* Add this for mobile */
-    margin: 0 auto; /* Add this for mobile */
+    width: 100%;
+    /* Add this */
+    overflow-x: hidden;
+    /* Add this */
+    max-width: 500px;
+    /* Add this for mobile */
+    margin: 0 auto;
+    /* Add this for mobile */
 }
+
 .nav-label {
     position: relative;
     line-height: 12px;
@@ -519,6 +568,7 @@ a.list4:hover,
     font-weight: 500;
     color: var(--secondary);
 }
+
 .nav-icon-container {
     width: 31px;
     display: flex;
@@ -528,8 +578,28 @@ a.list4:hover,
     gap: 4px;
     color: var(--secondary);
     cursor: pointer;
-
+    transition: all 0.8s ease;
+    padding: 8px;
+    border-radius: 12px;
 }
+
+.nav-icon-container:hover {
+    background-color: var(--container-background);
+    color: var(--secondary);
+}
+
+.nav-icon-container:hover .nav-label {
+    color: var(--secondary);
+}
+
+.nav-icon-container:hover svg {
+    animation: bounce 0.8s ease infinite;
+}
+
+.nav-icon-container:hover svg path {
+    fill: var(--secondary);
+}
+
 .nav-label-selected {
     position: relative;
     line-height: 12px;
@@ -537,6 +607,7 @@ a.list4:hover,
     font-weight: 600;
     color: var(--primary);
 }
+
 .nav-icon-container-selected {
     width: 31px;
     display: flex;
@@ -547,6 +618,7 @@ a.list4:hover,
     color: var(--primary);
     cursor: pointer;
 }
+
 .ic-oui-search-1-icon {
     width: 24px;
     position: relative;
@@ -554,44 +626,56 @@ a.list4:hover,
     overflow: hidden;
     flex-shrink: 0;
 }
+
 .icon-container {
-    width: 100%; /* Change from 332px */
-    max-width: 332px; /* Add this */
+    width: 100%;
+    /* Change from 332px */
+    max-width: 332px;
+    /* Add this */
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin: 0 auto; /* Add this */
+    margin: 0 auto;
+    /* Add this */
 }
+
 .tab-container {
-    position: fixed; /* Change to fixed */
+    position: fixed;
+    /* Change to fixed */
     bottom: 0px;
     left: 0px;
     background-color: var(--background);
-    width: 100%; /* Make it take up the full width */
+    width: 100%;
+    /* Make it take up the full width */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: var(--padding-xl) 0; /* Reduce horizontal padding */
+    padding: var(--padding-xl) 0;
+    /* Reduce horizontal padding */
     box-sizing: border-box;
     text-align: center;
     font-size: var(--font-size-2xs);
     color: var(--secondary);
-    z-index: 1000; /* Add this to ensure nav stays on top */
+    z-index: 1000;
+    /* Add this to ensure nav stays on top */
 }
+
 .index {
     /* Remove height limit */
     /* height: 1071px; */
     width: 100%;
-    min-height: 100vh; /* Add this */
+    min-height: 100vh;
+    /* Add this */
     position: relative;
     text-align: left;
     font-size: var(--subheading-size);
     color: var(--primary);
     font-family: var(--body);
     padding-bottom: 80px;
-    background-color: var(--background); /* Add this */
+    background-color: var(--background);
+    /* Add this */
 }
 
 .blank-div {
@@ -638,27 +722,87 @@ a.list4:hover,
 }
 
 .main-content {
-    padding-bottom: 100px; /* Add this to prevent content from being hidden under nav */
+    padding-bottom: 100px;
+    /* Add this to prevent content from being hidden under nav */
     position: relative;
     width: 100%;
-    max-width: 100%; /* Add this */
-    overflow-x: hidden; /* Add this */
-    display: flex; /* Add this */
-    flex-direction: column; /* Add this */
-    align-items: center; /* Add this */
+    max-width: 100%;
+    /* Add this */
+    overflow-x: hidden;
+    /* Add this */
+    display: flex;
+    /* Add this */
+    flex-direction: column;
+    /* Add this */
+    align-items: center;
+    /* Add this */
     overflow-x: visible;
 }
 
-.main-content > *:not(.top-app-bar) {
+.main-content>*:not(.top-app-bar) {
     animation: fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
     opacity: 0;
 }
+
+.big-number-container {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 28px;
+    background: radial-gradient(circle at 50% 150%, #3CAEA3 0%, #6A8CAF 50%, #8B7AB0 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    gap: 16px;
+}
+
+.big-number-container::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+    pointer-events: none;
+}
+
+.big-serif-number {
+    font-family: 'Clock Serif';
+    font-size: 140px;
+    font-weight: bold;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.big-number-subtitle {
+    font-family: var(--body);
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
 
 @keyframes fadeInUp {
     from {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -670,6 +814,7 @@ a.list4:hover,
         opacity: 1;
         transform: translateY(0);
     }
+
     to {
         opacity: 0;
         transform: translateY(20px);
@@ -695,7 +840,7 @@ a.list4:hover,
         margin: 0;
         align-items: center;
     }
-    
+
     .main-content {
         width: 100%;
         max-width: 500px;
@@ -711,6 +856,13 @@ a.list4:hover,
     .theme-container {
         width: 100%;
     }
+
+    .big-serif-number {
+        font-size: 80px;
+    }
+    .big-number-subtitle {
+        font-size: 20px;
+    }
 }
 
 /* Update mobile styles */
@@ -720,7 +872,7 @@ a.list4:hover,
         max-width: none;
         padding: 10px 20px;
     }
-    
+
     .main-content {
         width: 100%;
         padding: 0;
@@ -744,24 +896,33 @@ a.list4:hover,
         display: flex;
         flex-direction: row;
         padding: 0;
-        justify-content: center; /* Add this */
-        max-width: 1600px; /* This will override mobile max-width */
-        margin: 0 auto; /* Add this */
-        align-items: flex-start; /* Reset alignment for desktop */
+        justify-content: center;
+        /* Add this */
+        max-width: 1600px;
+        /* This will override mobile max-width */
+        margin: 0 auto;
+        /* Add this */
+        align-items: flex-start;
+        /* Reset alignment for desktop */
     }
 
     .main-content {
-        align-items: flex-start; /* Reset alignment for desktop */
-        margin-left: 420px; /* Change from 33% to fixed width */
-        width: 800px; /* Increased from 700px */
+        align-items: flex-start;
+        /* Reset alignment for desktop */
+        margin-left: 420px;
+        /* Change from 33% to fixed width */
+        width: 800px;
+        /* Increased from 700px */
         padding: 40px;
-        max-width: 100%; /* Update this */
+        max-width: 100%;
+        /* Update this */
     }
 
     .tab-container {
         position: fixed;
         top: 0;
-        left: max(0px, calc(50% - 800px)); /* Add this to anchor to center */
+        left: max(0px, calc(50% - 800px));
+        /* Add this to anchor to center */
         bottom: 0;
         width: 33%;
         max-width: 420px;
@@ -801,34 +962,41 @@ a.list4:hover,
     }
 
     .main-content {
-        margin-left: 420px; /* Change from 33% to fixed width */
-        width: 800px; /* Increased from 700px */
+        margin-left: 420px;
+        /* Change from 33% to fixed width */
+        width: 800px;
+        /* Increased from 700px */
         padding: 40px;
-        max-width: 100%; /* Update this */
+        max-width: 100%;
+        /* Update this */
     }
 }
 
 /* Add a larger breakpoint for ultra-wide screens */
 @media screen and (min-width: 1600px) {
     .tab-container {
-        left: calc(50% - 800px); /* Lock to center on very wide screens */
+        left: calc(50% - 800px);
+        /* Lock to center on very wide screens */
     }
 }
 
 @media screen and (max-width: 499px) {
     .containers {
-        padding: 10px 16px; /* Add consistent padding */
+        padding: 10px 16px;
+        /* Add consistent padding */
     }
-    
+
     .tab-container {
-        padding: var(--padding-xl) 20px; /* Adjust padding for mobile */
+        padding: var(--padding-xl) 20px;
+        /* Adjust padding for mobile */
     }
 }
 
 /* Update settings container spacing */
 .container.settings {
-    margin-bottom: 20px;  /* Increase bottom margin to create space */
-    padding: var(--padding-xl);
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: transparent;
 }
 
 /* Add proper spacing between paragraphs */
@@ -840,7 +1008,8 @@ a.list4:hover,
 
 /* Adjust GitHub repo container spacing */
 .list3.settings {
-    margin-top: 0;  /* Remove top margin since parent container has bottom margin */
+    margin-top: 0;
+    /* Remove top margin since parent container has bottom margin */
     padding: var(--padding-xl);
 }
 
@@ -849,6 +1018,7 @@ a.list4:hover,
     --container-background-hover: color-mix(in srgb, var(--container-background) 95%, var(--primary) 5%);
     --container-background-active: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
 }
+
 /* Update the CSS variables for hover/active states with mode-specific values */
 :root {
     /* Base hover states - will be used for dark mode */
@@ -870,4 +1040,9 @@ a.list4:hover,
         --container-background-hover: color-mix(in srgb, var(--container-background) 95%, var(--primary) 5%);
         --container-background-active: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
     }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
 }
