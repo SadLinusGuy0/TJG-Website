@@ -161,6 +161,7 @@ button.list3:hover {
 
 /* For back button in settings and similar pages */
 .top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon,
+.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon,
 .top-app-bar-icon[onclick="window.history.back()"] {
     transform: scale(1);
     transition: transform 0.2s ease-out, background-color 0.2s ease;
@@ -172,6 +173,7 @@ button.list3:hover {
 }
 
 .top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon:hover,
+.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon:hover,
 .top-app-bar-icon[onclick="window.history.back()"]:hover {
     transform: scale(1.1);
     transition: transform 0.2s ease-in, background-color 0.2s ease;
@@ -179,7 +181,7 @@ button.list3:hover {
 }
 
 /* Keep the original behavior for the settings icon only */
-.top-app-bar-icon:not([onclick="window.history.back()"]) {
+.top-app-bar-icon:not([onclick="window.history.back()"]):not(.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon) {
     transform: scale(1);
     transition: transform 0.2s ease-out, rotate 0.2s ease, background-color 0.2s ease;
     border-radius: 50%;
@@ -188,7 +190,7 @@ button.list3:hover {
     cursor: pointer;
 }
 
-.top-app-bar-icon:not([onclick="window.history.back()"]):hover {
+.top-app-bar-icon:not([onclick="window.history.back()"]):not(.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon):hover {
     transform: scale(1.1) rotate(90deg);
     transition: transform 0.2s ease-in, rotate 0.2s ease, background-color 0.2s ease;
     background-color: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);

@@ -60,7 +60,7 @@
                 <form id="settings" action="/src/scripts/settings.js" style="padding-bottom: 20px;">
 
                 <div class="top-app-bar">
-                    <div class="top-app-bar-container" onclick="window.history.back()" style="justify-content: flex-start; padding-left: 10px;"> 
+                    <div class="top-app-bar-container" onclick="handleBackNavigation(event)" style="justify-content: flex-start; padding-left: 10px;"> 
                         <div class="top-app-bar-icon">
                             <svg width="10" height="20" viewBox="0 0 10 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M9.56416 2.15216C9.85916 1.86116 9.86316 1.38616 9.57216 1.09116C9.28116 0.797162 8.80616 0.794162 8.51116 1.08516L0.733159 8.75516C0.397159 9.08616 0.212158 9.52916 0.212158 10.0012C0.212158 10.4722 0.397159 10.9162 0.733159 11.2472L8.51116 18.9162C8.65716 19.0592 8.84716 19.1312 9.03816 19.1312C9.23116 19.1312 9.42516 19.0562 9.57216 18.9082C9.86316 18.6132 9.85916 18.1382 9.56416 17.8472L1.78716 10.1782C1.72116 10.1152 1.71216 10.0402 1.71216 10.0012C1.71216 9.96216 1.72116 9.88616 1.78716 9.82316L9.56416 2.15216Z" fill="var(--primary)"/>
@@ -173,68 +173,123 @@
         </div>
     </div>
     <script>
+        // Store the previous page URL when entering settings
         document.addEventListener('DOMContentLoaded', () => {
-            // Get saved theme or default to 'auto'
-            const currentTheme = localStorage.getItem('theme') || 'auto';
-            
-            // Check the correct radio button
-            document.querySelector(`input[value="${currentTheme}"]`).checked = true;
+            // Get the previous page from URL parameter or session storage
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromPage = urlParams.get('from');
+            console.log('From page parameter:', fromPage);
 
-            // Add change listeners to radio buttons
-            document.querySelectorAll('input[name="theme"]').forEach(input => {
+            if (fromPage && fromPage.endsWith('.html')) {
+                sessionStorage.setItem('previousPage', fromPage);
+                console.log('Stored previous page from URL param:', fromPage);
+            }
+
+            // Get saved theme from localStorage or sessionStorage
+            const savedTheme = localStorage.getItem('theme') || sessionStorage.getItem('lastTheme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+
+            // Prevent scroll restoration
+            if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+            }
+
+            // Reset scroll position
+            window.scrollTo(0, 0);
+
+            // Handle theme changes
+            const themeInputs = document.querySelectorAll('input[name="theme"]');
+            themeInputs.forEach(input => {
+                if (input.value === savedTheme) {
+                    input.checked = true;
+                }
+                
                 input.addEventListener('change', (e) => {
                     const newTheme = e.target.value;
                     const root = document.documentElement;
                     
-                    // Add transitioning class to html instead of body
                     root.classList.add('theme-transitioning');
                     
                     if (newTheme === 'auto') {
                         localStorage.removeItem('theme');
+                        sessionStorage.removeItem('lastTheme');
                         root.removeAttribute('data-theme');
                     } else {
                         localStorage.setItem('theme', newTheme);
+                        sessionStorage.setItem('lastTheme', newTheme);
                         root.setAttribute('data-theme', newTheme);
                     }
 
-                    // Remove transitioning class after transition completes
                     setTimeout(() => {
                         root.classList.remove('theme-transitioning');
-                    }, 200); // Reduced from 300ms to 200ms
+                    }, 200);
                 });
             });
         });
+
+        function handleBackNavigation(e) {
+            e.preventDefault();
+            console.log('Back navigation triggered');
+
+            const mainContent = document.querySelector('.main-content');
+            mainContent.classList.add('fade-out');
+            
+            // Store current theme
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme) {
+                sessionStorage.setItem('lastTheme', currentTheme);
+            } else {
+                sessionStorage.removeItem('lastTheme');
+            }
+            
+            // Get the stored previous page
+            const previousPage = sessionStorage.getItem('previousPage');
+            console.log('Retrieved previous page from session:', previousPage);
+            
+            setTimeout(() => {
+                // Double check we have a valid page to go to
+                const targetPage = previousPage && previousPage.endsWith('.html') ? previousPage : 'index.html';
+                console.log('Navigating to:', targetPage);
+                window.location.href = targetPage;
+            }, 300);
+        }
+
+        // Update all navigation links to settings to include the current page
+        function updateSettingsLinks() {
+            const settingsIcon = document.querySelector('.top-app-bar-icon[onclick*="settings.html"]');
+            if (settingsIcon) {
+                const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+                settingsIcon.setAttribute('onclick', `location.href='settings.html?from=${currentPage}'`);
+            }
+        }
+
+        // Call this when the page loads
+        if (window.location.pathname.indexOf('settings.html') === -1) {
+            document.addEventListener('DOMContentLoaded', updateSettingsLinks);
+        }
     </script>
     <script>
-        // Handle back button and page transitions
+        // Handle navigation clicks
         document.addEventListener('DOMContentLoaded', () => {
-            // Handle back button clicks
-            document.querySelector('.top-app-bar-container')?.addEventListener('click', function(e) {
-                e.preventDefault();
-                const mainContent = document.querySelector('.main-content');
-                mainContent.classList.add('fade-out');
-                
-                setTimeout(() => {
-                    window.history.back();
-                }, 300);
-            });
-    
-            // Handle navigation clicks
             document.querySelectorAll('[onclick*="location.href"]').forEach(link => {
                 const originalOnClick = link.getAttribute('onclick');
-                link.setAttribute('onclick', ''); // Remove original onclick
-                
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = originalOnClick.match(/'([^']+)'/)[1];
+                if (!originalOnClick.includes('settings.html')) {  // Don't modify settings links
+                    link.setAttribute('onclick', ''); // Remove original onclick
                     
-                    const mainContent = document.querySelector('.main-content');
-                    mainContent.classList.add('fade-out');
-                    
-                    setTimeout(() => {
-                        window.location.href = target;
-                    }, 300);
-                });
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const target = originalOnClick.match(/'([^']+)'/)[1];
+                        
+                        const mainContent = document.querySelector('.main-content');
+                        mainContent.classList.add('fade-out');
+                        
+                        setTimeout(() => {
+                            window.location.href = target;
+                        }, 300);
+                    });
+                }
             });
         });
     </script>
