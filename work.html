@@ -127,7 +127,7 @@
 									</svg>
 								</div>
 							</div>
-							<img src="src/images/projects/oneuialt.png" alt="One UI Design Kit" style="width: 100%; height: 100%; border-radius: 24px;"/>
+							<img class="theme-aware-image" src="src/images/projects/oneuialt.png" data-dark-src="src/images/projects/oneuialt.png" data-light-src="src/images/projects/One UI Design Kit cover light.png" alt="One UI Design Kit" style="width: 100%; height: 100%; border-radius: 24px;"/>
 						</a>
 						
 						<a href="https://youtu.be/RCb5AaginpM" class="list4" aria-label="View WhatsApp You project">
@@ -240,6 +240,10 @@
 						</div>
 					</a>
 
+				</div>
+			</div>
+		</div>
+
 				<script>
 					document.addEventListener('DOMContentLoaded', (event) => {
 						const savedTheme = localStorage.getItem('theme');
@@ -278,39 +282,44 @@
 						}
 					});
 				</script>
-				<!-- <script>
-					// Handle back button and page transitions
-					document.addEventListener('DOMContentLoaded', () => {
-						// Handle back button clicks
-						document.querySelector('.top-app-bar-container')?.addEventListener('click', function(e) {
-							e.preventDefault();
-							const mainContent = document.querySelector('.main-content');
-							mainContent.classList.add('fade-out');
-							
-							setTimeout(() => {
-								window.history.back();
-							}, 300);
-						});
-				
-						// Handle navigation clicks
-						document.querySelectorAll('[onclick*="location.href"]').forEach(link => {
-							const originalOnClick = link.getAttribute('onclick');
-							link.setAttribute('onclick', ''); // Remove original onclick
-							
-							link.addEventListener('click', function(e) {
-								e.preventDefault();
-								const target = originalOnClick.match(/'([^']+)'/)[1];
-								
-								const mainContent = document.querySelector('.main-content');
-								mainContent.classList.add('fade-out');
-								
-								setTimeout(() => {
-									window.location.href = target;
-								}, 300);
-							});
-						});
-					});
-				</script> -->
+
+                <script>
+                    // Function to update theme-aware images
+                    function updateThemeAwareImages() {
+                        const customTheme = document.documentElement.getAttribute('data-theme');
+                        // Use custom theme if set, otherwise fallback to system preference
+                        const isDarkMode = customTheme ? 
+                            customTheme === 'dark' : 
+                            window.matchMedia('(prefers-color-scheme: dark)').matches;
+                        
+                        document.querySelectorAll('.theme-aware-image').forEach(img => {
+                            img.src = isDarkMode ? img.dataset.darkSrc : img.dataset.lightSrc;
+                        });
+                    }
+
+                    // Update images initially
+                    document.addEventListener('DOMContentLoaded', () => {
+                        updateThemeAwareImages();
+                    });
+
+                    // Create a MutationObserver to watch for theme changes
+                    const observer = new MutationObserver((mutations) => {
+                        mutations.forEach((mutation) => {
+                            if (mutation.attributeName === 'data-theme') {
+                                updateThemeAwareImages();
+                            }
+                        });
+                    });
+
+                    // Start observing theme changes
+                    observer.observe(document.documentElement, {
+                        attributes: true,
+                        attributeFilter: ['data-theme']
+                    });
+
+                    // Also listen for system theme changes
+                    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeAwareImages);
+                </script>
   	</div>
 </body>
 </html>

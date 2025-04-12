@@ -1048,3 +1048,28 @@ button.list3:hover {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-3px); }
 }
+
+/* Theme-aware image handling */
+@media (prefers-color-scheme: dark) {
+    .theme-aware-image {
+        content: attr(data-dark-src);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .theme-aware-image {
+        content: attr(data-light-src);
+    }
+}
+
+.new-chip {
+    background-color: #64DD88;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 8px;
+    display: inline-block;
+    font-family: var(--body);
+}
