@@ -113,8 +113,7 @@ export default function WorkPage() {
                   </div>
                 </div>
                 <Image
-                  className="theme-aware-image"
-                  src={theme === 'dark' ? '/images/projects/oneuialt.png' : '/images/projects/oneui-design-kit-cover-light.png'}
+                  src="/images/projects/oneuialt.png"
                   alt="One UI Design Kit"
                   width={1000}
                   height={1000}

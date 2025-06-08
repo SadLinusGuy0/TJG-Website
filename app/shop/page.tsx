@@ -65,7 +65,7 @@ export default function Shop() {
                     </svg>
                   </div>
                 </div>
-                <Image className="theme-aware-image" src="/images/wallpapers/oui8-dark.png" alt="S25 Ultra recreation" width={600} height={338} style={{ width: '100%', height: '100%', borderRadius: 24 }} />
+                <Image src="/images/wallpapers/oui8-dark.png" alt="S25 Ultra recreation" width={600} height={338} style={{ width: '100%', height: '100%', borderRadius: 24 }} />
               </a>
               <a href="https://thatjoshguy.gumroad.com/l/s25u" className="list4" aria-label="S25U remake" style={{ marginBottom: 20 }}>
                 <div className="test-toggle-frame">
