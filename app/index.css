@@ -568,6 +568,7 @@ button.list3:hover {
     color: var(--secondary);
     font-size: 16px;
     font-weight: 600;
+    font-family: 'One UI Sans';
     gap: 12px;
 }
 
@@ -575,6 +576,7 @@ button.list3:hover {
     color: var(--primary);
     font-size: 16px;
     font-weight: 600;
+    font-family: 'One UI Sans';
     gap: 12px;
 }
 
