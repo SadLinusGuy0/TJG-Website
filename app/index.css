@@ -1113,7 +1113,7 @@ button.list3:hover {
     font-weight: 600;
     margin-right: 8px;
     display: inline-block;
-    font-family: var(--body);
+    font-family: 'One UI Sans';
 }
 
 @font-face {
