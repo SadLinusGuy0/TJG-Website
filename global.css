@@ -126,10 +126,9 @@ a {
 
 @font-face {
     font-family: 'One UI Sans';
-        src: url(src/styles/fonts/oneuisans.ttf) format('truetype supports variations');
-        src: url(src/styles/fonts/oneuisans.ttf) format('truetype-variations');
-        font-weight: 100 900;
-    }
+    src: url(src/styles/fonts/oneuisans.ttf) format('truetype-variations');
+    font-weight: 100 900;
+}
 
 @font-face {
     font-family: 'Clock Serif';
