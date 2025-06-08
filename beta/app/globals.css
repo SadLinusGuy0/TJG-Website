@@ -1,0 +1,162 @@
+/* === Merged from legacy global.css === */
+@import url('./index.css');
+
+html {
+    scroll-behavior: smooth;
+    color-scheme: var(--color-scheme);
+    min-height: 100%;
+    background-color: var(--background);
+}
+
+html[data-theme="dark"],
+html[data-theme="light"],
+:root,
+body,
+.container,
+.list3,
+.nav-icon-container,
+.nav-icon-container-selected,
+.nav-label,
+.nav-label-selected,
+.body-text,
+.information,
+.theme-selection input[type="radio"],
+.tab-container,
+svg path,
+.main-content,
+.containers,
+.index,
+.title,
+.containers-are-the,
+.information-wrapper {
+    transition: all 0.15s ease-out;
+}
+
+html[data-theme="dark"] {
+    --background: var(--dark-background);
+    --secondary: var(--dark-secondary);
+    --container-background: var(--dark-container-background);
+    --primary: var(--dark-primary);
+    --accent: var(--accent);
+}
+
+html[data-theme="light"] {
+    --background: var(--light-background);
+    --secondary: var(--light-secondary);
+    --container-background: var(--light-container-background);
+    --primary: var(--light-primary);
+    --accent: var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: var(--dark-background);
+        --secondary: var(--dark-secondary);
+        --container-background: var(--dark-container-background);
+        --primary: var(--dark-primary);
+        --accent: var(--accent);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --background: var(--light-background);
+        --secondary: var(--light-secondary);
+        --container-background: var(--light-container-background);
+        --primary: var(--light-primary);
+        --accent: var(--accent);
+    }
+}
+
+body {
+    margin: 0;
+    line-height: normal;
+    color: var(--background);
+    min-height: 100vh;
+    background-color: var(--background);
+    display: flex;
+    flex-direction: column;
+    transition: none;
+}
+
+a {
+    text-decoration: none;
+    color: var(--secondary);
+}
+
+:root {
+    --body: 'One UI Sans APP VF';
+    --font-size-2xs: 11px;
+    --body-size: 14px;
+    --subheading-size: 18px;
+    --subtitle-size: 20px;
+    --title-size: 36px;
+    --dark-background: #000;
+    --dark-secondary: #848487;
+    --dark-container-background: #17171a;
+    --dark-primary: #fff;
+    --light-background: #f1f1f3;
+    --light-secondary: #99999d;
+    --light-container-background: #fff;
+    --light-primary: #000;
+    --accent: #387aff;
+    --gap-xl: 10px;
+    --gap-xll: 20px;
+    --gap-11xs: 2px;
+    --padding-xl: 20px;
+    --br-9xl: 28px;
+    --br-10xl: 40px;
+    --br-11xs: 2px;
+}
+
+@font-face {
+    font-family: 'One UI Sans';
+    src: url(/src/styles/fonts/oneuisans.ttf) format('truetype-variations');
+    font-weight: 100 900;
+}
+
+@font-face {
+    font-family: 'Clock Serif';
+    src: url('/src/styles/fonts/Clock Bold Serif.ttf') format('truetype');
+    font-weight: bold;
+    font-display: swap;
+}
+
+/* === index.css is imported above and contains all component/utility styles === */
+
+.settings-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.settings-content {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+}
+
+@media screen and (min-width: 900px) {
+    .settings-content {
+        max-width: 600px;
+    }
+}
+
+.main-content.settings {
+    padding-left: 0;
+}
+
+@media screen and (min-width: 900px) {
+    .main-content.settings {
+        width: 600px;
+        max-width: 100%;
+    }
+} 
