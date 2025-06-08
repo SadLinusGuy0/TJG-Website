@@ -3,7 +3,7 @@
 import { useTheme } from '../components/ThemeProvider';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 export default function Settings() {
