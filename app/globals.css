@@ -48,6 +48,28 @@ html[data-theme="light"] {
     --accent: var(--accent);
 }
 
+/* Experimental UI Theme Variables */
+html[data-experimental="true"] {
+    --experimental-border-radius: 28px;
+    --experimental-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --experimental-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --experimental-gradient: linear-gradient(90deg, #17171A 0%, #FCFCFF 100%);
+}
+
+html[data-experimental="true"][data-theme="dark"] {
+    --experimental-background: linear-gradient(180deg, #346368 0%, #1D3A7C 100%);
+    --experimental-container: rgba(23, 23, 26, 0.3);
+    --experimental-border: rgba(255, 255, 255, 0.1);
+    --secondary: rgba(255,255,255,0.6);
+}
+
+html[data-experimental="true"][data-theme="light"] {
+    --experimental-background: linear-gradient(180deg, #65BAC3 0%, #4B65A1 100%);
+    --experimental-container: rgba(252, 252, 255, 0.3);
+    --experimental-border: rgba(0, 0, 0, 0.08);
+    --secondary: rgba(0,0,0,0.3);
+}
+
 @media (prefers-color-scheme: dark) {
     :root {
         --background: var(--dark-background);
@@ -159,4 +181,10 @@ a {
         width: 600px;
         max-width: 100%;
     }
+}
+
+html[data-experimental="true"],
+html[data-experimental="true"] body {
+    background: var(--experimental-background) !important;
+    background-color: transparent !important;
 } 

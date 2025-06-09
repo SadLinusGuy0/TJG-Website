@@ -1,5 +1,6 @@
 import { ThemeProvider } from './components/ThemeProvider';
 import './globals.css';
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata = {
   title: 'That Josh Guy',
@@ -39,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning>
       <head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <script
@@ -53,6 +54,12 @@ export default function RootLayout({
                   } else {
                     document.documentElement.dataset.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                   }
+                  var experimental = localStorage.getItem('experimentalUI');
+                  if (experimental) {
+                    document.documentElement.dataset.experimental = experimental;
+                  } else {
+                    document.documentElement.dataset.experimental = 'false';
+                  }
                 } catch (e) {}
               })();
             `
@@ -63,6 +70,11 @@ export default function RootLayout({
         <ThemeProvider>
           {children}
         </ThemeProvider>
+        <svg width="0" height="0" style={{position:'absolute'}}>
+          <filter id="progressive-blur" x="0" y="0" width="100%" height="100%">
+            <feGaussianBlur stdDeviation="0 24" edgeMode="duplicate"/>
+          </filter>
+        </svg>
       </body>
     </html>
   )

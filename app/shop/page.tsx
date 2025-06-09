@@ -9,7 +9,7 @@ export default function Shop() {
     <div className="index">
       <div className="containers">
         <Navigation />
-        <div className="main-content" style={{ paddingTop: 0 }}>
+        <div className="main-content">
           <div className="top-app-bar">
             <div className="top-app-bar-container" style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
               <a href={`/settings?from=${encodeURIComponent(pathname)}`} className="top-app-bar-icon" aria-label="Settings" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: '50%', cursor: 'pointer' }}>

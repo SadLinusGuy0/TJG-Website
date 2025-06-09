@@ -7,7 +7,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 function SettingsContent() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, experimentalUI, setExperimentalUI } = useTheme();
   const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || '/';
@@ -72,6 +72,28 @@ function SettingsContent() {
             )}
           </div>
         </div>
+        
+        <div className="container1">
+          <div className="title">Experimental features</div>
+        </div>
+        <label htmlFor="experimental-ui-toggle" className="list3" style={{ cursor: 'pointer' }}>
+          <div className="test-toggle-group">
+            <div className="body-text">Experimental UI</div>
+            <div className="information-wrapper">
+              <div className="information">Try out new UI improvements and features</div>
+            </div>
+          </div>
+          <div className="toggle-switch">
+            <input
+              type="checkbox"
+              checked={experimentalUI}
+              onChange={(e) => setExperimentalUI(e.target.checked)}
+              id="experimental-ui-toggle"
+            />
+            <span className="toggle-slider"></span>
+          </div>
+        </label>
+
         <div className="container settings">
           <div className="body-text">
             <p className="containers-are-the">
