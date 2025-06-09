@@ -70,6 +70,7 @@ export default function RootLayout({
         <ThemeProvider>
           {children}
         </ThemeProvider>
+        <Analytics />
         <svg width="0" height="0" style={{position:'absolute'}}>
           <filter id="progressive-blur" x="0" y="0" width="100%" height="100%">
             <feGaussianBlur stdDeviation="0 24" edgeMode="duplicate"/>
