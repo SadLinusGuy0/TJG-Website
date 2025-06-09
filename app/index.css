@@ -542,6 +542,10 @@ button.list4:hover {
     outline-offset: 2px;
 }
 
+.list4 img {
+    border-radius: 20px !important;
+}
+
 .test-toggle-group {
     align-self: stretch;
     flex: 1;
