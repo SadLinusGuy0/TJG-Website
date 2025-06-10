@@ -7,17 +7,23 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 function SettingsContent() {
-  const { theme, setTheme, experimentalUI, setExperimentalUI } = useTheme();
+  const { theme, setTheme, experimentalUI, setExperimentalUI, blurEnabled, setBlurEnabled } = useTheme();
   const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || '/';
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    localStorage.setItem('progressiveBlur', blurEnabled.toString());
+    document.documentElement.dataset.progressiveBlur = blurEnabled.toString();
+  }, [blurEnabled]);
 
   return (
     <div className="main-content-settings" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0 }}>
+      <div className="header-container">
+        <div className="title" style={{ paddingBottom: '40px' }}>Settings</div>
+      </div>
+      <div className="blank-div">
       <div className="top-app-bar">
         <div className="top-app-bar-container" style={{ justifyContent: 'flex-start', paddingLeft: '10px' }}>
           <Link href={from} className="top-app-bar-icon" aria-label="Back">
@@ -27,10 +33,6 @@ function SettingsContent() {
           </Link>
         </div>
       </div>
-      <div className="header-container">
-        <div className="title" style={{ paddingBottom: '40px' }}>Settings</div>
-      </div>
-      <div className="blank-div" style={{ gap: '10px' }}>
         <div className="container1">
           <div className="title">Site theme</div>
         </div>
@@ -93,6 +95,26 @@ function SettingsContent() {
             <span className="toggle-slider"></span>
           </div>
         </label>
+
+        {experimentalUI && (
+          <label htmlFor="progressive-blur-toggle" className="list3" style={{ cursor: 'pointer', marginTop: 8 }}>
+            <div className="test-toggle-group">
+              <div className="body-text">Progressive Blur</div>
+              <div className="information-wrapper">
+                <div className="information">Enable or disable the new progressive blur effect</div>
+              </div>
+            </div>
+            <div className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={blurEnabled}
+                onChange={(e) => setBlurEnabled(e.target.checked)}
+                id="progressive-blur-toggle"
+              />
+              <span className="toggle-slider"></span>
+            </div>
+          </label>
+        )}
 
         <div className="container settings">
           <div className="body-text">

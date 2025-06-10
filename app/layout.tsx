@@ -1,6 +1,7 @@
 import { ThemeProvider } from './components/ThemeProvider';
 import './globals.css';
 import { Analytics } from "@vercel/analytics/next"
+import ProgressiveBlur from './components/ProgressiveBlur';
 
 export const metadata = {
   title: 'That Josh Guy',
@@ -60,6 +61,12 @@ export default function RootLayout({
                   } else {
                     document.documentElement.dataset.experimental = 'false';
                   }
+                  var progressiveBlur = localStorage.getItem('progressiveBlur');
+                  if (progressiveBlur) {
+                    document.documentElement.dataset.progressiveBlur = progressiveBlur;
+                  } else {
+                    document.documentElement.dataset.progressiveBlur = 'true';
+                  }
                 } catch (e) {}
               })();
             `
@@ -68,6 +75,8 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider>
+          <ProgressiveBlur />
+          <ProgressiveBlur position="bottom" />
           {children}
         </ThemeProvider>
         <Analytics />

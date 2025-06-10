@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 type Theme = 'light' | 'dark' | 'auto';
 
@@ -9,6 +10,9 @@ interface ThemeContextType {
   setTheme: (theme: Theme) => void;
   experimentalUI: boolean;
   setExperimentalUI: (enabled: boolean) => void;
+  blurEnabled: boolean;
+  setBlurEnabled: (enabled: boolean) => void;
+  hydrated: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
@@ -16,6 +20,9 @@ const ThemeContext = createContext<ThemeContextType>({
   setTheme: () => {},
   experimentalUI: false,
   setExperimentalUI: () => {},
+  blurEnabled: true,
+  setBlurEnabled: () => {},
+  hydrated: false,
 });
 
 const getInitialTheme = (): Theme => {
@@ -34,10 +41,20 @@ const getInitialExperimentalUI = (): boolean => {
   return false;
 };
 
+const getInitialBlurEnabled = (): boolean => {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('progressiveBlur');
+    return saved === null ? true : saved === 'true';
+  }
+  return true;
+};
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [experimentalUI, setExperimentalUIState] = useState<boolean>(getInitialExperimentalUI);
+  const [blurEnabled, setBlurEnabledState] = useState<boolean>(getInitialBlurEnabled);
   const [hydrated, setHydrated] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     // Load theme from localStorage on mount
@@ -86,8 +103,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('experimentalUI', enabled.toString());
   };
 
+  const setBlurEnabled = (enabled: boolean) => {
+    console.log('setBlurEnabled called with', enabled);
+    setBlurEnabledState(enabled);
+    document.documentElement.dataset.progressiveBlur = enabled.toString();
+    localStorage.setItem('progressiveBlur', enabled.toString());
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, experimentalUI, setExperimentalUI }}>
+    <ThemeContext.Provider value={{ theme, setTheme, experimentalUI, setExperimentalUI, blurEnabled, setBlurEnabled, hydrated }}>
       {children}
     </ThemeContext.Provider>
   );

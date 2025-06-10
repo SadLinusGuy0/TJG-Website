@@ -65,7 +65,26 @@ export default function WorkPage() {
                 </svg>
               </div>
             </a>
+            <Link href="/" className="list3" role="button" aria-label="View this website project">
+              <div className="shape">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <mask id="mask0_948_534" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                    <rect width="24" height="24" fill="#D9D9D9"/>
+                  </mask>
+                  <g mask="url(#mask0_948_534)">
+                    <path d="M4.825 12.025L8.7 15.9C8.88334 16.0833 8.975 16.3167 8.975 16.6C8.975 16.8833 8.88334 17.1167 8.7 17.3C8.51667 17.4833 8.28334 17.575 8 17.575C7.71667 17.575 7.48334 17.4833 7.3 17.3L2.7 12.7C2.6 12.6 2.52917 12.4917 2.4875 12.375C2.44584 12.2583 2.425 12.1333 2.425 12C2.425 11.8667 2.44584 11.7417 2.4875 11.625C2.52917 11.5083 2.6 11.4 2.7 11.3L7.3 6.7C7.5 6.5 7.7375 6.4 8.0125 6.4C8.2875 6.4 8.525 6.5 8.725 6.7C8.925 6.9 9.025 7.1375 9.025 7.4125C9.025 7.6875 8.925 7.925 8.725 8.125L4.825 12.025ZM19.175 11.975L15.3 8.1C15.1167 7.91667 15.025 7.68333 15.025 7.4C15.025 7.11667 15.1167 6.88333 15.3 6.7C15.4833 6.51667 15.7167 6.425 16 6.425C16.2833 6.425 16.5167 6.51667 16.7 6.7L21.3 11.3C21.4 11.4 21.4708 11.5083 21.5125 11.625C21.5542 11.7417 21.575 11.8667 21.575 12C21.575 12.1333 21.5542 12.2583 21.5125 12.375C21.4708 12.4917 21.4 12.6 21.3 12.7L16.7 17.3C16.5 17.5 16.2667 17.5958 16 17.5875C15.7333 17.5792 15.5 17.475 15.3 17.275C15.1 17.075 15 16.8375 15 16.5625C15 16.2875 15.1 16.05 15.3 15.85L19.175 11.975Z" fill="var(--primary)"/>
+                  </g>
+                </svg>
+              </div>
+              <div className="test-toggle-group">
+                <div className="body-text">This very site</div>
+                <div className="information-wrapper">
+                  <div className="information">What you're looking at right now</div>
+                </div>
+              </div>
+            </Link>
           </div>
+          
 
           <div className="container1">
             <div className="title">Design projects</div>
@@ -163,25 +182,6 @@ export default function WorkPage() {
             <div className="container1">
               <div className="title">Other projects</div>
             </div>
-
-            <Link href="/" className="list3" role="button" aria-label="View this website project">
-              <div className="shape">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <mask id="mask0_948_534" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-                    <rect width="24" height="24" fill="#D9D9D9"/>
-                  </mask>
-                  <g mask="url(#mask0_948_534)">
-                    <path d="M4.825 12.025L8.7 15.9C8.88334 16.0833 8.975 16.3167 8.975 16.6C8.975 16.8833 8.88334 17.1167 8.7 17.3C8.51667 17.4833 8.28334 17.575 8 17.575C7.71667 17.575 7.48334 17.4833 7.3 17.3L2.7 12.7C2.6 12.6 2.52917 12.4917 2.4875 12.375C2.44584 12.2583 2.425 12.1333 2.425 12C2.425 11.8667 2.44584 11.7417 2.4875 11.625C2.52917 11.5083 2.6 11.4 2.7 11.3L7.3 6.7C7.5 6.5 7.7375 6.4 8.0125 6.4C8.2875 6.4 8.525 6.5 8.725 6.7C8.925 6.9 9.025 7.1375 9.025 7.4125C9.025 7.6875 8.925 7.925 8.725 8.125L4.825 12.025ZM19.175 11.975L15.3 8.1C15.1167 7.91667 15.025 7.68333 15.025 7.4C15.025 7.11667 15.1167 6.88333 15.3 6.7C15.4833 6.51667 15.7167 6.425 16 6.425C16.2833 6.425 16.5167 6.51667 16.7 6.7L21.3 11.3C21.4 11.4 21.4708 11.5083 21.5125 11.625C21.5542 11.7417 21.575 11.8667 21.575 12C21.575 12.1333 21.5542 12.2583 21.5125 12.375C21.4708 12.4917 21.4 12.6 21.3 12.7L16.7 17.3C16.5 17.5 16.2667 17.5958 16 17.5875C15.7333 17.5792 15.5 17.475 15.3 17.275C15.1 17.075 15 16.8375 15 16.5625C15 16.2875 15.1 16.05 15.3 15.85L19.175 11.975Z" fill="var(--primary)"/>
-                  </g>
-                </svg>
-              </div>
-              <div className="test-toggle-group">
-                <div className="body-text">This very site</div>
-                <div className="information-wrapper">
-                  <div className="information">What you're looking at right now</div>
-                </div>
-              </div>
-            </Link>
 
             <a href="https://legacy.thatjoshguy.me" className="list3" role="button" aria-label="View legacy website">
               <div className="shape">

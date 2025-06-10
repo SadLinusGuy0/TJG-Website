@@ -51,10 +51,26 @@ export default function Shop() {
           <div className="blank-div">
             <div className="theme-container">
               {/* Wallpaper cards */}
-              <a href="https://thatjoshguy.gumroad.com/l/oneui8" className="list4" aria-label="One UI 8 wallpapers" style={{ marginBottom: 20 }}>
+              <a href="https://thatjoshguy.gumroad.com/l/flip7" className="list4" aria-label="Galaxy Z Flip 7 wallpaper recreation" style={{ marginBottom: 20 }}>
                 <div className="test-toggle-frame">
                   <div className="body-text" style={{ marginLeft: 10, textAlign: 'left', display: 'flex', alignItems: 'center' }}>
                     <span className="new-chip">New</span>
+                    Z Flip 7 Wallpaper Recreation
+                  </div>
+                  <div className="others2">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g id="Shape">
+                        <path id="Vector 3" d="M8.80005 20L15.3858 13.4142C16.1669 12.6332 16.1669 11.3668 15.3858 10.5858L8.80005 4" stroke="#ACACB1" strokeWidth="2" strokeLinecap="round"/>
+                      </g>
+                    </svg>
+                  </div>
+                </div>
+                <Image src="/images/wallpapers/flip7.png" alt="Flip 7 wallpaper recreation" width={600} height={338} style={{ width: '100%', height: '100%', borderRadius: 24 }} />
+              </a>
+              <a href="https://thatjoshguy.gumroad.com/l/oneui8" className="list4" aria-label="One UI 8 wallpapers" style={{ marginBottom: 20 }}>
+                <div className="test-toggle-frame">
+                  <div className="body-text" style={{ marginLeft: 10, textAlign: 'left', display: 'flex', alignItems: 'center' }}>
+                    <span className="hot-chip">Hot</span>
                     One UI 8
                   </div>
                   <div className="others2">
