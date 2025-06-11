@@ -1552,13 +1552,13 @@ html[data-experimental="true"][data-theme="dark"] body {
 }
 
 html[data-experimental="true"][data-theme="light"] .tab-container {
-  background: rgba(252, 252, 255, 0.6) !important;
+  background: rgba(252, 252, 255, 0.3) !important;
   backdrop-filter: blur(48px);
   margin-bottom: 0;
 }
 
 html[data-experimental="true"][data-theme="dark"] .tab-container {
-  background: rgba(23, 23, 26, 0.6) !important;
+  background: rgba(23, 23, 26, 0.3) !important;
   backdrop-filter: blur(48px);
   margin-bottom: 0;
 }
@@ -1570,6 +1570,15 @@ html[data-experimental="true"] .tab-container .icon-container {
   display: flex;
   justify-content: center;
   gap: 8px;
+}
+
+@media screen and (max-width: 900px) {
+  html[data-experimental="true"][data-theme="light"] .tab-container {
+    background: rgba(252, 252, 255, 0.6) !important;
+  }
+  html[data-experimental="true"][data-theme="dark"] .tab-container {
+    background: rgba(23, 23, 26, 0.6) !important;
+  }
 }
 
 html[data-experimental="true"] .nav-icon-container,
