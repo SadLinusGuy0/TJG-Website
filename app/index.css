@@ -759,7 +759,7 @@ button.list4:hover {
 }
 
 .title-container .title {
-    font-size: var(--subheading-size);
+    font-size: var(--subtitle-size);
     padding: 0;
     margin: 0;
 }
@@ -1066,6 +1066,9 @@ button.list4:hover {
         margin-left: 11% !important;
         padding-left: 100px !important;
         padding-right: 100px !important;
+    }
+    .top-app-bar {
+        margin-top: 40px;
     }
 }
 
@@ -1735,6 +1738,12 @@ html[data-theme="light"] {
   --container-background: var(--light-container-background);
   --primary: var(--light-primary);
   --accent: var(--accent);
+}
+
+.settings-page .progressive-blur-overlay {
+  height: 48px !important;
+  mask-image: linear-gradient(to bottom, black 0%, transparent 100%) !important;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%) !important;
 }
 
 

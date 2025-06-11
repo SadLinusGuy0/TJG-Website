@@ -27,7 +27,7 @@ export default function OneUIDesignKitPage() {
     <div className="index">
       <div className="containers">
         <Navigation hideMobile={true} />
-        <div className="main-content" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0, marginTop: 32 }}>
+        <div className="main-content" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0 }}>
           <div className="top-app-bar">
             <div className="top-app-bar-container" style={{ justifyContent: 'flex-start', paddingLeft: '10px' }}>
               <Link href="/work" className="top-app-bar-icon" aria-label="Back">
