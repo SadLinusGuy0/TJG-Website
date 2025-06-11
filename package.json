@@ -33,6 +33,6 @@
     "typescript": "^5"
   },
   "resolutions": {
-    "brace-expansion": "^latest-safe-version"
+    "brace-expansion": "latest-safe-version"
   }
 }
