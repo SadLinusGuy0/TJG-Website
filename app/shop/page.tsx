@@ -56,7 +56,7 @@ export default function Shop() {
                 <div className="test-toggle-frame">
                   <div className="body-text" style={{ marginLeft: 10, textAlign: 'left', display: 'flex', alignItems: 'center' }}>
                     <span className="new-chip">New</span>
-                    Z Flip 7 Wallpaper Recreation
+                    Z Flip 7 Recreation
                   </div>
                   <div className="others2">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
