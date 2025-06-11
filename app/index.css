@@ -734,7 +734,7 @@ button.list4:hover {
 
 .top-app-bar {
     position: relative;
-    z-index: 99 !important;
+    z-index: 100 !important;
     width: 100%;
     display: flex;
     align-items: center;
