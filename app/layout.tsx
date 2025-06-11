@@ -44,6 +44,8 @@ export default function RootLayout({
     <html suppressHydrationWarning>
       <head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#168AFF" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
