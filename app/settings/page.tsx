@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Navigation from '../components/Navigation';
 
 function SettingsContent() {
   const { theme, setTheme, experimentalUI, setExperimentalUI, blurEnabled, setBlurEnabled } = useTheme();
@@ -19,7 +20,7 @@ function SettingsContent() {
   }, [blurEnabled]);
 
   return (
-    <div className="main-content-settings" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0 }}>
+    <div className="main-content" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0 }}>
       <div className="header-container">
         <div className="title" style={{ paddingBottom: '40px' }}>Settings</div>
       </div>
@@ -99,9 +100,9 @@ function SettingsContent() {
         {experimentalUI && (
           <label htmlFor="progressive-blur-toggle" className="list3" style={{ cursor: 'pointer', marginTop: 8 }}>
             <div className="test-toggle-group">
-              <div className="body-text">Progressive Blur</div>
+              <div className="body-text">Blur effects</div>
               <div className="information-wrapper">
-                <div className="information">Enable or disable the new progressive blur effect</div>
+                <div className="information">Enable or disable the new blur effects</div>
               </div>
             </div>
             <div className="toggle-switch">
@@ -119,10 +120,7 @@ function SettingsContent() {
         <div className="container settings">
           <div className="body-text">
             <p className="containers-are-the">
-              This site was created using my One UI Design Kit, Figma's dev mode tools, and pure HTML, CSS and JS.
-            </p>
-            <p className="containers-are-the">
-              This is also the first site I've fully developed, from start to finish.
+              This site was created using my One UI Design Kit, and built using Next.js.
             </p>
           </div>
         </div>
@@ -198,6 +196,7 @@ export default function Settings() {
   return (
     <div className="index">
       <div className="containers">
+        <Navigation hideMobile={true} />
         <Suspense fallback={<div>Loading...</div>}>
           <SettingsContent />
         </Suspense>

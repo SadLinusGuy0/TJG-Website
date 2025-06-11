@@ -1213,7 +1213,7 @@ button.list4:hover {
     height: 72px;
     max-width: 100vw;
     padding: 4px 0 4px 0;
-    background-color: rgba(252,252,255,0.4);
+    background-color: rgba(252,252,255,0.8);
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -1596,14 +1596,14 @@ html[data-experimental="true"][data-theme="dark"] .nav-icon-container-selected:h
 
 @media screen and (max-width: 900px) {
   .mobile-nav {
-    background-color: rgba(252,252,255,0.4);
+    background-color: rgba(252,252,255,0.8);
     border-top: 1px solid rgba(0,0,0,0.10);
   }
 }
 
 @media (prefers-color-scheme: dark) {
   .mobile-nav {
-    background-color: rgba(23,23,26,0.4) !important;
+    background-color: rgba(23,23,26,0.8) !important;
     border-top: 1px solid rgba(255,255,255,0.10) !important;
   }
 }
