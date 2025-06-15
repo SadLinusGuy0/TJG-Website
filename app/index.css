@@ -1070,6 +1070,19 @@ button.list4:hover {
     .top-app-bar {
         margin-top: 40px;
     }
+    html[data-experimental="true"] .tab-container.desktop-nav {
+        border-top: 1.5px solid var(--experimental-border);
+        border-right: 1.5px solid var(--experimental-border);
+        border-bottom: 1.5px solid var(--experimental-border);
+        border-left: none;
+        border-top-right-radius: var(--experimental-border-radius);
+        border-bottom-right-radius: var(--experimental-border-radius);
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        box-shadow: var(--experimental-shadow);
+        background: var(--experimental-container);
+        transition: var(--experimental-transition);
+    }
 }
 
 /* Add a larger breakpoint for ultra-wide screens */

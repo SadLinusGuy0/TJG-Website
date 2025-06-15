@@ -61,7 +61,7 @@ export default function RootLayout({
                   if (experimental) {
                     document.documentElement.dataset.experimental = experimental;
                   } else {
-                    document.documentElement.dataset.experimental = 'false';
+                    document.documentElement.dataset.experimental = 'true';
                   }
                   var progressiveBlur = localStorage.getItem('progressiveBlur');
                   if (progressiveBlur) {

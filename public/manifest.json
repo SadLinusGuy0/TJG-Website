@@ -3,8 +3,8 @@
   "short_name": "TJG",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#17171A",
-  "theme_color": "#168AFF",
+  "background_color": "#b5c5de",
+  "theme_color": "#b5c5de",
   "description": "Hi, I'm Josh Skinner - a 17-year-old freelance UI/UX designer and writer.",
   "icons": [
     {
