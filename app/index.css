@@ -939,6 +939,7 @@ button.list4:hover {
     }
     .nav-label, .nav-label-selected {
         font-size: 13px;
+        font-family: 'One UI Sans';
         margin-top: 2px;
         text-align: center;
         display: block;
@@ -1227,6 +1228,7 @@ button.list4:hover {
     box-shadow: 0 -2px 16px rgba(0,0,0,0.12);
     gap: 8px;
     border-top: 1px solid rgba(0,0,0,0.10);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .mobile-nav .icon-container {
     width: 100%;
@@ -1260,6 +1262,7 @@ button.list4:hover {
     margin-top: 2px;
     text-align: center;
     display: block;
+    font-family: 'One UI Sans';
   }
   .containers,
   .main-content,
