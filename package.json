@@ -1,12 +1,40 @@
 {
   "name": "tjg-website",
-  "version": "1.0.0",
-  "description": "",
-  "devDependencies": {
-    "jest": "^29.6.2",
-    "jest-environment-jsdom": "^30.0.0-beta.3"
-  },
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "jest"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "@flags-sdk/hypertune": "^0.2.0",
+    "@vercel/analytics": "^1.5.0",
+    "@vercel/edge-config": "^1.4.0",
+    "flags": "^4.0.1",
+    "hypertune": "^2.7.2",
+    "next": "^15.3.3",
+    "next-pwa": "^5.6.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.0.0",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^15.3.3",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "typescript": "^5.0.0"
   }
 }
