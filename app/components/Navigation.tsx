@@ -80,8 +80,8 @@ export default function Navigation({ hideMobile = false }: NavigationProps) {
               transition: 'background 0.2s',
             } : {
               cursor: 'pointer',
-              paddingLeft: 20,
-              paddingRight: 20,
+              paddingLeft: 16,
+              paddingRight: 16,
               width: '100%',
               height: 48,
               display: 'flex',
