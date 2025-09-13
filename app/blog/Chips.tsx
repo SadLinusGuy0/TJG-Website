@@ -100,6 +100,8 @@ export default function Chips({ categories, selectedSlug }: Props) {
                 : 'color-mix(in srgb, var(--container-background) 50%, transparent)',
               color: chip.selected ? '#fff' : 'var(--secondary)',
               fontSize: 16,
+              fontFamily: 'One UI Sans',
+              fontWeight: 500,
               lineHeight: '20px',
               whiteSpace: 'nowrap',
               transition: 'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease'

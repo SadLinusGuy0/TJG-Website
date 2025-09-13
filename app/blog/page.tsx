@@ -68,6 +68,7 @@ export default async function BlogIndex({ searchParams }: Props) {
             }
             .blog-card-text-content {
               font-size: 1rem !important;
+              font-family: 'One UI Sans';
             }
             /* No blog-specific desktop spacing; use global .main-content like the home page */
           }
@@ -83,6 +84,7 @@ export default async function BlogIndex({ searchParams }: Props) {
             }
             .blog-card-text-content {
               font-size: 0.9rem !important;
+              font-family: 'One UI Sans';
             }
             .blog-card-thumbnail {
               width: 100px !important;
@@ -102,6 +104,7 @@ export default async function BlogIndex({ searchParams }: Props) {
             }
             .blog-card-text-content {
               font-size: 0.9rem !important;
+              font-family: 'One UI Sans';
             }
             /* mobile-specific adjustments here if needed */
           }
@@ -120,7 +123,7 @@ export default async function BlogIndex({ searchParams }: Props) {
           <div className="header-container">
             <div className="title" style={{ paddingBottom: 24 }}>Blog</div>
           </div>
-          <Chips categories={sortedCategories.sort((a, b) => b.id - a.id)} selectedSlug={selectedUnit} />
+          <Chips categories={sortedCategories} selectedSlug={selectedUnit} />
           
           {/* Posts Section */}
           {posts.length > 0 ? (
@@ -158,7 +161,9 @@ export default async function BlogIndex({ searchParams }: Props) {
                           minWidth: 0,
                           display: 'flex',
                           flexDirection: 'column',
-                          gap: '8px'
+                          gap: '8px',
+                          fontFamily: 'One UI Sans',
+                          fontWeight: '600'
                         }}>
                           <div className="body-text-blog-title" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                           <div className="information-wrapper">
@@ -167,7 +172,8 @@ export default async function BlogIndex({ searchParams }: Props) {
                               display: 'flex', 
                               flexWrap: 'wrap', 
                               alignItems: 'center',
-                              gap: '8px'
+                              gap: '8px',
+                              fontFamily: 'One UI Sans'
                             }}>
                               {/* Date Tag */}
                               <div style={{
@@ -176,7 +182,8 @@ export default async function BlogIndex({ searchParams }: Props) {
                                 backgroundColor: 'rgba(0, 0, 0, 0.1)',
                                 borderRadius: '12px',
                                 color: 'var(--primary)',
-                                fontWeight: '500'
+                                fontWeight: '500',
+                                fontFamily: 'One UI Sans'
                               }}>
                                 {new Date(post.date).toLocaleDateString('en-US', { 
                                   year: 'numeric', 

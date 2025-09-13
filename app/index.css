@@ -1574,9 +1574,9 @@ gap: 8px;
 }
 
 @media screen and (max-width: 900px) {
-html[data-experimental="true"][data-theme="light"] .tab-container {
+/* html[data-experimental="true"][data-theme="light"] .tab-container {
   background: rgba(252, 252, 255, 0.6) !important;
-}
+} */
 html[data-experimental="true"][data-theme="dark"] .tab-container {
   background: rgba(23, 23, 26, 0.6) !important;
 }
@@ -1647,6 +1647,7 @@ display: inline-block;
 white-space: nowrap;
 font-size: 16px;
 font-weight: 600;
+font-family: 'One UI Sans';
 }
 body.nav-collapsed .nav-label,
 body.nav-collapsed .nav-label-selected {
