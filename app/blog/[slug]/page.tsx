@@ -93,7 +93,7 @@ export default async function BlogPost(props: Params) {
           <div style={{ 
             position: 'relative', 
             width: '100%', 
-            height: 'clamp(300px, 50vh, 500px)',
+            height: 'clamp(300px, 40vh, 500px)',
             marginTop: '16px',
             marginBottom: '16px',
             borderRadius: '28px',
