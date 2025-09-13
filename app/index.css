@@ -491,8 +491,8 @@ button.list3:hover {
 .list3:hover,
 a.list3:hover,
 button.list3:hover {
-  background-color: rgba(23, 23, 26, 0.7) !important;
-  outline: 2px solid color-mix(in srgb, currentColor 60%, transparent);
+  background-color: var(--container-background-hover) !important;
+  outline: 2px solid color-mix(in srgb, currentColor 20%, transparent);
   transform: scale(1.02) !important;
   transition: transform 0.2s ease-in, background-color 0.2s ease-in, outline-color 0.2s !important;
 }
