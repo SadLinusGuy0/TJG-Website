@@ -67,7 +67,7 @@ export default async function BlogIndex({ searchParams }: Props) {
               flex-direction: row !important;
             }
             .blog-card-text-content {
-              font-size: 1rem !important;
+              font-size: 1.3rem !important;
               font-family: 'One UI Sans';
             }
             /* No blog-specific desktop spacing; use global .main-content like the home page */
@@ -83,7 +83,6 @@ export default async function BlogIndex({ searchParams }: Props) {
               flex-direction: row !important;
             }
             .blog-card-text-content {
-              font-size: 0.9rem !important;
               font-family: 'One UI Sans';
             }
             .blog-card-thumbnail {
@@ -103,7 +102,6 @@ export default async function BlogIndex({ searchParams }: Props) {
               flex-direction: column !important;
             }
             .blog-card-text-content {
-              font-size: 0.9rem !important;
               font-family: 'One UI Sans';
             }
             /* mobile-specific adjustments here if needed */
@@ -163,7 +161,8 @@ export default async function BlogIndex({ searchParams }: Props) {
                           flexDirection: 'column',
                           gap: '8px',
                           fontFamily: 'One UI Sans',
-                          fontWeight: '600'
+                          fontWeight: '600',
+                          fontSize: '1.2rem'
                         }}>
                           <div className="body-text-blog-title" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                           <div className="information-wrapper">
