@@ -18,7 +18,7 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType>({
   theme: 'auto',
   setTheme: () => {},
-  experimentalUI: true,
+  experimentalUI: false,
   setExperimentalUI: () => {},
   blurEnabled: true,
   setBlurEnabled: () => {},
@@ -36,9 +36,9 @@ const getInitialTheme = (): Theme => {
 const getInitialExperimentalUI = (): boolean => {
   if (typeof window !== 'undefined') {
     const saved = localStorage.getItem('experimentalUI');
-    return saved === null ? true : saved === 'true';
+    return saved === null ? false : saved === 'true';
   }
-  return true;
+  return false;
 };
 
 const getInitialBlurEnabled = (): boolean => {
@@ -75,7 +75,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     // Initialize experimental UI state
     const savedExperimental = localStorage.getItem('experimentalUI');
-    const experimentalValue = savedExperimental === null ? true : savedExperimental === 'true';
+    const experimentalValue = savedExperimental === null ? false : savedExperimental === 'true';
     document.documentElement.dataset.experimental = experimentalValue.toString();
 
     // Listen for system theme changes if theme is auto
