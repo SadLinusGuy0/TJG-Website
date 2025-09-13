@@ -5,18 +5,18 @@ import Link from "next/link";
 
 export const revalidate = 60;
 
-type Params = { params: { slug: string } };
+type Params = { params: Promise<{ slug: string }> };
 
 export default async function BlogPost(props: Params) {
-  const { params } = await props; // await to satisfy Next.js dynamic params rule
+  const { slug } = await props.params;
   
   // Try to fetch as post first, then as page
   let content = null;
   
   try {
-    content = await fetchPostBySlug(params.slug);
+    content = await fetchPostBySlug(slug);
     if (!content) {
-      content = await fetchPageBySlug(params.slug);
+      content = await fetchPageBySlug(slug);
     }
   } catch (error) {
     console.error('Failed to fetch content:', error);
