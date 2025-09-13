@@ -44,8 +44,6 @@ export default function RootLayout({
     <html suppressHydrationWarning>
       <head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#168AFF" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -61,7 +59,7 @@ export default function RootLayout({
                   if (experimental) {
                     document.documentElement.dataset.experimental = experimental;
                   } else {
-                    document.documentElement.dataset.experimental = 'true';
+                    document.documentElement.dataset.experimental = 'false';
                   }
                   var progressiveBlur = localStorage.getItem('progressiveBlur');
                   if (progressiveBlur) {
