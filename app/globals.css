@@ -38,6 +38,7 @@ html[data-theme="dark"] {
     --container-background: var(--dark-container-background);
     --primary: var(--dark-primary);
     --accent: var(--accent);
+    --selected: var(--dark-selected);
 }
 
 html[data-theme="light"] {
@@ -46,6 +47,7 @@ html[data-theme="light"] {
     --container-background: var(--light-container-background);
     --primary: var(--light-primary);
     --accent: var(--accent);
+    --selected: var(--light-selected);
 }
 
 /* Experimental UI Theme Variables */
@@ -77,6 +79,7 @@ html[data-experimental="true"][data-theme="light"] {
         --container-background: var(--dark-container-background);
         --primary: var(--dark-primary);
         --accent: var(--accent);
+        --selected: var(--dark-selected);
     }
 }
 
@@ -87,6 +90,7 @@ html[data-experimental="true"][data-theme="light"] {
         --container-background: var(--light-container-background);
         --primary: var(--light-primary);
         --accent: var(--accent);
+        --selected: var(--light-selected);
     }
 }
 
@@ -117,11 +121,14 @@ a {
     --dark-secondary: #848487;
     --dark-container-background: #17171a;
     --dark-primary: #fff;
+    --dark-selected: #3A3A3A;
     --light-background: #f1f1f3;
     --light-secondary: #99999d;
     --light-container-background: #fff;
     --light-primary: #000;
+    --light-selected: #EFEFEF;
     --accent: #387aff;
+
     --gap-xl: 10px;
     --gap-xll: 20px;
     --gap-11xs: 2px;

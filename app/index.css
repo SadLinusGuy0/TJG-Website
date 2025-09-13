@@ -596,7 +596,7 @@ button.list4:hover {
 }
 
 .nav-icon-container:hover {
-    background-color: var(--container-background);
+    background-color: var(--background);
     color: var(--secondary);
 }
 
@@ -632,7 +632,7 @@ button.list4:hover {
     cursor: pointer;
     padding: 8px;
     border-radius: 12px;
-    background-color: var(--container-background);
+    background-color: var(--selected);
     position: relative;
 }
 
@@ -667,7 +667,7 @@ button.list4:hover {
     /* Change to fixed */
     bottom: 0px;
     left: 0px;
-    background-color: var(--background);
+    background-color: var(--container-background);
     width: 100%;
     /* Make it take up the full width */
     display: flex;
@@ -755,21 +755,14 @@ button.list4:hover {
 
 .main-content {
     padding-bottom: 100px;
-    /* Add this to prevent content from being hidden under nav */
     padding-top: 0%;
     position: relative;
     width: 100%;
     max-width: 100%;
-    /* Add this */
     overflow-x: hidden;
-    /* Add this */
     display: flex;
-    /* Add this */
     flex-direction: column;
-    /* Add this */
     align-items: center;
-    /* Add this */
-    overflow-x: visible;
 }
 
 .main-content>*:not(.top-app-bar) {
@@ -879,6 +872,7 @@ button.list4:hover {
         max-width: 500px;
         padding: 0 16px;
         margin: 0 auto;
+        overflow-x: visible;
     }
 
     .container,
@@ -907,7 +901,7 @@ button.list4:hover {
         height: 72px;
         max-width: 100vw;
         padding: 0 0 4px 0;
-        background-color: var(--background);
+        background-color: var(--container-background);
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -986,8 +980,9 @@ button.list4:hover {
     }
     .desktop-nav .nav-icon-container,
     .desktop-nav .nav-icon-container-selected {
-        padding: 0 16px;
+        margin: 0 16px;
         gap: 12px;
+        width: auto;
     }
     body.nav-collapsed .desktop-nav .icon-container {
         padding: 0 !important;
@@ -1006,7 +1001,7 @@ button.list4:hover {
         min-width: 200px;
         max-width: 420px;
         padding: 40px 20px;
-        background-color: var(--background);
+        background-color: var(--container-background);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -1800,6 +1795,8 @@ body.nav-collapsed .desktop-nav .sidebar-toggle {
   align-items: center;
   justify-content: center;
 }
+
+
 
 @media screen and (min-width: 900px) {
   .tab-container {
