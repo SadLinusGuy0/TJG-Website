@@ -5,9 +5,11 @@ import Link from "next/link";
 
 export const revalidate = 60;
 
-type Params = { params: Promise<{ slug: string }> };
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
 
-export default async function BlogPost(props: Params) {
+export default async function BlogPost(props: PageProps) {
   const { slug } = await props.params;
   
   // Try to fetch as post first, then as page
