@@ -1539,27 +1539,27 @@ animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 html[data-experimental="true"][data-theme="light"] .containers {
-background: linear-gradient(180deg, #BEE8E4 0%, #BDDDF6 100%) !important;
+background: linear-gradient(180deg, #dff2ff 0%, #f1f1f1 100%) !important;
 }
 
 html[data-experimental="true"][data-theme="dark"] .containers {
-background: linear-gradient(180deg, #346368 0%, #1D3A7C 100%) !important;
+background: linear-gradient(180deg, #050D17 0%, #000 100%) !important;
 }
 
 html[data-experimental="true"][data-theme="light"] .index {
-background: linear-gradient(180deg, #BEE8E4 0%, #BDDDF6 100%) !important;
+background: linear-gradient(180deg, #dff2ff 0%, #f1f1f1 100%) !important;
 }
 
 html[data-experimental="true"][data-theme="dark"] .index {
-background: linear-gradient(180deg, #346368 0%, #1D3A7C 100%) !important;
+background: linear-gradient(180deg, #050D17 0%, #000 100%) !important;
 }
 
 html[data-experimental="true"][data-theme="light"] body {
-background: linear-gradient(180deg, #BEE8E4 0%, #BDDDF6 100%) !important;
+background: linear-gradient(180deg, #dff2ff 0%, #f1f1f1 100%) !important;
 }
 
 html[data-experimental="true"][data-theme="dark"] body {
-background: linear-gradient(180deg, #346368 0%, #1D3A7C 100%) !important;
+background: linear-gradient(180deg, #050D17 0%, #000 100%) !important;
 }
 
 html[data-experimental="true"][data-theme="light"] .tab-container {
@@ -1570,7 +1570,7 @@ margin-bottom: 0;
 }
 
 html[data-experimental="true"][data-theme="dark"] .tab-container {
-background: rgba(23, 23, 26, 0.3) !important;
+background: rgba(23, 23, 26, 0.068) !important;
 -webkit-backdrop-filter: blur(48px);
         backdrop-filter: blur(48px);
 margin-bottom: 0;
@@ -1748,7 +1748,7 @@ mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
 }
 }
 
-html[data-theme="light"] {
+html[data-theme="light"]:not([data-experimental="true"]) {
 --background: var(--light-background);
 --secondary: #444851;
 --container-background: var(--light-container-background);
