@@ -3,6 +3,6 @@
   "git": {
     "deploymentEnabled": {
       "legacy": false
-      }
     }
- }
+  }
+}
