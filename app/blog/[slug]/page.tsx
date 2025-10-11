@@ -5,18 +5,20 @@ import Link from "next/link";
 
 export const revalidate = 60;
 
-type Params = { params: Promise<{ slug: string }> };
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
 
-export default async function BlogPost(props: Params) {
-  const params = await props.params;
+export default async function BlogPost(props: PageProps) {
+  const { slug } = await props.params;
   
   // Try to fetch as post first, then as page
   let content = null;
   
   try {
-    content = await fetchPostBySlug(params.slug);
+    content = await fetchPostBySlug(slug);
     if (!content) {
-      content = await fetchPageBySlug(params.slug);
+      content = await fetchPageBySlug(slug);
     }
   } catch (error) {
     console.error('Failed to fetch content:', error);
@@ -130,7 +132,6 @@ export default async function BlogPost(props: Params) {
                     <h1 style={{
                       fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
                       fontWeight: 'bold',
-                      fontFamily: 'One UI Sans',
                       margin: 0,
                       marginBottom: '8px',
                       textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)',
@@ -138,7 +139,6 @@ export default async function BlogPost(props: Params) {
                     }} dangerouslySetInnerHTML={{ __html: content.title.rendered }} />
                     <div style={{
                       fontSize: '1rem',
-                      fontFamily: 'One UI Sans',
                       opacity: 0.9,
                       textShadow: '0 1px 4px rgba(0, 0, 0, 0.6)',
                       fontWeight: '500'
