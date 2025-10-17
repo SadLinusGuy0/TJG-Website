@@ -938,6 +938,7 @@ button.list4:hover {
       max-width: 500px;
       padding: 0 10px;
       margin: 0 auto;
+      margin-top: 40px !important;
       overflow-x: hidden;
       box-sizing: border-box;
       padding-top: 80px;
@@ -1106,7 +1107,7 @@ button.list4:hover {
       gap: 12px;
   }
   .main-content {
-      margin-left: 35%;
+      margin-left: 34%;
       width: 66%;
       max-width: 100%;
       padding-left: 30px;
@@ -1896,7 +1897,7 @@ mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
 .main-content {
   padding-top: 80px !important;
   padding-bottom: 60px !important;
-  margin-top: 0 !important;
+  margin-top: 40px !important;
   padding-left: 10px !important;
   padding-right: 20px !important;
   box-sizing: border-box !important;
@@ -2022,7 +2023,6 @@ min-height: 48px;
 max-width: 48px;
 max-height: 48px;
 padding: 0;
-margin: 0;
 display: flex;
 align-items: center;
 justify-content: center;
