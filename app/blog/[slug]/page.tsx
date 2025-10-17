@@ -77,7 +77,6 @@ export default async function BlogPost(props: PageProps) {
             overflow-x: auto !important;
             white-space: pre-wrap !important;
           }
-            
 
           /* Blog content heading sizes and spacing */
           .body-text h1 { font-size: 32px !important; margin: 14px 0 8px !important; }
