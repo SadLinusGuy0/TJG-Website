@@ -38,7 +38,7 @@ function SettingsContent() {
         <div className="container1">
           <div className="title">Site theme</div>
         </div>
-        <div className="container">
+        <div className="container" style={{ padding: 'var(--padding-xll)' }}>
           <div className="theme-selection">
             {mounted && (
               <>
