@@ -1110,7 +1110,7 @@ button.list4:hover {
       margin-left: 34%;
       width: 66%;
       max-width: 100%;
-      padding-left: 30px;
+      padding-left: 20px;
       padding-right: 20px;
       padding-top: 0;
       align-items: flex-start;
@@ -1895,11 +1895,7 @@ mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
 
 @media (max-width: 900px) {
 .main-content {
-  padding-top: 80px !important;
-  padding-bottom: 60px !important;
-  margin-top: 40px !important;
-  padding-left: 10px !important;
-  padding-right: 20px !important;
+  padding: 80px 10px 60px 10px !important;
   box-sizing: border-box !important;
   overflow-x: hidden !important;
 }

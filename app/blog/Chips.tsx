@@ -63,9 +63,11 @@ export default function Chips({ categories, selectedSlug }: Props) {
         paddingRight: 16,
         marginRight: -16,
         marginBottom: 12,
-        overflowX: 'visible',
-        overflowY: 'visible',
+        overflowX: 'auto',
+        overflowY: 'hidden',
         WebkitOverflowScrolling: 'touch',
+        touchAction: 'pan-x',
+        overscrollBehaviorX: 'contain',
         width: '100%',
         maxWidth: '100%'
       }}
