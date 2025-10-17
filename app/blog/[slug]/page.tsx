@@ -44,10 +44,10 @@ export default async function BlogPost(props: PageProps) {
       <style dangerouslySetInnerHTML={{
         __html: `
           .body-text p {
-            margin: 0 0 6px 0 !important;
+            margin: 0 10px 6px 10px !important;
           }
           .body-text p:last-child {
-            margin-bottom: 0 !important;
+            margin-bottom: 10px !important;
           }
           .body-text p:has(img) {
             margin: 0 !important;
@@ -79,12 +79,12 @@ export default async function BlogPost(props: PageProps) {
           }
 
           /* Blog content heading sizes and spacing */
-          .body-text h1 { font-size: 32px !important; margin: 14px 0 8px !important; }
-          .body-text h2 { font-size: 28px !important; margin: 12px 0 6px !important; }
-          .body-text h3 { font-size: 24px !important; margin: 10px 0 6px !important; }
-          .body-text h4 { font-size: 20px !important; margin: 8px 0 4px !important; }
-          .body-text h5 { font-size: 18px !important; margin: 8px 0 4px !important; }
-          .body-text h6 { font-size: 16px !important; margin: 6px 0 4px !important; }
+          .body-text h1 { font-size: 32px !important; margin: 14px 10px 8px 10px !important;}
+          .body-text h2 { font-size: 28px !important; margin: 12px 10px 6px 10px !important; }
+          .body-text h3 { font-size: 24px !important; margin: 10px 10px 6px 10px !important; }
+          .body-text h4 { font-size: 20px !important; margin: 8px 10px 4px 10px !important; }
+          .body-text h5 { font-size: 18px !important; margin: 8px 10px 4px 10px !important; }
+          .body-text h6 { font-size: 16px !important; margin: 6px 10px 4px 10px !important; }
 
           /* Lists spacing */
           .body-text ul, .body-text ol { margin: 6px 0 8px 20px !important; }
@@ -229,7 +229,7 @@ export default async function BlogPost(props: PageProps) {
             line-height: 1.4 !important;
             color: var(--primary) !important;
             text-align: center !important;
-            margin-top: 6px !important;
+            margin: 6px 10px !important;
           }
           /* Map classic gallery columns to CSS grid */
           .body-text .gallery.gallery-columns-1 { grid-template-columns: repeat(1, 1fr) !important; }
@@ -263,6 +263,7 @@ export default async function BlogPost(props: PageProps) {
           }
           .body-text table {
             border-collapse: collapse !important;
+            margin: 0 10px !important;
           }
           .body-text thead th {
             text-align: left !important;
@@ -346,6 +347,11 @@ export default async function BlogPost(props: PageProps) {
             margin-top: 6px !important;
           }
 
+          /* General figcaption centering */
+          .body-text figcaption {
+            text-align: center !important;
+          }
+
           /* Lightbox overlay */
           .lightbox-overlay {
             position: fixed !important;
@@ -392,7 +398,7 @@ export default async function BlogPost(props: PageProps) {
         `
       }} />
       <div className="containers">
-        <Navigation />
+        <Navigation hideMobile={true} />
         <div className="main-content">
           <div className="top-app-bar">
             <div className="top-app-bar-container back-only">
@@ -448,13 +454,15 @@ export default async function BlogPost(props: PageProps) {
                       margin: 0,
                       marginBottom: '8px',
                       textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)',
-                      lineHeight: '1.2'
+                      lineHeight: '1.2',
+                      fontFamily: 'One UI Sans'
                     }} dangerouslySetInnerHTML={{ __html: content.title.rendered }} />
                     <div style={{
                       fontSize: '1rem',
                       opacity: 0.9,
                       textShadow: '0 1px 4px rgba(0, 0, 0, 0.6)',
-                      fontWeight: '500'
+                      fontWeight: '500',
+                      fontFamily: 'One UI Sans'
                     }}>
                       {new Date(content.date).toLocaleDateString('en-US', { 
                         year: 'numeric', 
@@ -499,12 +507,14 @@ export default async function BlogPost(props: PageProps) {
                       fontWeight: 'bold',
                       margin: 0,
                       marginBottom: '8px',
-                      lineHeight: '1.2'
+                      lineHeight: '1.2',
+                      fontFamily: 'One UI Sans'
                     }} dangerouslySetInnerHTML={{ __html: content.title.rendered }} />
                     <div style={{
                       fontSize: '1rem',
                       opacity: 0.7,
-                      fontWeight: '500'
+                      fontWeight: '500',
+                      fontFamily: 'One UI Sans'
                     }}>
                       {new Date(content.date).toLocaleDateString('en-US', { 
                         year: 'numeric', 
@@ -533,7 +543,7 @@ export default async function BlogPost(props: PageProps) {
             )}
           </div>
           
-           <div className="container settings" style={{ padding: '0 20px', marginBottom: '0', maxWidth: '100%', overflow: 'hidden' }}>
+           <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%', overflow: 'hidden' }}>
              <div className="body-text" style={{ 
                fontSize: '16px', 
                lineHeight: '1.5',

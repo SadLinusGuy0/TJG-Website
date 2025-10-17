@@ -1170,10 +1170,6 @@ button.list4:hover {
 } */
 
 @media screen and (max-width: 499px) {
-  .containers {
-      padding: 10px 16px;
-      /* Add consistent padding */
-  }
 
   .tab-container {
       padding: var(--padding-xl) 20px;
@@ -1187,12 +1183,6 @@ button.list4:hover {
   .top-app-bar-container {
       max-width: 100% !important;
   }
-}
-
-/* Update settings container spacing */
-.container.settings {
-  padding-left: 10px !important;
-  padding-right: 10px !important;
 }
 
 /* Add proper spacing between paragraphs */
@@ -1895,7 +1885,7 @@ mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
 
 @media (max-width: 900px) {
 .main-content {
-  padding: 80px 10px 60px 10px !important;
+  padding: 80px 20px 60px 20px !important;
   box-sizing: border-box !important;
   overflow-x: hidden !important;
 }
