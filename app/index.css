@@ -1953,6 +1953,7 @@ mask-image: linear-gradient(to bottom, black 0%, transparent 100%) !important;
 padding-top: 100px;
 }
 
+
 /* Remove excessive height and padding for One UI Design Kit page */
 .oneui-design-kit-page.index {
   min-height: auto !important;
