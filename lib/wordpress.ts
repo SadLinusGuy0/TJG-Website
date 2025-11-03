@@ -32,11 +32,7 @@ export type WPCategory = {
   slug: string;
 };
 
-<<<<<<< HEAD
-const apiBaseUrl = process.env.WP_API_URL?.replace(/\/$/, "") || "";
-=======
 const apiBaseUrl = (process.env.WP_API_URL?.replace(/\/$/, "") || "https://joshskinnertjg.wordpress.com");
->>>>>>> college
 
 function getApiUrls() {
   ensureConfigured();
