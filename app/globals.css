@@ -4,8 +4,9 @@
 html {
     scroll-behavior: smooth;
     color-scheme: var(--color-scheme);
-    min-height: 100%;
-    background-color: var(--background);
+    height: 100%;
+    background-color: transparent;
+    overflow-x: hidden;
 }
 
 html[data-theme="dark"],
@@ -59,14 +60,14 @@ html[data-experimental="true"] {
 }
 
 html[data-experimental="true"][data-theme="dark"] {
-    --experimental-background: linear-gradient(180deg, #346368 0%, #1D3A7C 100%);
-    --experimental-container: rgba(23, 23, 26, 0.3);
+    --experimental-background: linear-gradient(180deg, #081525 0%, #000 100%);
+    --experimental-container: rgba(23,23,26,0.6);
     --experimental-border: rgba(255, 255, 255, 0.1);
     --secondary: rgba(255,255,255,0.6);
 }
 
 html[data-experimental="true"][data-theme="light"] {
-    --experimental-background: linear-gradient(180deg, #65BAC3 0%, #4B65A1 100%);
+    --experimental-background: linear-gradient(180deg, #dff2ff 0%, #f1f1f1 100%);
     --experimental-container: rgba(252, 252, 255, 0.3);
     --experimental-border: rgba(0, 0, 0, 0.08);
     --secondary: rgba(0,0,0,0.3);
@@ -99,10 +100,24 @@ body {
     line-height: normal;
     color: var(--background);
     min-height: 100vh;
-    background-color: var(--background);
+    background-color: transparent;
     display: flex;
     flex-direction: column;
     transition: none;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    background-color: var(--background);
+    z-index: -1;
+    pointer-events: none;
 }
 
 a {
@@ -132,7 +147,8 @@ a {
     --gap-xl: 10px;
     --gap-xll: 20px;
     --gap-11xs: 2px;
-    --padding-xl: 20px;
+    --padding-xl: 10px;
+    --padding-xll: 20px;
     --br-9xl: 28px;
     --br-10xl: 40px;
     --br-11xs: 2px;
@@ -192,6 +208,11 @@ a {
 
 html[data-experimental="true"],
 html[data-experimental="true"] body {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+html[data-experimental="true"] body::after {
     background: var(--experimental-background) !important;
     background-color: transparent !important;
 } 

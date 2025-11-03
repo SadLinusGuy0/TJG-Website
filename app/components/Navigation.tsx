@@ -55,12 +55,13 @@ export default function Navigation({ hideMobile = false }: NavigationProps) {
         <div className="icon-container">
           {/* Sidebar toggle as first nav item, not a button at the top */}
           <div
-            className="sidebar-toggle nav-icon-container"
+            className={`sidebar-toggle nav-icon-container ${collapsed ? 'sidebar-toggle-collapsed' : 'sidebar-toggle-expanded'}`}
             tabIndex={0}
             role="button"
             aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'}
             onClick={() => setCollapsed((c) => !c)}
             onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setCollapsed(c => !c); }}
+<<<<<<< HEAD
             style={collapsed ? {
               cursor: 'pointer',
               width: 48,
@@ -94,6 +95,8 @@ export default function Navigation({ hideMobile = false }: NavigationProps) {
               border: 'none',
               transition: 'background 0.2s',
             }}
+=======
+>>>>>>> college
           >
             {collapsed ? (
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

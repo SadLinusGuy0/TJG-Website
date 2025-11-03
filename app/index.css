@@ -14,6 +14,10 @@ form {
   position: relative;
   font-family: 'One UI Sans';
   font-weight: 700;
+<<<<<<< HEAD
+=======
+  color: var(--primary);
+>>>>>>> college
 }
 
 a {
@@ -303,6 +307,10 @@ button.list3:hover {
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 8px;
+<<<<<<< HEAD
+=======
+  padding: 0 10px;
+>>>>>>> college
 }
 
 .others2 {
@@ -509,6 +517,7 @@ button.list3:hover {
 .list4 {
   align-self: stretch;
   border-radius: 28px;
+<<<<<<< HEAD
   background-color: var(--container-background);
   display: flex;
   flex-direction: column;
@@ -634,6 +643,168 @@ button.list4:hover {
   border-radius: 12px;
   background-color: var(--selected);
   position: relative;
+=======
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  gap: 0;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--primary);
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+}
+
+.list4:hover,
+a.list4:hover,
+button.list4:hover {
+  transform: scale(1.02) !important;
+  transition: transform 0.3s ease !important;
+}
+
+.list4:hover .list4-label {
+  background: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+.list4:active {
+  background-color: var(--container-background-active);
+}
+
+.list4:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.list4 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 28px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.list4-label {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 16px;
+  padding: 12px 16px;
+  z-index: 2;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: calc(100% - 32px);
+  width: auto;
+  white-space: nowrap;
+}
+
+.test-toggle-group {
+  align-self: stretch;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: var(--gap-11xs);
+}
+
+.containers {
+  top: 0px;
+  left: 0px;
+  min-height: 100vh;
+  /* Add this */
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Add this */
+  justify-content: flex-start;
+  padding: 10px;
+  box-sizing: border-box;
+  gap: var(--gap-xl);
+  width: 100%;
+  /* Add this */
+  overflow-x: hidden;
+  /* Add this */
+  max-width: 500px;
+  /* Add this for mobile */
+  margin: 0 auto;
+  /* Add this for mobile */
+}
+
+.nav-icon-container {
+  width: 31px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  color: var(--secondary);
+  cursor: pointer;
+  transition: all 0.8s ease;
+  padding: 8px;
+  border-radius: 12px;
+}
+
+.nav-icon-container:hover {
+  background-color: var(--background);
+  color: var(--secondary);
+}
+
+.nav-icon-container:hover .nav-label {
+  color: var(--secondary);
+}
+
+.nav-icon-container:hover svg {
+  animation: bounce 0.8s ease infinite;
+}
+
+.nav-icon-container:hover svg path {
+  fill: var(--secondary);
+}
+
+.nav-icon-container a,
+.nav-icon-container-selected a {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-icon-container-selected {
+  width: 31px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  color: var(--primary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 12px;
+  background-color: var(--selected);
+  position: relative;
+>>>>>>> college
 }
 
 /* Active indicator: left border */
@@ -688,6 +859,7 @@ button.list4:hover {
               margin 1s cubic-bezier(0.4,0,0.2,1),
               gap 1s cubic-bezier(0.4,0,0.2,1);
   transition-delay: 1s;
+<<<<<<< HEAD
 }
 
 .index {
@@ -1099,6 +1271,476 @@ button.list4:hover {
   display: flex;
   flex-direction: column;
   gap: 10px;
+=======
+}
+
+.index {
+  /* Remove height limit */
+  /* height: 1071px; */
+  width: 100%;
+  min-height: 100vh;
+  /* Add this */
+  position: relative;
+  text-align: left;
+  font-size: var(--subheading-size);
+  color: var(--primary);
+  font-family: var(--body);
+  padding-bottom: 20px;
+  background-color: transparent;
+  /* Add this */
+}
+
+.blank-div {
+  width: 100%;
+}
+
+.top-app-bar-container {
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+/* When only settings button is present, align it to the right */
+.top-app-bar .top-app-bar-container.settings-only {
+  justify-content: flex-end !important;
+}
+
+/* When only back button is present, align it to the left */
+.top-app-bar .top-app-bar-container.back-only {
+  justify-content: flex-start !important;
+}
+
+/* When both buttons are present, use space-between */
+.top-app-bar .top-app-bar-container.both-buttons {
+  justify-content: space-between !important;
+}
+
+.top-app-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000 !important;
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 10px;
+  margin-top: 10px;
+  background: transparent;
+  pointer-events: auto;
+}
+
+.top-app-bar-icon {
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  pointer-events: auto;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+}
+
+.title-container .title {
+  font-size: var(--subtitle-size);
+  padding: 0;
+  margin: 0;
+}
+
+.main-content {
+  padding-bottom: 20px;
+  padding-top: 80px;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main-content>*:not(.top-app-bar) {
+  animation: fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.big-number-container {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 28px;
+  background: radial-gradient(circle at 50% 150%, #3CAEA3 0%, #6A8CAF 50%, #8B7AB0 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  gap: 16px;
+}
+
+.big-number-container::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+  pointer-events: none;
+}
+
+.big-serif-number {
+  font-family: 'Clock Serif';
+  font-size: 140px;
+  font-weight: bold;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.big-number-subtitle {
+  font-family: var(--body);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+
+@keyframes fadeInUp {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutDown {
+  from {
+      opacity: 1;
+      transform: translateY(0);
+  }
+
+  to {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+}
+
+.fade-out {
+  animation: fadeOutDown 0.3s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+}
+
+.page-transition {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* Fix mobile centering */
+@media screen and (max-width: 699px) {
+  .containers {
+      padding: 10px 0;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      align-items: center;
+      box-sizing: border-box;
+      overflow-x: hidden;
+  }
+
+  .main-content {
+      width: 100%;
+      max-width: 500px;
+      padding: 0 10px;
+      margin: 0 auto;
+      margin-top: 40px !important;
+      overflow-x: hidden;
+      box-sizing: border-box;
+      padding-top: 80px;
+  }
+
+  .container,
+  .container1,
+  .list3,
+  .list4,
+  .button-container,
+  .theme-container {
+      width: 100%;
+  }
+
+  .big-serif-number {
+      font-size: 80px;
+  }
+  .big-number-subtitle {
+      font-size: 20px;
+  }
+
+  .tab-container {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: auto;
+      width: 100vw;
+      height: 72px;
+      max-width: 100vw;
+      padding: 0 0 4px 0;
+      background-color: var(--container-background);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -2px 16px rgba(0,0,0,0.12);
+  }
+  .icon-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      gap: 0;
+      padding: 0;
+      margin: 0;
+  }
+  .nav-icon-container, .nav-icon-container-selected {
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 2px !important;
+  }
+  .nav-icon-container svg, .nav-icon-container-selected svg {
+      display: block;
+      margin: 0 auto;
+  }
+  .nav-label, .nav-label-selected {
+      font-size: 13px;
+      font-family: 'One UI Sans';
+      margin-top: 2px;
+      text-align: center;
+      display: block;
+  }
+}
+
+/* Update mobile styles */
+@media screen and (max-width: 699px) {
+  .containers {
+      width: 100%;
+      max-width: none;
+      padding: 10px 0;
+      box-sizing: border-box;
+      overflow-x: hidden;
+  }
+
+  .main-content {
+      width: 100%;
+      padding: 0 10px;
+      margin: 0 auto;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      padding-top: 80px;
+  }
+
+  .list3,
+  .list4,
+  .container,
+  .theme-container,
+  .button-container {
+      width: 100%;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+      overflow-x: hidden;
+  }
+}
+
+.container1 {
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+@media screen and (min-width: 699px) {
+  .desktop-nav .icon-container {
+      padding-top: 0 !important;
+      padding-bottom: 0;
+      padding-left: 0;
+      padding-right: 0;
+      gap: 8px;
+  }
+  .desktop-nav .nav-icon-container,
+  .desktop-nav .nav-icon-container-selected {
+      margin: 0 16px;
+      gap: 12px;
+      width: auto;
+  }
+  body.nav-collapsed .desktop-nav .icon-container {
+      padding: 0 !important;
+      gap: 8px !important;
+  }
+  body.nav-collapsed .desktop-nav .nav-icon-container,
+  body.nav-collapsed .desktop-nav .nav-icon-container-selected {
+      padding: 0 !important;
+  }
+  .tab-container {
+      position: fixed;
+      top: 40px;
+      left: 0;
+      bottom: 40px;
+      width: 33%;
+      min-width: 200px;
+      max-width: 420px;
+      background-color: var(--container-background);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      z-index: 1000;
+      border-top-right-radius: 24px;
+      border-bottom-right-radius: 24px;
+  }
+  .icon-container {
+      width: 100%;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      padding-top: 60px;
+      margin: 0;
+  }
+  .nav-icon-container,
+  .nav-icon-container-selected {
+      width: 100%;
+      height: 48px;
+      flex-direction: row;
+      align-items: center;
+      padding: 0 16px;
+      border-radius: 12px;
+      gap: 12px;
+  }
+  .main-content {
+      margin-left: 34%;
+      width: 66%;
+      max-width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-top: 0;
+      align-items: flex-start;
+  }
+  .top-app-bar-container {
+      padding-left: 36% !important;
+      padding-right: 20px !important;
+  }
+  .containers {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      max-width: 1600px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 0;
+  }
+  body.nav-collapsed .main-content {
+      margin-left: 8% !important;
+      padding-left: 10px !important;
+      padding-right: 10px !important;
+  }
+  body.nav-collapsed .top-app-bar-container {
+      padding-left: 10px !important;
+      padding-right: 10px !important;
+  }
+  
+  body.nav-collapsed .top-app-bar {
+      left: 8% !important;
+      width: calc(92% - 20px) !important;
+      padding-left: 10px !important;
+      padding-right: 10px !important;
+  }
+  .top-app-bar {
+      margin-top: 40px;
+  }
+  html[data-experimental="true"] .tab-container.desktop-nav {
+      border-top: 1.5px solid var(--experimental-border);
+      border-right: 1.5px solid var(--experimental-border);
+      border-bottom: 1.5px solid var(--experimental-border);
+      border-left: none;
+      border-top-right-radius: var(--experimental-border-radius);
+      border-bottom-right-radius: var(--experimental-border-radius);
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      box-shadow: var(--experimental-shadow);
+      background: var(--experimental-container);
+      transition: var(--experimental-transition);
+  }
+}
+
+/* Remove the ultra-wide screen centering behavior to keep navigation on the left */
+/* @media screen and (min-width: 1600px) {
+  .tab-container {
+      left: calc(50% - 800px);
+  }
+} */
+
+@media screen and (max-width: 499px) {
+
+  .tab-container {
+      padding: var(--padding-xl) 20px;
+      /* Adjust padding for mobile */
+  }
+
+  .top-app-bar {
+      padding: 20px 16px;
+  }
+
+  .top-app-bar-container {
+      max-width: 100% !important;
+  }
+}
+
+/* Add proper spacing between paragraphs */
+.container.settings .body-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.body-text {
+  width: 100%;
+>>>>>>> college
 }
 
 /* Adjust GitHub repo container spacing */
@@ -1108,6 +1750,16 @@ button.list4:hover {
   padding: var(--padding-xl);
 }
 
+<<<<<<< HEAD
+=======
+.button.list4:hover {
+  background-color: var(--container-background-hover);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+
+>>>>>>> college
 /* Add CSS variables for hover/active states */
 :root {
   --container-background-hover: color-mix(in srgb, var(--container-background) 95%, var(--primary) 5%);
@@ -1311,6 +1963,7 @@ a {
 }
 
 /* Add after the .top-app-bar-icon rules */
+<<<<<<< HEAD
 .top-app-bar-icon[aria-label="Settings"] {
 transition: transform 0.2s ease-out, rotate 0.2s ease, background-color 0.2s ease;
 }
@@ -1325,10 +1978,27 @@ transition: transform 0.2s ease-out, background-color 0.2s ease;
 .top-app-bar-icon[aria-label="Back"]:hover {
 transform: scale(1.1);
 background-color: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
+=======
+.top-app-bar-icon:hover {
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* SVG styling for top app bar icons */
+.top-app-bar-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: white;
+  transition: all 0.3s ease;
+>>>>>>> college
 }
 
 /* Only rotate the SVG for the settings cog, not the back button */
 .top-app-bar-icon[aria-label="Settings"]:hover svg {
+<<<<<<< HEAD
 transform: rotate(90deg);
 transition: transform 0.2s ease-in;
 }
@@ -1340,6 +2010,14 @@ background-color: color-mix(in srgb, var(--container-background) 90%, var(--prim
 .top-app-bar-icon[aria-label="Back"]:hover {
 transform: scale(1.1);
 background-color: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
+=======
+  transform: rotate(90deg);
+  fill: #387aff;
+}
+
+.top-app-bar-icon[aria-label="Back"]:hover svg {
+  fill: #387aff;
+>>>>>>> college
 }
 
 /* Experimental Toggle Styles */
@@ -1451,8 +2129,12 @@ border: 1px solid var(--experimental-border);
 background: var(--experimental-container);
 }
 
+<<<<<<< HEAD
 html[data-experimental="true"] .list3,
 html[data-experimental="true"] .list4 {
+=======
+html[data-experimental="true"] .list3 {
+>>>>>>> college
 border-radius: var(--experimental-border-radius);
 box-shadow: var(--experimental-shadow);
 transition: var(--experimental-transition);
@@ -1460,14 +2142,42 @@ border: 1px solid var(--experimental-border);
 background: var(--experimental-container);
 }
 
+<<<<<<< HEAD
 html[data-experimental="true"] .list3:hover,
 html[data-experimental="true"] .list4:hover {
+=======
+html[data-experimental="true"] .list4 {
+border-radius: var(--experimental-border-radius);
+box-shadow: var(--experimental-shadow);
+transition: var(--experimental-transition);
+border: 1px solid var(--experimental-border);
+background: transparent;
+}
+
+html[data-experimental="true"] .list3:hover {
+>>>>>>> college
 background: rgba(255,255,255,0.5) !important;
 box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 border-color: var(--accent);
 transform: translateY(-2px);
 }
 
+<<<<<<< HEAD
+=======
+html[data-experimental="true"] .list4:hover {
+background: transparent !important;
+box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+border-color: var(--accent);
+transform: scale(1.02);
+}
+
+html[data-experimental="true"] .list4:hover .list4-label {
+background: rgba(0, 0, 0, 0.8) !important;
+backdrop-filter: blur(20px) !important;
+-webkit-backdrop-filter: blur(20px) !important;
+}
+
+>>>>>>> college
 html[data-experimental="true"] .nav-icon-container,
 html[data-experimental="true"] .nav-icon-container-selected {
 padding-left: 20px;
@@ -1504,10 +2214,29 @@ box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
 border-color: var(--accent);
 }
 
+<<<<<<< HEAD
 html[data-experimental="true"] .top-app-bar-icon:hover {
 border-radius: var(--experimental-border-radius);
 box-shadow: 0 4px 20px rgba(56, 122, 255, 0.2);
 border: 1px solid var(--accent);
+=======
+html[data-experimental="true"] .top-app-bar {
+  background: transparent;
+}
+
+html[data-experimental="true"] .top-app-bar-icon {
+  background: var(--experimental-container);
+  border: 1px solid var(--experimental-border);
+  border-radius: var(--experimental-border-radius);
+  box-shadow: var(--experimental-shadow);
+}
+
+html[data-experimental="true"] .top-app-bar-icon:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: var(--accent);
+  box-shadow: 0 6px 25px rgba(56, 122, 255, 0.3);
+  transform: scale(1.05);
+>>>>>>> college
 }
 
 /* Enhanced animations for experimental mode */
@@ -1531,6 +2260,7 @@ animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 html[data-experimental="true"][data-theme="light"] .containers {
+<<<<<<< HEAD
 background: linear-gradient(180deg, #BEE8E4 0%, #BDDDF6 100%) !important;
 }
 
@@ -1552,6 +2282,29 @@ background: linear-gradient(180deg, #BEE8E4 0%, #BDDDF6 100%) !important;
 
 html[data-experimental="true"][data-theme="dark"] body {
 background: linear-gradient(180deg, #346368 0%, #1D3A7C 100%) !important;
+=======
+background: transparent !important;
+}
+
+html[data-experimental="true"][data-theme="dark"] .containers {
+background: transparent !important;
+}
+
+html[data-experimental="true"][data-theme="light"] .index {
+background: transparent !important;
+}
+
+html[data-experimental="true"][data-theme="dark"] .index {
+background: transparent !important;
+}
+
+html[data-experimental="true"][data-theme="light"] body {
+background: transparent !important;
+}
+
+html[data-experimental="true"][data-theme="dark"] body {
+background: transparent !important;
+>>>>>>> college
 }
 
 html[data-experimental="true"][data-theme="light"] .tab-container {
@@ -1561,7 +2314,11 @@ margin-bottom: 0;
 }
 
 html[data-experimental="true"][data-theme="dark"] .tab-container {
+<<<<<<< HEAD
 background: rgba(23, 23, 26, 0.3) !important;
+=======
+background: rgba(23, 23, 26, 0.068) !important;
+>>>>>>> college
 backdrop-filter: blur(48px);
 margin-bottom: 0;
 }
@@ -1580,6 +2337,7 @@ gap: 8px;
 html[data-experimental="true"][data-theme="dark"] .tab-container {
   background: rgba(23, 23, 26, 0.6) !important;
 }
+<<<<<<< HEAD
 }
 
 html[data-experimental="true"] .nav-icon-container,
@@ -1763,9 +2521,87 @@ outline: none;
 .desktop-nav .icon-container {
 gap: 12px;
 transition: gap 0.3s cubic-bezier(0.4,0,0.2,1);
+=======
 }
+
+html[data-experimental="true"] .nav-icon-container,
+html[data-experimental="true"] .nav-icon-container-selected {
+padding-left: 20px;
+padding-right: 20px;
+box-sizing: border-box;
+}
+
+html[data-experimental="true"] .nav-icon-container-selected {
+background: rgba(251, 251, 255, 0.5) !important;
+}
+
+html[data-experimental="true"][data-theme="dark"] .nav-icon-container-selected {
+background: rgba(0, 0, 0, 0.5) !important;
+}
+
+html[data-experimental="true"][data-theme="light"] .nav-icon-container:hover,
+html[data-experimental="true"][data-theme="light"] .nav-icon-container-selected:hover {
+background: rgba(251, 251, 255, 0.4) !important;
+}
+
+html[data-experimental="true"][data-theme="dark"] .nav-icon-container:hover,
+html[data-experimental="true"][data-theme="dark"] .nav-icon-container-selected:hover {
+background: rgba(23,23,26,0.4) !important;
+}
+
+@media screen and (max-width: 699px) {
+.mobile-nav {
+  background-color: rgba(252,252,255,0.8);
+  border-top: 1px solid rgba(0,0,0,0.10);
+}
+}
+
+@media (prefers-color-scheme: dark) {
+.mobile-nav {
+  background-color: rgba(23,23,26,0.8) !important;
+  border-top: 1px solid rgba(255,255,255,0.10) !important;
+}
+}
+
+body.nav-collapsed .icon-container {
+align-items: center;
+gap: 0;
+padding: 0;
+transition: gap 0.3s cubic-bezier(0.4,0,0.2,1), padding 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+body.nav-collapsed .nav-icon-container,
+body.nav-collapsed .nav-icon-container-selected {
+justify-content: center;
+align-items: center;
+gap: 0;
+transition: gap 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+body.nav-collapsed .nav-label,
+body.nav-collapsed .nav-label-selected {
+opacity: 0;
+max-width: 0;
+pointer-events: none;
+}
+
+.nav-label, .nav-label-selected {
+opacity: 1;
+display: inline-block;
+white-space: nowrap;
+font-size: 16px;
+font-weight: 600;
+font-family: 'One UI Sans';
+>>>>>>> college
+}
+body.nav-collapsed .nav-label,
+body.nav-collapsed .nav-label-selected {
+opacity: 0;
+pointer-events: none;
+transition: none;
+}
+
 .desktop-nav .nav-icon-container,
 .desktop-nav .nav-icon-container-selected {
+<<<<<<< HEAD
 transition: gap 0.3s cubic-bezier(0.4,0,0.2,1), padding 0.3s cubic-bezier(0.4,0,0.2,1), width 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 .tab-container.desktop-nav {
@@ -1796,6 +2632,238 @@ align-items: center;
 justify-content: center;
 }
 
+=======
+position: relative;
+}
+
+html[data-experimental="true"] .list3 {
+border-radius: 28px !important;
+}
+
+html[data-experimental="true"] .main-content a {
+border-radius: 28px !important;
+}
+
+.sidebar-toggle {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  outline: none;
+  background: none;
+  border: none;
+  transition: background 0.2s;
+}
+
+.sidebar-toggle-collapsed {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  max-width: 48px;
+  max-height: 48px;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.sidebar-toggle-expanded {
+  padding-left: 16px;
+  padding-right: 16px;
+  width: 100%;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  height: 48px;
+  justify-content: flex-start;
+}
+
+.sidebar-toggle:hover {
+background: rgba(0,0,0,0.08);
+animation: bounce 0.8s ease;
+}
+
+html[data-theme="dark"] .sidebar-toggle:hover {
+background: rgba(255,255,255,0.08);
+}
+
+@keyframes bounce {
+0%, 100% { transform: translateY(0); }
+20% { transform: translateY(-4px); }
+40% { transform: translateY(0); }
+60% { transform: translateY(-2px); }
+80% { transform: translateY(0); }
+}
+
+html[data-experimental="true"][data-theme="light"] .sidebar-toggle:hover {
+background: rgba(251, 251, 255, 0.2) !important;
+}
+
+html[data-experimental="true"][data-theme="dark"] .sidebar-toggle:hover {
+background: rgba(0, 0, 0, 0.2) !important;
+}
+
+@media screen and (max-width: 699px) {
+.mobile-nav .nav-icon-container-selected {
+  box-shadow: 0 4px 24px 0 rgba(255,255,255,0.10), 0 2px 8px 0 rgba(168,200,255,0.10);
+}
+}
+
+.progressive-blur-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: 160px;
+pointer-events: none;
+z-index: 9;
+backdrop-filter: blur(120px);
+-webkit-backdrop-filter: blur(120px);
+mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
+-webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
+}
+
+@media (max-width: 900px) {
+.progressive-blur-overlay {
+  height: 120px;
+  backdrop-filter: blur(160px);
+  -webkit-backdrop-filter: blur(160px);
+  mask-image: linear-gradient(to bottom, black 0%, transparent 60%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 60%);
+}
+}
+
+@media (max-width: 900px) {
+.main-content {
+  padding: 80px 20px 60px 20px !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+
+.top-app-bar-container {
+  max-width: 100% !important;
+}
+}
+
+@media (max-width: 700px) {
+.index {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+}
+
+
+
+
+html[data-theme="light"]:not([data-experimental="true"]) {
+--background: var(--light-background);
+--secondary: #444851;
+--container-background: var(--light-container-background);
+--primary: var(--light-primary);
+--accent: var(--accent);
+}
+
+.settings-page .progressive-blur-overlay {
+height: 48px !important;
+mask-image: linear-gradient(to bottom, black 0%, transparent 100%) !important;
+-webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%) !important;
+}
+
+.settings-page .main-content {
+padding-top: 80px !important;
+}
+
+/* Remove excessive height and padding for settings page */
+.settings-page.index {
+  min-height: auto !important;
+  padding-bottom: 0 !important;
+}
+
+/* Ensure settings page gets proper mobile styling */
+@media screen and (max-width: 699px) {
+  .settings-page .main-content {
+    width: 100% !important;
+    padding: 0 10px;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    padding-top: 80px !important;
+  }
+}
+
+/* One UI Design Kit page styling - same as settings page */
+.oneui-design-kit-page .progressive-blur-overlay {
+height: 48px !important;
+mask-image: linear-gradient(to bottom, black 0%, transparent 100%) !important;
+-webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%) !important;
+}
+
+.main-content {
+padding-top: 100px;
+}
+
+
+/* Remove excessive height and padding for One UI Design Kit page */
+.oneui-design-kit-page.index {
+  min-height: auto !important;
+  padding-bottom: 0 !important;
+}
+
+/* Ensure One UI Design Kit page gets proper mobile styling */
+@media screen and (max-width: 699px) {
+  .oneui-design-kit-page .main-content {
+    width: 100% !important;
+    padding: 0 10px !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    padding-top: 80px !important;
+  }
+}
+
+* {
+-webkit-tap-highlight-color: transparent;
+}
+
+:focus:not(:focus-visible) {
+outline: none;
+}
+
+.desktop-nav .icon-container {
+gap: 12px;
+transition: gap 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.desktop-nav .nav-icon-container,
+.desktop-nav .nav-icon-container-selected {
+transition: gap 0.3s cubic-bezier(0.4,0,0.2,1), padding 0.3s cubic-bezier(0.4,0,0.2,1), width 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.tab-container.desktop-nav {
+width: 30%;
+min-width: 200px;
+max-width: 420px;
+transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+body.nav-collapsed .tab-container.desktop-nav {
+width: 8%;
+min-width: 72px;
+max-width: 72px;
+}
+
+body.nav-collapsed .desktop-nav .nav-icon-container,
+body.nav-collapsed .desktop-nav .nav-icon-container-selected,
+body.nav-collapsed .desktop-nav .sidebar-toggle {
+width: 48px;
+height: 48px;
+min-width: 48px;
+min-height: 48px;
+max-width: 48px;
+max-height: 48px;
+padding: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+>>>>>>> college
 
 
 @media screen and (min-width: 900px) {
