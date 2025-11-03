@@ -66,11 +66,8 @@ export default function Chips({ categories, selectedSlug }: Props) {
         overflowX: 'auto',
         overflowY: 'hidden',
         WebkitOverflowScrolling: 'touch',
-<<<<<<< HEAD
-=======
         touchAction: 'pan-x',
         overscrollBehaviorX: 'contain',
->>>>>>> college
         width: '100%',
         maxWidth: '100%'
       }}
@@ -106,11 +103,7 @@ export default function Chips({ categories, selectedSlug }: Props) {
               color: chip.selected ? '#fff' : 'var(--secondary)',
               fontSize: 16,
               fontFamily: 'One UI Sans',
-<<<<<<< HEAD
-              fontWeight: '500',
-=======
               fontWeight: 500,
->>>>>>> college
               lineHeight: '20px',
               whiteSpace: 'nowrap',
               transition: 'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease'
