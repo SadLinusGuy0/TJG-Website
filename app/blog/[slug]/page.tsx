@@ -6,12 +6,9 @@ import Link from "next/link";
 
 export const revalidate = 60;
 
-interface PageProps {
-  params: { slug: string };
-}
-
-export default async function BlogPost({ params }: PageProps) {
-  const { slug } = params;
+export default async function BlogPost(props: any) {
+  const resolvedParams = typeof props?.params?.then === 'function' ? await props.params : props?.params;
+  const { slug } = resolvedParams || {};
 
   // Try to fetch as post first, then as page
   let content = null;
