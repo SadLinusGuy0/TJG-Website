@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import { fetchPostBySlug, fetchPageBySlug, getFeaturedImageUrlAsync } from "../../../lib/wordpress";
+import type { WPPost } from "../../../lib/wordpress";
 import { notFound } from "next/navigation";
 import Navigation from "../../components/Navigation";
 import LightboxClient from "../../components/LightboxClient";
@@ -10,22 +12,95 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+async function getContentForSlug(slug: string): Promise<WPPost | null> {
+  try {
+    const post = await fetchPostBySlug(slug);
+    if (post) return post;
+    return await fetchPageBySlug(slug);
+  } catch (error) {
+    console.error(`Failed to fetch content for slug "${slug}":`, error);
+    return null;
+  }
+}
+
+function stripHtmlAndDecode(value?: string): string {
+  if (!value) return "";
+  const withoutTags = value.replace(/<[^>]*>/g, " ");
+  const decoded = withoutTags
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&apos;/gi, "'")
+    .replace(/&#39;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&#(\d+);/g, (_, code: string) => String.fromCharCode(Number(code)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, code: string) => String.fromCharCode(parseInt(code, 16)))
+    .replace(/\s+/g, " ")
+    .trim();
+  return decoded;
+}
+
+function truncate(value: string, maxLength = 160): string {
+  if (value.length <= maxLength) return value;
+  const sliceLength = Math.max(0, maxLength - 3);
+  return `${value.slice(0, sliceLength).trimEnd()}...`;
+}
+
+function getFeaturedImageAltText(post: WPPost): string | undefined {
+  return post._embedded?.['wp:featuredmedia']?.[0]?.alt_text?.trim() || undefined;
+}
+
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const { slug } = await props.params;
+  const content = await getContentForSlug(slug);
+
+  if (!content) {
+    return {
+      title: "Blog Post | That Josh Guy",
+      description: "Explore the latest stories from That Josh Guy.",
+    };
+  }
+
+  const titleText = stripHtmlAndDecode(content.title?.rendered) || "That Josh Guy";
+  const excerptText = stripHtmlAndDecode(content.excerpt?.rendered);
+  const fallbackDescription = stripHtmlAndDecode(content.content?.rendered);
+  const description = truncate(excerptText || fallbackDescription || "Explore the latest stories from That Josh Guy.");
+  const featuredImageUrl = await getFeaturedImageUrlAsync(content);
+  const imageAlt = getFeaturedImageAltText(content) || titleText;
+
+  return {
+    title: `${titleText} | That Josh Guy`,
+    description,
+    openGraph: {
+      title: `${titleText} | That Josh Guy`,
+      description,
+      type: "article",
+      images: featuredImageUrl
+        ? [
+            {
+              url: featuredImageUrl,
+              alt: imageAlt,
+            },
+          ]
+        : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${titleText} | That Josh Guy`,
+      description,
+      images: featuredImageUrl ? [featuredImageUrl] : undefined,
+    },
+    alternates: {
+      canonical: content.link || undefined,
+    },
+  };
+}
+
 export default async function BlogPost(props: PageProps) {
   const { slug } = await props.params;
-  
-  // Try to fetch as post first, then as page
-  let content = null;
-  
-  try {
-    content = await fetchPostBySlug(slug);
-    if (!content) {
-      content = await fetchPageBySlug(slug);
-    }
-  } catch (error) {
-    console.error('Failed to fetch content:', error);
-    return notFound();
-  }
-  
+  const content = await getContentForSlug(slug);
+
   if (!content) return notFound();
   const featuredImageUrl = await getFeaturedImageUrlAsync(content);
   
