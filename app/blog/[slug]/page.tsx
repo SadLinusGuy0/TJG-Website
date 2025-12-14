@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import Navigation from "../../components/Navigation";
 import LightboxClient from "../../components/LightboxClient";
 import Link from "next/link";
+import TableOfContents from "../TableOfContents";
+import BlogContent from "../BlogContent";
 
 export const revalidate = 60;
 
@@ -49,6 +51,35 @@ function truncate(value: string, maxLength = 160): string {
 
 function getFeaturedImageAltText(post: WPPost): string | undefined {
   return post._embedded?.['wp:featuredmedia']?.[0]?.alt_text?.trim() || undefined;
+}
+
+function countWords(content: string): number {
+  const text = stripHtmlAndDecode(content);
+  if (!text) return 0;
+  const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+  return words.length;
+}
+
+function processContentWithEmbeds(content: string): string {
+  // Define embed mappings - keyphrase to embed HTML
+  const embedMap: Record<string, string> = {
+    'story-mindmap': `
+      <div class="figma-wrapper">
+        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/JFh3pE1bu21Ad74KUibZug/Unit-4---Storytelling?node-id=0-1&embed-host=share" allowfullscreen></iframe>
+      </div>
+    `,
+    // Add more embeds here as needed
+    // 'story-mindmap': '<div class="embed-wrapper">...</div>',
+  };
+
+  let processedContent = content;
+
+  // Replace each keyphrase with its corresponding embed
+  Object.entries(embedMap).forEach(([keyphrase, embedHtml]) => {
+    processedContent = processedContent.replace(keyphrase, embedHtml);
+  });
+
+  return processedContent;
 }
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
@@ -470,6 +501,64 @@ export default async function BlogPost(props: PageProps) {
           .lightbox-caption-wrap { position: absolute !important; left: 0 !important; right: 0 !important; bottom: 0 !important; padding: 24px !important; pointer-events: none !important; z-index: 2 !important; }
           .lightbox-caption-gradient { position: absolute !important; left: 0 !important; right: 0 !important; bottom: 0 !important; height: 40% !important; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%) !important; }
           .lightbox-caption { position: relative !important; max-width: min(900px, 90%) !important; color: #fff !important; font-size: 0.95rem !important; line-height: 1.4 !important; text-shadow: 0 1px 2px rgba(0,0,0,0.4) !important; }
+
+          /* WordPress Dividers */
+          .body-text hr,
+          .body-text .wp-block-separator,
+          .body-text .wp-block-separator.is-style-dots,
+          .body-text .wp-block-separator.is-style-wide {
+            border: none !important;
+            border-top: 1px solid rgba(127, 127, 127, 0.2) !important;
+            margin: 6px 10px !important;
+            height: 1px !important;
+            background: none !important;
+            width: auto !important;
+          }
+          .body-text .wp-block-separator.is-style-dots {
+            border: none !important;
+            height: auto !important;
+            line-height: 1 !important;
+            text-align: center !important;
+            background: none !important;
+            opacity: 0.4 !important;
+          }
+          .body-text .wp-block-separator.is-style-dots::before {
+            content: '···' !important;
+            color: var(--primary) !important;
+            font-size: 1.5rem !important;
+            letter-spacing: 0.5em !important;
+            padding-left: 0.5em !important;
+          }
+          .body-text .wp-block-separator.is-style-wide {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            width: 100% !important;
+          }
+
+          /* Embed wrappers (Figma, etc.) */
+          .body-text .figma-wrapper,
+          .body-text .embed-wrapper {
+            margin: 16px 0px !important;
+            padding: 10px 0 !important;
+            width: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+          }
+          .body-text .figma-wrapper iframe,
+          .body-text .embed-wrapper iframe {
+            width: 100% !important;
+            max-width: 800px !important;
+            height: 450px !important;
+            border-radius: 12px !important;
+          }
+          @media (max-width: 768px) {
+            .body-text .figma-wrapper iframe,
+            .body-text .embed-wrapper iframe {
+              height: 300px !important;
+            }
+          }
         `
       }} />
       <div className="containers">
@@ -482,6 +571,7 @@ export default async function BlogPost(props: PageProps) {
                   <path fillRule="evenodd" clipRule="evenodd" d="M9.56416 2.15216C9.85916 1.86116 9.86316 1.38616 9.57216 1.09116C9.28116 0.797162 8.80616 0.794162 8.51116 1.08516L0.733159 8.75516C0.397159 9.08616 0.212158 9.52916 0.212158 10.0012C0.212158 10.4722 0.397159 10.9162 0.733159 11.2472L8.51116 18.9162C8.65716 19.0592 8.84716 19.1312 9.03816 19.1312C9.23116 19.1312 9.42516 19.0562 9.57216 18.9082C9.86316 18.6132 9.85916 18.1382 9.56416 17.8472L1.78716 10.1782C1.72116 10.1152 1.71216 10.0402 1.71216 10.0012C1.71216 9.96216 1.72116 9.88616 1.78716 9.82316L9.56416 2.15216Z" fill="var(--primary)"/>
                 </svg>
               </Link>
+              <TableOfContents content={content.content?.rendered || ''} />
             </div>
           </div>
           
@@ -537,13 +627,19 @@ export default async function BlogPost(props: PageProps) {
                       opacity: 0.9,
                       textShadow: '0 1px 4px rgba(0, 0, 0, 0.6)',
                       fontWeight: '500',
-                      fontFamily: 'One UI Sans'
+                      fontFamily: 'One UI Sans',
+                      display: 'flex',
+                      gap: '8px',
+                      alignItems: 'center',
+                      flexWrap: 'wrap'
                     }}>
-                      {new Date(content.date).toLocaleDateString('en-US', { 
+                      <span>{new Date(content.date).toLocaleDateString('en-US', { 
                         year: 'numeric', 
                         month: 'long', 
                         day: 'numeric' 
-                      })}
+                      })}</span>
+                      <span style={{ opacity: 0.7 }}>•</span>
+                      <span>{countWords(content.content?.rendered || '').toLocaleString()} words</span>
                     </div>
                   </div>
                 </div>
@@ -589,13 +685,19 @@ export default async function BlogPost(props: PageProps) {
                       fontSize: '1rem',
                       opacity: 0.7,
                       fontWeight: '500',
-                      fontFamily: 'One UI Sans'
+                      fontFamily: 'One UI Sans',
+                      display: 'flex',
+                      gap: '8px',
+                      alignItems: 'center',
+                      flexWrap: 'wrap'
                     }}>
-                      {new Date(content.date).toLocaleDateString('en-US', { 
+                      <span>{new Date(content.date).toLocaleDateString('en-US', { 
                         year: 'numeric', 
                         month: 'long', 
                         day: 'numeric' 
-                      })}
+                      })}</span>
+                      <span style={{ opacity: 0.5 }}>•</span>
+                      <span>{countWords(content.content?.rendered || '').toLocaleString()} words</span>
                     </div>
                   </div>
                 </div>
@@ -619,15 +721,7 @@ export default async function BlogPost(props: PageProps) {
           </div>
           
            <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%', overflow: 'hidden' }}>
-             <div className="body-text" style={{ 
-               fontSize: '16px', 
-               lineHeight: '1.5',
-               margin: 0,
-               padding: 0,
-               wordWrap: 'break-word',
-               overflowWrap: 'break-word',
-               maxWidth: '100%'
-             }} dangerouslySetInnerHTML={{ __html: content.content?.rendered || '' }} />
+             <BlogContent content={processContentWithEmbeds(content.content?.rendered || '')} />
            </div>
         </div>
       </div>
