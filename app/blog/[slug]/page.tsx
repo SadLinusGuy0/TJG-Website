@@ -83,49 +83,64 @@ function processContentWithEmbeds(content: string): string {
 }
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
-  const { slug } = await props.params;
-  const content = await getContentForSlug(slug);
+  try {
+    const { slug } = await props.params;
+    const content = await getContentForSlug(slug);
 
-  if (!content) {
+    if (!content) {
+      return {
+        title: "Blog Post | That Josh Guy",
+        description: "Explore the latest stories from That Josh Guy.",
+      };
+    }
+
+    const titleText = stripHtmlAndDecode(content.title?.rendered) || "That Josh Guy";
+    const excerptText = stripHtmlAndDecode(content.excerpt?.rendered);
+    const fallbackDescription = stripHtmlAndDecode(content.content?.rendered);
+    const description = truncate(excerptText || fallbackDescription || "Explore the latest stories from That Josh Guy.");
+    
+    let featuredImageUrl: string | null = null;
+    try {
+      featuredImageUrl = await getFeaturedImageUrlAsync(content);
+    } catch (error) {
+      console.error('Error fetching featured image:', error);
+    }
+    
+    const imageAlt = getFeaturedImageAltText(content) || titleText;
+
+    return {
+      title: `${titleText} | That Josh Guy`,
+      description,
+      openGraph: {
+        title: `${titleText} | That Josh Guy`,
+        description,
+        type: "article",
+        images: featuredImageUrl
+          ? [
+              {
+                url: featuredImageUrl,
+                alt: imageAlt,
+              },
+            ]
+          : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${titleText} | That Josh Guy`,
+        description,
+        images: featuredImageUrl ? [featuredImageUrl] : undefined,
+      },
+      alternates: {
+        canonical: content.link || undefined,
+      },
+    };
+  } catch (error) {
+    console.error('Error generating metadata:', error);
     return {
       title: "Blog Post | That Josh Guy",
       description: "Explore the latest stories from That Josh Guy.",
     };
   }
-
-  const titleText = stripHtmlAndDecode(content.title?.rendered) || "That Josh Guy";
-  const excerptText = stripHtmlAndDecode(content.excerpt?.rendered);
-  const fallbackDescription = stripHtmlAndDecode(content.content?.rendered);
-  const description = truncate(excerptText || fallbackDescription || "Explore the latest stories from That Josh Guy.");
-  const featuredImageUrl = await getFeaturedImageUrlAsync(content);
-  const imageAlt = getFeaturedImageAltText(content) || titleText;
-
-  return {
-    title: `${titleText} | That Josh Guy`,
-    description,
-    openGraph: {
-      title: `${titleText} | That Josh Guy`,
-      description,
-      type: "article",
-      images: featuredImageUrl
-        ? [
-            {
-              url: featuredImageUrl,
-              alt: imageAlt,
-            },
-          ]
-        : undefined,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${titleText} | That Josh Guy`,
-      description,
-      images: featuredImageUrl ? [featuredImageUrl] : undefined,
-    },
-    alternates: {
-      canonical: content.link || undefined,
-    },
-  };
 }
 
 export default async function BlogPost(props: PageProps) {
