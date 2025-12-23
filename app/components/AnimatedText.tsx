@@ -9,27 +9,57 @@ interface AnimatedTextProps {
 }
 
 export default function AnimatedText({ text, className, style, inverse = false }: AnimatedTextProps) {
-  const [mousePosition, setMousePosition] = useState<{ x: number; y: number } | null>(null);
+  const [pointerPosition, setPointerPosition] = useState<{ x: number; y: number } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const isTouching = useRef(false);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const updatePosition = (clientX: number, clientY: number) => {
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
-      setMousePosition({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+      setPointerPosition({
+        x: clientX - rect.left,
+        y: clientY - rect.top,
       });
     }
   };
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isTouching.current) {
+      updatePosition(e.clientX, e.clientY);
+    }
+  };
+
   const handleMouseLeave = () => {
-    setMousePosition(null);
+    if (!isTouching.current) {
+      setPointerPosition(null);
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    isTouching.current = true;
+    const touch = e.touches[0];
+    if (touch) {
+      updatePosition(touch.clientX, touch.clientY);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    e.preventDefault(); // Prevent scrolling while dragging
+    const touch = e.touches[0];
+    if (touch) {
+      updatePosition(touch.clientX, touch.clientY);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    isTouching.current = false;
+    setPointerPosition(null);
   };
 
   useEffect(() => {
-    if (!mousePosition) {
-      // Reset all weights when mouse leaves
+    if (!pointerPosition) {
+      // Reset all weights when pointer leaves
       const resetWeight = inverse ? '700' : '400';
       charRefs.current.forEach((charRef) => {
         if (charRef) {
@@ -39,7 +69,7 @@ export default function AnimatedText({ text, className, style, inverse = false }
       return;
     }
 
-    // Find the closest character to the mouse position
+    // Find the closest character to the pointer position
     let closestIndex = 0;
     let minDistance = Infinity;
 
@@ -53,10 +83,10 @@ export default function AnimatedText({ text, className, style, inverse = false }
       const charCenterX = charRect.left - containerRect.left + charRect.width / 2;
       const charCenterY = charRect.top - containerRect.top + charRect.height / 2;
       
-      // Calculate distance from mouse to character center
+      // Calculate distance from pointer to character center
       const distance = Math.sqrt(
-        Math.pow(mousePosition.x - charCenterX, 2) + 
-        Math.pow(mousePosition.y - charCenterY, 2)
+        Math.pow(pointerPosition.x - charCenterX, 2) + 
+        Math.pow(pointerPosition.y - charCenterY, 2)
       );
       
       if (distance < minDistance) {
@@ -108,15 +138,18 @@ export default function AnimatedText({ text, className, style, inverse = false }
       charRef.style.fontWeight = weight.toString();
       charRef.style.transition = 'font-weight 0.15s ease-out';
     });
-  }, [mousePosition, inverse]);
+  }, [pointerPosition, inverse]);
 
   return (
     <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
       className={className}
-      style={{ display: 'inline-block', cursor: 'default', ...style }}
+      style={{ display: 'inline-block', cursor: 'default', touchAction: 'none', ...style }}
     >
       {text.split('').map((char, index) => (
         <span
