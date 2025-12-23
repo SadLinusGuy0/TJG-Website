@@ -6,6 +6,7 @@ import Navigation from "../../components/Navigation";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Toast from "../../components/Toast";
+import AnimatedText from "../../components/AnimatedText";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -115,7 +116,7 @@ export default function Home() {
                 }}
               >
                 <div className="title" style={{ paddingBottom: 0 }}>
-                  That Josh Guy
+                  <AnimatedText text="That Josh Guy" />
                 </div>
                 <div
                   className="information-wrapper"
@@ -130,7 +131,7 @@ export default function Home() {
                     }}
                     onClick={handleVersionTap}
                   >
-                    Version 3.0
+                    <AnimatedText text="Version 3.0" />
                   </div>
                 </div>
               </div>

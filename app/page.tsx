@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import './globals.css';
 import Navigation from "./components/Navigation";
+import AnimatedText from "./components/AnimatedText";
 import { ReactNode } from "react";
 
 // Stack chip component for easy customization
@@ -107,14 +108,18 @@ export default function Home() {
         <div className="main-content" style={{paddingTop: 0}}>
           <div className="header-container">
             <Image className="profile-image-icon" alt="Profile" src="/images/pfp.png" width={200} height={200} />
-            <div className="title">Josh Skinner</div>
+            <div className="title">
+              <AnimatedText text="Josh Skinner" inverse />
+            </div>
             <div className="container settings" style={{ padding: 0 }}>
             <div className="body-text" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: "row", gap: 8}}>
               <span className="containers-are-the">Aka</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fillRule="evenodd" clipRule="evenodd" d="M5.13519 6.77392V20.1163H8.1369C7.7373 20.0255 7.36267 19.895 7.01298 19.7249C6.27837 19.3448 5.66618 18.8355 5.17644 18.197L7.28847 16.1904C7.56395 16.5856 7.89299 16.8897 8.27561 17.1025C8.27571 17.1025 8.27581 17.1026 8.27591 17.1026V13.9755C8.37381 14.4025 8.50578 14.817 8.67182 15.219C9.01602 16.0103 9.46611 16.7268 10.0221 17.3684C10.3176 17.3253 10.5848 17.2367 10.8238 17.1025C11.1911 16.9049 11.4666 16.616 11.6503 16.236C11.8284 15.8957 11.9268 15.4885 11.9454 15.0142C11.9017 14.943 11.8594 14.8703 11.8184 14.796C11.3988 13.9947 11.1891 13.0747 11.1891 12.0358C11.1891 10.997 11.4063 10.0918 11.8408 9.32011C11.8859 9.23859 11.9327 9.15898 11.9813 9.08129L12.01 4H0V6.77392H5.13519ZM15.0596 4.08712L15.0689 6.95299C15.4625 6.869 15.8774 6.82701 16.3134 6.82701C17.1974 6.82701 18.0065 6.99767 18.7408 7.33898C19.475 7.6803 20.0893 8.17001 20.5837 8.80814L22.6515 6.76023C21.9323 5.88468 21.0258 5.20945 19.932 4.73458C18.8381 4.24486 17.6395 4 16.3359 4C15.899 4 15.4735 4.02904 15.0596 4.08712ZM14.6488 17.1101C14.5764 17.2876 14.4952 17.4599 14.4051 17.627C14.0116 18.3682 13.4678 18.9661 12.7736 19.4206C12.8441 19.453 12.9153 19.4845 12.9871 19.5151C13.976 19.9158 15.0323 20.1162 16.1561 20.1162C17.6844 20.1162 19.0329 19.8045 20.2017 19.1812C21.3854 18.5431 22.3143 17.6008 22.9886 16.3542C23.6629 15.0928 24 13.5272 24 11.6574V11.2345H15.9538V13.8611L20.73 13.9074C20.6367 14.3737 20.4906 14.7961 20.2916 15.1745C19.9169 15.8719 19.3775 16.4061 18.6733 16.7772C17.9692 17.1333 17.1225 17.3114 16.1336 17.3114C15.607 17.3114 15.1121 17.2443 14.6488 17.1101ZM8.27591 6.77392V10.163C8.37818 9.72525 8.51764 9.30332 8.69429 8.89718C9.03259 8.10741 9.47806 7.39966 10.0307 6.77392H8.27591Z" fill="var(--primary)"/>
               </svg>
-              <strong>That Josh Guy</strong>
+              <strong>
+                <AnimatedText text="That Josh Guy" />
+              </strong>
             </div>
             </div>
           </div>
