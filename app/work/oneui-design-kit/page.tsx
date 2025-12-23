@@ -25,7 +25,7 @@ export default function OneUIDesignKitPage() {
 
   return (
     <div className="index oneui-design-kit-page">
-      <div className="containers">
+      <div className="containers" style={{ padding: '0 10px' }}>
         <Navigation hideMobile={true} />
         <div className="top-app-bar">
           <div className="top-app-bar-container back-only">

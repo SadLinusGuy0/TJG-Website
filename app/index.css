@@ -3,11 +3,29 @@ form {
 }
 
 .profile-image-icon {
-  width: 100px;
+  width: 160px;
   position: relative;
-  border-radius: 50px;
-  height: 100px;
+  border-radius: 80px;
+  height: 160px;
   object-fit: cover;
+  transition: box-shadow 0.2s, transform 0.6s cubic-bezier(.6,-0.6,0,1.5);
+  /* This ensures transform (rotation) animates back smoothly */
+  transform: rotate(0deg);
+}
+
+.profile-image-icon:hover {
+  box-shadow: 0 0 20px 0 #b5c6ddcc, 0 0 40px 5px #B5C6DD33;
+  animation: spin-record 3s linear infinite;
+  /* transition remains so box-shadow animates too */
+}
+
+@keyframes spin-record {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .title {
@@ -30,7 +48,6 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0px 19px;
   box-sizing: border-box;
   gap: var(--gap-xl);
   font-size: var(--title-size);
@@ -51,7 +68,7 @@ a {
   align-self: stretch;
   border-radius: var(--br-9xl);
   background-color: var(--container-background);
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -95,8 +112,8 @@ a {
 .button {
   align-self: stretch;
   border-radius: 20px;
-  background-color: #387aff;
-  overflow: hidden;
+  background-color: var(--accent);
+  overflow: visible;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -167,49 +184,12 @@ button.list3:hover {
   transition: none !important;
 }
 
-/* For back button in settings and similar pages */
-.top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon,
-.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon,
-.top-app-bar-icon[onclick="window.history.back()"] {
-  transform: scale(1);
-  transition: transform 0.2s ease-out, background-color 0.2s ease;
-  margin-right: 0;
-  border-radius: 50%;
-  padding: 4px;
-  box-sizing: content-box;
-  cursor: pointer;
-}
-
-.top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon:hover,
-.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon:hover,
-.top-app-bar-icon[onclick="window.history.back()"]:hover {
-  transform: scale(1.1);
-  transition: transform 0.2s ease-in, background-color 0.2s ease;
-  background-color: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
-}
-
-/* Keep the original behavior for the settings icon only */
-.top-app-bar-icon:not([onclick="window.history.back()"]):not(.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon) {
-  transform: scale(1);
-  transition: transform 0.2s ease-out, rotate 0.2s ease, background-color 0.2s ease;
-  border-radius: 50%;
-  padding: 4px;
-  box-sizing: content-box;
-  cursor: pointer;
-}
-
-.top-app-bar-icon:not([onclick="window.history.back()"]):not(.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon):hover {
-  transform: scale(1.1);
-  transition: transform 0.2s ease-in, rotate 0.2s ease, background-color 0.2s ease;
-  background-color: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
-}
-
 .button-container {
   width: 100%;
   top: 20px;
   position: relative;
   height: 47px;
-  overflow: hidden;
+  overflow: visible;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -260,7 +240,7 @@ button.list3:hover {
   left: 0%;
   border-radius: var(--br-11xs);
   max-width: 100%;
-  overflow: hidden;
+  overflow: visible;
   object-fit: cover;
   z-index: 2;
 }
@@ -268,7 +248,7 @@ button.list3:hover {
 .test-toggle-wrapper {
   align-self: stretch;
   flex: 1;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -298,7 +278,7 @@ button.list3:hover {
 .test-toggle-frame {
   align-self: stretch;
   flex: 1;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -383,7 +363,7 @@ button.list3:hover {
 }
 
 .theme-selection input[type="radio"]:checked {
-  border: 2px solid #387aff;
+  border: 2px solid var(--accent);
   background: var(--container-background);
   position: relative;
 }
@@ -393,12 +373,85 @@ button.list3:hover {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #387aff;
-  ;
+  background: var(--accent);
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* Horizontal accent color picker */
+.accent-color-selection {
+  align-self: stretch;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xl);
+  font-family: 'One UI Sans';
+  font-weight: 400;
+  font-size: var(--body-size);
+}
+
+.accent-color-selection label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 16px;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.accent-color-selection label:hover {
+  background-color: var(--container-background-hover);
+}
+
+.accent-color-selection label.selected {
+  background-color: var(--container-background-active);
+}
+
+.accent-color-selection input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.accent-color-swatch {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.accent-color-swatch svg {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+}
+
+.accent-color-selection label:hover .accent-color-swatch {
+  transform: scale(1.1);
+}
+
+.accent-color-selection label.selected .accent-color-swatch {
+  border-color: var(--primary);
+  transform: scale(1.05);
+}
+
+.accent-color-selection label span {
+  font-size: var(--body-size);
+  font-weight: 500;
+  color: var(--primary);
+  text-align: center;
 }
 
 .div {
@@ -432,7 +485,7 @@ button.list3:hover {
   align-self: normal;
   min-height: 19px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   flex-shrink: 0;
   font-size: var(--body-size);
   color: var(--secondary);
@@ -448,7 +501,7 @@ button.list3:hover {
 .test-toggle-parent {
   align-self: stretch;
   flex: 1;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -490,13 +543,46 @@ button.list3:hover {
   outline-offset: 2px;
 }
 
-.list3:hover,
-a.list3:hover,
-button.list3:hover {
-  background-color: rgba(23, 23, 26, 0.7) !important;
-  outline: 2px solid color-mix(in srgb, currentColor 60%, transparent);
+/* Light mode hover */
+html[data-theme="light"] .list3:hover,
+html[data-theme="light"] a.list3:hover,
+html[data-theme="light"] button.list3:hover {
+  background-color: #e3e3e3 !important;
+  outline: 1.5px solid color-mix(in srgb, currentColor 20%, transparent);
   transform: scale(1.02) !important;
-  transition: transform 0.2s ease-in, background-color 0.2s ease-in, outline-color 0.2s !important;
+  transition: transform 0.2s ease-in, background-color 0.2s ease-in;
+}
+
+@media (prefers-color-scheme: light) {
+  .list3:hover,
+  a.list3:hover,
+  button.list3:hover {
+    background-color: #e3e3e3 !important;
+    outline: 1.5px solid color-mix(in srgb, currentColor 20%, transparent);
+    transform: scale(1.02) !important;
+    transition: transform 0.2s ease-in, background-color 0.2s ease-in;
+  }
+}
+
+/* Dark mode hover */
+html[data-theme="dark"] .list3:hover,
+html[data-theme="dark"] a.list3:hover,
+html[data-theme="dark"] button.list3:hover {
+  background-color: #2a2a2d !important;
+  outline: 1.5px solid color-mix(in srgb, currentColor 20%, transparent);
+  transform: scale(1.02) !important;
+  transition: transform 0.2s ease-in, background-color 0.2s ease-in;
+}
+
+@media (prefers-color-scheme: dark) {
+  .list3:hover,
+  a.list3:hover,
+  button.list3:hover {
+    background-color: #2a2a2d !important;
+    outline: 1.5px solid color-mix(in srgb, currentColor 20%, transparent);
+    transform: scale(1.02) !important;
+    transition: transform 0.2s ease-in, background-color 0.2s ease-in;
+  }
 }
 
 .list3:active {
@@ -525,7 +611,7 @@ button.list3:hover {
   transition: all 0.3s ease;
   margin-bottom: 20px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   min-height: 200px;
 }
 
@@ -586,7 +672,7 @@ button.list4:hover {
 .test-toggle-group {
   align-self: stretch;
   flex: 1;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -610,7 +696,7 @@ button.list4:hover {
   gap: var(--gap-xl);
   width: 100%;
   /* Add this */
-  overflow-x: hidden;
+  overflow-x: visible;
   /* Add this */
   max-width: 500px;
   /* Add this for mobile */
@@ -627,9 +713,13 @@ button.list4:hover {
   gap: 12px;
   color: var(--secondary);
   cursor: pointer;
-  transition: all 0.8s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.2s ease-out,
+              transform 0.2s ease-out;
   padding: 8px;
   border-radius: 12px;
+  opacity: 1;
+  transform: scale(1);
 }
 
 .nav-icon-container:hover {
@@ -647,6 +737,20 @@ button.list4:hover {
 
 .nav-icon-container:hover svg path {
   fill: var(--secondary);
+}
+
+.nav-icon-container svg,
+.nav-icon-container-selected svg {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-icon-container-selected svg {
+  transform: scale(1.05);
+}
+
+.nav-icon-container svg path,
+.nav-icon-container-selected svg path {
+  transition: fill 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-icon-container a,
@@ -671,6 +775,12 @@ button.list4:hover {
   border-radius: 12px;
   background-color: var(--selected);
   position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1);
 }
 
 /* Active indicator: left border */
@@ -682,7 +792,7 @@ button.list4:hover {
   width: 24px;
   position: relative;
   height: 24px;
-  overflow: hidden;
+  overflow: visible;
   flex-shrink: 0;
 }
 
@@ -778,32 +888,71 @@ button.list4:hover {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000 !important;
+  z-index: 999 !important;
   width: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0px 10px;
   margin-top: 10px;
-  background: transparent;
   pointer-events: auto;
 }
 
 .top-app-bar-icon {
   width: 40px;
   height: 40px;
-  overflow: hidden;
+  background: color-mix(in srgb, var(--container-background) 60%, transparent 40%) !important;
+  backdrop-filter: blur(10px) !important;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
+  border: 1px solid color-mix(in srgb, var(--primary) 10%, transparent 80%);
+  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   pointer-events: auto;
+}
+
+/* For back button in settings and similar pages */
+.top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon,
+.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon,
+.top-app-bar-icon[onclick="window.history.back()"] {
+  transform: scale(1);
+  transition: transform 0.2s ease-out, background 0.2s ease, backdrop-filter 0.2s ease;
+  margin-right: 0;
+  border-radius: 50%;
+  padding: 4px;
+  box-sizing: content-box;
+  cursor: pointer;
+}
+
+.top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon:hover,
+.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon:hover,
+.top-app-bar-icon[onclick="window.history.back()"]:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in, background 0.2s ease, backdrop-filter 0.2s ease;
+  background: color-mix(in srgb, var(--container-background) 75%, transparent 25%);
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent 70%);
+}
+
+/* Keep the original behavior for the settings icon only */
+.top-app-bar-icon:not([onclick="window.history.back()"]):not(.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon) {
+  transform: scale(1);
+  transition: transform 0.2s ease-out, rotate 0.2s ease, background 0.2s ease, backdrop-filter 0.2s ease;
+  border-radius: 50%;
+  padding: 4px;
+  box-sizing: content-box;
+  cursor: pointer;
+
+}
+
+.top-app-bar-icon:not([onclick="window.history.back()"]):not(.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon):hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in, rotate 0.2s ease, background 0.2s ease, backdrop-filter 0.2s ease;
+  background: color-mix(in srgb, var(--container-background) 75%, transparent 25%);
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent 70%);
 }
 
 .title-container {
@@ -823,7 +972,7 @@ button.list4:hover {
   position: relative;
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: visible;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -845,7 +994,7 @@ button.list4:hover {
   justify-content: center;
   margin-bottom: 20px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   gap: 16px;
 }
 
@@ -930,7 +1079,7 @@ button.list4:hover {
       margin: 0;
       align-items: center;
       box-sizing: border-box;
-      overflow-x: hidden;
+      overflow-x: visible;
   }
 
   .main-content {
@@ -939,7 +1088,7 @@ button.list4:hover {
       padding: 0 10px;
       margin: 0 auto;
       margin-top: 40px !important;
-      overflow-x: hidden;
+      overflow-x: visible;
       box-sizing: border-box;
       padding-top: 80px;
   }
@@ -1016,7 +1165,7 @@ button.list4:hover {
       max-width: none;
       padding: 10px 0;
       box-sizing: border-box;
-      overflow-x: hidden;
+      overflow-x: visible;
   }
 
   .main-content {
@@ -1024,7 +1173,7 @@ button.list4:hover {
       padding: 0 10px;
       margin: 0 auto;
       box-sizing: border-box;
-      overflow-x: hidden;
+      overflow-x: visible;
       padding-top: 80px;
   }
 
@@ -1038,7 +1187,7 @@ button.list4:hover {
       margin-left: auto;
       margin-right: auto;
       box-sizing: border-box;
-      overflow-x: hidden;
+      overflow-x: visible;
   }
 }
 
@@ -1147,19 +1296,6 @@ button.list4:hover {
   .top-app-bar {
       margin-top: 40px;
   }
-  html[data-experimental="true"] .tab-container.desktop-nav {
-      border-top: 1.5px solid var(--experimental-border);
-      border-right: 1.5px solid var(--experimental-border);
-      border-bottom: 1.5px solid var(--experimental-border);
-      border-left: none;
-      border-top-right-radius: var(--experimental-border-radius);
-      border-bottom-right-radius: var(--experimental-border-radius);
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-      box-shadow: var(--experimental-shadow);
-      background: var(--experimental-container);
-      transition: var(--experimental-transition);
-  }
 }
 
 /* Remove the ultra-wide screen centering behavior to keep navigation on the left */
@@ -1169,7 +1305,7 @@ button.list4:hover {
   }
 } */
 
-@media screen and (max-width: 499px) {
+@media screen and (max-width: 799px) {
 
   .tab-container {
       padding: var(--padding-xl) 20px;
@@ -1211,36 +1347,57 @@ button.list4:hover {
 
 /* Add CSS variables for hover/active states */
 :root {
-  --container-background-hover: color-mix(in srgb, var(--container-background) 95%, var(--primary) 5%);
-  --container-background-active: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
+  --container-background-hover: color-mix(in srgb, var(--container-background) 80%, var(--primary) 20%);
+  --container-background-active: color-mix(in srgb, var(--container-background) 70%, var(--primary) 30%);
 }
 
 /* Update the CSS variables for hover/active states with mode-specific values */
 :root {
-  /* Base hover states - will be used for dark mode */
   --container-background-hover: color-mix(in srgb, var(--container-background) 95%, var(--primary) 5%);
-  --container-background-active: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
+  --container-background-active: color-mix(in srgb, var(--container-background) 85%, var(--primary) 15%);
 }
 
-/* Add darker hover effect specifically for light mode */
+/* Add lighter hover effect specifically for light mode
 @media (prefers-color-scheme: light) {
   :root {
-      --container-background-hover: color-mix(in srgb, var(--container-background) 92%, #000000 8%);
-      --container-background-active: color-mix(in srgb, var(--container-background) 85%, #000000 15%);
+      --container-background-hover: color-mix(in srgb, var(--container-background) 98%, #e8e8e8 2%);
+      --container-background-active: color-mix(in srgb, var(--container-background) 95%, #e8e8e8 5%);
   }
-}
+} */
 
 /* Ensure dark mode keeps the original values */
 @media (prefers-color-scheme: dark) {
   :root {
-      --container-background-hover: color-mix(in srgb, var(--container-background) 95%, var(--primary) 5%);
-      --container-background-active: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
+    --container-background-hover: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
+    --container-background-active: color-mix(in srgb, var(--container-background) 85%, var(--primary) 15%);
   }
 }
 
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-3px); }
+}
+
+@keyframes tabSwitchIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes tabSwitchOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
 }
 
 /* Theme-aware image handling */
@@ -1280,6 +1437,58 @@ button.list4:hover {
   font-family: 'One UI Sans';
 }
 
+.stack-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+  padding: 0 0 20px 0;
+}
+
+.stack-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background-color: var(--container-background);
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.stack-chip:hover {
+  background-color: var(--container-background-hover, color-mix(in srgb, var(--container-background) 95%, var(--accent) 5%));
+  border-color: color-mix(in srgb, var(--primary) 25%, transparent 75%);
+  transform: translateY(-1px);
+}
+
+.stack-chip-icon {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: 'One UI Sans';
+  min-width: 24px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stack-chip-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.stack-chip-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--primary);
+  font-family: 'One UI Sans';
+}
+
 @font-face {
   font-family: 'One UI Sans';
   src: url('/fonts/oneuisans.ttf') format('truetype-variations');
@@ -1305,59 +1514,136 @@ button.list4:hover {
 .mobile-nav {
   display: flex !important;
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: auto;
-  width: 100vw;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  bottom: 16px;
   height: auto;
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
+  padding: 8px !important;
   margin-top: 0 !important;
-  backdrop-filter: blur(8px); /* optional, for frosted glass effect */
+  background-color: color-mix(in srgb, var(--container-background) 80%, transparent 20%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   flex-direction: row;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  border-radius: 16px 16px 0 0;
-  box-shadow: 0 -2px 16px rgba(0,0,0,0.12);
-  gap: 8px;
-  border-top: 1px solid rgba(0,0,0,0.10);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  border-radius: 36px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  gap: 4px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+}
+.mobile-nav.with-blog {
+  padding: 8px 10px !important;
+  min-width: fill-available;
+}
+
+.mobile-nav.with-blog .nav-icon-container,
+.mobile-nav.with-blog .nav-icon-container-selected {
+  padding: 6px 32px !important;
+}
+
+/* Version number tap to enable blog */
+.information[style*="cursor: pointer"] {
+  transition: opacity 0.2s ease;
+}
+
+.information[style*="cursor: pointer"]:hover {
+  opacity: 0.7;
+}
+
+.information[style*="cursor: pointer"]:active {
+  opacity: 0.5;
 }
 .mobile-nav .icon-container {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-around;
-  gap: 0;
+  justify-content: center;
+  gap: 4px;
   padding: 0;
   margin: 0;
+  width: auto;
+  height: auto;
 }
-.mobile-nav .nav-icon-container, .mobile-nav .nav-icon-container-selected {
-  flex: 1 1 0;
-  height: 100%;
+.mobile-nav .nav-icon-container {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8px !important;
-  border-radius: 12px;
-  gap: 2px;
-  background: none;
+  padding: 6px 40px !important;
+  border-radius: 28px;
+  gap: 4px;
+  background: transparent;
+  color: var(--secondary);
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              backdrop-filter 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.mobile-nav .nav-icon-container-selected {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 40px !important;
+  border-radius: 28px;
+  gap: 4px;
+  background: color-mix(in srgb, var(--container-background-active) 80%, transparent 20%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--primary);
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              backdrop-filter 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-sizing: border-box;
+  transform: scale(1);
+}
+
+.mobile-nav .nav-icon-container-selected .nav-label-selected {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.mobile-nav .nav-icon-container .nav-label {
+  color: var(--secondary);
 }
 .mobile-nav .nav-icon-container svg, .mobile-nav .nav-icon-container-selected svg {
   display: block;
-  margin: 0 auto;
+  margin: 0;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-nav .nav-icon-container-selected svg {
+  transform: scale(1.05);
+}
+
+.mobile-nav .nav-icon-container svg path,
+.mobile-nav .nav-icon-container-selected svg path {
+  transition: fill 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .mobile-nav .nav-label, .mobile-nav .nav-label-selected {
-  font-size: 13px;
-  margin-top: 2px;
+  font-size: 12px;
+  margin-top: 0;
   text-align: center;
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: block;
   font-family: 'One UI Sans';
+  line-height: 1.2;
+  white-space: nowrap;
 }
 .containers,
 .main-content,
@@ -1414,9 +1700,10 @@ a {
 
 /* Add after the .top-app-bar-icon rules */
 .top-app-bar-icon:hover {
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: color-mix(in srgb, var(--container-background) 75%, transparent 25%);
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent 70%);
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
@@ -1432,24 +1719,11 @@ a {
 /* Only rotate the SVG for the settings cog, not the back button */
 .top-app-bar-icon[aria-label="Settings"]:hover svg {
   transform: rotate(90deg);
-  fill: #387aff;
+  fill: var(--accent);
 }
 
 .top-app-bar-icon[aria-label="Back"]:hover svg {
-  fill: #387aff;
-}
-
-/* Experimental Toggle Styles */
-.experimental-toggle {
-align-self: stretch;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: flex-start;
-gap: var(--gap-xl);
-font-family: 'One UI Sans';
-font-weight: 400;
-font-size: var(--body-size);
+  fill: var(--accent);
 }
 
 .toggle-label {
@@ -1528,7 +1802,7 @@ box-shadow: 0 1px 4px rgba(0,0,0,0.10);
 }
 
 .toggle-switch input:checked + .toggle-slider {
-background-color: #168AFF;
+background-color: var(--accent);
 }
 
 .toggle-switch input:checked + .toggle-slider:before {
@@ -1536,218 +1810,10 @@ transform: translateX(20px);
 }
 
 .toggle-switch input:focus + .toggle-slider {
-box-shadow: 0 0 0 2px #168AFF33;
+box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
-/* Experimental UI Enhancements */
-html[data-experimental="true"] .container {
-border-radius: var(--experimental-border-radius);
-box-shadow: var(--experimental-shadow);
-transition: var(--experimental-transition);
-border: 1px solid var(--experimental-border);
-background: var(--experimental-container);
-}
 
-html[data-experimental="true"] .list3 {
-border-radius: var(--experimental-border-radius);
-box-shadow: var(--experimental-shadow);
-transition: var(--experimental-transition);
-border: 1px solid var(--experimental-border);
-background: var(--experimental-container);
-}
-
-html[data-experimental="true"] .list4 {
-border-radius: var(--experimental-border-radius);
-box-shadow: var(--experimental-shadow);
-transition: var(--experimental-transition);
-border: 1px solid var(--experimental-border);
-background: transparent;
-}
-
-html[data-experimental="true"] .list3:hover {
-background: rgba(255,255,255,0.5) !important;
-box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-border-color: var(--accent);
-transform: translateY(-2px);
-}
-
-html[data-experimental="true"] .list4:hover {
-background: transparent !important;
-box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-border-color: var(--accent);
-transform: scale(1.02);
-}
-
-html[data-experimental="true"] .list4:hover .list4-label {
-background: rgba(0, 0, 0, 0.8) !important;
-backdrop-filter: blur(20px) !important;
--webkit-backdrop-filter: blur(20px) !important;
-}
-
-html[data-experimental="true"] .nav-icon-container,
-html[data-experimental="true"] .nav-icon-container-selected {
-padding-left: 20px;
-padding-right: 20px;
-box-sizing: border-box;
-}
-
-html[data-experimental="true"] .toggle-label {
-border-radius: var(--experimental-border-radius);
-box-shadow: var(--experimental-shadow);
-border: 1px solid var(--experimental-border);
-background: var(--experimental-container);
-}
-
-html[data-experimental="true"] .toggle-label:hover {
-transform: translateY(-1px);
-box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
-}
-
-html[data-experimental="true"] .theme-selection label {
-border-radius: var(--br-9xl) !important;
-box-shadow: none !important;
-border: none !important;
-background: none !important;
-transition: var(--experimental-transition);
-}
-
-html[data-experimental="true"] .theme-selection label:hover {
-border-radius: var(--experimental-border-radius) !important;
-box-shadow: var(--experimental-shadow) !important;
-background: var(--experimental-container) !important;
-transform: translateY(-1px);
-box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
-border-color: var(--accent);
-}
-
-html[data-experimental="true"] .top-app-bar {
-  background: transparent;
-}
-
-html[data-experimental="true"] .top-app-bar-icon {
-  background: var(--experimental-container);
-  border: 1px solid var(--experimental-border);
-  border-radius: var(--experimental-border-radius);
-  box-shadow: var(--experimental-shadow);
-}
-
-html[data-experimental="true"] .top-app-bar-icon:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: var(--accent);
-  box-shadow: 0 6px 25px rgba(56, 122, 255, 0.3);
-  transform: scale(1.05);
-}
-
-/* Enhanced animations for experimental mode */
-html[data-experimental="true"] * {
-transition: var(--experimental-transition);
-}
-
-html[data-experimental="true"] .main-content-settings {
-animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-@keyframes fadeInUp {
-0% {
-  opacity: 0;
-  transform: translateY(30px);
-}
-100% {
-  opacity: 1;
-  transform: translateY(0);
-}
-}
-
-html[data-experimental="true"][data-theme="light"] .containers {
-background: transparent !important;
-}
-
-html[data-experimental="true"][data-theme="dark"] .containers {
-background: transparent !important;
-}
-
-html[data-experimental="true"][data-theme="light"] .index {
-background: transparent !important;
-}
-
-html[data-experimental="true"][data-theme="dark"] .index {
-background: transparent !important;
-}
-
-html[data-experimental="true"][data-theme="light"] body {
-background: transparent !important;
-}
-
-html[data-experimental="true"][data-theme="dark"] body {
-background: transparent !important;
-}
-
-html[data-experimental="true"][data-theme="light"] .tab-container {
-background: rgba(252, 252, 255, 0.3) !important;
-backdrop-filter: blur(48px);
-margin-bottom: 0;
-}
-
-html[data-experimental="true"][data-theme="dark"] .tab-container {
-background: rgba(23, 23, 26, 0.068) !important;
-backdrop-filter: blur(48px);
-margin-bottom: 0;
-}
-
-html[data-experimental="true"] .tab-container .icon-container {
-width: 100%;
-display: flex;
-justify-content: center;
-gap: 8px;
-}
-
-@media screen and (max-width: 900px) {
-/* html[data-experimental="true"][data-theme="light"] .tab-container {
-  background: rgba(252, 252, 255, 0.6) !important;
-} */
-html[data-experimental="true"][data-theme="dark"] .tab-container {
-  background: rgba(23, 23, 26, 0.6) !important;
-}
-}
-
-html[data-experimental="true"] .nav-icon-container,
-html[data-experimental="true"] .nav-icon-container-selected {
-padding-left: 20px;
-padding-right: 20px;
-box-sizing: border-box;
-}
-
-html[data-experimental="true"] .nav-icon-container-selected {
-background: rgba(251, 251, 255, 0.5) !important;
-}
-
-html[data-experimental="true"][data-theme="dark"] .nav-icon-container-selected {
-background: rgba(0, 0, 0, 0.5) !important;
-}
-
-html[data-experimental="true"][data-theme="light"] .nav-icon-container:hover,
-html[data-experimental="true"][data-theme="light"] .nav-icon-container-selected:hover {
-background: rgba(251, 251, 255, 0.4) !important;
-}
-
-html[data-experimental="true"][data-theme="dark"] .nav-icon-container:hover,
-html[data-experimental="true"][data-theme="dark"] .nav-icon-container-selected:hover {
-background: rgba(23,23,26,0.4) !important;
-}
-
-@media screen and (max-width: 699px) {
-.mobile-nav {
-  background-color: rgba(252,252,255,0.8);
-  border-top: 1px solid rgba(0,0,0,0.10);
-}
-}
-
-@media (prefers-color-scheme: dark) {
-.mobile-nav {
-  background-color: rgba(23,23,26,0.8) !important;
-  border-top: 1px solid rgba(255,255,255,0.10) !important;
-}
-}
 
 body.nav-collapsed .icon-container {
 align-items: center;
@@ -1776,6 +1842,9 @@ white-space: nowrap;
 font-size: 16px;
 font-weight: 600;
 font-family: 'One UI Sans';
+transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 body.nav-collapsed .nav-label,
 body.nav-collapsed .nav-label-selected {
@@ -1789,13 +1858,6 @@ transition: none;
 position: relative;
 }
 
-html[data-experimental="true"] .list3 {
-border-radius: 28px !important;
-}
-
-html[data-experimental="true"] .main-content a {
-border-radius: 28px !important;
-}
 
 .sidebar-toggle {
   cursor: pointer;
@@ -1846,17 +1908,20 @@ background: rgba(255,255,255,0.08);
 80% { transform: translateY(0); }
 }
 
-html[data-experimental="true"][data-theme="light"] .sidebar-toggle:hover {
-background: rgba(251, 251, 255, 0.2) !important;
-}
-
-html[data-experimental="true"][data-theme="dark"] .sidebar-toggle:hover {
-background: rgba(0, 0, 0, 0.2) !important;
-}
 
 @media screen and (max-width: 699px) {
-.mobile-nav .nav-icon-container-selected {
-  box-shadow: 0 4px 24px 0 rgba(255,255,255,0.10), 0 2px 8px 0 rgba(168,200,255,0.10);
+.mobile-nav .nav-icon-container-selected svg path {
+  fill: var(--primary);
+}
+
+.mobile-nav .nav-icon-container svg path {
+  fill: var(--secondary);
+}
+
+.mobile-nav .nav-icon-container:hover {
+  background: color-mix(in srgb, var(--container-background-hover) 70%, transparent 30%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 }
 
@@ -1888,7 +1953,7 @@ mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
 .main-content {
   padding: 80px 20px 60px 20px !important;
   box-sizing: border-box !important;
-  overflow-x: hidden !important;
+  overflow-x: visible !important;
 }
 
 
@@ -1907,12 +1972,14 @@ mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
 
 
 
-html[data-theme="light"]:not([data-experimental="true"]) {
+html[data-theme="light"] {
 --background: var(--light-background);
 --secondary: #444851;
 --container-background: var(--light-container-background);
 --primary: var(--light-primary);
 --accent: var(--accent);
+--container-background-hover: color-mix(in srgb, var(--container-background) 80%, #c5c5c5 20%);
+--container-background-active: color-mix(in srgb, var(--container-background) 70%, #9c9c9c 30%);
 }
 
 .settings-page .progressive-blur-overlay {
@@ -1938,7 +2005,7 @@ padding-top: 80px !important;
     padding: 0 10px;
     margin: 0 auto !important;
     box-sizing: border-box !important;
-    overflow-x: hidden !important;
+    overflow-x: visible !important;
     padding-top: 80px !important;
   }
 }
@@ -1968,7 +2035,7 @@ padding-top: 100px;
     padding: 0 10px !important;
     margin: 0 auto !important;
     box-sizing: border-box !important;
-    overflow-x: hidden !important;
+    overflow-x: visible !important;
     padding-top: 80px !important;
   }
 }

@@ -98,7 +98,7 @@ export default function Chips({ categories, selectedSlug }: Props) {
                 ? '2px solid var(--accent)'
                 : '1px solid color-mix(in srgb, var(--secondary) 40%, transparent)',
               backgroundColor: chip.selected
-                ? '#387aff'
+                ? 'var(--accent)'
                 : 'color-mix(in srgb, var(--container-background) 50%, transparent)',
               color: chip.selected ? '#fff' : 'var(--secondary)',
               fontSize: 16,

@@ -5,7 +5,7 @@ html {
     scroll-behavior: smooth;
     color-scheme: var(--color-scheme);
     height: 100%;
-    background-color: transparent;
+    background-color: var(--background);
     overflow-x: hidden;
 }
 
@@ -51,27 +51,6 @@ html[data-theme="light"] {
     --selected: var(--light-selected);
 }
 
-/* Experimental UI Theme Variables */
-html[data-experimental="true"] {
-    --experimental-border-radius: 28px;
-    --experimental-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --experimental-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --experimental-gradient: linear-gradient(90deg, #17171A 0%, #FCFCFF 100%);
-}
-
-html[data-experimental="true"][data-theme="dark"] {
-    --experimental-background: linear-gradient(180deg, #081525 0%, #000 100%);
-    --experimental-container: rgba(23,23,26,0.6);
-    --experimental-border: rgba(255, 255, 255, 0.1);
-    --secondary: rgba(255,255,255,0.6);
-}
-
-html[data-experimental="true"][data-theme="light"] {
-    --experimental-background: linear-gradient(180deg, #dff2ff 0%, #f1f1f1 100%);
-    --experimental-container: rgba(252, 252, 255, 0.3);
-    --experimental-border: rgba(0, 0, 0, 0.08);
-    --secondary: rgba(0,0,0,0.3);
-}
 
 @media (prefers-color-scheme: dark) {
     :root {
@@ -205,14 +184,3 @@ a {
         max-width: 100%;
     }
 }
-
-html[data-experimental="true"],
-html[data-experimental="true"] body {
-    background: transparent !important;
-    background-color: transparent !important;
-}
-
-html[data-experimental="true"] body::after {
-    background: var(--experimental-background) !important;
-    background-color: transparent !important;
-} 

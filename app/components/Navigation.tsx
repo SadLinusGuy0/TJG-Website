@@ -12,9 +12,10 @@ export function useNavCollapse() {
 
 interface NavigationProps {
   hideMobile?: boolean;
+  showBlog?: boolean;
 }
 
-export default function Navigation({ hideMobile = false }: NavigationProps) {
+export default function Navigation({ hideMobile = false, showBlog: propShowBlog = false }: NavigationProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -22,6 +23,53 @@ export default function Navigation({ hideMobile = false }: NavigationProps) {
     }
     return false;
   });
+  const [showBlog, setShowBlog] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('college-blogs-enabled') === 'true' || propShowBlog;
+    }
+    return propShowBlog;
+  });
+
+  // Listen for changes to the blog flag in localStorage
+  useEffect(() => {
+    const checkBlogFlag = () => {
+      if (typeof window !== 'undefined') {
+        const enabled = localStorage.getItem('college-blogs-enabled') === 'true';
+        setShowBlog(enabled || propShowBlog);
+      }
+    };
+
+    // Check on mount
+    checkBlogFlag();
+
+    // Listen for storage events (in case it changes in another tab/window)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'college-blogs-enabled') {
+        checkBlogFlag();
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Listen for custom events when blog is enabled/disabled in same tab
+    const handleBlogEnabled = () => {
+      checkBlogFlag();
+    };
+    const handleBlogDisabled = () => {
+      checkBlogFlag();
+    };
+    window.addEventListener('college-blogs-enabled', handleBlogEnabled);
+    window.addEventListener('college-blogs-disabled', handleBlogDisabled);
+    
+    // Also check periodically as a fallback
+    const interval = setInterval(checkBlogFlag, 1000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('college-blogs-enabled', handleBlogEnabled);
+      window.removeEventListener('college-blogs-disabled', handleBlogDisabled);
+      clearInterval(interval);
+    };
+  }, [propShowBlog]);
 
   // When collapsed changes, persist to localStorage
   useEffect(() => {
@@ -93,14 +141,15 @@ export default function Navigation({ hideMobile = false }: NavigationProps) {
             </svg>
             <div className={pathname === '/shop' ? 'nav-label-selected' : 'nav-label'}>Shop</div>
           </Link>
-          <Link href="/blog" className={pathname?.startsWith('/blog') ? 'nav-icon-container-selected' : 'nav-icon-container'}>
-          <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path fill={pathname === '/blog' ? "var(--primary)" : "var(--secondary)"} d="M16 4C17.3807 4 18.5 5.1193 18.5 6.5V18C18.5 19.3805 17.3807 20.5 16 20.5H7.5C6.1193 20.5 5 19.3805 5 18V16.6758C5.04072 16.6826 5.08233 16.6875 5.125 16.6875H7.56738L7.64453 16.6836C8.02265 16.6451 8.31738 16.3258 8.31738 15.9375C8.31738 15.5492 8.02265 15.2299 7.64453 15.1914L7.56738 15.1875H5.125C5.08239 15.1875 5.04067 15.1914 5 15.1982V12.9883C5.04072 12.9951 5.08233 13 5.125 13H7.56738L7.64453 12.9961C8.02265 12.9576 8.31738 12.6383 8.31738 12.25C8.31738 11.8617 8.02265 11.5424 7.64453 11.5039L7.56738 11.5H5.125C5.08239 11.5 5.04067 11.5039 5 11.5107V9.30078C5.04072 9.30763 5.08233 9.3125 5.125 9.3125H7.56738L7.64453 9.30859C8.02265 9.27012 8.31738 8.95077 8.31738 8.5625C8.31738 8.17423 8.02265 7.85488 7.64453 7.81641L7.56738 7.8125H5.125C5.08239 7.8125 5.04067 7.81642 5 7.82324V6.5C5 5.1193 6.1193 4 7.5 4H16Z">
-            </path>
-          </svg>
-
-            <div className={pathname?.startsWith('/blog') ? 'nav-label-selected' : 'nav-label'}>Blog</div>
-          </Link>
+          {showBlog && (
+            <Link href="/blog" className={pathname === '/blog' || pathname?.startsWith('/blog/') ? 'nav-icon-container-selected' : 'nav-icon-container'}>
+              <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path fill={pathname === '/blog' ? "var(--primary)" : "var(--secondary)"} d="M16 4C17.3807 4 18.5 5.1193 18.5 6.5V18C18.5 19.3805 17.3807 20.5 16 20.5H7.5C6.1193 20.5 5 19.3805 5 18V16.6758C5.04072 16.6826 5.08233 16.6875 5.125 16.6875H7.56738L7.64453 16.6836C8.02265 16.6451 8.31738 16.3258 8.31738 15.9375C8.31738 15.5492 8.02265 15.2299 7.64453 15.1914L7.56738 15.1875H5.125C5.08239 15.1875 5.04067 15.1914 5 15.1982V12.9883C5.04072 12.9951 5.08233 13 5.125 13H7.56738L7.64453 12.9961C8.02265 12.9576 8.31738 12.6383 8.31738 12.25C8.31738 11.8617 8.02265 11.5424 7.64453 11.5039L7.56738 11.5H5.125C5.08239 11.5 5.04067 11.5039 5 11.5107V9.30078C5.04072 9.30763 5.08233 9.3125 5.125 9.3125H7.56738L7.64453 9.30859C8.02265 9.27012 8.31738 8.95077 8.31738 8.5625C8.31738 8.17423 8.02265 7.85488 7.64453 7.81641L7.56738 7.8125H5.125C5.08239 7.8125 5.04067 7.81642 5 7.82324V6.5C5 5.1193 6.1193 4 7.5 4H16Z">
+                </path>
+              </svg>
+              <div className={pathname === '/blog' ? 'nav-label-selected' : 'nav-label'}>Blog</div>
+            </Link>
+          )}
           <Link href="/contact" className={pathname === '/contact' ? 'nav-icon-container-selected' : 'nav-icon-container'}>
             <svg id="vector" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <path fill={pathname === '/contact' ? "var(--primary)" : "var(--secondary)"} fillRule="nonzero" d="M11.999,12.9072C15.796,12.9072 18.875,15.4721 18.875,18.2372L18.875,18.2372L18.875,19.0112C18.875,19.5571 18.381,20.0002 17.772,20.0002L17.772,20.0002L6.227,20.0002C5.618,20.0002 5.125,19.5571 5.125,19.0112L5.125,19.0112L5.125,18.2372C5.125,15.4721 8.203,12.9072 11.999,12.9072ZM11.999,3.9999C14.025,3.9999 15.668,5.6418 15.668,7.6688C15.668,9.6948 14.025,11.3369 11.999,11.3369C9.974,11.3369 8.331,9.6948 8.331,7.6688C8.331,5.6418 9.974,3.9999 11.999,3.9999Z" />
@@ -112,7 +161,7 @@ export default function Navigation({ hideMobile = false }: NavigationProps) {
 
       {/* Mobile Navigation - Only show if hideMobile is false */}
       {!hideMobile && (
-        <nav className="tab-container mobile-nav" style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
+        <nav className={`tab-container mobile-nav${showBlog ? ' with-blog' : ''}`}>
           <div className="icon-container">
             <Link href="/" className={pathname === '/' ? 'nav-icon-container-selected' : 'nav-icon-container'}>
               <svg id="vector" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -132,13 +181,15 @@ export default function Navigation({ hideMobile = false }: NavigationProps) {
               </svg>
               <div className={pathname === '/shop' ? 'nav-label-selected' : 'nav-label'}>Shop</div>
             </Link>
-            <Link href="/blog" className={pathname?.startsWith('/blog') ? 'nav-icon-container-selected' : 'nav-icon-container'}>
-            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path fill={pathname === '/blog' ? "var(--primary)" : "var(--secondary)"} d="M16 4C17.3807 4 18.5 5.1193 18.5 6.5V18C18.5 19.3805 17.3807 20.5 16 20.5H7.5C6.1193 20.5 5 19.3805 5 18V16.6758C5.04072 16.6826 5.08233 16.6875 5.125 16.6875H7.56738L7.64453 16.6836C8.02265 16.6451 8.31738 16.3258 8.31738 15.9375C8.31738 15.5492 8.02265 15.2299 7.64453 15.1914L7.56738 15.1875H5.125C5.08239 15.1875 5.04067 15.1914 5 15.1982V12.9883C5.04072 12.9951 5.08233 13 5.125 13H7.56738L7.64453 12.9961C8.02265 12.9576 8.31738 12.6383 8.31738 12.25C8.31738 11.8617 8.02265 11.5424 7.64453 11.5039L7.56738 11.5H5.125C5.08239 11.5 5.04067 11.5039 5 11.5107V9.30078C5.04072 9.30763 5.08233 9.3125 5.125 9.3125H7.56738L7.64453 9.30859C8.02265 9.27012 8.31738 8.95077 8.31738 8.5625C8.31738 8.17423 8.02265 7.85488 7.64453 7.81641L7.56738 7.8125H5.125C5.08239 7.8125 5.04067 7.81642 5 7.82324V6.5C5 5.1193 6.1193 4 7.5 4H16Z">
-              </path>
-            </svg>
-            <div className={pathname?.startsWith('/blog') ? 'nav-label-selected' : 'nav-label'}>Blog</div>
-            </Link>
+            {showBlog && (
+              <Link href="/blog" className={pathname === '/blog' || pathname?.startsWith('/blog/') ? 'nav-icon-container-selected' : 'nav-icon-container'}>
+                <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path fill={pathname === '/blog' ? "var(--primary)" : "var(--secondary)"} d="M16 4C17.3807 4 18.5 5.1193 18.5 6.5V18C18.5 19.3805 17.3807 20.5 16 20.5H7.5C6.1193 20.5 5 19.3805 5 18V16.6758C5.04072 16.6826 5.08233 16.6875 5.125 16.6875H7.56738L7.64453 16.6836C8.02265 16.6451 8.31738 16.3258 8.31738 15.9375C8.31738 15.5492 8.02265 15.2299 7.64453 15.1914L7.56738 15.1875H5.125C5.08239 15.1875 5.04067 15.1914 5 15.1982V12.9883C5.04072 12.9951 5.08233 13 5.125 13H7.56738L7.64453 12.9961C8.02265 12.9576 8.31738 12.6383 8.31738 12.25C8.31738 11.8617 8.02265 11.5424 7.64453 11.5039L7.56738 11.5H5.125C5.08239 11.5 5.04067 11.5039 5 11.5107V9.30078C5.04072 9.30763 5.08233 9.3125 5.125 9.3125H7.56738L7.64453 9.30859C8.02265 9.27012 8.31738 8.95077 8.31738 8.5625C8.31738 8.17423 8.02265 7.85488 7.64453 7.81641L7.56738 7.8125H5.125C5.08239 7.8125 5.04067 7.81642 5 7.82324V6.5C5 5.1193 6.1193 4 7.5 4H16Z">
+                  </path>
+                </svg>
+                <div className={pathname === '/blog' || pathname?.startsWith('/blog/') ? 'nav-label-selected' : 'nav-label'}>Blog</div>
+              </Link>
+            )}
             <Link href="/contact" className={pathname === '/contact' ? 'nav-icon-container-selected' : 'nav-icon-container'}>
               <svg id="vector" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path fill={pathname === '/contact' ? "var(--primary)" : "var(--secondary)"} fillRule="nonzero" d="M11.999,12.9072C15.796,12.9072 18.875,15.4721 18.875,18.2372L18.875,18.2372L18.875,19.0112C18.875,19.5571 18.381,20.0002 17.772,20.0002L17.772,20.0002L6.227,20.0002C5.618,20.0002 5.125,19.5571 5.125,19.0112L5.125,19.0112L5.125,18.2372C5.125,15.4721 8.203,12.9072 11.999,12.9072ZM11.999,3.9999C14.025,3.9999 15.668,5.6418 15.668,7.6688C15.668,9.6948 14.025,11.3369 11.999,11.3369C9.974,11.3369 8.331,9.6948 8.331,7.6688C8.331,5.6418 9.974,3.9999 11.999,3.9999Z" />

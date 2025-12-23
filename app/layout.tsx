@@ -43,23 +43,26 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <head>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+        <meta name="theme-color" content="#000" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
                   var theme = localStorage.getItem('theme');
+                  var currentTheme;
                   if (theme && theme !== 'auto') {
+                    currentTheme = theme;
                     document.documentElement.dataset.theme = theme;
                   } else {
-                    document.documentElement.dataset.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    document.documentElement.dataset.theme = currentTheme;
                   }
-                  var experimental = localStorage.getItem('experimentalUI');
-                  if (experimental) {
-                    document.documentElement.dataset.experimental = experimental;
-                  } else {
-                    document.documentElement.dataset.experimental = 'true';
+                  // Set theme-color meta tag for Safari URL bar
+                  var themeColorMeta = document.querySelector('meta[name="theme-color"]');
+                  if (themeColorMeta) {
+                    themeColorMeta.setAttribute('content', currentTheme === 'dark' ? '#000' : '#f1f1f3');
                   }
                   var progressiveBlur = localStorage.getItem('progressiveBlur');
                   if (progressiveBlur) {
@@ -67,6 +70,15 @@ export default function RootLayout({
                   } else {
                     document.documentElement.dataset.progressiveBlur = 'true';
                   }
+                  var accentColor = localStorage.getItem('accentColor') || 'blue';
+                  var accentColors = {
+                    blue: '#387aff',
+                    coral: '#ff6b6b',
+                    mint: '#4ecdc4',
+                    lilac: '#a78bfa',
+                    monochrome: '#808080'
+                  };
+                  document.documentElement.style.setProperty('--accent', accentColors[accentColor] || accentColors.blue);
                 } catch (e) {}
               })();
             `

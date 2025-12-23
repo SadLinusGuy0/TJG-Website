@@ -7,7 +7,7 @@ interface ProgressiveBlurProps {
 }
 
 export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurProps) {
-  const { blurEnabled, hydrated, experimentalUI } = useTheme();
+  const { blurEnabled, hydrated } = useTheme();
   const [isDesktop, setIsDesktop] = useState(
     typeof window !== 'undefined' ? window.innerWidth > 900 : true
   );
@@ -23,9 +23,7 @@ export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurPro
     return () => window.removeEventListener('resize', handleResize);
   }, [position]);
 
-  console.log('ProgressiveBlur:', { blurEnabled, hydrated });
   if (!hydrated) return null;
-  if (!experimentalUI) return null;
   if (!blurEnabled) return null;
 
   // Only show bottom blur on desktop

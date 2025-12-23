@@ -1,46 +1,169 @@
+import type { Metadata } from "next";
 import { fetchPostBySlug, fetchPageBySlug, getFeaturedImageUrlAsync } from "../../../lib/wordpress";
+import type { WPPost } from "../../../lib/wordpress";
 import { notFound } from "next/navigation";
 import Navigation from "../../components/Navigation";
 import LightboxClient from "../../components/LightboxClient";
 import Link from "next/link";
+import TableOfContents from "../TableOfContents";
+import BlogContent from "../BlogContent";
 
 export const revalidate = 60;
 
-export default async function BlogPost(props: any) {
-  const resolvedParams = typeof props?.params?.then === 'function' ? await props.params : props?.params;
-  const { slug } = resolvedParams || {};
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
 
-  // Try to fetch as post first, then as page
-  let content = null;
-
+async function getContentForSlug(slug: string): Promise<WPPost | null> {
   try {
-    content = await fetchPostBySlug(slug);
-    if (!content) {
-      content = await fetchPageBySlug(slug);
-    }
+    const post = await fetchPostBySlug(slug);
+    if (post) return post;
+    return await fetchPageBySlug(slug);
   } catch (error) {
-    console.error("Failed to fetch content:", error);
-    return notFound();
+    console.error(`Failed to fetch content for slug "${slug}":`, error);
+    return null;
   }
+}
+
+function stripHtmlAndDecode(value?: string): string {
+  if (!value) return "";
+  const withoutTags = value.replace(/<[^>]*>/g, " ");
+  const decoded = withoutTags
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&apos;/gi, "'")
+    .replace(/&#39;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&#(\d+);/g, (_, code: string) => String.fromCharCode(Number(code)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, code: string) => String.fromCharCode(parseInt(code, 16)))
+    .replace(/\s+/g, " ")
+    .trim();
+  return decoded;
+}
+
+function truncate(value: string, maxLength = 160): string {
+  if (value.length <= maxLength) return value;
+  const sliceLength = Math.max(0, maxLength - 3);
+  return `${value.slice(0, sliceLength).trimEnd()}...`;
+}
+
+function getFeaturedImageAltText(post: WPPost): string | undefined {
+  return post._embedded?.['wp:featuredmedia']?.[0]?.alt_text?.trim() || undefined;
+}
+
+function countWords(content: string): number {
+  const text = stripHtmlAndDecode(content);
+  if (!text) return 0;
+  const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+  return words.length;
+}
+
+function processContentWithEmbeds(content: string): string {
+  // Define embed mappings - keyphrase to embed HTML
+  const embedMap: Record<string, string> = {
+    'story-mindmap': `
+      <div class="figma-wrapper">
+        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/JFh3pE1bu21Ad74KUibZug/Unit-4---Storytelling?node-id=0-1&embed-host=share" allowfullscreen></iframe>
+      </div>
+    `,
+    // Add more embeds here as needed
+    // 'story-mindmap': '<div class="embed-wrapper">...</div>',
+  };
+
+  let processedContent = content;
+
+  // Replace each keyphrase with its corresponding embed
+  Object.entries(embedMap).forEach(([keyphrase, embedHtml]) => {
+    processedContent = processedContent.replace(keyphrase, embedHtml);
+  });
+
+  return processedContent;
+}
+
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  try {
+    const { slug } = await props.params;
+    const content = await getContentForSlug(slug);
+
+    if (!content) {
+      return {
+        title: "Blog Post | That Josh Guy",
+        description: "Explore the latest stories from That Josh Guy.",
+      };
+    }
+
+    const titleText = stripHtmlAndDecode(content.title?.rendered) || "That Josh Guy";
+    const excerptText = stripHtmlAndDecode(content.excerpt?.rendered);
+    const fallbackDescription = stripHtmlAndDecode(content.content?.rendered);
+    const description = truncate(excerptText || fallbackDescription || "Explore the latest stories from That Josh Guy.");
+    
+    let featuredImageUrl: string | null = null;
+    try {
+      featuredImageUrl = await getFeaturedImageUrlAsync(content);
+    } catch (error) {
+      console.error('Error fetching featured image:', error);
+    }
+    
+    const imageAlt = getFeaturedImageAltText(content) || titleText;
+
+    return {
+      title: `${titleText} | That Josh Guy`,
+      description,
+      openGraph: {
+        title: `${titleText} | That Josh Guy`,
+        description,
+        type: "article",
+        images: featuredImageUrl
+          ? [
+              {
+                url: featuredImageUrl,
+                alt: imageAlt,
+              },
+            ]
+          : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${titleText} | That Josh Guy`,
+        description,
+        images: featuredImageUrl ? [featuredImageUrl] : undefined,
+      },
+      alternates: {
+        canonical: content.link || undefined,
+      },
+    };
+  } catch (error) {
+    console.error('Error generating metadata:', error);
+    return {
+      title: "Blog Post | That Josh Guy",
+      description: "Explore the latest stories from That Josh Guy.",
+    };
+  }
+}
+
+export default async function BlogPost(props: PageProps) {
+  const { slug } = await props.params;
+  const content = await getContentForSlug(slug);
 
   if (!content) return notFound();
   const featuredImageUrl = await getFeaturedImageUrlAsync(content);
-
+  
   // Debug logging (remove in production)
-  console.log("Post content:", {
+  console.log('Post content:', {
     id: content.id,
     title: content.title.rendered,
     featured_media: content.featured_media,
-    hasEmbedded: !!content._embedded?.["wp:featuredmedia"],
-    embeddedMedia: content._embedded?.["wp:featuredmedia"],
-    featuredImageUrl,
+    hasEmbedded: !!content._embedded?.['wp:featuredmedia'],
+    embeddedMedia: content._embedded?.['wp:featuredmedia'],
+    featuredImageUrl
   });
-
+  
   return (
     <div className="index">
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
           .body-text p {
             margin: 0 10px 6px 10px !important;
           }
@@ -393,199 +516,228 @@ export default async function BlogPost(props: any) {
           .lightbox-caption-wrap { position: absolute !important; left: 0 !important; right: 0 !important; bottom: 0 !important; padding: 24px !important; pointer-events: none !important; z-index: 2 !important; }
           .lightbox-caption-gradient { position: absolute !important; left: 0 !important; right: 0 !important; bottom: 0 !important; height: 40% !important; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%) !important; }
           .lightbox-caption { position: relative !important; max-width: min(900px, 90%) !important; color: #fff !important; font-size: 0.95rem !important; line-height: 1.4 !important; text-shadow: 0 1px 2px rgba(0,0,0,0.4) !important; }
-        `,
-        }}
-      />
+
+          /* WordPress Dividers */
+          .body-text hr,
+          .body-text .wp-block-separator,
+          .body-text .wp-block-separator.is-style-dots,
+          .body-text .wp-block-separator.is-style-wide {
+            border: none !important;
+            border-top: 1px solid rgba(127, 127, 127, 0.2) !important;
+            margin: 6px 10px !important;
+            height: 1px !important;
+            background: none !important;
+            width: auto !important;
+          }
+          .body-text .wp-block-separator.is-style-dots {
+            border: none !important;
+            height: auto !important;
+            line-height: 1 !important;
+            text-align: center !important;
+            background: none !important;
+            opacity: 0.4 !important;
+          }
+          .body-text .wp-block-separator.is-style-dots::before {
+            content: '···' !important;
+            color: var(--primary) !important;
+            font-size: 1.5rem !important;
+            letter-spacing: 0.5em !important;
+            padding-left: 0.5em !important;
+          }
+          .body-text .wp-block-separator.is-style-wide {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            width: 100% !important;
+          }
+
+          /* Embed wrappers (Figma, etc.) */
+          .body-text .figma-wrapper,
+          .body-text .embed-wrapper {
+            margin: 16px 0px !important;
+            padding: 10px 0 !important;
+            width: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+          }
+          .body-text .figma-wrapper iframe,
+          .body-text .embed-wrapper iframe {
+            width: 100% !important;
+            max-width: 800px !important;
+            height: 450px !important;
+            border-radius: 12px !important;
+          }
+          @media (max-width: 768px) {
+            .body-text .figma-wrapper iframe,
+            .body-text .embed-wrapper iframe {
+              height: 300px !important;
+            }
+          }
+        `
+      }} />
       <div className="containers">
         <Navigation hideMobile={true} />
         <div className="main-content">
           <div className="top-app-bar">
             <div className="top-app-bar-container back-only">
               <Link href="/blog" className="top-app-bar-icon" aria-label="Back">
-                <svg
-                  width="10"
-                  height="20"
-                  viewBox="0 0 10 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M9.56416 2.15216C9.85916 1.86116 9.86316 1.38616 9.57216 1.09116C9.28116 0.797162 8.80616 0.794162 8.51116 1.08516L0.733159 8.75516C0.397159 9.08616 0.212158 9.52916 0.212158 10.0012C0.212158 10.4722 0.397159 10.9162 0.733159 11.2472L8.51116 18.9162C8.65716 19.0592 8.84716 19.1312 9.03816 19.1312C9.23116 19.1312 9.42516 19.0562 9.57216 18.9082C9.86316 18.6132 9.85916 18.1382 9.56416 17.8472L1.78716 10.1782C1.72116 10.1152 1.71216 10.0402 1.71216 10.0012C1.71216 9.96216 1.72116 9.88616 1.78716 9.82316L9.56416 2.15216Z"
-                    fill="var(--primary)"
-                  />
+                <svg width="10" height="20" viewBox="0 0 10 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M9.56416 2.15216C9.85916 1.86116 9.86316 1.38616 9.57216 1.09116C9.28116 0.797162 8.80616 0.794162 8.51116 1.08516L0.733159 8.75516C0.397159 9.08616 0.212158 9.52916 0.212158 10.0012C0.212158 10.4722 0.397159 10.9162 0.733159 11.2472L8.51116 18.9162C8.65716 19.0592 8.84716 19.1312 9.03816 19.1312C9.23116 19.1312 9.42516 19.0562 9.57216 18.9082C9.86316 18.6132 9.85916 18.1382 9.56416 17.8472L1.78716 10.1782C1.72116 10.1152 1.71216 10.0402 1.71216 10.0012C1.71216 9.96216 1.72116 9.88616 1.78716 9.82316L9.56416 2.15216Z" fill="var(--primary)"/>
                 </svg>
               </Link>
+              <TableOfContents content={content.content?.rendered || ''} />
             </div>
           </div>
-
+          
           {/* Featured Image with Title Overlay or Placeholder */}
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              height: "clamp(300px, 40vh, 500px)",
-              marginTop: "16px",
-              marginBottom: "16px",
-              borderRadius: "28px",
-              overflow: "hidden",
-            }}
-          >
+          <div style={{ 
+            position: 'relative', 
+            width: '100%', 
+            height: 'clamp(300px, 40vh, 500px)',
+            marginTop: '16px',
+            marginBottom: '16px',
+            borderRadius: '28px',
+            overflow: 'hidden'
+          }}>
             {featuredImageUrl ? (
               <>
-                <img
-                  src={featuredImageUrl}
+                <img 
+                  src={featuredImageUrl} 
                   alt="Featured image"
                   style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    display: "block",
-                    margin: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block',
+                    margin: 0
                   }}
                 />
                 {/* Title and Date Container */}
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: "clamp(16px, 4vw, 32px)",
-                    left: "clamp(16px, 4vw, 32px)",
-                    right: "clamp(16px, 4vw, 32px)",
-                  }}
-                >
-                  <div
-                    style={{
-                      color: "white",
-                      maxWidth: "100%",
-                      background: "rgba(0, 0, 0, 0.3)",
-                      padding: "16px 20px",
-                      borderRadius: "12px",
-                      backdropFilter: "blur(10px)",
-                    }}
-                  >
-                    <h1
-                      style={{
-                        fontSize: "clamp(1.8rem, 4vw, 2.5rem)",
-                        fontWeight: "bold",
-                        margin: 0,
-                        marginBottom: "8px",
-                        textShadow: "0 2px 8px rgba(0, 0, 0, 0.6)",
-                        lineHeight: "1.2",
-                      }}
-                      dangerouslySetInnerHTML={{ __html: content.title.rendered }}
-                    />
-                    <div
-                      style={{
-                        fontSize: "1rem",
-                        opacity: 0.9,
-                        textShadow: "0 1px 4px rgba(0, 0, 0, 0.6)",
-                        fontWeight: "500",
-                      }}
-                    >
-                      {new Date(content.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
+                <div style={{
+                  position: 'absolute',
+                  bottom: 'clamp(16px, 4vw, 32px)',
+                  left: 'clamp(16px, 4vw, 32px)',
+                  right: 'clamp(16px, 4vw, 32px)'
+                }}>
+                  <div style={{ 
+                    color: 'white', 
+                    maxWidth: '100%',
+                    background: 'rgba(0, 0, 0, 0.3)',
+                    padding: '16px 20px',
+                    borderRadius: '12px',
+                    backdropFilter: 'blur(10px)'
+                  }}>
+                    <h1 style={{
+                      fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
+                      fontWeight: 'bold',
+                      margin: 0,
+                      marginBottom: '8px',
+                      textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)',
+                      lineHeight: '1.2',
+                      fontFamily: 'One UI Sans'
+                    }} dangerouslySetInnerHTML={{ __html: content.title.rendered }} />
+                    <div style={{
+                      fontSize: '1rem',
+                      opacity: 0.9,
+                      textShadow: '0 1px 4px rgba(0, 0, 0, 0.6)',
+                      fontWeight: '500',
+                      fontFamily: 'One UI Sans',
+                      display: 'flex',
+                      gap: '8px',
+                      alignItems: 'center',
+                      flexWrap: 'wrap'
+                    }}>
+                      <span>{new Date(content.date).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}</span>
+                      <span style={{ opacity: 0.7 }}>•</span>
+                      <span>{countWords(content.content?.rendered || '').toLocaleString()} words</span>
                     </div>
                   </div>
                 </div>
               </>
             ) : (
               /* Placeholder for missing featured image */
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  background: "rgba(255, 255, 255, 0.1)",
-                  backdropFilter: "blur(20px)",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  position: "relative",
-                }}
-              >
+              <div style={{
+                width: '100%',
+                height: '100%',
+                background: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative'
+              }}>
                 {/* Title and Date Container for placeholder */}
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: "clamp(16px, 4vw, 32px)",
-                    left: "clamp(16px, 4vw, 32px)",
-                    right: "clamp(16px, 4vw, 32px)",
-                  }}
-                >
-                  <div
-                    style={{
-                      color: "var(--primary)",
-                      maxWidth: "100%",
-                      background: "rgba(255, 255, 255, 0.9)",
-                      padding: "16px 20px",
-                      borderRadius: "12px",
-                      backdropFilter: "blur(10px)",
-                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                    }}
-                  >
-                    <h1
-                      style={{
-                        fontSize: "clamp(1.8rem, 4vw, 2.5rem)",
-                        fontWeight: "bold",
-                        margin: 0,
-                        marginBottom: "8px",
-                        lineHeight: "1.2",
-                      }}
-                      dangerouslySetInnerHTML={{ __html: content.title.rendered }}
-                    />
-                    <div
-                      style={{
-                        fontSize: "1rem",
-                        opacity: 0.7,
-                        fontWeight: "500",
-                      }}
-                    >
-                      {new Date(content.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
+                <div style={{
+                  position: 'absolute',
+                  bottom: 'clamp(16px, 4vw, 32px)',
+                  left: 'clamp(16px, 4vw, 32px)',
+                  right: 'clamp(16px, 4vw, 32px)'
+                }}>
+                  <div style={{ 
+                    color: 'var(--primary)', 
+                    maxWidth: '100%',
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    padding: '16px 20px',
+                    borderRadius: '12px',
+                    backdropFilter: 'blur(10px)',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                  }}>
+                    <h1 style={{
+                      fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
+                      fontWeight: 'bold',
+                      margin: 0,
+                      marginBottom: '8px',
+                      lineHeight: '1.2',
+                      fontFamily: 'One UI Sans'
+                    }} dangerouslySetInnerHTML={{ __html: content.title.rendered }} />
+                    <div style={{
+                      fontSize: '1rem',
+                      opacity: 0.7,
+                      fontWeight: '500',
+                      fontFamily: 'One UI Sans',
+                      display: 'flex',
+                      gap: '8px',
+                      alignItems: 'center',
+                      flexWrap: 'wrap'
+                    }}>
+                      <span>{new Date(content.date).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}</span>
+                      <span style={{ opacity: 0.5 }}>•</span>
+                      <span>{countWords(content.content?.rendered || '').toLocaleString()} words</span>
                     </div>
                   </div>
                 </div>
+                
                 {/* Subtle pattern overlay */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background:
-                      "radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),\n                    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),\n                    radial-gradient(circle at 40% 60%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)",
-                    pointerEvents: "none",
-                  }}
-                />
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: `
+                    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 60%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)
+                  `,
+                  pointerEvents: 'none'
+                }} />
               </div>
             )}
           </div>
-          <div
-            className="container settings"
-            style={{ padding: "0", marginBottom: "0", maxWidth: "100%", overflow: "hidden" }}
-          >
-            <div
-              className="body-text"
-              style={{
-                fontSize: "16px",
-                lineHeight: "1.5",
-                margin: 0,
-                padding: 0,
-                wordWrap: "break-word",
-                overflowWrap: "break-word",
-                maxWidth: "100%",
-              }}
-              dangerouslySetInnerHTML={{ __html: content.content?.rendered || "" }}
-            />
-          </div>
+          
+           <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%', overflow: 'hidden' }}>
+             <BlogContent content={processContentWithEmbeds(content.content?.rendered || '')} />
+           </div>
         </div>
       </div>
       <LightboxClient />
