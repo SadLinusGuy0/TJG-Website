@@ -1310,22 +1310,6 @@ button.list4:hover {
   }
 } */
 
-@media screen and (max-width: 799px) {
-
-  .tab-container {
-      padding: var(--padding-xl) 20px;
-      /* Adjust padding for mobile */
-  }
-
-  .top-app-bar {
-      padding: 20px 16px;
-  }
-
-  .top-app-bar-container {
-      max-width: 100% !important;
-  }
-}
-
 /* Add proper spacing between paragraphs */
 .container.settings .body-text {
   display: flex;
