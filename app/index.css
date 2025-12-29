@@ -900,7 +900,7 @@ button.list4:hover {
   align-items: center;
   justify-content: center;
   padding: 0px 10px;
-  margin-top: 10px;
+  margin-top: 40px;
   pointer-events: auto;
 }
 
@@ -1093,10 +1093,9 @@ button.list4:hover {
       max-width: 500px;
       padding: 0 10px;
       margin: 0 auto;
-      margin-top: 40px !important;
       overflow-x: visible;
       box-sizing: border-box;
-      padding-top: 80px;
+      padding-top: 40px;
   }
 
   .container,
@@ -1169,7 +1168,7 @@ button.list4:hover {
   .containers {
       width: 100%;
       max-width: none;
-      padding: 10px 0;
+      padding: 2% 0;
       box-sizing: border-box;
       overflow-x: visible;
   }
@@ -1263,7 +1262,7 @@ button.list4:hover {
   }
   .main-content {
       margin-left: 34%;
-      width: 66%;
+      width: 64%;
       max-width: 100%;
       padding-left: 20px;
       padding-right: 20px;
@@ -1478,6 +1477,76 @@ button.list4:hover {
   font-family: 'One UI Sans';
 }
 
+/* ============================================
+   STACK MARQUEE STYLES
+   ============================================ */
+
+.stack-marquee-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 10px 0 20px 0;
+}
+
+/* Gradient masks on left and right */
+.stack-marquee-wrapper::before,
+.stack-marquee-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.stack-marquee-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--background) 0%, transparent 100%);
+}
+
+.stack-marquee-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--background) 0%, transparent 100%);
+}
+
+.stack-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.stack-marquee:hover {
+  animation-play-state: paused;
+}
+
+.stack-marquee-content {
+  display: flex;
+  gap: 12px;
+  padding-right: 12px;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Reduce speed on mobile for better readability */
+@media screen and (max-width: 699px) {
+  .stack-marquee {
+    animation-duration: 20s;
+  }
+  
+  .stack-marquee-wrapper::before,
+  .stack-marquee-wrapper::after {
+    width: 40px;
+  }
+}
+
 @font-face {
   font-family: 'One UI Sans';
   src: url('/fonts/oneuisans.ttf') format('truetype-variations');
@@ -1612,6 +1681,7 @@ button.list4:hover {
   height: 24px;
   flex-shrink: 0;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: none !important;
 }
 
 .mobile-nav .nav-icon-container-selected svg {
@@ -1621,6 +1691,12 @@ button.list4:hover {
 .mobile-nav .nav-icon-container svg path,
 .mobile-nav .nav-icon-container-selected svg path {
   transition: fill 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Disable bounce animation for mobile nav buttons */
+.mobile-nav .nav-icon-container:hover svg,
+.mobile-nav .nav-icon-container-selected:hover svg {
+  animation: none !important;
 }
 .mobile-nav .nav-label, .mobile-nav .nav-label-selected {
   font-size: 12px;
@@ -1940,11 +2016,18 @@ mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
 
 @media (max-width: 900px) {
 .main-content {
-  padding: 80px 20px 60px 20px !important;
+  padding: 40px 20px 60px 20px !important;
   box-sizing: border-box !important;
   overflow-x: visible !important;
+  }
 }
 
+@media (max-width: 700px) {
+  .main-content {
+    padding: 28px 20px 60px 20px !important;
+    box-sizing: border-box !important;
+    overflow-x: visible !important;
+  }
 
 .top-app-bar-container {
   max-width: 100% !important;
@@ -2078,6 +2161,837 @@ justify-content: center;
   .tab-container {
     padding-left: 0;
     padding-right: 0;
+  }
+}
+
+/* ============================================
+   BENTO GRID STYLES
+   ============================================ */
+
+.bento-grid {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Desktop: 2 columns with profile card on left spanning full height */
+@media screen and (min-width: 700px) {
+  .bento-grid {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 16px;
+  }
+  
+  .bento-card-profile {
+    grid-column: 1;
+    grid-row: 1 / 5;
+  }
+  
+  .bento-card-tjg {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  
+  .bento-card-designer {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  
+  .bento-card-journalist {
+    grid-column: 2;
+    grid-row: 3;
+  }
+  
+  .bento-card-phone {
+    grid-column: 2;
+    grid-row: 4;
+  }
+}
+
+/* Mobile: Full-width profile, then 2-column grid for other cards */
+@media screen and (max-width: 699px) {
+  .bento-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .bento-card-profile {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+  
+  .bento-card-tjg {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  
+  .bento-card-designer {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  
+  .bento-card-journalist {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  
+  .bento-card-phone {
+    grid-column: 2;
+    grid-row: 3;
+  }
+}
+
+/* Base card styles */
+.bento-card {
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bento-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Profile Card - Large */
+.bento-card-profile {
+  min-height: 500px;
+  background: var(--container-background);
+  position: relative;
+}
+
+@media screen and (max-width: 699px) {
+  .bento-card-profile {
+    min-height: 400px;
+    aspect-ratio: 3/4;
+  }
+}
+
+.bento-card-profile .profile-image-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.bento-card-profile .profile-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #2a2a2d 0%, #1a1a1d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--secondary);
+  font-size: 14px;
+}
+
+.bento-card-profile .profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bento-card-profile .profile-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px 24px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 50%, transparent 100%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.bento-card-profile .profile-subtitle {
+  font-family: 'One UI Sans';
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 4px;
+}
+
+.bento-card-profile .profile-name {
+  font-family: 'One UI Sans';
+  font-size: 42px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+}
+
+@media screen and (max-width: 699px) {
+  .bento-card-profile .profile-name {
+    font-size: 36px;
+  }
+  
+  .bento-card-profile .profile-overlay {
+    padding: 24px 20px;
+  }
+}
+
+/* Small info cards */
+.bento-card-small {
+  background: var(--container-background);
+  padding: 20px;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+@media screen and (max-width: 699px) {
+  .bento-card-small {
+    min-height: 140px;
+    padding: 16px;
+    aspect-ratio: 1;
+  }
+}
+
+.bento-card-small .card-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bento-card-small .card-icon-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.bento-card-small .card-label {
+  font-family: 'One UI Sans';
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 2px;
+}
+
+.bento-card-small .card-title {
+  font-family: 'One UI Sans';
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* That Josh Guy Card - Green gradient */
+.bento-card-tjg {
+  background: linear-gradient(135deg, #0d3d2e 0%, #1a5a45 50%, #2a7a6a 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-card-tjg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60%;
+  height: 100%;
+  background: radial-gradient(circle at 80% 30%, rgba(56, 122, 255, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.bento-card-tjg .tjg-logo {
+  width: 64px;
+  height: 64px;
+  margin-bottom: auto;
+}
+
+.bento-card-tjg .tjg-logo-placeholder {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* UX Designer Card - Blue grid pattern */
+.bento-card-designer {
+  background: linear-gradient(180deg, #0a1628 0%, #0d1f3c 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-card-designer .grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(56, 122, 255, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 122, 255, 0.4) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.6;
+}
+
+.bento-card-designer .cursor-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-30%, -60%);
+  width: 64px;
+  height: 64px;
+  z-index: 2;
+}
+
+.bento-card-designer .cursor-icon-placeholder {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.bento-card-designer .card-content {
+  position: relative;
+  z-index: 3;
+  margin-top: auto;
+}
+
+/* Tech Journalist Card - Samsung/Galaxy watermark */
+.bento-card-journalist {
+  background: var(--container-background);
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-card-journalist .watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'One UI Sans';
+  font-size: 28px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: -1px;
+}
+
+.bento-card-journalist .watermark-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.bento-card-journalist .card-content {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+}
+
+/* Galaxy Z Fold7 Card */
+.bento-card-phone {
+  background: var(--container-background);
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  min-height: auto;
+}
+
+@media screen and (max-width: 699px) {
+  .bento-card-phone {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 16px;
+    min-height: 140px;
+    aspect-ratio: 1;
+  }
+  
+  .bento-card-phone .card-icon {
+    margin-bottom: auto;
+  }
+}
+
+.bento-card-phone .phone-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.bento-card-phone .phone-icon-placeholder {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: #fff;
+}
+
+.bento-card-phone .card-text {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bento header with title and settings */
+.bento-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 20px;
+  margin-bottom: 8px;
+}
+
+@media screen and (min-width: 700px) {
+  .bento-header {
+    display: none;
+  }
+}
+
+.bento-header .bento-title {
+  font-family: 'One UI Sans';
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Desktop about me title */
+.bento-about-title {
+  display: none;
+}
+
+@media screen and (min-width: 700px) {
+  .bento-about-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    grid-column: 2;
+    padding: 0 4px;
+    margin-bottom: -8px;
+  }
+  
+  .bento-about-title .title-text {
+    font-family: 'One UI Sans';
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+}
+
+/* Bento page specific main content overrides */
+.bento-page .main-content {
+  padding-top: 60px;
+  align-items: center;
+  max-width: 100%;
+}
+
+@media screen and (min-width: 700px) {
+  .bento-page .main-content {
+    padding-top: 80px;
+  }
+  
+  .bento-page .bento-grid {
+    max-width: 100%;
+    padding: 20px;
+  }
+}
+
+@media screen and (max-width: 699px) {
+  .bento-page .main-content {
+    padding-top: 50px;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .bento-page .containers {
+    padding: 0;
+  }
+  
+  .bento-page .top-app-bar {
+    left: 0;
+    width: 100%;
+  }
+}
+
+/* ============================================
+   HERO SECTION STYLES
+   ============================================ */
+
+.hero-section {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 32px;
+  align-items: center;
+  padding: 20px 0;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.hero-avatar {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/5;
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--container-background);
+  transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.4s ease;
+}
+
+.hero-avatar::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 31px;
+  background: linear-gradient(135deg, var(--accent) 0%, transparent 50%, var(--accent) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+.hero-avatar:hover {
+  transform: scale(1.02) translateY(-4px);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 60px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.hero-avatar:hover::before {
+  opacity: 1;
+}
+
+.hero-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 28px;
+}
+
+.hero-intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.hero-subtitle {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--secondary);
+}
+
+.hero-name {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: clamp(36px, 6vw, 56px);
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.hero-description {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--secondary);
+  line-height: 1.5;
+  margin: 8px 0 0 0;
+  max-width: 400px;
+}
+
+/* ============================================
+   ROLE CARDS STYLES
+   ============================================ */
+
+.role-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.role-card {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  background: var(--container-background);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.role-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.role-card-icon {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+}
+
+.role-card-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.role-card-label {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.role-card-title {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Designer Card - CSS grid pattern */
+.role-card-designer {
+  --grid-size: 48px;
+  background-color: var(--container-background);
+  background-image: 
+    /* Vertical lines */
+    repeating-linear-gradient(
+      90deg,
+      var(--accent) 0px,
+      var(--accent) 1px,
+      transparent 1px,
+      transparent var(--grid-size)
+    ),
+    /* Horizontal lines */
+    repeating-linear-gradient(
+      0deg,
+      var(--accent) 0px,
+      var(--accent) 1px,
+      transparent 1px,
+      transparent var(--grid-size)
+    );
+  background-size: var(--grid-size) var(--grid-size);
+  background-position: center center;
+  position: relative;
+  overflow: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L6.35 2.86a.5.5 0 0 0-.85.35Z' fill='%23ffffff' stroke='%23000000' stroke-width='1.5'/%3E%3C/svg%3E") 4 4, auto;
+}
+
+/* Cursor icon in center */
+.role-card-designer::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L6.35 2.86a.5.5 0 0 0-.85.35Z' fill='%23ffffff' stroke='%23000000' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 2;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  transition: opacity 0.2s ease;
+}
+
+.role-card-designer:hover::before {
+  opacity: 0;
+}
+
+/* Bottom gradient for text readability */
+.role-card-designer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--container-background) 0%, color-mix(in srgb, var(--container-background) 60%, transparent) 40%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.role-card-designer .role-card-label,
+.role-card-designer .role-card-title {
+  color: var(--primary);
+}
+
+.role-card-designer .role-card-label {
+  color: var(--secondary);
+}
+
+/* Journalist Card - with background image */
+.role-card-journalist {
+  background-image: url('/images/home/Journalist.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.role-card-journalist::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--container-background) 0%, color-mix(in srgb, var(--container-background) 60%, transparent) 40%, transparent 100%);
+  z-index: 1;
+}
+
+.role-card-journalist .role-card-label,
+.role-card-journalist .role-card-title {
+  color: var(--primary);
+}
+
+.role-card-journalist .role-card-label {
+  color: var(--secondary);
+}
+
+/* Phone Card - solid background with accent icon */
+.role-card-phone {
+  background: var(--container-background);
+}
+
+.role-card-phone .role-card-label,
+.role-card-phone .role-card-title {
+  color: var(--primary);
+}
+
+.role-card-phone .role-card-label {
+  color: var(--secondary);
+}
+
+/* ============================================
+   HERO SECTION RESPONSIVE STYLES
+   ============================================ */
+
+@media screen and (max-width: 900px) {
+  .hero-section {
+    display: block;
+    position: relative;
+    padding: 0;
+    margin-bottom: 16px;
+  }
+  
+  .hero-avatar {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 3/4;
+    margin: 0;
+    border-radius: 28px;
+  }
+  
+  .hero-avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Overlay the intro text on the image */
+  .hero-intro {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 80px 24px 32px 24px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.6) 50%, transparent 100%);
+    border-radius: 0 0 28px 28px;
+    align-items: center;
+    text-align: center;
+    z-index: 2;
+  }
+  
+  .hero-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .hero-name {
+    color: #fff;
+    font-size: clamp(32px, 8vw, 48px);
+  }
+  
+  .hero-description {
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    max-width: 100%;
+  }
+  
+  .role-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .role-card:first-child {
+    grid-column: 1 / -1;
+    aspect-ratio: 2/1;
+  }
+  
+  .role-card {
+    aspect-ratio: 1;
+    min-height: 140px;
+  }
+  
+  .role-card-title {
+    font-size: 16px;
+  }
+  
+  .role-card-label {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .hero-intro {
+    padding: 60px 20px 24px 20px;
+  }
+  
+  .hero-subtitle {
+    font-size: 15px;
+  }
+  
+  .hero-description {
+    font-size: 14px;
+  }
+  
+  .role-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .role-card {
+    padding: 16px;
+  }
+  
+  .role-card-icon svg {
+    width: 32px;
+    height: 32px;
   }
 }
 

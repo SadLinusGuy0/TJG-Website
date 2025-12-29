@@ -105,69 +105,82 @@ export default function Home() {
       
       <div className="containers">
         <Navigation />
-        <div className="main-content" style={{paddingTop: 0}}>
-          <div className="header-container">
-            <Image className="profile-image-icon" alt="Profile" src="/images/pfp.png" width={200} height={200} />
-            <div className="title">
-              <AnimatedText text="Josh Skinner" inverse />
+        <div className="main-content" style={{paddingTop: '2%'}}>
+          {/* Hero Section */}
+          <div className="hero-section">
+            <div className="hero-avatar">
+              <Image 
+                src="/images/home/pfp.jpg" 
+                alt="Josh Skinner" 
+                width={400} 
+                height={500}
+                className="hero-avatar-image"
+                priority
+              />
             </div>
-            <div className="container settings" style={{ padding: 0 }}>
-            <div className="body-text" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: "row", gap: 8}}>
-              <span className="containers-are-the">Aka</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fillRule="evenodd" clipRule="evenodd" d="M5.13519 6.77392V20.1163H8.1369C7.7373 20.0255 7.36267 19.895 7.01298 19.7249C6.27837 19.3448 5.66618 18.8355 5.17644 18.197L7.28847 16.1904C7.56395 16.5856 7.89299 16.8897 8.27561 17.1025C8.27571 17.1025 8.27581 17.1026 8.27591 17.1026V13.9755C8.37381 14.4025 8.50578 14.817 8.67182 15.219C9.01602 16.0103 9.46611 16.7268 10.0221 17.3684C10.3176 17.3253 10.5848 17.2367 10.8238 17.1025C11.1911 16.9049 11.4666 16.616 11.6503 16.236C11.8284 15.8957 11.9268 15.4885 11.9454 15.0142C11.9017 14.943 11.8594 14.8703 11.8184 14.796C11.3988 13.9947 11.1891 13.0747 11.1891 12.0358C11.1891 10.997 11.4063 10.0918 11.8408 9.32011C11.8859 9.23859 11.9327 9.15898 11.9813 9.08129L12.01 4H0V6.77392H5.13519ZM15.0596 4.08712L15.0689 6.95299C15.4625 6.869 15.8774 6.82701 16.3134 6.82701C17.1974 6.82701 18.0065 6.99767 18.7408 7.33898C19.475 7.6803 20.0893 8.17001 20.5837 8.80814L22.6515 6.76023C21.9323 5.88468 21.0258 5.20945 19.932 4.73458C18.8381 4.24486 17.6395 4 16.3359 4C15.899 4 15.4735 4.02904 15.0596 4.08712ZM14.6488 17.1101C14.5764 17.2876 14.4952 17.4599 14.4051 17.627C14.0116 18.3682 13.4678 18.9661 12.7736 19.4206C12.8441 19.453 12.9153 19.4845 12.9871 19.5151C13.976 19.9158 15.0323 20.1162 16.1561 20.1162C17.6844 20.1162 19.0329 19.8045 20.2017 19.1812C21.3854 18.5431 22.3143 17.6008 22.9886 16.3542C23.6629 15.0928 24 13.5272 24 11.6574V11.2345H15.9538V13.8611L20.73 13.9074C20.6367 14.3737 20.4906 14.7961 20.2916 15.1745C19.9169 15.8719 19.3775 16.4061 18.6733 16.7772C17.9692 17.1333 17.1225 17.3114 16.1336 17.3114C15.607 17.3114 15.1121 17.2443 14.6488 17.1101ZM8.27591 6.77392V10.163C8.37818 9.72525 8.51764 9.30332 8.69429 8.89718C9.03259 8.10741 9.47806 7.39966 10.0307 6.77392H8.27591Z" fill="var(--primary)"/>
-              </svg>
-              <strong>
-                <AnimatedText text="That Josh Guy" />
-              </strong>
+            <div className="hero-intro">
+              <span className="hero-subtitle">Hey, I&apos;m</span>
+              <h1 className="hero-name">
+                <AnimatedText text="Josh Skinner" inverse />
+              </h1>
+              <p className="hero-description">
+                I&apos;m a designer and journalist creative with a passion for UI Design and Mobile Interfaces.
+              </p>
             </div>
+          </div>
+
+          {/* Role Cards */}
+          <div className="role-cards">
+            <div className="role-card role-card-designer">
+              <div className="role-card-icon">
+              </div>
+              <div className="role-card-content">
+                <span className="role-card-label">I am a</span>
+                <span className="role-card-title">UX Designer</span>
+              </div>
+            </div>
+            <div className="role-card role-card-journalist">
+              <div className="role-card-icon">
+              </div>
+              <div className="role-card-content">
+                <span className="role-card-label">I&apos;m also a</span>
+                <span className="role-card-title">Tech Journalist</span>
+              </div>
+            </div>
+            <div className="role-card role-card-phone">
+              <div className="role-card-icon">
+                {/* One UI icon */}
+                <svg fill="none" height="86" viewBox="0 0 86 86" width="86" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"><clipPath id="a"><path d="m0 0h86v86h-86z" transform="matrix(0 1 -1 0 86 0)" /></clipPath>
+                  <g clipPath="url(#a)" clipRule="evenodd" fillRule="evenodd">
+                    <path d="m63.1669 72.4735c3.959 0 7.1656-3.2097 7.1656-7.1657v-39.4156c0-3.9591-3.2066-7.1687-7.1656-7.1687h-21.8625c-.7525 0-1.4988-.1167-2.2145-.3502l-13.8429-4.4965c-.7156-.2335-1.4651-.3502-2.2145-.3502-3.9591 0-7.1687 3.2066-7.1687 7.1657v39.6675c0 3.228 2.1623 6.0599 5.2767 6.9107l18.0999 4.9511c.6174.1659 1.2532.2519 1.892.2519zm-9.3187-40.4753c-1.978 0-3.5813-1.6033-3.5813-3.5813 0-1.9811 1.6033-3.5844 3.5813-3.5844 1.981 0 3.5843 1.6033 3.5843 3.5844 0 1.978-1.6033 3.5813-3.5843 3.5813z" fill="var(--accent)" />
+                    <path d="m70.2344 25.9903v39.4157c0 3.959-3.2097 7.1687-7.1657 7.1687h-22.0375c-.6388 0-1.2746-.086-1.8889-.2549l-18.0999-4.9481c-3.1175-.8539-5.2767-3.6827-5.2767-6.9138v-39.6644c0-3.9591 3.2096-7.1687 7.1656-7.1687.7525 0 1.4989.1197 2.2145.3501l13.846 4.4966c.7126.2334 1.462.3532 2.2114.3532h21.8655c3.956 0 7.1657 3.2066 7.1657 7.1656z" stroke="var(--accent)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" />
+                  </g>
+                </svg>
+              </div>
+              <div className="role-card-content">
+                <span className="role-card-label">Phone I&apos;m using</span>
+                <span className="role-card-title">Galaxy Z Fold7</span>
+              </div>
             </div>
           </div>
 
           <div className="blank-div">
             <div className="container1">
-              <div className="title">I am a...</div>
+              <div className="title">My Stack</div>
             </div>
-            <div className="theme-container">
-              <button className="list3" role="button" aria-label="Graphic and UI Designer">
-                <div className="shape">
-                  {/* Designer SVG */}
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 22C6.49 22 2 17.51 2 12C2 6.49 6.49 2 12 2C17.51 2 22 6.04 22 11C22 14.31 19.31 17 16 17H14.23C13.95 17 13.73 17.22 13.73 17.5C13.73 17.62 13.78 17.73 13.86 17.83C14.27 18.3 14.5 18.89 14.5 19.5C14.5 20.88 13.38 22 12 22ZM12 4C7.59 4 4 7.59 4 12C4 16.41 7.59 20 12 20C12.28 20 12.5 19.78 12.5 19.5C12.5 19.34 12.42 19.22 12.36 19.15C11.95 18.69 11.73 18.1 11.73 17.5C11.73 16.12 12.85 15 14.23 15H16C18.21 15 20 13.21 20 11C20 7.14 16.41 4 12 4ZM6.5 13C7.32843 13 8 12.3284 8 11.5C8 10.6716 7.32843 10 6.5 10C5.67157 10 5 10.6716 5 11.5C5 12.3284 5.67157 13 6.5 13ZM9.5 9C10.3284 9 11 8.32843 11 7.5C11 6.67157 10.3284 6 9.5 6C8.67157 6 8 6.67157 8 7.5C8 8.32843 8.67157 9 9.5 9ZM14.5 9C15.3284 9 16 8.32843 16 7.5C16 6.67157 15.3284 6 14.5 6C13.6716 6 13 6.67157 13 7.5C13 8.32843 13.6716 9 14.5 9ZM17.5 13C18.3284 13 19 12.3284 19 11.5C19 10.6716 18.3284 10 17.5 10C16.6716 10 16 10.6716 16 11.5C16 12.3284 16.6716 13 17.5 13Z" fill="var(--accent)"/>
-                  </svg>
+            <div className="stack-marquee-wrapper">
+              <div className="stack-marquee">
+                <div className="stack-marquee-content">
+                  {stackTools.map((tool, index) => (
+                    <StackChip key={index} tool={tool} />
+                  ))}
                 </div>
-                <div className="test-toggle-group">
-                  <div className="body-text">Graphic and UI Designer</div>
+                <div className="stack-marquee-content" aria-hidden="true">
+                  {stackTools.map((tool, index) => (
+                    <StackChip key={`dup-${index}`} tool={tool} />
+                  ))}
                 </div>
-              </button>
-              <a href="https://sammyguru.com/author/emailthatjoshguy-me/" className="list3" role="button" aria-label="Writer">
-                <div className="shape">
-                  {/* Writer SVG */}
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M16.25 20.25H7.75C6.3693 20.25 5.25 19.1305 5.25 17.75V6.25C5.25 4.8693 6.3693 3.75 7.75 3.75H16.25C17.6307 3.75 18.75 4.8693 18.75 6.25V17.75C18.75 19.1305 17.6307 20.25 16.25 20.25Z" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M5.375 8.3125H7.8177" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M5.375 12H7.8177" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M5.375 15.6875H7.8177" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <div className="test-toggle-group">
-                  <div className="body-text">Journalist</div>
-                  <div className="information-wrapper">
-                    <div className="information">SammyGuru</div>
-                  </div>
-                </div>
-              </a>
-              <a href="https://sammyguru.com/author/emailthatjoshguy-me/" className="list3" role="button" aria-label="Writer">
-                <div className="shape">
-                  {/* Writer SVG */}
-                  <svg width="24" height="24" viewBox="0 0 24 " fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21.3823 4.81864C21.3968 5.02864 21.3968 5.23864 21.3968 5.45058C21.3968 11.9083 16.4806 19.3561 7.49129 19.3561V19.3522C4.83581 19.3561 2.23548 18.5954 0 17.1612C0.386129 17.2077 0.774194 17.2309 1.16323 17.2319C3.36387 17.2338 5.50161 16.4954 7.2329 15.1357C5.14161 15.0961 3.30774 13.7325 2.6671 11.7419C3.39968 11.8832 4.15452 11.8541 4.87355 11.6577C2.59355 11.197 0.953226 9.1938 0.953226 6.86735V6.80542C1.63258 7.1838 2.39323 7.3938 3.17129 7.41703C1.02387 5.98187 0.361935 3.12509 1.65871 0.891544C4.14 3.94477 7.80097 5.8009 11.731 5.99735C11.3371 4.29993 11.8752 2.52122 13.1448 1.328C15.1132 -0.522327 18.209 -0.427488 20.0594 1.53993C21.1539 1.32412 22.2029 0.922512 23.1629 0.35348C22.7981 1.48477 22.0345 2.44574 21.0145 3.05638C21.9832 2.94219 22.9297 2.68283 23.821 2.28703C23.1648 3.27025 22.3384 4.12671 21.3823 4.81864Z" fill="var(--accent)"/>
-                  </svg>
-                </div>
-                <div className="test-toggle-group">
-                  <div className="body-text">Social Media Personality</div>
-                </div>
-              </a>
+              </div>
             </div>
           </div>
 
@@ -183,10 +196,10 @@ export default function Home() {
                 </svg>
               </div>
               <div className="test-toggle-group">
-                <div className="body-text">Name</div>
                 <div className="information-wrapper">
-                  <div className="information">Josh Skinner</div>
+                  <div className="information">Also known as</div>
                 </div>
+                <div className="body-text">That Josh Guy</div>
               </div>
             </button>
             <div className="list3">
@@ -200,17 +213,6 @@ export default function Home() {
                 </div>
               </div>
               <div className="others2"></div>
-            </div>
-          </div>
-
-          <div className="blank-div">
-            <div className="container1">
-              <div className="title">My Stack</div>
-            </div>
-            <div className="stack-container">
-              {stackTools.map((tool, index) => (
-                <StackChip key={index} tool={tool} />
-              ))}
             </div>
           </div>
         </div>
