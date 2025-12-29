@@ -1710,6 +1710,13 @@ button.list4:hover {
   line-height: 1.2;
   white-space: nowrap;
 }
+/* Ensure mobile nav labels are always visible, even when sidebar is collapsed */
+body.nav-collapsed .mobile-nav .nav-label,
+body.nav-collapsed .mobile-nav .nav-label-selected {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  max-width: none !important;
+}
 .containers,
 .main-content,
 .settings-content,
