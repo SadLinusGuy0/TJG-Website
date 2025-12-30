@@ -40,7 +40,7 @@ export default function OneUIDesignKitPage() {
           </div>
         </div>
         
-        <div className="main-content" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0 }}>
+        <div className="main-content" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0, paddingTop: '100px' }}>
           <div className="container settings">
             <div className="body-text">
               <p className="containers-are-the">Ever wanted to make an app in the style of One UI? Well, this is a great place to start.</p>

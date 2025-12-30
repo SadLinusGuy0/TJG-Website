@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useRef, Suspense } from "react";
 import Toast from "../../components/Toast";
 import AnimatedText from "../../components/AnimatedText";
+import { LoadingDots } from "../../components/LoadingAnim";
 
 function AboutContent() {
   const searchParams = useSearchParams();
@@ -305,7 +306,11 @@ export default function Home() {
     <div className="index settings-page">
       <div className="containers">
         <Navigation hideMobile={true} />
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+            <LoadingDots />
+          </div>
+        }>
           <AboutContent />
         </Suspense>
       </div>

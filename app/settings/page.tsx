@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Navigation from '../components/Navigation';
+import { LoadingDots } from '../components/LoadingAnim';
 
 function SettingsContent() {
   const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled } = useTheme();
@@ -229,7 +230,11 @@ export default function Settings() {
     <div className="index settings-page">
       <div className="containers">
         <Navigation hideMobile={true} />
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+            <LoadingDots />
+          </div>
+        }>
           <SettingsContent />
         </Suspense>
       </div>

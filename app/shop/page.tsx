@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getGumroadProducts, GumroadProduct } from "../../lib/gumroad";
+import { LoadingDots } from "../components/LoadingAnim";
 
 export default function Shop() {
   const pathname = usePathname();
@@ -70,8 +71,8 @@ export default function Shop() {
           <div className="blank-div">
             <div className="theme-container">
               {loading ? (
-                <div className="container" style={{ padding: 'var(--padding-xll)' }}>
-                  <div className="body-text">Loading products...</div>
+                <div className="container" style={{ padding: 'var(--padding-xll)', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+                  <LoadingDots />
                 </div>
               ) : products.length > 0 ? (
                 products.map((product) => (

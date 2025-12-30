@@ -71,7 +71,13 @@ export async function fetchPosts(params: { page?: number; perPage?: number; cate
   console.log('API Base URL:', apiBaseUrl);
   console.log('Is WordPress.com:', isWPCom);
   
-  const res = await fetch(url, { next: { revalidate: 0 } });
+  // Check if we're on the server (for Next.js)
+  const isServer = typeof window === 'undefined';
+  const fetchOptions: RequestInit = isServer 
+    ? { next: { revalidate: 0 } }
+    : { cache: 'no-store' };
+  
+  const res = await fetch(url, fetchOptions);
   console.log('Fetch response status:', res.status);
   
   if (!res.ok) throw new Error(`Failed to fetch posts: ${res.status}`);
@@ -103,7 +109,14 @@ export async function fetchCategories(): Promise<WPCategory[]> {
   const { isWPCom, wpJsonBase, wpComBase } = getApiUrls();
   const base = isWPCom ? wpComBase : wpJsonBase;
   const url = `${base}/categories?_fields=id,name,slug`;
-  const res = await fetch(url, { next: { revalidate: 60 } });
+  
+  // Check if we're on the server (for Next.js)
+  const isServer = typeof window === 'undefined';
+  const fetchOptions: RequestInit = isServer 
+    ? { next: { revalidate: 60 } }
+    : { cache: 'no-store' };
+  
+  const res = await fetch(url, fetchOptions);
   if (!res.ok) throw new Error(`Failed to fetch categories: ${res.status}`);
   return res.json();
 }
@@ -116,7 +129,13 @@ export async function fetchPostBySlug(slug: string): Promise<WPPost | null> {
   console.log('Fetching post by slug from URL:', url);
   console.log('Slug:', slug);
   
-  const res = await fetch(url, { next: { revalidate: 0 } });
+  // Check if we're on the server (for Next.js)
+  const isServer = typeof window === 'undefined';
+  const fetchOptions: RequestInit = isServer 
+    ? { next: { revalidate: 0 } }
+    : { cache: 'no-store' };
+  
+  const res = await fetch(url, fetchOptions);
   console.log('Post fetch response status:', res.status);
   
   if (!res.ok) throw new Error(`Failed to fetch post: ${res.status}`);
@@ -139,7 +158,14 @@ export async function fetchPageBySlug(slug: string): Promise<WPPost | null> {
   const { isWPCom, wpJsonBase, wpComBase } = getApiUrls();
   const base = isWPCom ? wpComBase : wpJsonBase;
   const url = `${base}/pages?slug=${encodeURIComponent(slug)}&_fields=id,date,slug,link,title,excerpt,content,featured_media,jetpack_featured_media_url&_embed=wp:featuredmedia`;
-  const res = await fetch(url, { next: { revalidate: 60 } });
+  
+  // Check if we're on the server (for Next.js)
+  const isServer = typeof window === 'undefined';
+  const fetchOptions: RequestInit = isServer 
+    ? { next: { revalidate: 60 } }
+    : { cache: 'no-store' };
+  
+  const res = await fetch(url, fetchOptions);
   if (!res.ok) throw new Error(`Failed to fetch page: ${res.status}`);
   const data: WPPost[] = await res.json();
   return data[0] || null;
