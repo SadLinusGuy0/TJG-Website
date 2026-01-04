@@ -59,23 +59,7 @@ export default async function BlogIndex({ searchParams }: Props) {
     <div className="index">
       <style dangerouslySetInnerHTML={{
         __html: `
-          /* Blog card styling with blur and shadow */
-          .theme-container .list3,
-          .theme-container a.list3 {
-            background-color: rgba(0, 0, 0, 0.2) !important;
-            backdrop-filter: blur(20px) !important;
-            -webkit-backdrop-filter: blur(20px) !important;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
-            transition: transform 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out, backdrop-filter 0.2s ease-out !important;
-          }
-          
-          .theme-container .list3:hover,
-          .theme-container a.list3:hover {
-            background-color: rgba(0, 0, 0, 0.3) !important;
-            backdrop-filter: blur(20px) !important;
-            -webkit-backdrop-filter: blur(20px) !important;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
-          }
+        
           
           @media (min-width: 1024px) {
             .blog-card-desktop-thumbnail {
@@ -170,5 +154,3 @@ export default async function BlogIndex({ searchParams }: Props) {
     </div>
   );
 }
-
-
