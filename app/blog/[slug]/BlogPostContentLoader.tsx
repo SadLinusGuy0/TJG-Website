@@ -53,8 +53,7 @@ function countWords(content: string): number {
           break;
         }
       }
-    }
-    
+    }    
   
     // Remove everything from the Bibliography section onwards
     contentWithoutBibliography = contentWithoutBibliography.substring(0, startPos);
