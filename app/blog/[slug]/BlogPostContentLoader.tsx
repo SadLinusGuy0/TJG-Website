@@ -30,7 +30,37 @@ function stripHtmlAndDecode(value?: string): string {
 }
 
 function countWords(content: string): number {
-  const text = stripHtmlAndDecode(content);
+  if (!content) return 0;
+  
+  // Remove Bibliography section and everything below it
+  let contentWithoutBibliography = content;
+  
+  // Case-insensitive search for "Bibliography" - could be in headings, paragraphs, or plain text
+  const bibliographyIndex = contentWithoutBibliography.search(/Bibliography/i);
+  
+  if (bibliographyIndex !== -1) {
+    // Find the start of the HTML element containing "Bibliography"
+    // Look backwards to find the opening tag (h1-h6, p, div, etc.)
+    let startPos = bibliographyIndex;
+    
+    // Search backwards for the opening tag
+    for (let i = bibliographyIndex; i >= 0; i--) {
+      if (contentWithoutBibliography[i] === '<') {
+        // Check if it's a valid opening tag (not a closing tag)
+        const tagMatch = contentWithoutBibliography.substring(i).match(/^<([a-z1-6]+)[^>]*>/i);
+        if (tagMatch) {
+          startPos = i;
+          break;
+        }
+      }
+    }
+    
+  
+    // Remove everything from the Bibliography section onwards
+    contentWithoutBibliography = contentWithoutBibliography.substring(0, startPos);
+  }
+  
+  const text = stripHtmlAndDecode(contentWithoutBibliography);
   if (!text) return 0;
   const words = text.trim().split(/\s+/).filter(word => word.length > 0);
   return words.length;
