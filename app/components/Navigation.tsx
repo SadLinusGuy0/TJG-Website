@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
 import { useState, useEffect, createContext, useContext, useRef } from 'react';
+import { featureFlags } from '../../lib/featureFlags';
 
 // Context to share collapsed state
 export const NavCollapseContext = createContext({ collapsed: false, setCollapsed: (_: boolean) => {} });
@@ -163,17 +164,31 @@ export default function Navigation({ hideMobile = false, showBlog: propShowBlog 
     return false;
   });
   const [showBlog, setShowBlog] = useState(() => {
+    // Feature flag controls default state
+    const defaultEnabled = featureFlags.blogEnabled;
+    
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('college-blogs-enabled') === 'true' || propShowBlog;
+      // Check localStorage for user override (if explicitly set)
+      const localStorageValue = localStorage.getItem('college-blogs-enabled');
+      if (localStorageValue !== null) {
+        return localStorageValue === 'true' || propShowBlog;
+      }
+      // If not set in localStorage, use feature flag default
+      return defaultEnabled || propShowBlog;
     }
-    return propShowBlog;
+    return defaultEnabled || propShowBlog;
   });
 
   // Listen for changes to the blog flag in localStorage
   useEffect(() => {
     const checkBlogFlag = () => {
       if (typeof window !== 'undefined') {
-        const enabled = localStorage.getItem('college-blogs-enabled') === 'true';
+        const defaultEnabled = featureFlags.blogEnabled;
+        const localStorageValue = localStorage.getItem('college-blogs-enabled');
+        // If localStorage has an explicit value, use it; otherwise use feature flag default
+        const enabled = localStorageValue !== null 
+          ? localStorageValue === 'true'
+          : defaultEnabled;
         setShowBlog(enabled || propShowBlog);
       }
     };
