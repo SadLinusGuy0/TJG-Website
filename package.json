@@ -16,7 +16,7 @@
     "@vercel/edge-config": "^1.4.0",
     "flags": "^4.0.1",
     "hypertune": "^2.7.2",
-    "next": "^16.0.10",
+    "next": "^16.1.1",
     "next-pwa": "^5.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

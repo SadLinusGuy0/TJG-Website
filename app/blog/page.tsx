@@ -167,9 +167,7 @@ export default async function BlogIndex({ searchParams }: Props) {
         </div>
         </BlogSearchProvider>
       </div>
-    }>
-      <BlogContentLoader />
-    </Suspense>
+    </div>
   );
 }
 
