@@ -68,6 +68,11 @@ function processContentWithEmbeds(content: string): string {
         <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/JFh3pE1bu21Ad74KUibZug/Unit-4---Storytelling?node-id=0-1&embed-host=share" allowfullscreen></iframe>
       </div>
     `,
+    'gdd-results': `
+      <div class="figma-wrapper">
+        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://forms.office.com/Pages/AnalysisPage.aspx?AnalyzerToken=Svsr8OjeTHhXu0MsS6MiWcVyyd1M3BbD&id=0JsvSSEvbkyhotOQXlsYcw32xjNmmxRNrKwdPrtn9KRUM0s1OEFZWFZLOUNLNklZRThROFc3U1ZQOS4u" allowfullscreen></iframe>
+      </div>
+    `
     // Add more embeds here as needed
     // 'story-mindmap': '<div class="embed-wrapper">...</div>',
   };
