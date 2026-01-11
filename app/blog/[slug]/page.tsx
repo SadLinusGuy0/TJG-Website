@@ -486,6 +486,112 @@ export default async function BlogPost(props: PageProps) {
             content: '— ' !important;
           }
 
+          /* WordPress Tables */
+          .body-text table,
+          .body-text .wp-block-table {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 20px 0 !important;
+            border-collapse: collapse !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+            background: var(--container-background) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+            box-sizing: border-box !important;
+            table-layout: auto !important;
+          }
+          .body-text table thead,
+          .body-text .wp-block-table thead {
+            background: var(--container-background) !important;
+          }
+          .body-text table th,
+          .body-text .wp-block-table th {
+            padding: 12px 16px !important;
+            text-align: left !important;
+            font-weight: 600 !important;
+            font-size: 0.95rem !important;
+            color: var(--primary) !important;
+            border-bottom: 2px solid rgba(127, 127, 127, 0.2) !important;
+            background: var(--container-background) !important;
+          }
+          .body-text table td,
+          .body-text .wp-block-table td {
+            padding: 12px 16px !important;
+            border-bottom: 1px solid rgba(127, 127, 127, 0.1) !important;
+            color: var(--primary) !important;
+            font-size: 0.9rem !important;
+            line-height: 1.5 !important;
+          }
+          .body-text table tbody tr:last-child td,
+          .body-text .wp-block-table tbody tr:last-child td {
+            border-bottom: none !important;
+          }
+          .body-text table tbody tr:hover,
+          .body-text .wp-block-table tbody tr:hover {
+            background: rgba(127, 127, 127, 0.05) !important;
+          }
+          .body-text table tbody tr:nth-child(even),
+          .body-text .wp-block-table tbody tr:nth-child(even) {
+            background: rgba(127, 127, 127, 0.02) !important;
+          }
+          .body-text table tbody tr:nth-child(even):hover,
+          .body-text .wp-block-table tbody tr:nth-child(even):hover {
+            background: rgba(127, 127, 127, 0.08) !important;
+          }
+          /* Responsive table wrapper */
+          .body-text .wp-block-table__wrapper {
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            margin: 20px 0 !important;
+            -webkit-overflow-scrolling: touch !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            display: block !important;
+          }
+          .body-text .wp-block-table__wrapper table {
+            margin: 0 !important;
+            min-width: 100% !important;
+            width: 100% !important;
+            display: table !important;
+          }
+          /* Ensure regular tables are constrained */
+          .body-text table {
+            display: table !important;
+          }
+          /* Ensure table cells wrap text to prevent overflow */
+          .body-text table th,
+          .body-text table td,
+          .body-text .wp-block-table th,
+          .body-text .wp-block-table td {
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+          }
+          /* For WordPress figure wrappers containing tables */
+          .body-text figure.wp-block-table {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            margin: 20px 0 !important;
+            max-width: 100% !important;
+            display: block !important;
+          }
+          .body-text figure.wp-block-table table {
+            margin: 0 !important;
+            display: table !important;
+          }
+          @media (max-width: 768px) {
+            .body-text table,
+            .body-text .wp-block-table {
+              font-size: 0.85rem !important;
+            }
+            .body-text table th,
+            .body-text table td,
+            .body-text .wp-block-table th,
+            .body-text .wp-block-table td {
+              padding: 10px 12px !important;
+            }
+          }
+
           /* Embed wrappers (Figma, etc.) */
           .body-text .figma-wrapper,
           .body-text .embed-wrapper {
