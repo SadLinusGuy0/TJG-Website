@@ -72,6 +72,11 @@ function processContentWithEmbeds(content: string): string {
       <div class="figma-wrapper">
         <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://forms.office.com/Pages/AnalysisPage.aspx?AnalyzerToken=Svsr8OjeTHhXu0MsS6MiWcVyyd1M3BbD&id=0JsvSSEvbkyhotOQXlsYcw32xjNmmxRNrKwdPrtn9KRUM0s1OEFZWFZLOUNLNklZRThROFc3U1ZQOS4u" allowfullscreen></iframe>
       </div>
+    `,
+    'story-results': `
+      <div class="figma-wrapper">
+        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://forms.office.com/Pages/AnalysisPage.aspx?AnalyzerToken=etTOj7nVjPy1Bt4CWPzEeAfutjr6345P&id=0JsvSSEvbkyhotOQXlsYcw32xjNmmxRNrKwdPrtn9KRUNlJPUklRRlRXSDVCUkRCVUZMT1RINTRJTS4u" allowfullscreen></iframe>
+      </div>
     `
     // Add more embeds here as needed
     // 'story-mindmap': '<div class="embed-wrapper">...</div>',
@@ -411,6 +416,74 @@ export default async function BlogPost(props: PageProps) {
             margin-left: 0 !important;
             margin-right: 0 !important;
             width: 100% !important;
+          }
+
+          /* WordPress Quote Blocks */
+          .body-text .wp-block-quote {
+            position: relative !important;
+            margin: 20px 10px !important;
+            padding: 20px 50px 20px 50px !important;
+            border-left: none !important;
+            font-style: italic !important;
+            color: var(--primary) !important;
+          }
+          .body-text .wp-block-quote::before {
+            content: '' !important;
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 32px !important;
+            height: 32px !important;
+            background-color: var(--accent) !important;
+            mask-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 3C4.34315 3 3 4.34315 3 6V10C3 11.6569 4.34315 13 6 13H8V11H6C5.44772 11 5 10.5523 5 10V6C5 5.44772 5.44772 5 6 5H8V3H6Z' fill='black'/%3E%3Cpath d='M18 3C16.3431 3 15 4.34315 15 6V10C15 11.6569 16.3431 13 18 13H20V11H18C17.4477 11 17 10.5523 17 10V6C17 5.44772 17.4477 5 18 5H20V3H18Z' fill='black'/%3E%3C/svg%3E") !important;
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 3C4.34315 3 3 4.34315 3 6V10C3 11.6569 4.34315 13 6 13H8V11H6C5.44772 11 5 10.5523 5 10V6C5 5.44772 5.44772 5 6 5H8V3H6Z' fill='black'/%3E%3Cpath d='M18 3C16.3431 3 15 4.34315 15 6V10C15 11.6569 16.3431 13 18 13H20V11H18C17.4477 11 17 10.5523 17 10V6C17 5.44772 17.4477 5 18 5H20V3H18Z' fill='black'/%3E%3C/svg%3E") !important;
+            mask-size: contain !important;
+            -webkit-mask-size: contain !important;
+            mask-repeat: no-repeat !important;
+            -webkit-mask-repeat: no-repeat !important;
+            mask-position: center !important;
+            -webkit-mask-position: center !important;
+            z-index: 1 !important;
+          }
+          .body-text .wp-block-quote::after {
+            content: '' !important;
+            position: absolute !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 32px !important;
+            height: 32px !important;
+            background-color: var(--accent) !important;
+            mask-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 3C4.34315 3 3 4.34315 3 6V10C3 11.6569 4.34315 13 6 13H8V11H6C5.44772 11 5 10.5523 5 10V6C5 5.44772 5.44772 5 6 5H8V3H6Z' fill='black'/%3E%3Cpath d='M18 3C16.3431 3 15 4.34315 15 6V10C15 11.6569 16.3431 13 18 13H20V11H18C17.4477 11 17 10.5523 17 10V6C17 5.44772 17.4477 5 18 5H20V3H18Z' fill='black'/%3E%3C/svg%3E") !important;
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 3C4.34315 3 3 4.34315 3 6V10C3 11.6569 4.34315 13 6 13H8V11H6C5.44772 11 5 10.5523 5 10V6C5 5.44772 5.44772 5 6 5H8V3H6Z' fill='black'/%3E%3Cpath d='M18 3C16.3431 3 15 4.34315 15 6V10C15 11.6569 16.3431 13 18 13H20V11H18C17.4477 11 17 10.5523 17 10V6C17 5.44772 17.4477 5 18 5H20V3H18Z' fill='black'/%3E%3C/svg%3E") !important;
+            mask-size: contain !important;
+            -webkit-mask-size: contain !important;
+            mask-repeat: no-repeat !important;
+            -webkit-mask-repeat: no-repeat !important;
+            mask-position: center !important;
+            -webkit-mask-position: center !important;
+            transform: rotate(180deg) !important;
+            z-index: 1 !important;
+          }
+          .body-text .wp-block-quote p {
+            margin: 0 0 10px 0 !important;
+            font-size: 1.1rem !important;
+            line-height: 1.6 !important;
+          }
+          .body-text .wp-block-quote p:last-child {
+            margin-bottom: 0 !important;
+          }
+          .body-text .wp-block-quote cite,
+          .body-text .wp-block-quote .wp-block-quote__citation {
+            display: block !important;
+            margin-top: 12px !important;
+            font-size: 0.9rem !important;
+            font-style: normal !important;
+            opacity: 0.7 !important;
+            text-align: right !important;
+          }
+          .body-text .wp-block-quote cite::before,
+          .body-text .wp-block-quote .wp-block-quote__citation::before {
+            content: '— ' !important;
           }
 
           /* Embed wrappers (Figma, etc.) */
