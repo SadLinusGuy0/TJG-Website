@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { enhanceImageCompare } from './enhanceImageCompare';
 
 interface BlogContentProps {
   content: string;
@@ -28,6 +29,9 @@ export default function BlogContent({ content }: BlogContentProps) {
         heading.id = slug || `heading-${index}`;
       }
     });
+
+    // Enhance Jetpack before/after blocks into our compare slider
+    enhanceImageCompare(contentRef.current);
   }, [content]);
 
   return (

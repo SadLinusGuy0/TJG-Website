@@ -198,7 +198,7 @@ export default function BlogPostContentLoader() {
             word-wrap: break-word !important;
             overflow-wrap: break-word !important;
           }
-          .body-text img {
+          .body-text img:not(.ko-compare__img) {
             max-width: 100% !important;
             width: 100% !important;
             height: auto !important;
@@ -206,6 +206,76 @@ export default function BlogPostContentLoader() {
             display: block !important;
             margin: 12px 0 !important;
             padding: 0 !important;
+          }
+
+          /* Jetpack Image Compare (before/after) -> custom slider */
+          .body-text .ko-compare {
+            margin: 12px 0 !important;
+          }
+          .body-text .ko-compare__viewport {
+            --_radius: 28px;
+            position: relative !important;
+            width: 100% !important;
+            aspect-ratio: var(--ar, 16 / 9) !important;
+            border-radius: var(--_radius) !important;
+            overflow: hidden !important;
+            user-select: none !important;
+            touch-action: pan-y !important;
+            background: rgba(0,0,0,0.06) !important;
+          }
+          .body-text .ko-compare__img {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            object-fit: cover !important;
+            display: block !important;
+          }
+          .body-text .ko-compare__img--before {
+            clip-path: inset(0 calc(100% - var(--pos, 50%)) 0 0) !important;
+          }
+          .body-text .ko-compare__img--after {
+            clip-path: inset(0 0 0 var(--pos, 50%)) !important;
+          }
+          .body-text .ko-compare__handle {
+            position: absolute !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            left: var(--pos, 50%) !important;
+            transform: translateX(-50%) !important;
+            width: 2px !important;
+            background: var(--accent) !important;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.18) !important;
+            pointer-events: auto !important;
+            cursor: ew-resize !important;
+          }
+          .body-text .ko-compare__handle::after {
+            content: "" !important;
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 34px !important;
+            height: 34px !important;
+            border-radius: 999px !important;
+            background: rgba(23,23,26,0.55) !important;
+            border: 1px solid rgba(255,255,255,0.18) !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35) !important;
+          }
+          .body-text .ko-compare__handle::before {
+            content: "|" !important;
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            color: var(--accent) !important;
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            line-height: 1 !important;
+            z-index: 1 !important;
           }
           .wp-block-image {
             margin: 12px 0 !important;
