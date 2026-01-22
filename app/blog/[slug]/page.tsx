@@ -77,6 +77,11 @@ function processContentWithEmbeds(content: string): string {
       <div class="figma-wrapper">
         <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://forms.office.com/Pages/AnalysisPage.aspx?AnalyzerToken=etTOj7nVjPy1Bt4CWPzEeAfutjr6345P&id=0JsvSSEvbkyhotOQXlsYcw32xjNmmxRNrKwdPrtn9KRUNlJPUklRRlRXSDVCUkRCVUZMT1RINTRJTS4u" allowfullscreen></iframe>
       </div>
+    `,
+    'google-doc-name': `
+      <div class="figma-wrapper">
+        <iframe src="https://docs.google.com/document/d/e/2PACX-1vRZR3r5IoEGDi0okO7E-GHVfb9yPtadU3H8v6urWH_bvpmze1qFmm_OZL_63jmjGfiG7ML-ahpuoSPC/pub?embedded=true"></iframe>
+      </div>
     `
     // Add more embeds here as needed
     // 'story-mindmap': '<div class="embed-wrapper">...</div>',
