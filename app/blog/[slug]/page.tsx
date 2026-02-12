@@ -87,7 +87,12 @@ function processContentWithEmbeds(content: string): string {
       <div class="figma-wrapper">
         <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/S8xl4FFql9Q6V4O3S0Zayw/UX-Workflow?node-id=0-1&embed-host=share" allowfullscreen></iframe>
       </div>
-    `
+    `,
+    'maps-embed': `
+      <div class="figma-wrapper">
+        <iframe src="https://www.google.com/maps/embed?pb=!4v1770888651744!6m8!1m7!1sEwCt_D72XDwMDw9hPLITpA!2m2!1d50.75749897863136!2d-2.076732351682947!3f240.73163492541838!4f-6.098039408431191!5f0.7820865974627469" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    `,
     // Add more embeds here as needed
     // 'story-mindmap': '<div class="embed-wrapper">...</div>',
   };
@@ -680,7 +685,7 @@ export default async function BlogPost(props: PageProps) {
             width: 100% !important;
             display: flex !important;
             justify-content: center !important;
-            border-radius: 12px !important;
+            border-radius: 28px !important;
             overflow: hidden !important;
           }
           .body-text .figma-wrapper iframe,
@@ -688,7 +693,7 @@ export default async function BlogPost(props: PageProps) {
             width: 100% !important;
             max-width: 800px !important;
             height: 450px !important;
-            border-radius: 12px !important;
+            border-radius: 28px !important;
           }
           @media (max-width: 768px) {
             .body-text .figma-wrapper iframe,
