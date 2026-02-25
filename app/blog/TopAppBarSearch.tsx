@@ -122,7 +122,7 @@ export default function TopAppBarSearch({ posts, onFilteredPostsChange }: TopApp
             background: var(--container-experimental);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
+            border-radius: var(--br-lg);
             border: 1px solid rgba(255, 255, 255, 0.2);
             cursor: pointer;
             transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -164,7 +164,7 @@ export default function TopAppBarSearch({ posts, onFilteredPostsChange }: TopApp
             background: var(--container-experimental);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
+            border-radius: var(--br-lg);
             border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 8px 12px;
             min-width: 200px;

@@ -57,7 +57,7 @@ export default function OneUIDesignKitPage() {
             alt="The One UI Design Kit's unique Bento style layout makes designing easy."
             width={1000}
             height={1000}
-            style={{ width: '100%', height: '100%', borderRadius: '28px', border: '2px solid var(--container-background)', marginBottom: '20px' }}
+            style={{ width: '100%', height: '100%', borderRadius: 'var(--br-9xl)', border: '2px solid var(--container-background)', marginBottom: '20px' }}
           />
 
           <div className="container settings">
@@ -80,7 +80,7 @@ export default function OneUIDesignKitPage() {
             alt="One UI Design Kit"
             width={1000}
             height={1000}
-            style={{ width: '100%', height: '100%', borderRadius: '28px' }}
+            style={{ width: '100%', height: '100%', borderRadius: 'var(--br-9xl)' }}
           />
 
           <div className="container settings" style={{ marginTop: '20px' }}>
@@ -119,7 +119,7 @@ export default function OneUIDesignKitPage() {
             alt="Developing with the One UI Design Kit"
             width={1000}
             height={1000}
-            style={{ width: '100%', height: '100%', borderRadius: '28px', border: '2px solid var(--container-background)', marginBottom: '20px' }}
+            style={{ width: '100%', height: '100%', borderRadius: 'var(--br-9xl)', border: '2px solid var(--container-background)', marginBottom: '20px' }}
           />
 
           <div className="container settings">

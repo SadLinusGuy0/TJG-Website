@@ -102,7 +102,7 @@ export default function Shop() {
                       alt={product.name}
                       width={600}
                       height={338}
-                      style={{ width: '100%', height: '100%', borderRadius: 24 }}
+                      style={{ width: '100%', height: '100%', borderRadius: 'var(--br-2lg)' }}
                     />
                   </a>
                 ))

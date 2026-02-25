@@ -185,7 +185,7 @@ export default function BlogSearch({ posts, onFilteredPostsChange }: BlogSearchP
             background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-radius: 12px;
+            border-radius: var(--br-sm);
             padding: 6px 12px;
             font-family: 'One UI Sans';
             font-size: 0.75rem;

@@ -184,7 +184,7 @@ export default function BlogPostContentLoader() {
       <style dangerouslySetInnerHTML={{
         __html: `
           .body-text p {
-            margin: 0 10px 6px 10px !important;
+            margin: 0 10px 12px 10px !important;
           }
           .body-text p:last-child {
             margin-bottom: 10px !important;
@@ -202,7 +202,7 @@ export default function BlogPostContentLoader() {
             max-width: 100% !important;
             width: 100% !important;
             height: auto !important;
-            border-radius: 28px !important;
+            border-radius: var(--br-9xl) !important;
             display: block !important;
             margin: 12px 0 !important;
             padding: 0 !important;
@@ -281,7 +281,7 @@ export default function BlogPostContentLoader() {
             margin: 12px 0 !important;
           }
           .wp-block-image img {
-            border-radius: 28px !important;
+            border-radius: var(--br-9xl) !important;
           }
           .body-text pre {
             overflow-x: auto !important;
@@ -361,7 +361,7 @@ export default function BlogPostContentLoader() {
           }
           .body-text .wp-block-gallery.is-slideshow .slideshow-track::-webkit-scrollbar { display: none !important; }
           .body-text .wp-block-gallery.is-slideshow figure { flex: 0 0 100% !important; scroll-snap-align: center !important; margin: 0 !important; }
-          .body-text .wp-block-gallery.is-slideshow img { width: 100% !important; height: auto !important; border-radius: 16px !important; }
+          .body-text .wp-block-gallery.is-slideshow img { width: 100% !important; height: auto !important; border-radius: var(--br-md) !important; }
           .body-text .wp-block-gallery.is-slideshow .slideshow-arrow { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; background: rgba(0,0,0,0.6) !important; color: white !important; border: none !important; width: 36px !important; height: 36px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; z-index: 2 !important; cursor: pointer !important; }
           .body-text .wp-block-gallery.is-slideshow .slideshow-prev { left: 8px !important; }
           .body-text .wp-block-gallery.is-slideshow .slideshow-next { right: 8px !important; }
@@ -374,7 +374,7 @@ export default function BlogPostContentLoader() {
           .body-text .wp-block-jetpack-slideshow .wp-block-jetpack-slideshow_container { display: flex !important; overflow-x: auto !important; scroll-snap-type: x mandatory !important; gap: 8px !important; -webkit-overflow-scrolling: touch !important; scrollbar-width: none !important; }
           .body-text .wp-block-jetpack-slideshow .wp-block-jetpack-slideshow_container::-webkit-scrollbar { display: none !important; }
           .body-text .wp-block-jetpack-slideshow .wp-block-jetpack-slideshow_slide { flex: 0 0 100% !important; scroll-snap-align: center !important; margin: 0 !important; }
-          .body-text .wp-block-jetpack-slideshow img { width: 100% !important; height: auto !important; border-radius: 16px !important; display: block !important; }
+          .body-text .wp-block-jetpack-slideshow img { width: 100% !important; height: auto !important; border-radius: var(--br-md) !important; display: block !important; }
           .body-text .wp-block-jetpack-slideshow .slideshow-arrow { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; background: rgba(0,0,0,0.6) !important; color: white !important; border: none !important; width: 36px !important; height: 36px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; z-index: 2 !important; cursor: pointer !important; }
           .body-text .wp-block-jetpack-slideshow .slideshow-prev { left: 8px !important; }
           .body-text .wp-block-jetpack-slideshow .slideshow-next { right: 8px !important; }
@@ -404,7 +404,7 @@ export default function BlogPostContentLoader() {
             width: 100% !important;
             height: auto !important;
             display: block !important;
-            border-radius: 16px !important;
+            border-radius: var(--br-md) !important;
             margin: 0 !important;
           }
           .body-text .wp-block-gallery figcaption,
@@ -430,7 +430,7 @@ export default function BlogPostContentLoader() {
             width: 100% !important;
             height: auto !important;
             display: block !important;
-            border-radius: 16px !important;
+            border-radius: var(--br-md) !important;
             margin: 0 !important;
           }
           .body-text .gallery .gallery-caption {
@@ -509,7 +509,7 @@ export default function BlogPostContentLoader() {
             width: 100% !important;
             height: auto !important;
             display: block !important;
-            border-radius: 20px !important;
+            border-radius: var(--br-lg) !important;
             margin: 0 !important;
           }
           .body-text .wp-block-media-text__content > *:first-child { margin-top: 0 !important; }
@@ -545,7 +545,7 @@ export default function BlogPostContentLoader() {
           .lightbox-overlay.closing { display: flex !important; opacity: 0 !important; }
           .lightbox-content { position: relative !important; width: 100% !important; height: 100% !important; display: flex !important; align-items: center !important; justify-content: center !important; }
           .lightbox-stage { position: relative !important; width: 100% !important; height: 100% !important; display: flex !important; align-items: center !important; justify-content: center !important; overflow: hidden !important; }
-          .lightbox-img { position: absolute !important; max-width: 100% !important; max-height: 100% !important; border-radius: 12px !important; box-shadow: 0 10px 30px rgba(0,0,0,0.4) !important; transform: scale(0.98) translateX(0) !important; opacity: 0 !important; transition: transform 250ms ease, opacity 250ms ease !important; z-index: 1 !important; }
+          .lightbox-img { position: absolute !important; max-width: 100% !important; max-height: 100% !important; border-radius: var(--br-sm) !important; box-shadow: 0 10px 30px rgba(0,0,0,0.4) !important; transform: scale(0.98) translateX(0) !important; opacity: 0 !important; transition: transform 250ms ease, opacity 250ms ease !important; z-index: 1 !important; }
           .lightbox-img.incoming { opacity: 0 !important; transform: scale(1) translateX(var(--incomingStart, 0)) !important; }
           .lightbox-overlay.open .lightbox-img.current { transform: scale(1) translateX(0) !important; opacity: 1 !important; }
           .lightbox-overlay.open.slide-next.sliding-active .lightbox-img.current { transform: scale(0.98) translateX(-8%) !important; opacity: 0 !important; }
@@ -608,7 +608,7 @@ export default function BlogPostContentLoader() {
             width: 100% !important;
             display: flex !important;
             justify-content: center !important;
-            border-radius: 12px !important;
+            border-radius: var(--br-sm) !important;
             overflow: hidden !important;
           }
           .body-text .figma-wrapper iframe,
@@ -616,7 +616,7 @@ export default function BlogPostContentLoader() {
             width: 100% !important;
             max-width: 800px !important;
             height: 450px !important;
-            border-radius: 12px !important;
+            border-radius: var(--br-sm) !important;
           }
           @media (max-width: 768px) {
             .body-text .figma-wrapper iframe,
@@ -647,7 +647,7 @@ export default function BlogPostContentLoader() {
             height: 'clamp(300px, 40vh, 500px)',
             marginTop: '16px',
             marginBottom: '16px',
-            borderRadius: '28px',
+            borderRadius: 'var(--br-9xl)',
             overflow: 'hidden'
           }}>
             {featuredImageUrl ? (
@@ -675,7 +675,7 @@ export default function BlogPostContentLoader() {
                     maxWidth: '100%',
                     background: 'rgba(0, 0, 0, 0.3)',
                     padding: '16px 20px',
-                    borderRadius: '12px',
+                    borderRadius: 'var(--br-sm)',
                     backdropFilter: 'blur(10px)'
                   }}>
                     <h1 style={{
@@ -732,7 +732,7 @@ export default function BlogPostContentLoader() {
                     maxWidth: '100%',
                     background: 'rgba(255, 255, 255, 0.9)',
                     padding: '16px 20px',
-                    borderRadius: '12px',
+                    borderRadius: 'var(--br-sm)',
                     backdropFilter: 'blur(10px)',
                     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
                   }}>

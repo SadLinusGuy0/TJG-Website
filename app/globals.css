@@ -149,6 +149,12 @@ a {
     --gap-11xs: 2px;
     --padding-xl: 10px;
     --padding-xll: 20px;
+    --br-xs: 8px;
+    --br-sm: 12px;
+    --br-md: 16px;
+    --br-lg: 20px;
+    --br-2lg: 24px;
+    --br-xl: 36px;
     --br-9xl: 28px;
     --br-10xl: 40px;
     --br-11xs: 2px;
@@ -203,6 +209,32 @@ a {
     .main-content.settings {
         width: 600px;
         max-width: 100%;
+    }
+}
+
+@supports (corner-shape: squircle) {
+    html[data-corner-smoothing="true"] {
+        --br-xs: 10px;
+        --br-sm: 16px;
+        --br-md: 20px;
+        --br-lg: 24px;
+        --br-2lg: 28px;
+        --br-xl: 42px;
+        --br-9xl: 48px;
+        --br-10xl: 48px;
+        --br-11xs: 4px;
+    }
+    html[data-corner-smoothing="true"] * {
+        corner-shape: squircle;
+    }
+    html[data-corner-smoothing="true"] .toggle-switch,
+    html[data-corner-smoothing="true"] .toggle-switch *,
+    html[data-corner-smoothing="true"] .theme-selection input[type="radio"],
+    html[data-corner-smoothing="true"] .theme-selection input[type="radio"]::before,
+    html[data-corner-smoothing="true"] .accent-color-swatch,
+    html[data-corner-smoothing="true"] .top-app-bar-icon,
+    html[data-corner-smoothing="true"] .top-app-bar-icon * {
+        corner-shape: round;
     }
 }
 

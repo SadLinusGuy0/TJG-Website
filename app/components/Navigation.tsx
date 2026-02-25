@@ -248,7 +248,7 @@ export default function Navigation({ hideMobile = false, showBlog: propShowBlog 
       {/* Desktop Navigation */}
       <nav className={`tab-container desktop-nav${collapsed ? ' collapsed' : ''}`}
         style={{
-          borderTopRightRadius: 24,
+          borderTopRightRadius: 'var(--br-2lg)',
           width: collapsed ? 72 : '33%',
           minWidth: collapsed ? 72 : 260,
           maxWidth: collapsed ? 72 : 420,

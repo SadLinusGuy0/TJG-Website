@@ -74,7 +74,7 @@ export default function BlogPostsWithSearch({ initialPosts, categoryMap }: BlogP
                             fontSize: '0.75em',
                             padding: '4px 8px',
                             backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                            borderRadius: '12px',
+                            borderRadius: 'var(--br-sm)',
                             color: 'var(--primary)',
                             fontWeight: '500',
                             fontFamily: 'One UI Sans'
@@ -92,7 +92,7 @@ export default function BlogPostsWithSearch({ initialPosts, categoryMap }: BlogP
                               fontSize: '0.75em',
                               padding: '4px 8px',
                               backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                              borderRadius: '12px',
+                              borderRadius: 'var(--br-sm)',
                               color: 'var(--primary)',
                               fontWeight: '500'
                             }}>
@@ -111,7 +111,7 @@ export default function BlogPostsWithSearch({ initialPosts, categoryMap }: BlogP
                           flexShrink: 0,
                           width: '120px',
                           height: '80px',
-                          borderRadius: '12px',
+                          borderRadius: 'var(--br-sm)',
                           overflow: 'hidden',
                           position: 'relative'
                         }}>
@@ -131,7 +131,7 @@ export default function BlogPostsWithSearch({ initialPosts, categoryMap }: BlogP
                         <div className="blog-card-mobile-thumbnail" style={{ 
                           width: '100%',
                           height: '120px',
-                          borderRadius: '12px',
+                          borderRadius: 'var(--br-sm)',
                           overflow: 'hidden',
                           position: 'relative',
                           marginBottom: '12px'

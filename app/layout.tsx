@@ -79,6 +79,10 @@ export default function RootLayout({
                     monochrome: '#808080'
                   };
                   document.documentElement.style.setProperty('--accent', accentColors[accentColor] || accentColors.blue);
+                  var csSupported = window.CSS && CSS.supports && CSS.supports('corner-shape', 'squircle');
+                  var csSaved = localStorage.getItem('cornerSmoothing');
+                  var csEnabled = csSupported && (csSaved === null ? true : csSaved === 'true');
+                  document.documentElement.dataset.cornerSmoothing = csEnabled ? 'true' : 'false';
                 } catch (e) {}
               })();
             `

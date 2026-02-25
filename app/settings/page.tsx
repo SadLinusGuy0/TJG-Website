@@ -9,7 +9,7 @@ import Navigation from '../components/Navigation';
 import { LoadingDots } from '../components/LoadingAnim';
 
 function SettingsContent() {
-  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled } = useTheme();
+  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported } = useTheme();
   const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || '/';
@@ -207,6 +207,37 @@ function SettingsContent() {
               checked={blurEnabled}
               onChange={(e) => setBlurEnabled(e.target.checked)}
               id="progressive-blur-toggle"
+            />
+            <span className="toggle-slider"></span>
+          </div>
+        </label>
+
+        <label
+          htmlFor="corner-smoothing-toggle"
+          className="list3"
+          style={{
+            cursor: cornerSmoothingSupported ? 'pointer' : 'default',
+            opacity: cornerSmoothingSupported ? 1 : 0.45,
+            pointerEvents: cornerSmoothingSupported ? 'auto' : 'none',
+          }}
+        >
+          <div className="test-toggle-group">
+            <div className="body-text">Corner smoothing</div>
+            <div className="information-wrapper">
+              <div className="information">
+                {cornerSmoothingSupported
+                  ? 'Use squircle-shaped corners for a smoother look'
+                  : 'Not supported on this browser'}
+              </div>
+            </div>
+          </div>
+          <div className="toggle-switch">
+            <input
+              type="checkbox"
+              checked={cornerSmoothing}
+              onChange={(e) => setCornerSmoothing(e.target.checked)}
+              id="corner-smoothing-toggle"
+              disabled={!cornerSmoothingSupported}
             />
             <span className="toggle-slider"></span>
           </div>

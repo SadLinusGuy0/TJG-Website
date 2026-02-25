@@ -92,7 +92,7 @@ export default function Chips({ categories, selectedSlug }: Props) {
           <div
             className="chip"
             style={{
-              borderRadius: 24,
+              borderRadius: 'var(--br-2lg)',
               padding: '8px 16px',
               border: chip.selected
                 ? '2px solid var(--accent)'

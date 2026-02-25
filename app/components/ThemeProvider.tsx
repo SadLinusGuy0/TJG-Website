@@ -55,6 +55,9 @@ interface ThemeContextType {
   setAccentColor: (color: AccentColor) => void;
   blurEnabled: boolean;
   setBlurEnabled: (enabled: boolean) => void;
+  cornerSmoothing: boolean;
+  setCornerSmoothing: (enabled: boolean) => void;
+  cornerSmoothingSupported: boolean;
   hydrated: boolean;
 }
 
@@ -65,6 +68,9 @@ const ThemeContext = createContext<ThemeContextType>({
   setAccentColor: () => {},
   blurEnabled: true,
   setBlurEnabled: () => {},
+  cornerSmoothing: false,
+  setCornerSmoothing: () => {},
+  cornerSmoothingSupported: false,
   hydrated: false,
 });
 
@@ -79,6 +85,23 @@ const getInitialTheme = (): Theme => {
 const getInitialBlurEnabled = (): boolean => {
   if (typeof window !== 'undefined') {
     const saved = localStorage.getItem('progressiveBlur');
+    return saved === null ? true : saved === 'true';
+  }
+  return true;
+};
+
+const getCornerSmoothingSupported = (): boolean => {
+  if (typeof window !== 'undefined' && typeof CSS !== 'undefined' && CSS.supports) {
+    return CSS.supports('corner-shape', 'squircle');
+  }
+  return false;
+};
+
+const getInitialCornerSmoothing = (): boolean => {
+  const supported = getCornerSmoothingSupported();
+  if (!supported) return false;
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('cornerSmoothing');
     return saved === null ? true : saved === 'true';
   }
   return true;
@@ -108,6 +131,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [accentColor, setAccentColorState] = useState<AccentColor>(getInitialAccentColor);
   const [blurEnabled, setBlurEnabledState] = useState<boolean>(getInitialBlurEnabled);
+  const [cornerSmoothing, setCornerSmoothingState] = useState<boolean>(getInitialCornerSmoothing);
+  const [cornerSmoothingSupported] = useState<boolean>(getCornerSmoothingSupported);
   const [hydrated, setHydrated] = useState(false);
   const pathname = usePathname();
 
@@ -223,7 +248,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     applyAccentColor(accentColor);
   }, [accentColor]);
 
-  useEffect(() => { setHydrated(true); }, []);
+  useEffect(() => {
+    setHydrated(true);
+    document.documentElement.dataset.cornerSmoothing = cornerSmoothing.toString();
+  }, []);
   if (!hydrated) return null;
 
   const setAccentColor = (color: AccentColor) => {
@@ -238,8 +266,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('progressiveBlur', enabled.toString());
   };
 
+  const setCornerSmoothing = (enabled: boolean) => {
+    if (!cornerSmoothingSupported) return;
+    setCornerSmoothingState(enabled);
+    document.documentElement.dataset.cornerSmoothing = enabled.toString();
+    localStorage.setItem('cornerSmoothing', enabled.toString());
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, hydrated }}>
+    <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, hydrated }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -2,6 +2,9 @@
 
 import { useEffect, useRef } from 'react';
 import { enhanceImageCompare } from './enhanceImageCompare';
+import WordCounter from './WordCounter';
+
+const WORD_COUNTER_REGEX = /\{\{WORD_COUNTER\}\}:(\d+)/;
 
 interface BlogContentProps {
   content: string;
@@ -34,20 +37,36 @@ export default function BlogContent({ content }: BlogContentProps) {
     enhanceImageCompare(contentRef.current);
   }, [content]);
 
+  const bodyTextStyle: React.CSSProperties = {
+    fontSize: '16px',
+    lineHeight: '1.5',
+    margin: 0,
+    padding: 0,
+    wordWrap: 'break-word',
+    overflowWrap: 'break-word',
+    maxWidth: '100%',
+  };
+
+  const match = content?.match(WORD_COUNTER_REGEX);
+  if (match) {
+    const [fullMatch, countStr] = match;
+    const count = parseInt(countStr, 10);
+    const [before, after] = content.split(fullMatch);
+    return (
+      <div ref={contentRef} className="body-text" style={bodyTextStyle}>
+        {before && <div dangerouslySetInnerHTML={{ __html: before }} />}
+        <WordCounter count={count} />
+        {after && <div dangerouslySetInnerHTML={{ __html: after }} />}
+      </div>
+    );
+  }
+
   return (
-    <div 
+    <div
       ref={contentRef}
-      className="body-text" 
-      style={{ 
-        fontSize: '16px', 
-        lineHeight: '1.5',
-        margin: 0,
-        padding: 0,
-        wordWrap: 'break-word',
-        overflowWrap: 'break-word',
-        maxWidth: '100%'
-      }} 
-      dangerouslySetInnerHTML={{ __html: content || '' }} 
+      className="body-text"
+      style={bodyTextStyle}
+      dangerouslySetInnerHTML={{ __html: content || '' }}
     />
   );
 }

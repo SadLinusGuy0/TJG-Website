@@ -30,7 +30,7 @@ export default function Toast({ message, duration = 3000, onClose }: ToastProps)
         backgroundColor: 'var(--container-background)',
         color: 'var(--primary)',
         padding: '12px 24px',
-        borderRadius: '28px',
+        borderRadius: 'var(--br-9xl)',
         boxShadow: '0 4px 24px rgba(0,0,0,0.15)',
         zIndex: 10000,
         fontSize: '14px',

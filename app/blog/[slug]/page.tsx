@@ -60,6 +60,13 @@ function countWords(content: string): number {
   return words.length;
 }
 
+function countWordsAboveMarker(content: string, marker: string): number {
+  const idx = content.indexOf(marker);
+  if (idx === -1) return 0;
+  const contentAbove = content.substring(0, idx);
+  return countWords(contentAbove);
+}
+
 function processContentWithEmbeds(content: string): string {
   // Define embed mappings - keyphrase to embed HTML
   const embedMap: Record<string, string> = {
@@ -103,6 +110,14 @@ function processContentWithEmbeds(content: string): string {
   Object.entries(embedMap).forEach(([keyphrase, embedHtml]) => {
     processedContent = processedContent.replace(keyphrase, embedHtml);
   });
+
+  // Replace "word-count" with a placeholder for the WordCounter component (rendered in BlogContent)
+  const wordCountMarker = "word-count";
+  const wordCounterPlaceholder = "{{WORD_COUNTER}}";
+  if (processedContent.includes(wordCountMarker)) {
+    const wordsAbove = countWordsAboveMarker(processedContent, wordCountMarker);
+    processedContent = processedContent.replace(wordCountMarker, `${wordCounterPlaceholder}:${wordsAbove}`);
+  }
 
   return processedContent;
 }
@@ -190,7 +205,7 @@ export default async function BlogPost(props: PageProps) {
       <style dangerouslySetInnerHTML={{
         __html: `
           .body-text p {
-            margin: 0 10px 6px 10px !important;
+            margin: 0 10px 12px 10px !important;
           }
           .body-text p:last-child {
             margin-bottom: 10px !important;
@@ -208,10 +223,17 @@ export default async function BlogPost(props: PageProps) {
             max-width: 100% !important;
             width: 100% !important;
             height: auto !important;
-            border-radius: 28px !important;
+            border-radius: var(--br-9xl) !important;
             display: block !important;
             margin: 12px 0 !important;
             padding: 0 !important;
+          }
+          /* Word counter: full width like images, slightly wider than body text */
+          .body-text .list3.word-counter {
+            margin: 12px 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
           }
 
           /* Jetpack Image Compare (before/after) -> custom slider */
@@ -287,7 +309,7 @@ export default async function BlogPost(props: PageProps) {
             margin: 12px 0 !important;
           }
           .wp-block-image img {
-            border-radius: 28px !important;
+            border-radius: var(--br-9xl) !important;
           }
           .body-text pre {
             overflow-x: auto !important;
@@ -368,7 +390,7 @@ export default async function BlogPost(props: PageProps) {
           }
           .body-text .wp-block-gallery.is-slideshow .slideshow-track::-webkit-scrollbar { display: none !important; }
           .body-text .wp-block-gallery.is-slideshow figure { flex: 0 0 100% !important; scroll-snap-align: center !important; margin: 0 !important; }
-          .body-text .wp-block-gallery.is-slideshow img { width: 100% !important; height: auto !important; border-radius: 16px !important; }
+          .body-text .wp-block-gallery.is-slideshow img { width: 100% !important; height: auto !important; border-radius: var(--br-md) !important; }
           .body-text .wp-block-gallery.is-slideshow .slideshow-arrow { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; background: rgba(0,0,0,0.6) !important; color: white !important; border: none !important; width: 36px !important; height: 36px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; z-index: 2 !important; cursor: pointer !important; }
           .body-text .wp-block-gallery.is-slideshow .slideshow-prev { left: 8px !important; }
           .body-text .wp-block-gallery.is-slideshow .slideshow-next { right: 8px !important; }
@@ -381,7 +403,7 @@ export default async function BlogPost(props: PageProps) {
           .body-text .wp-block-jetpack-slideshow .wp-block-jetpack-slideshow_container { display: flex !important; overflow-x: auto !important; scroll-snap-type: x mandatory !important; gap: 8px !important; -webkit-overflow-scrolling: touch !important; scrollbar-width: none !important; }
           .body-text .wp-block-jetpack-slideshow .wp-block-jetpack-slideshow_container::-webkit-scrollbar { display: none !important; }
           .body-text .wp-block-jetpack-slideshow .wp-block-jetpack-slideshow_slide { flex: 0 0 100% !important; scroll-snap-align: center !important; margin: 0 !important; }
-          .body-text .wp-block-jetpack-slideshow img { width: 100% !important; height: auto !important; border-radius: 16px !important; display: block !important; }
+          .body-text .wp-block-jetpack-slideshow img { width: 100% !important; height: auto !important; border-radius: var(--br-md) !important; display: block !important; }
           .body-text .wp-block-jetpack-slideshow .slideshow-arrow { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; background: rgba(0,0,0,0.6) !important; color: white !important; border: none !important; width: 36px !important; height: 36px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; z-index: 2 !important; cursor: pointer !important; }
           .body-text .wp-block-jetpack-slideshow .slideshow-prev { left: 8px !important; }
           .body-text .wp-block-jetpack-slideshow .slideshow-next { right: 8px !important; }
@@ -411,7 +433,7 @@ export default async function BlogPost(props: PageProps) {
             width: 100% !important;
             height: auto !important;
             display: block !important;
-            border-radius: 16px !important;
+            border-radius: var(--br-md) !important;
             margin: 0 !important;
           }
           .body-text .wp-block-gallery figcaption,
@@ -421,6 +443,12 @@ export default async function BlogPost(props: PageProps) {
             color: var(--primary) !important;
             text-align: center !important;
             margin-top: 6px !important;
+          }
+
+          /* Center all image captions */
+          .body-text figcaption {
+            text-align: center !important;
+            color: var(--secondary) !important;
           }
 
           /* Classic [gallery] shortcode */
@@ -437,7 +465,7 @@ export default async function BlogPost(props: PageProps) {
             width: 100% !important;
             height: auto !important;
             display: block !important;
-            border-radius: 16px !important;
+            border-radius: var(--br-md) !important;
             margin: 0 !important;
           }
           .body-text .gallery .gallery-caption {
@@ -465,7 +493,42 @@ export default async function BlogPost(props: PageProps) {
             margin: 0 !important;
           }
 
-          /* Caption with gradient backdrop */
+          /* Lightbox overlay */
+          .lightbox-overlay {
+            position: fixed !important;
+            inset: 0 !important;
+            background: rgba(0,0,0,0.85) !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 9999 !important;
+            padding: 24px !important;
+            opacity: 0 !important;
+            transition: opacity 200ms ease !important;
+          }
+          .lightbox-overlay.opening { display: flex !important; opacity: 0 !important; }
+          .lightbox-overlay.open { display: flex !important; opacity: 1 !important; }
+          .lightbox-overlay.closing { display: flex !important; opacity: 0 !important; }
+          .lightbox-content { position: relative !important; width: 100% !important; height: 100% !important; display: flex !important; align-items: center !important; justify-content: center !important; }
+          .lightbox-stage { position: relative !important; width: 100% !important; height: 100% !important; display: flex !important; align-items: center !important; justify-content: center !important; overflow: hidden !important; }
+          .lightbox-img { position: absolute !important; max-width: 100% !important; max-height: 100% !important; border-radius: var(--br-sm) !important; box-shadow: 0 10px 30px rgba(0,0,0,0.4) !important; transform: scale(0.98) translateX(0) !important; opacity: 0 !important; transition: transform 250ms ease, opacity 250ms ease !important; z-index: 1 !important; }
+          .lightbox-img.incoming { opacity: 0 !important; transform: scale(1) translateX(var(--incomingStart, 0)) !important; }
+          .lightbox-overlay.open .lightbox-img.current { transform: scale(1) translateX(0) !important; opacity: 1 !important; }
+          .lightbox-overlay.open.slide-next.sliding-active .lightbox-img.current { transform: scale(0.98) translateX(-8%) !important; opacity: 0 !important; }
+          .lightbox-overlay.open.slide-next.sliding-active .lightbox-img.incoming { transform: scale(1) translateX(0) !important; opacity: 1 !important; }
+          .lightbox-overlay.open.slide-prev.sliding-active .lightbox-img.current { transform: scale(0.98) translateX(8%) !important; opacity: 0 !important; }
+          .lightbox-overlay.open.slide-prev.sliding-active .lightbox-img.incoming { transform: scale(1) translateX(0) !important; opacity: 1 !important; }
+          .lightbox-overlay.opening .lightbox-img { transform: scale(0.98) !important; opacity: 0 !important; }
+          .lightbox-overlay.open .lightbox-img { transform: scale(1) !important; opacity: 1 !important; }
+          .lightbox-overlay.closing .lightbox-img { transform: scale(0.98) !important; opacity: 0 !important; }
+          .lightbox-close { position: absolute !important; top: 16px !important; right: 16px !important; background: rgba(0,0,0,0.6) !important; color: #fff !important; border: none !important; width: 40px !important; height: 40px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; z-index: 2 !important; }
+          .lightbox-close.left { left: 16px !important; right: auto !important; }
+          .lightbox-arrow { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; background: rgba(0,0,0,0.6) !important; color: #fff !important; border: none !important; width: 44px !important; height: 44px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; opacity: 0 !important; transition: opacity 200ms ease !important; z-index: 2 !important; }
+          .lightbox-overlay.open .lightbox-arrow { opacity: 1 !important; }
+          .lightbox-overlay.closing .lightbox-arrow { opacity: 0 !important; }
+          .lightbox-prev { left: 16px !important; }
+          .lightbox-next { right: 16px !important; }
+          .lightbox-arrow svg, .lightbox-close svg { width: 20px !important; height: 20px !important; }
           .lightbox-caption-wrap { position: absolute !important; left: 0 !important; right: 0 !important; bottom: 0 !important; padding: 24px !important; pointer-events: none !important; z-index: 2 !important; }
           .lightbox-caption-gradient { position: absolute !important; left: 0 !important; right: 0 !important; bottom: 0 !important; height: 40% !important; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%) !important; }
           .lightbox-caption { position: relative !important; max-width: min(900px, 90%) !important; color: #fff !important; font-size: 0.95rem !important; line-height: 1.4 !important; text-shadow: 0 1px 2px rgba(0,0,0,0.4) !important; }
@@ -578,7 +641,7 @@ export default async function BlogPost(props: PageProps) {
             max-width: 100% !important;
             margin: 20px 0 !important;
             border-collapse: collapse !important;
-            border-radius: 12px !important;
+            border-radius: var(--br-sm) !important;
             overflow: hidden !important;
             background: var(--container-background) !important;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
@@ -685,7 +748,7 @@ export default async function BlogPost(props: PageProps) {
             width: 100% !important;
             display: flex !important;
             justify-content: center !important;
-            border-radius: 28px !important;
+            border-radius: var(--br-9xl) !important;
             overflow: hidden !important;
           }
           .body-text .figma-wrapper iframe,
@@ -693,7 +756,7 @@ export default async function BlogPost(props: PageProps) {
             width: 100% !important;
             max-width: 800px !important;
             height: 450px !important;
-            border-radius: 28px !important;
+            border-radius: var(--br-9xl) !important;
           }
           @media (max-width: 768px) {
             .body-text .figma-wrapper iframe,
@@ -724,7 +787,7 @@ export default async function BlogPost(props: PageProps) {
             height: 'clamp(300px, 40vh, 500px)',
             marginTop: '16px',
             marginBottom: '16px',
-            borderRadius: '28px',
+            borderRadius: 'var(--br-9xl)',
             overflow: 'hidden'
           }}>
             {featuredImageUrl ? (
@@ -752,7 +815,7 @@ export default async function BlogPost(props: PageProps) {
                     maxWidth: '100%',
                     background: 'rgba(0, 0, 0, 0.3)',
                     padding: '16px 20px',
-                    borderRadius: '12px',
+                    borderRadius: 'var(--br-sm)',
                     backdropFilter: 'blur(10px)'
                   }}>
                     <h1 style={{
@@ -811,7 +874,7 @@ export default async function BlogPost(props: PageProps) {
                     maxWidth: '100%',
                     background: 'rgba(255, 255, 255, 0.9)',
                     padding: '16px 20px',
-                    borderRadius: '12px',
+                    borderRadius: 'var(--br-sm)',
                     backdropFilter: 'blur(10px)',
                     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
                   }}>
@@ -862,7 +925,7 @@ export default async function BlogPost(props: PageProps) {
             )}
           </div>
           
-           <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%', overflow: 'hidden' }}>
+           <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
              <BlogContent content={processContentWithEmbeds(content.content?.rendered || '')} />
            </div>
         </div>
