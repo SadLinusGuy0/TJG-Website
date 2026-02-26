@@ -7,6 +7,7 @@ import LightboxClient from "../../components/LightboxClient";
 import Link from "next/link";
 import TableOfContents from "../TableOfContents";
 import BlogContent from "../BlogContent";
+import JumpToNextHeading from "../JumpToNextHeading";
 
 export const revalidate = 60;
 
@@ -223,6 +224,8 @@ export default async function BlogPost(props: PageProps) {
             max-width: 100% !important;
             width: 100% !important;
             height: auto !important;
+            max-height: 70vh !important;
+            object-fit: contain !important;
             border-radius: var(--br-9xl) !important;
             display: block !important;
             margin: 12px 0 !important;
@@ -323,6 +326,15 @@ export default async function BlogPost(props: PageProps) {
           .body-text h4 { font-size: 20px !important; margin: 8px 10px 4px 10px !important; }
           .body-text h5 { font-size: 18px !important; margin: 8px 10px 4px 10px !important; }
           .body-text h6 { font-size: 16px !important; margin: 6px 10px 4px 10px !important; }
+
+          /* WordPress block alignment */
+          .body-text .has-text-align-center { text-align: center !important; }
+          .body-text .has-text-align-right { text-align: right !important; }
+          .body-text .has-text-align-left { text-align: left !important; }
+          .body-text .has-text-align-justify { text-align: justify !important; }
+          .body-text .aligncenter { text-align: center !important; }
+          .body-text .alignright { text-align: right !important; }
+          .body-text .alignleft { text-align: left !important; }
 
           /* Lists spacing */
           .body-text ul, .body-text ol { margin: 6px 0 8px 20px !important; }
@@ -499,6 +511,50 @@ export default async function BlogPost(props: PageProps) {
           .lightbox-caption-wrap { position: absolute !important; left: 0 !important; right: 0 !important; bottom: 0 !important; padding: 24px !important; pointer-events: none !important; z-index: 2 !important; }
           .lightbox-caption-gradient { position: absolute !important; left: 0 !important; right: 0 !important; bottom: 0 !important; height: 40% !important; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%) !important; }
           .lightbox-caption { position: relative !important; max-width: min(900px, 90%) !important; color: #fff !important; font-size: 0.95rem !important; line-height: 1.4 !important; text-shadow: 0 1px 2px rgba(0,0,0,0.4) !important; }
+
+          /* WordPress Media & Text */
+          .body-text .wp-block-media-text {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            grid-template-areas:
+              "media"
+              "content" !important;
+            gap: 12px !important;
+            align-items: start !important;
+            margin: 12px 0 !important;
+          }
+          .body-text .wp-block-media-text .wp-block-media-text__media { grid-area: media !important; }
+          .body-text .wp-block-media-text .wp-block-media-text__content { grid-area: content !important; }
+          .body-text .wp-block-media-text.is-vertically-aligned-top { align-items: start !important; }
+          .body-text .wp-block-media-text.is-vertically-aligned-center { align-items: center !important; }
+          .body-text .wp-block-media-text.is-vertically-aligned-bottom { align-items: end !important; }
+          @media (min-width: 768px) {
+            .body-text .wp-block-media-text {
+              grid-template-columns: 1fr 1fr !important;
+              grid-template-areas: "media content" !important;
+            }
+            .body-text .wp-block-media-text.has-media-on-the-right {
+              grid-template-areas: "content media" !important;
+            }
+          }
+          .body-text .wp-block-media-text__media img,
+          .body-text .wp-block-media-text__media video,
+          .body-text .wp-block-media-text__media figure img {
+            width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            border-radius: var(--br-lg) !important;
+            margin: 0 !important;
+          }
+          .body-text .wp-block-media-text__content > *:first-child { margin-top: 0 !important; }
+          .body-text .wp-block-media-text__content > *:last-child { margin-bottom: 0 !important; }
+          .body-text .wp-block-media-text__media figcaption {
+            font-size: 0.85rem !important;
+            line-height: 1.4 !important;
+            color: var(--primary) !important;
+            text-align: center !important;
+            margin-top: 6px !important;
+          }
 
           /* WordPress Dividers */
           .body-text hr,
@@ -898,6 +954,7 @@ export default async function BlogPost(props: PageProps) {
            <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
              <BlogContent content={processContentWithEmbeds(content.content?.rendered || '')} />
            </div>
+          <JumpToNextHeading />
         </div>
       </div>
       <LightboxClient />

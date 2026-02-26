@@ -233,7 +233,9 @@ a {
     html[data-corner-smoothing="true"] .theme-selection input[type="radio"]::before,
     html[data-corner-smoothing="true"] .accent-color-swatch,
     html[data-corner-smoothing="true"] .top-app-bar-icon,
-    html[data-corner-smoothing="true"] .top-app-bar-icon * {
+    html[data-corner-smoothing="true"] .top-app-bar-icon *,
+    html[data-corner-smoothing="true"] .mobile-nav,
+    html[data-corner-smoothing="true"] .mobile-nav * {
         corner-shape: round;
     }
 }

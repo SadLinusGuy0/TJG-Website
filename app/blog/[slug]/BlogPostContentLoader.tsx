@@ -8,6 +8,7 @@ import LightboxClient from '../../components/LightboxClient';
 import Link from 'next/link';
 import TableOfContents from '../TableOfContents';
 import BlogContent from '../BlogContent';
+import JumpToNextHeading from '../JumpToNextHeading';
 import { LoadingDots } from '../../components/LoadingAnim';
 import { notFound } from 'next/navigation';
 
@@ -202,6 +203,8 @@ export default function BlogPostContentLoader() {
             max-width: 100% !important;
             width: 100% !important;
             height: auto !important;
+            max-height: 70vh !important;
+            object-fit: contain !important;
             border-radius: var(--br-9xl) !important;
             display: block !important;
             margin: 12px 0 !important;
@@ -295,6 +298,15 @@ export default function BlogPostContentLoader() {
           .body-text h4 { font-size: 20px !important; margin: 8px 10px 4px 10px !important; }
           .body-text h5 { font-size: 18px !important; margin: 8px 10px 4px 10px !important; }
           .body-text h6 { font-size: 16px !important; margin: 6px 10px 4px 10px !important; }
+
+          /* WordPress block alignment */
+          .body-text .has-text-align-center { text-align: center !important; }
+          .body-text .has-text-align-right { text-align: right !important; }
+          .body-text .has-text-align-left { text-align: left !important; }
+          .body-text .has-text-align-justify { text-align: justify !important; }
+          .body-text .aligncenter { text-align: center !important; }
+          .body-text .alignright { text-align: right !important; }
+          .body-text .alignleft { text-align: left !important; }
 
           /* Lists spacing */
           .body-text ul, .body-text ol { margin: 6px 0 8px 20px !important; }
@@ -752,6 +764,7 @@ export default function BlogPostContentLoader() {
           <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%', overflow: 'hidden' }}>
             <BlogContent content={processContentWithEmbeds(content.content?.rendered || '')} />
           </div>
+          <JumpToNextHeading />
         </div>
       </div>
       <LightboxClient />
