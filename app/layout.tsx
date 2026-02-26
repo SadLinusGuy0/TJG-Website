@@ -1,4 +1,6 @@
 import { ThemeProvider } from './components/ThemeProvider';
+import { BlogFlagProvider } from './components/BlogFlagProvider';
+import { getBlogEnabled } from '../lib/getBlogFlag';
 import './globals.css';
 import { Analytics } from "@vercel/analytics/next"
 import ProgressiveBlur from './components/ProgressiveBlur';
@@ -35,11 +37,13 @@ export const metadata = {
   }
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const blogEnabledValue = await getBlogEnabled();
+  
   return (
     <html suppressHydrationWarning>
       <head>
@@ -91,9 +95,11 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider>
-          <ProgressiveBlur />
-          <ProgressiveBlur position="bottom" />
-          {children}
+          <BlogFlagProvider blogEnabled={blogEnabledValue}>
+            <ProgressiveBlur />
+            <ProgressiveBlur position="bottom" />
+            {children}
+          </BlogFlagProvider>
         </ThemeProvider>
         <Analytics />
         <svg width="0" height="0" style={{position:'absolute'}}>
