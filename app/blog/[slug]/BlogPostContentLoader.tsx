@@ -343,44 +343,11 @@ export default function BlogPostContentLoader() {
           .body-text .wp-block-gallery.columns-8,
           .body-text .blocks-gallery-grid.columns-8 { grid-template-columns: repeat(8, 1fr) !important; }
 
-          /* Slideshow variant */
-          .body-text .wp-block-gallery.is-slideshow,
-          .body-text .wp-block-gallery.alignfull.is-style-slideshow,
-          .body-text .wp-block-gallery.is-style-slideshow {
-            display: block !important;
-            position: relative !important;
-            margin: 12px 0 !important;
+          /* Native slideshow images should not inherit blog image overrides */
+          .body-text .native-slideshow img {
+            margin: 0 !important;
+            border-radius: var(--br-9xl) !important;
           }
-          .body-text .wp-block-gallery.is-slideshow .slideshow-track {
-            display: flex !important;
-            overflow-x: auto !important;
-            scroll-snap-type: x mandatory !important;
-            gap: 8px !important;
-            -webkit-overflow-scrolling: touch !important;
-            scrollbar-width: none !important;
-          }
-          .body-text .wp-block-gallery.is-slideshow .slideshow-track::-webkit-scrollbar { display: none !important; }
-          .body-text .wp-block-gallery.is-slideshow figure { flex: 0 0 100% !important; scroll-snap-align: center !important; margin: 0 !important; }
-          .body-text .wp-block-gallery.is-slideshow img { width: 100% !important; height: auto !important; border-radius: var(--br-md) !important; }
-          .body-text .wp-block-gallery.is-slideshow .slideshow-arrow { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; background: rgba(0,0,0,0.6) !important; color: white !important; border: none !important; width: 36px !important; height: 36px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; z-index: 2 !important; cursor: pointer !important; }
-          .body-text .wp-block-gallery.is-slideshow .slideshow-prev { left: 8px !important; }
-          .body-text .wp-block-gallery.is-slideshow .slideshow-next { right: 8px !important; }
-          .body-text .wp-block-gallery.is-slideshow .slideshow-dots { display: flex !important; gap: 6px !important; justify-content: center !important; margin-top: 8px !important; }
-          .body-text .wp-block-gallery.is-slideshow .slideshow-dot { width: 8px !important; height: 8px !important; border-radius: 50% !important; background: rgba(255,255,255,0.4) !important; border: 1px solid rgba(0,0,0,0.2) !important; }
-          .body-text .wp-block-gallery.is-slideshow .slideshow-dot.active { background: white !important; }
-
-          /* Jetpack Slideshow block support */
-          .body-text .wp-block-jetpack-slideshow { position: relative !important; margin: 12px 0 !important; }
-          .body-text .wp-block-jetpack-slideshow .wp-block-jetpack-slideshow_container { display: flex !important; overflow-x: auto !important; scroll-snap-type: x mandatory !important; gap: 8px !important; -webkit-overflow-scrolling: touch !important; scrollbar-width: none !important; }
-          .body-text .wp-block-jetpack-slideshow .wp-block-jetpack-slideshow_container::-webkit-scrollbar { display: none !important; }
-          .body-text .wp-block-jetpack-slideshow .wp-block-jetpack-slideshow_slide { flex: 0 0 100% !important; scroll-snap-align: center !important; margin: 0 !important; }
-          .body-text .wp-block-jetpack-slideshow img { width: 100% !important; height: auto !important; border-radius: var(--br-md) !important; display: block !important; }
-          .body-text .wp-block-jetpack-slideshow .slideshow-arrow { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; background: rgba(0,0,0,0.6) !important; color: white !important; border: none !important; width: 36px !important; height: 36px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; z-index: 2 !important; cursor: pointer !important; }
-          .body-text .wp-block-jetpack-slideshow .slideshow-prev { left: 8px !important; }
-          .body-text .wp-block-jetpack-slideshow .slideshow-next { right: 8px !important; }
-          .body-text .wp-block-jetpack-slideshow .slideshow-dots { display: flex !important; gap: 6px !important; justify-content: center !important; margin-top: 8px !important; }
-          .body-text .wp-block-jetpack-slideshow .slideshow-dot { width: 8px !important; height: 8px !important; border-radius: 50% !important; background: rgba(255,255,255,0.4) !important; border: 1px solid rgba(0,0,0,0.2) !important; }
-          .body-text .wp-block-jetpack-slideshow .slideshow-dot.active { background: white !important; }
           @media (min-width: 768px) {
             .body-text .wp-block-gallery,
             .body-text .blocks-gallery-grid {
