@@ -1,10 +1,4 @@
-import { get } from "@vercel/edge-config";
-
-/**
- * Popular Stories are editable via Vercel Edge Config.
- * Add key "popular-stories" in Storage → Edge Config → your config.
- * Value: JSON array of { title, thumbnail, site, url } objects.
- */
+import { createClient } from "@vercel/edge-config";
 
 export interface FeaturedStory {
   title: string;
@@ -13,54 +7,31 @@ export interface FeaturedStory {
   url: string;
 }
 
-const DEFAULT_STORIES: FeaturedStory[] = [
-  {
-    title: "Here's the first glimpse of a One UI 9.0 Galaxy AI feature!",
-    thumbnail: "https://www.sammobile.com/wp-content/uploads/2026/01/Now-Brief-Galaxy-AI-1200x675.jpg",
-    site: "SamMobile",
-    url: "https://www.sammobile.com/news/samsung-one-ui-9-galaxy-ai-now-nudge/",
-  },
-  {
-    title: "Breaking – Samsung Removes Bootloader Unlocking with One UI 8",
-    thumbnail: "https://sammyguru.com/wp-content/uploads/2025/07/Galaxy-Z-Fold-7-SammyGuru-38-main-display.jpg",
-    site: "SammyGuru",
-    url: "https://sammyguru.com/breaking-samsung-removes-bootloader-unlocking-with-one-ui-8/",
-  },
-  {
-    title: "Here's How the Galaxy S26 Ultra's Privacy Display Will Work",
-    thumbnail: "https://sammyguru.com/wp-content/uploads/2026/01/Privacy-Display-thumbnail.png",
-    site: "SammyGuru",
-    url: "https://sammyguru.com/galaxy-s26-ultra-privacy-display-animation/",
-  },
-  {
-    title: "Samsung's rumored Perplexity-powered Bixby leaks in new video",
-    thumbnail: "https://m-cdn.phonearena.com/images/article/176996-wide-two_1200/Samsungs-rumored-Perplexity-powered-Bixby-leaks-in-new-video.webp?1767393754",
-    site: "PhoneArena",
-    url: "https://example.com/story-2",
-  },
-];
-
-function isValidStory(item: unknown): item is FeaturedStory {
-  if (!item || typeof item !== "object") return false;
-  const o = item as Record<string, unknown>;
+function isValidStory(obj: unknown): obj is FeaturedStory {
   return (
-    typeof o.title === "string" &&
-    typeof o.thumbnail === "string" &&
-    typeof o.site === "string" &&
-    typeof o.url === "string"
+    typeof obj === "object" &&
+    obj !== null &&
+    typeof (obj as FeaturedStory).title === "string" &&
+    typeof (obj as FeaturedStory).thumbnail === "string" &&
+    typeof (obj as FeaturedStory).site === "string" &&
+    typeof (obj as FeaturedStory).url === "string"
   );
 }
 
 export async function getFeaturedStories(): Promise<FeaturedStory[]> {
-  if (!process.env.EDGE_CONFIG) {
-    return DEFAULT_STORIES;
-  }
+  const connectionString = process.env.EDGE_CONFIG;
+  if (!connectionString) return [];
+
   try {
-    const data = await get<unknown>("popular-stories");
-    if (!Array.isArray(data)) return DEFAULT_STORIES;
-    const filtered = data.filter(isValidStory);
-    return filtered.length > 0 ? filtered : DEFAULT_STORIES;
+    const client = createClient(connectionString);
+    const value = await client.get("featured-stories");
+
+    if (Array.isArray(value)) {
+      return (value as unknown[]).filter(isValidStory);
+    }
+
+    return [];
   } catch {
-    return DEFAULT_STORIES;
+    return [];
   }
 }

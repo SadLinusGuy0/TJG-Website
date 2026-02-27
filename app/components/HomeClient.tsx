@@ -344,7 +344,7 @@ export default function HomeClient({
             </Link>
           </div>
 
-          {popularStoriesEnabled && (
+          {popularStoriesEnabled && featuredStories.length > 0 && (
             <div className="featured-stories-section">
               <h2 className="featured-stories-headline">Popular Stories</h2>
               <div className="featured-stories-scroll-wrapper">
