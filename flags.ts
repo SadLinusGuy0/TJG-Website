@@ -15,3 +15,17 @@ export const blogEnabled = flag({
     { value: false, label: 'Disabled' },
   ],
 });
+
+/**
+ * Popular Stories feature flag - controls visibility of the Popular Stories section on the home page.
+ */
+export const popularStoriesEnabled = flag({
+  key: 'popular-stories-enabled',
+  adapter: vercelAdapter(),
+  defaultValue: true,
+  description: 'Show the Popular Stories section on the home page',
+  options: [
+    { value: true, label: 'Enabled' },
+    { value: false, label: 'Disabled' },
+  ],
+});

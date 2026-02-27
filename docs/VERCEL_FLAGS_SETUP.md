@@ -1,6 +1,6 @@
 # Vercel Flags Setup
 
-This project uses [Vercel Flags](https://vercel.com/docs/flags) for feature flag management. The `blog-enabled` flag controls visibility of the blog in navigation.
+This project uses [Vercel Flags](https://vercel.com/docs/flags) for feature flag management.
 
 ## Quick Setup
 
@@ -12,7 +12,7 @@ This project uses [Vercel Flags](https://vercel.com/docs/flags) for feature flag
 2. **Create the flag in Vercel Dashboard**:
    - Go to [Vercel Dashboard](https://vercel.com/dashboard) → Your Project → **Flags**
    - Click **Create Flag**
-   - Name: `blog-enabled`
+   - Name: `blog-enabled` (or `popular-stories-enabled` for the Popular Stories section)
    - Type: **Boolean**
    - Configure per environment (Development: on, Preview/Production: as needed)
 
@@ -32,10 +32,11 @@ This project uses [Vercel Flags](https://vercel.com/docs/flags) for feature flag
 | Flag | Key | Description |
 |------|-----|-------------|
 | Blog | `blog-enabled` | Shows/hides the blog in navigation and controls access to blog pages |
+| Popular Stories | `popular-stories-enabled` | Shows/hides the Popular Stories section on the home page |
 
 ## Behavior
 
-- **Without FLAGS env var**: Blog is enabled by default (app works before setup)
+- **Without FLAGS env var**: All flags use default values (app works before setup)
 - **With FLAGS env var**: Flag value comes from Vercel Dashboard per environment
 - **Flags Explorer**: Override values locally without affecting other users
 

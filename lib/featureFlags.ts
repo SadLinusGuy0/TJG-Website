@@ -9,5 +9,9 @@ export const featureFlags = {
    * Set to true to show the blog navigation item and allow access to blog pages
    */
   blogEnabled: true,
+  /**
+   * Enable or disable the Popular Stories section on the home page
+   */
+  popularStoriesEnabled: true,
 } as const;
 

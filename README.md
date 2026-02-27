@@ -29,6 +29,18 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Featured Stories (Edge Config)
+
+The home page "Popular Stories" section can be edited via [Vercel Edge Config](https://vercel.com/docs/storage/edge-config) without redeploying.
+
+**Setup:**
+1. In Vercel Dashboard → Storage → create an Edge Config
+2. Add a key `featuredStories` with a JSON array of objects: `{ "title": "...", "thumbnail": "...", "site": "...", "url": "..." }`
+3. Link the config to your project and copy the connection string
+4. Add `EDGE_CONFIG` to your project's environment variables with that connection string
+
+Without `EDGE_CONFIG`, the app uses default stories from `lib/featured-stories.ts`.
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
