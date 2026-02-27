@@ -1,3 +1,11 @@
+import { get } from "@vercel/edge-config";
+
+/**
+ * Popular Stories are editable via Vercel Edge Config.
+ * Add key "popular-stories" in Storage → Edge Config → your config.
+ * Value: JSON array of { title, thumbnail, site, url } objects.
+ */
+
 export interface FeaturedStory {
   title: string;
   thumbnail: string;
@@ -5,7 +13,7 @@ export interface FeaturedStory {
   url: string;
 }
 
-const FEATURED_STORIES: FeaturedStory[] = [
+const DEFAULT_STORIES: FeaturedStory[] = [
   {
     title: "Here's the first glimpse of a One UI 9.0 Galaxy AI feature!",
     thumbnail: "https://www.sammobile.com/wp-content/uploads/2026/01/Now-Brief-Galaxy-AI-1200x675.jpg",
@@ -32,6 +40,27 @@ const FEATURED_STORIES: FeaturedStory[] = [
   },
 ];
 
-export function getFeaturedStories(): FeaturedStory[] {
-  return FEATURED_STORIES;
+function isValidStory(item: unknown): item is FeaturedStory {
+  if (!item || typeof item !== "object") return false;
+  const o = item as Record<string, unknown>;
+  return (
+    typeof o.title === "string" &&
+    typeof o.thumbnail === "string" &&
+    typeof o.site === "string" &&
+    typeof o.url === "string"
+  );
+}
+
+export async function getFeaturedStories(): Promise<FeaturedStory[]> {
+  if (!process.env.EDGE_CONFIG) {
+    return DEFAULT_STORIES;
+  }
+  try {
+    const data = await get<unknown>("popular-stories");
+    if (!Array.isArray(data)) return DEFAULT_STORIES;
+    const filtered = data.filter(isValidStory);
+    return filtered.length > 0 ? filtered : DEFAULT_STORIES;
+  } catch {
+    return DEFAULT_STORIES;
+  }
 }
