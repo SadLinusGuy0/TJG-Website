@@ -29,17 +29,17 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Featured Stories (Edge Config)
+## Featured Stories (Vercel Flags)
 
-The home page "Popular Stories" section can be edited via [Vercel Edge Config](https://vercel.com/docs/storage/edge-config) without redeploying.
+The home page "Popular Stories" section content is managed via [Vercel Flags](https://vercel.com/docs/flags). Edit the list without redeploying.
 
 **Setup:**
-1. In Vercel Dashboard → Storage → create an Edge Config
-2. Add a key `featuredStories` with a JSON array of objects: `{ "title": "...", "thumbnail": "...", "site": "...", "url": "..." }`
-3. Link the config to your project and copy the connection string
-4. Add `EDGE_CONFIG` to your project's environment variables with that connection string
+1. In Vercel Dashboard → Your Project → **Flags** → Create Flag
+2. Key: `featured-stories`
+3. Value: JSON array of objects `{ "title": "...", "thumbnail": "...", "site": "...", "url": "..." }`
+4. Ensure `FLAGS` env var is set (from `npx vercel env pull`)
 
-Without `EDGE_CONFIG`, the app uses default stories from `lib/featured-stories.ts`.
+Without `FLAGS`, the app uses default stories from `flags.ts`. See `docs/VERCEL_FLAGS_SETUP.md` for full setup.
 
 ## Deploy on Vercel
 

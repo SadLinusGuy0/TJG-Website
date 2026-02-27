@@ -14,7 +14,6 @@
     "@flags-sdk/hypertune": "^0.2.0",
     "@flags-sdk/vercel": "^1.0.1",
     "@vercel/analytics": "^1.5.0",
-    "@vercel/edge-config": "^1.4.0",
     "@vercel/flags-core": "^1.0.1",
     "flags": "^4.0.1",
     "hypertune": "^2.7.2",
