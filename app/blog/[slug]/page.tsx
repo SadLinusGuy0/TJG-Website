@@ -520,7 +520,7 @@ export default async function BlogPost(props: PageProps) {
               "media"
               "content" !important;
             gap: 12px !important;
-            align-items: start !important;
+            align-items: center;
             margin: 12px 0 !important;
           }
           .body-text .wp-block-media-text .wp-block-media-text__media { grid-area: media !important; }
