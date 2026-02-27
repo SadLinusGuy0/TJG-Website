@@ -34,7 +34,6 @@ This project uses [Vercel Flags](https://vercel.com/docs/flags) for feature flag
 |------|-----|-------------|
 | Blog | `blog-enabled` | Shows/hides the blog in navigation and controls access to blog pages |
 | Popular Stories | `popular-stories-enabled` | Shows/hides the Popular Stories section on the home page |
-| Featured Stories | `featured-stories` | Content for the Popular Stories section – JSON array of `{ title, thumbnail, site, url }` |
 
 ## Behavior
 
