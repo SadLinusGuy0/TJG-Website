@@ -101,6 +101,11 @@ function processContentWithEmbeds(content: string): string {
         <iframe src="https://www.google.com/maps/embed?pb=!4v1770888651744!6m8!1m7!1sEwCt_D72XDwMDw9hPLITpA!2m2!1d50.75749897863136!2d-2.076732351682947!3f240.73163492541838!4f-6.098039408431191!5f0.7820865974627469" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
     `,
+    'figma-prototype': `
+      <div class="figma-wrapper">
+        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="800" src="https://embed.figma.com/proto/mCrLxeF17zSEftGhESIB9u/One-UI-Setup-Flow?page-id=1%3A2&node-id=14-772&p=f&viewport=-4%2C538%2C0.13&scaling=min-zoom&content-scaling=responsive&starting-point-node-id=14%3A772&embed-host=share" allowfullscreen></iframe>
+      </div>
+    `,
     // Add more embeds here as needed
     // 'story-mindmap': '<div class="embed-wrapper">...</div>',
   };
