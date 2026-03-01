@@ -1296,6 +1296,7 @@ button.list4:hover {
   }
   body.nav-collapsed .main-content {
       margin-left: 8% !important;
+      width: 80% !important;
       padding-left: 10px !important;
       padding-right: 10px !important;
   }
