@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useMemo } from 'react';
 import { enhanceImageCompare } from './enhanceImageCompare';
+import { enhanceAudioPlayer } from './enhanceAudioPlayer';
 import WordCounter from './WordCounter';
 import NativeSlideshow, { type SlideData } from './NativeSlideshow';
 
@@ -104,6 +105,9 @@ export default function BlogContent({ content }: BlogContentProps) {
     });
 
     enhanceImageCompare(contentRef.current);
+    const cleanupAudio = enhanceAudioPlayer(contentRef.current);
+
+    return () => { cleanupAudio(); };
   }, [content]);
 
   const bodyTextStyle: React.CSSProperties = {

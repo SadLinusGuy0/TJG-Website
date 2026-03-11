@@ -795,6 +795,152 @@ export default async function BlogPost(props: PageProps) {
               height: 300px !important;
             }
           }
+
+          /* Custom Audio Player */
+          .body-text figure.wp-block-audio[data-custom-player] {
+            margin: 12px 0 !important;
+            padding: 0 !important;
+          }
+          .body-text .custom-audio-player {
+            background: var(--container-background) !important;
+            border-radius: var(--br-lg) !important;
+            padding: 16px 20px !important;
+            margin: 0 !important;
+            font-family: 'One UI Sans', sans-serif !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+          }
+          .body-text .custom-audio-player__title {
+            color: var(--primary) !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            line-height: 1.3 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          .body-text .custom-audio-player__progress {
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+          }
+          .body-text .custom-audio-player__time,
+          .body-text .custom-audio-player__duration {
+            color: var(--secondary) !important;
+            font-size: 12px !important;
+            font-family: 'One UI Sans', sans-serif !important;
+            font-variant-numeric: tabular-nums !important;
+            min-width: 36px !important;
+            user-select: none !important;
+          }
+          .body-text .custom-audio-player__time {
+            text-align: right !important;
+          }
+          .body-text .custom-audio-player__duration {
+            text-align: left !important;
+          }
+          .body-text .custom-audio-player__seek,
+          .body-text .custom-audio-player__vol-slider {
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            height: 4px !important;
+            border-radius: 2px !important;
+            outline: none !important;
+            cursor: pointer !important;
+            border: none !important;
+            background: linear-gradient(
+              to right,
+              var(--accent) 0%,
+              var(--accent) var(--range-pct, 0%),
+              rgba(127, 127, 127, 0.25) var(--range-pct, 0%),
+              rgba(127, 127, 127, 0.25) 100%
+            ) !important;
+          }
+          .body-text .custom-audio-player__seek {
+            flex: 1 !important;
+          }
+          .body-text .custom-audio-player__vol-slider {
+            width: 80px !important;
+          }
+          .body-text .custom-audio-player__seek::-webkit-slider-thumb,
+          .body-text .custom-audio-player__vol-slider::-webkit-slider-thumb {
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            width: 14px !important;
+            height: 14px !important;
+            border-radius: 50% !important;
+            background: var(--accent) !important;
+            border: 2px solid var(--container-background) !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+            cursor: pointer !important;
+          }
+          .body-text .custom-audio-player__seek::-moz-range-thumb,
+          .body-text .custom-audio-player__vol-slider::-moz-range-thumb {
+            width: 14px !important;
+            height: 14px !important;
+            border-radius: 50% !important;
+            background: var(--accent) !important;
+            border: 2px solid var(--container-background) !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+            cursor: pointer !important;
+          }
+          .body-text .custom-audio-player__seek::-moz-range-track,
+          .body-text .custom-audio-player__vol-slider::-moz-range-track {
+            height: 4px !important;
+            border-radius: 2px !important;
+            background: transparent !important;
+          }
+          .body-text .custom-audio-player__controls {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+          }
+          .body-text .custom-audio-player__right-controls {
+            display: flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+          }
+          .body-text .custom-audio-player__volume {
+            display: flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+          }
+          .body-text .custom-audio-player__btn {
+            background: none !important;
+            border: none !important;
+            padding: 8px !important;
+            margin: 0 !important;
+            cursor: pointer !important;
+            color: var(--primary) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 50% !important;
+            width: 40px !important;
+            height: 40px !important;
+            transition: background 0.15s ease !important;
+            flex-shrink: 0 !important;
+          }
+          .body-text .custom-audio-player__btn:hover {
+            background: rgba(127, 127, 127, 0.12) !important;
+          }
+          .body-text .custom-audio-player__btn svg {
+            width: 22px !important;
+            height: 22px !important;
+            display: block !important;
+          }
+          .body-text .custom-audio-player__play svg {
+            width: 26px !important;
+            height: 26px !important;
+          }
+          .body-text .custom-audio-player__download {
+            text-decoration: none !important;
+          }
+          @media (max-width: 480px) {
+            .body-text .custom-audio-player__vol-slider {
+              width: 56px !important;
+            }
+          }
         `
       }} />
       <div className="containers">
