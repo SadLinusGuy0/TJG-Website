@@ -206,21 +206,28 @@ export default function PostSearchBar() {
             width: 80% !important;
             padding-left: 10px !important;
             padding-right: 10px !important;
+            margin-left: 10% !important;
           }
 
           @media (min-width: 700px) {
             .post-search-positioner {
-              margin-left: % !important;
+              margin-left: 35% !important;
+            }
+            body.nav-collapsed .post-search-positioner {
+              margin-left: 15% !important;
             }
           }
-14
+
           @media (max-width: 699px) {
             .post-search-positioner {
               margin-left: auto !important;
               margin-right: auto !important;
               width: 100% !important;
               padding: 0 16px !important;
-              max-width: 510px;
+              max-width: 510px !important;
+            }
+            body.nav-collapsed .post-search-anchor {
+              width: 100% !important;
             }
           }
 
