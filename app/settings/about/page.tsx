@@ -129,7 +129,7 @@ function AboutContent() {
                 }}
                 onClick={handleVersionTap}
               >
-                <AnimatedText text="Version 3.0" />
+                <AnimatedText text="Version 3.2" />
               </div>
             </div>
           </div>
