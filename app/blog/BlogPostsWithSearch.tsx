@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { WPPost, getFeaturedImageUrl } from '../../lib/wordpress';
 import { useBlogSearch } from './BlogSearchWrapper';
@@ -161,18 +162,16 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
                             overflow: 'hidden',
                             position: 'relative'
                           }}>
-                            <img 
-                              src={featuredImageUrl} 
+                            <Image
+                              src={featuredImageUrl}
                               alt="Featured image"
-                              style={{
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'cover',
-                                display: 'block'
-                              }}
+                              fill
+                              sizes="120px"
+                              style={{ objectFit: 'cover' }}
+                              unoptimized={false}
                             />
                           </div>
-                          
+
                           <div className="blog-card-mobile-thumbnail" style={{ 
                             width: '100%',
                             height: '120px',
@@ -181,15 +180,13 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
                             position: 'relative',
                             marginBottom: '12px'
                           }}>
-                            <img 
-                              src={featuredImageUrl} 
+                            <Image
+                              src={featuredImageUrl}
                               alt="Featured image"
-                              style={{
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'cover',
-                                display: 'block'
-                              }}
+                              fill
+                              sizes="100vw"
+                              style={{ objectFit: 'cover' }}
+                              unoptimized={false}
                             />
                           </div>
                         </>

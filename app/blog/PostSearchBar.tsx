@@ -203,7 +203,7 @@ export default function PostSearchBar() {
           }
 
           body.nav-collapsed .post-search-positioner {
-            margin-left: 8% !important;
+            margin-left: 14% !important;
             width: 80% !important;
             padding-left: 10px !important;
             padding-right: 10px !important;

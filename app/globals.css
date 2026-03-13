@@ -143,6 +143,8 @@ a {
     --light-primary: #000;
     --light-selected: #EFEFEF;
     --accent: #387aff;
+    --skeleton-base: rgba(128, 128, 128, 0.10);
+    --skeleton-highlight: rgba(128, 128, 128, 0.22);
 
     --gap-xl: 10px;
     --gap-xll: 20px;
@@ -174,6 +176,24 @@ a {
 }
 
 /* === index.css is imported above and contains all component/utility styles === */
+
+/* Skeleton loading shimmer */
+@keyframes skeleton-shimmer {
+    0%   { background-position: -600px 0; }
+    100% { background-position: 600px 0; }
+}
+
+.skeleton-box {
+    background: linear-gradient(
+        90deg,
+        var(--skeleton-base) 25%,
+        var(--skeleton-highlight) 50%,
+        var(--skeleton-base) 75%
+    );
+    background-size: 1200px 100%;
+    animation: skeleton-shimmer 1.4s ease-in-out infinite;
+    border-radius: var(--br-sm);
+}
 
 .settings-container {
     min-height: 100vh;
