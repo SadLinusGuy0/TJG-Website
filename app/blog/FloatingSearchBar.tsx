@@ -50,7 +50,6 @@ export default function FloatingSearchBar({ categories }: FloatingSearchBarProps
 
           .floating-search-positioner {
             position: relative;
-            margin-left: 35%;
             width: 64%;
             padding-left: 20px;
             padding-right: 20px;
@@ -58,10 +57,15 @@ export default function FloatingSearchBar({ categories }: FloatingSearchBarProps
           }
 
           body.nav-collapsed .floating-search-positioner {
-            margin-left: 14% !important;
             width: 80% !important;
             padding-left: 10px !important;
             padding-right: 10px !important;
+          }
+
+          @media (min-width: 700px) {
+            .floating-search-positioner {
+              margin-left: 14% !important;
+            }
           }
 
           @media (max-width: 699px) {
@@ -69,11 +73,13 @@ export default function FloatingSearchBar({ categories }: FloatingSearchBarProps
               bottom: 100px;
             }
             .floating-search-positioner {
-              margin-left: auto !important;
               margin-right: auto !important;
               width: 100% !important;
               padding: 0 16px !important;
-              max-width: 386px;
+              max-width: 360px;
+            }
+            body.nav-collapsed .floating-search-positioner {
+              margin-left: auto;
             }
           }
 
