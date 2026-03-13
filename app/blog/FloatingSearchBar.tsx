@@ -80,12 +80,7 @@ export default function FloatingSearchBar({ categories }: FloatingSearchBarProps
               margin-right: auto !important;
               width: 100% !important;
               padding: 0 16px !important;
-              max-width: 386px;
-            }
-            body.nav-collapsed .floating-search-positioner {
-              margin-left: auto;
-              margin-right: auto;
-              max-width: 360px;
+              max-width: 510px;
             }
           }
 

@@ -254,14 +254,14 @@ a {
     html[data-corner-smoothing="true"] .accent-color-swatch,
     html[data-corner-smoothing="true"] .top-app-bar-icon,
     html[data-corner-smoothing="true"] .top-app-bar-icon *,
-    html[data-corner-smoothing="true"] .mobile-nav,
     html[data-corner-smoothing="true"] .floating-search-bar,
     html[data-corner-smoothing="true"] .floating-search-bar *,
     html[data-corner-smoothing="true"] .post-search-bar,
     html[data-corner-smoothing="true"] .post-search-bar *,
-    html[data-corner-smoothing="true"] .mobile-nav *,
     html[data-corner-smoothing="true"] .loading-dots,
-    html[data-corner-smoothing="true"] .loading-dots * {
+    html[data-corner-smoothing="true"] .loading-dots *,
+    html[data-corner-smoothing="true"] .mobile-nav-bar,
+    html[data-corner-smoothing="true"] .mobile-nav-bar * {
         corner-shape: round;
     }
 }
