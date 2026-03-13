@@ -210,17 +210,17 @@ export default function PostSearchBar() {
 
           @media (min-width: 700px) {
             .post-search-positioner {
-              margin-left: 14% !important;
+              margin-left: % !important;
             }
           }
-
+14
           @media (max-width: 699px) {
             .post-search-positioner {
               margin-left: auto !important;
               margin-right: auto !important;
               width: 100% !important;
               padding: 0 16px !important;
-              max-width: 386px;
+              max-width: 510px;
             }
           }
 
