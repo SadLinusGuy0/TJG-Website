@@ -237,6 +237,8 @@ a {
     html[data-corner-smoothing="true"] .mobile-nav,
     html[data-corner-smoothing="true"] .floating-search-bar,
     html[data-corner-smoothing="true"] .floating-search-bar *,
+    html[data-corner-smoothing="true"] .post-search-bar,
+    html[data-corner-smoothing="true"] .post-search-bar *,
     html[data-corner-smoothing="true"] .mobile-nav *,
     html[data-corner-smoothing="true"] .loading-dots,
     html[data-corner-smoothing="true"] .loading-dots * {

@@ -7,7 +7,7 @@ import LightboxClient from "../../components/LightboxClient";
 import Link from "next/link";
 import TableOfContents from "../TableOfContents";
 import BlogContent from "../BlogContent";
-import JumpToNextHeading from "../JumpToNextHeading";
+import PostSearchBar from "../PostSearchBar";
 
 export const revalidate = 60;
 
@@ -1105,7 +1105,7 @@ export default async function BlogPost(props: PageProps) {
            <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
              <BlogContent content={processContentWithEmbeds(content.content?.rendered || '')} />
            </div>
-          <JumpToNextHeading />
+          <PostSearchBar />
         </div>
       </div>
       <LightboxClient />

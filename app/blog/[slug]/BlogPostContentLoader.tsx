@@ -8,7 +8,7 @@ import LightboxClient from '../../components/LightboxClient';
 import Link from 'next/link';
 import TableOfContents from '../TableOfContents';
 import BlogContent from '../BlogContent';
-import JumpToNextHeading from '../JumpToNextHeading';
+import PostSearchBar from '../PostSearchBar';
 import { LoadingDots } from '../../components/LoadingAnim';
 import { notFound } from 'next/navigation';
 
@@ -910,7 +910,7 @@ export default function BlogPostContentLoader() {
           <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%', overflow: 'hidden' }}>
             <BlogContent content={processContentWithEmbeds(content.content?.rendered || '')} />
           </div>
-          <JumpToNextHeading />
+          <PostSearchBar />
         </div>
       </div>
       <LightboxClient />

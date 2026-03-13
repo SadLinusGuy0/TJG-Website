@@ -1602,9 +1602,14 @@ button.list4:hover {
   z-index: 1000;
   border-radius: var(--br-xl);
   box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   gap: 4px;
   padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
   box-sizing: border-box;
+}
+
+html[data-theme="dark"] .mobile-nav {
+  border-color: rgba(255, 255, 255, 0.1);
 }
 .mobile-nav.with-blog {
   padding: 8px 10px !important;
