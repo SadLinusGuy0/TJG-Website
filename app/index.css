@@ -3736,7 +3736,7 @@ justify-content: center;
   height: var(--loading-size, 56px);
   position: relative;
   display: inline-block;
-  animation: loading-rotate var(--loading-speed, 900ms) linear infinite;
+  animation: loading-rotate calc(var(--loading-speed, 900ms) * 3.5) linear infinite;
 }
 
 .loading-dots-centered {

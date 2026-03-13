@@ -29,3 +29,18 @@ export const popularStoriesEnabled = flag({
     { value: false, label: 'Disabled' },
   ],
 });
+
+/**
+ * Year Slider feature flag - controls the Year 1/Year 2 toggle on the blog page.
+ * When disabled, only Year 1 posts are shown without the toggle.
+ */
+export const yearSliderEnabled = flag({
+  key: 'year-slider-enabled',
+  adapter: vercelAdapter(),
+  defaultValue: true,
+  description: 'Show the Year 1/Year 2 slider toggle on the blog page',
+  options: [
+    { value: true, label: 'Enabled' },
+    { value: false, label: 'Disabled' },
+  ],
+});

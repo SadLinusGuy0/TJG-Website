@@ -7,6 +7,7 @@ export type WPPost = {
   excerpt: { rendered: string };
   content?: { rendered: string };
   categories?: number[];
+  tags?: number[];
   type?: string;
   featured_media?: number;
   jetpack_featured_media_url?: string;
@@ -27,6 +28,12 @@ export type WPPost = {
 };
 
 export type WPCategory = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
+export type WPTag = {
   id: number;
   name: string;
   slug: string;
@@ -61,11 +68,11 @@ function ensureConfigured(): void {
   }
 }
 
-export async function fetchPosts(params: { page?: number; perPage?: number; categoryId?: number } = {}): Promise<WPPost[]> {
-  const { page = 1, perPage = 10, categoryId } = params;
+export async function fetchPosts(params: { page?: number; perPage?: number; categoryId?: number; tagId?: number } = {}): Promise<WPPost[]> {
+  const { page = 1, perPage = 10, categoryId, tagId } = params;
   const { isWPCom, wpJsonBase, wpComBase } = getApiUrls();
   const base = isWPCom ? wpComBase : wpJsonBase;
-  const url = `${base}/posts?_fields=id,date,slug,link,title,excerpt,content,categories,featured_media,jetpack_featured_media_url&_embed=wp:featuredmedia&page=${page}&per_page=${perPage}&orderby=date&order=desc${categoryId ? `&categories=${categoryId}` : ""}`;
+  const url = `${base}/posts?_fields=id,date,slug,link,title,excerpt,content,categories,tags,featured_media,jetpack_featured_media_url&_embed=wp:featuredmedia&page=${page}&per_page=${perPage}&orderby=date&order=desc${categoryId ? `&categories=${categoryId}` : ""}${tagId ? `&tags=${tagId}` : ""}`;
   
   console.log('Fetching posts from URL:', url);
   console.log('API Base URL:', apiBaseUrl);
@@ -118,6 +125,21 @@ export async function fetchCategories(): Promise<WPCategory[]> {
   
   const res = await fetch(url, fetchOptions);
   if (!res.ok) throw new Error(`Failed to fetch categories: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchTags(): Promise<WPTag[]> {
+  const { isWPCom, wpJsonBase, wpComBase } = getApiUrls();
+  const base = isWPCom ? wpComBase : wpJsonBase;
+  const url = `${base}/tags?_fields=id,name,slug&per_page=100`;
+
+  const isServer = typeof window === 'undefined';
+  const fetchOptions: RequestInit = isServer
+    ? { next: { revalidate: 60 } }
+    : { cache: 'no-store' };
+
+  const res = await fetch(url, fetchOptions);
+  if (!res.ok) throw new Error(`Failed to fetch tags: ${res.status}`);
   return res.json();
 }
 
