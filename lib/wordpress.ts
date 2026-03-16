@@ -77,6 +77,22 @@ export async function fetchPosts(params: { page?: number; perPage?: number; cate
   return res.json();
 }
 
+/** Fetches all posts by paginating through the API. Use when you need the complete set (e.g. blog index). */
+export async function fetchAllPosts(params: { categoryId?: number; tagId?: number } = {}): Promise<WPPost[]> {
+  const perPage = 100; // WordPress REST API max
+  const all: WPPost[] = [];
+  let page = 1;
+
+  while (true) {
+    const batch = await fetchPosts({ page, perPage, ...params });
+    all.push(...batch);
+    if (batch.length < perPage) break;
+    page++;
+  }
+
+  return all;
+}
+
 export async function fetchPages(params: { page?: number; perPage?: number } = {}): Promise<WPPost[]> {
   const { page = 1, perPage = 10 } = params;
   const { isWPCom, wpJsonBase, wpComBase } = getApiUrls();

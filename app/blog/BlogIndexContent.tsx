@@ -1,4 +1,4 @@
-import { fetchPosts, fetchCategories, fetchTags, WPPost, WPCategory, WPTag } from "../../lib/wordpress";
+import { fetchAllPosts, fetchCategories, fetchTags, WPPost, WPCategory, WPTag } from "../../lib/wordpress";
 import { getYearSliderEnabled } from "../../lib/getYearSliderFlag";
 import { BlogSearchProvider } from "./BlogSearchWrapper";
 import BlogPostsWithSearch from "./BlogPostsWithSearch";
@@ -37,15 +37,15 @@ export default async function BlogIndexContent() {
 
   try {
     if (year1Tag) {
-      year1Posts = await fetchPosts({ perPage: 50, tagId: year1Tag.id });
+      year1Posts = await fetchAllPosts({ tagId: year1Tag.id });
     }
 
     if (yearSliderFlag && year2Tag) {
-      year2Posts = await fetchPosts({ perPage: 50, tagId: year2Tag.id });
+      year2Posts = await fetchAllPosts({ tagId: year2Tag.id });
     }
 
     if (!year1Tag && !year2Tag) {
-      year1Posts = await fetchPosts({ perPage: 50 });
+      year1Posts = await fetchAllPosts();
     }
   } catch (error) {
     console.error('Failed to fetch posts:', error);

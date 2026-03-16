@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cache, Suspense } from "react";
 import Image from "next/image";
-import { fetchPosts, fetchPostBySlug, fetchPageBySlug, getFeaturedImageUrlAsync } from "../../../lib/wordpress";
+import { fetchAllPosts, fetchPostBySlug, fetchPageBySlug, getFeaturedImageUrlAsync } from "../../../lib/wordpress";
 import type { WPPost } from "../../../lib/wordpress";
 import { notFound } from "next/navigation";
 import Navigation from "../../components/Navigation";
@@ -16,7 +16,7 @@ export const revalidate = 3600;
 // Pre-build all known post slugs at deploy time; new posts fall back to SSR
 export async function generateStaticParams() {
   try {
-    const posts = await fetchPosts({ perPage: 100 });
+    const posts = await fetchAllPosts();
     return posts.map((post) => ({ slug: post.slug }));
   } catch {
     return [];
