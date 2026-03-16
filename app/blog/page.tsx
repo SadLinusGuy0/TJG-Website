@@ -4,7 +4,7 @@ import Navigation from "../components/Navigation";
 import BlogIndexContent from "./BlogIndexContent";
 import BlogIndexSkeleton from "./BlogIndexSkeleton";
 
-export const revalidate = parseInt(process.env.WP_REVALIDATE_SECONDS ?? "300", 10);
+export const revalidate = 300;
 
 export default function BlogIndex() {
   return (
