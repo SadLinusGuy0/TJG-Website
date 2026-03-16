@@ -119,6 +119,12 @@ function processContentWithEmbeds(content: string): string {
         <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="800" src="https://embed.figma.com/proto/mCrLxeF17zSEftGhESIB9u/One-UI-Setup-Flow?page-id=1%3A2&node-id=14-772&p=f&viewport=-4%2C538%2C0.13&scaling=min-zoom&content-scaling=responsive&starting-point-node-id=14%3A772&embed-host=share" allowfullscreen></iframe>
       </div>
     `,
+    'fmp-pitch-embed': `
+      <div class="figma-wrapper">
+        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/slides/tovF81JJShr77717qeJ883/FMP-Proposal?node-id=0-1&embed-host=share" allowfullscreen></iframe>
+      </div>
+    `,
+    
     // Add more embeds here as needed
     // 'story-mindmap': '<div class="embed-wrapper">...</div>',
   };
