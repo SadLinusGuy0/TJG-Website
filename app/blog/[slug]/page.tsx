@@ -11,7 +11,7 @@ import TableOfContents from "../TableOfContents";
 import BlogContent from "../BlogContent";
 import PostSearchBar from "../PostSearchBar";
 
-export const revalidate = 3600;
+export const revalidate = parseInt(process.env.WP_REVALIDATE_SECONDS ?? "300", 10);
 
 // Pre-build all known post slugs at deploy time; new posts fall back to SSR
 export async function generateStaticParams() {

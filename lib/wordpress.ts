@@ -40,6 +40,8 @@ export type WPTag = {
 };
 
 const apiBaseUrl = (process.env.WP_API_URL?.replace(/\/$/, "") || "https://joshskinnertjg.wordpress.com");
+/** Revalidate every N seconds. 300 = 5 min. Set WP_REVALIDATE_SECONDS=0 to disable cache. */
+const revalidateSeconds = parseInt(process.env.WP_REVALIDATE_SECONDS ?? "300", 10);
 
 function getApiUrls() {
   ensureConfigured();
@@ -72,7 +74,8 @@ export async function fetchPosts(params: { page?: number; perPage?: number; cate
   const base = isWPCom ? wpComBase : wpJsonBase;
   const url = `${base}/posts?_fields=id,date,slug,link,title,excerpt,content,categories,tags,featured_media,jetpack_featured_media_url&_embed=wp:featuredmedia&page=${page}&per_page=${perPage}&orderby=date&order=desc${categoryId ? `&categories=${categoryId}` : ""}${tagId ? `&tags=${tagId}` : ""}`;
 
-  const res = await fetch(url, { next: { revalidate: 3600 } });
+  const cacheOpt = revalidateSeconds === 0 ? { cache: "no-store" as const } : { next: { revalidate: revalidateSeconds } };
+  const res = await fetch(url, cacheOpt);
   if (!res.ok) throw new Error(`Failed to fetch posts: ${res.status}`);
   return res.json();
 }
@@ -98,7 +101,8 @@ export async function fetchPages(params: { page?: number; perPage?: number } = {
   const { isWPCom, wpJsonBase, wpComBase } = getApiUrls();
   const base = isWPCom ? wpComBase : wpJsonBase;
   const url = `${base}/pages?_fields=id,date,slug,link,title,excerpt&page=${page}&per_page=${perPage}`;
-  const res = await fetch(url, { next: { revalidate: 3600 } });
+  const cacheOpt = revalidateSeconds === 0 ? { cache: "no-store" as const } : { next: { revalidate: revalidateSeconds } };
+  const res = await fetch(url, cacheOpt);
   if (!res.ok) throw new Error(`Failed to fetch pages: ${res.status}`);
   return res.json();
 }
@@ -107,7 +111,8 @@ export async function fetchCategories(): Promise<WPCategory[]> {
   const { isWPCom, wpJsonBase, wpComBase } = getApiUrls();
   const base = isWPCom ? wpComBase : wpJsonBase;
   const url = `${base}/categories?_fields=id,name,slug`;
-  const res = await fetch(url, { next: { revalidate: 3600 } });
+  const cacheOpt = revalidateSeconds === 0 ? { cache: "no-store" as const } : { next: { revalidate: revalidateSeconds } };
+  const res = await fetch(url, cacheOpt);
   if (!res.ok) throw new Error(`Failed to fetch categories: ${res.status}`);
   return res.json();
 }
@@ -116,7 +121,8 @@ export async function fetchTags(): Promise<WPTag[]> {
   const { isWPCom, wpJsonBase, wpComBase } = getApiUrls();
   const base = isWPCom ? wpComBase : wpJsonBase;
   const url = `${base}/tags?_fields=id,name,slug&per_page=100`;
-  const res = await fetch(url, { next: { revalidate: 3600 } });
+  const cacheOpt = revalidateSeconds === 0 ? { cache: "no-store" as const } : { next: { revalidate: revalidateSeconds } };
+  const res = await fetch(url, cacheOpt);
   if (!res.ok) throw new Error(`Failed to fetch tags: ${res.status}`);
   return res.json();
 }
@@ -126,7 +132,8 @@ export async function fetchPostBySlug(slug: string): Promise<WPPost | null> {
   const base = isWPCom ? wpComBase : wpJsonBase;
   const url = `${base}/posts?slug=${encodeURIComponent(slug)}&_fields=id,date,slug,link,title,excerpt,content,categories,featured_media,jetpack_featured_media_url&_embed=wp:featuredmedia`;
 
-  const res = await fetch(url, { next: { revalidate: 3600 } });
+  const cacheOpt = revalidateSeconds === 0 ? { cache: "no-store" as const } : { next: { revalidate: revalidateSeconds } };
+  const res = await fetch(url, cacheOpt);
   if (!res.ok) throw new Error(`Failed to fetch post: ${res.status}`);
   const data: WPPost[] = await res.json();
   return data[0] || null;
@@ -137,7 +144,8 @@ export async function fetchPageBySlug(slug: string): Promise<WPPost | null> {
   const base = isWPCom ? wpComBase : wpJsonBase;
   const url = `${base}/pages?slug=${encodeURIComponent(slug)}&_fields=id,date,slug,link,title,excerpt,content,featured_media,jetpack_featured_media_url&_embed=wp:featuredmedia`;
 
-  const res = await fetch(url, { next: { revalidate: 3600 } });
+  const cacheOpt = revalidateSeconds === 0 ? { cache: "no-store" as const } : { next: { revalidate: revalidateSeconds } };
+  const res = await fetch(url, cacheOpt);
   if (!res.ok) throw new Error(`Failed to fetch page: ${res.status}`);
   const data: WPPost[] = await res.json();
   return data[0] || null;
@@ -149,7 +157,8 @@ export async function fetchMediaById(mediaId: number): Promise<{ source_url?: st
   const url = `${base}/media/${mediaId}`;
 
   try {
-    const res = await fetch(url, { next: { revalidate: 3600 } });
+    const cacheOpt = revalidateSeconds === 0 ? { cache: "no-store" as const } : { next: { revalidate: revalidateSeconds } };
+    const res = await fetch(url, cacheOpt);
     if (!res.ok) return null;
     return res.json();
   } catch {
