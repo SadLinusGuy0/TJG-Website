@@ -11,7 +11,8 @@ import TableOfContents from "../TableOfContents";
 import BlogContent from "../BlogContent";
 import PostSearchBar from "../PostSearchBar";
 import { FMP_SLUG, extractH1Sections } from "../../../lib/fmpSections";
-import { featureFlags } from "../../../lib/featureFlags";
+import { getInPostSearchBarEnabled } from "../../../lib/getInPostSearchBarFlag";
+import { getInPostSearchBarFmpEnabled } from "../../../lib/getInPostSearchBarFmpFlag";
 
 export const revalidate = 300;
 
@@ -1030,7 +1031,11 @@ async function BlogPostBody({ slug }: { slug: string }) {
   const content = await getContentForSlug(slug);
   if (!content) return notFound();
 
-  const featuredImageUrl = await getFeaturedImageUrlAsync(content);
+  const [featuredImageUrl, searchBarEnabled, searchBarFmpEnabled] = await Promise.all([
+    getFeaturedImageUrlAsync(content),
+    getInPostSearchBarEnabled(),
+    getInPostSearchBarFmpEnabled(),
+  ]);
 
   return (
     <>
@@ -1179,7 +1184,7 @@ async function BlogPostBody({ slug }: { slug: string }) {
           <BlogContent content={processContentWithEmbeds(content.content?.rendered || '')} />
         </div>
       )}
-      {(featureFlags.inPostSearchBarEnabled || (featureFlags.inPostSearchBarFmpEnabled && slug === FMP_SLUG)) && (
+      {(searchBarEnabled || (searchBarFmpEnabled && slug === FMP_SLUG)) && (
         <PostSearchBar />
       )}
     </>

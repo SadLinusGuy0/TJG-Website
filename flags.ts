@@ -31,6 +31,35 @@ export const popularStoriesEnabled = flag({
 });
 
 /**
+ * In-post search bar feature flag - shows the search bar on every blog post.
+ */
+export const inPostSearchBarEnabled = flag({
+  key: 'in-post-search-bar-enabled',
+  adapter: vercelAdapter(),
+  defaultValue: false,
+  description: 'Show the in-post search bar on every blog post',
+  options: [
+    { value: true, label: 'Enabled' },
+    { value: false, label: 'Disabled' },
+  ],
+});
+
+/**
+ * In-post search bar FMP flag - shows the search bar on the FMP post only.
+ * Only used when in-post-search-bar-enabled is false.
+ */
+export const inPostSearchBarFmpEnabled = flag({
+  key: 'in-post-search-bar-fmp-enabled',
+  adapter: vercelAdapter(),
+  defaultValue: true,
+  description: 'Show the in-post search bar on the FMP post only',
+  options: [
+    { value: true, label: 'Enabled' },
+    { value: false, label: 'Disabled' },
+  ],
+});
+
+/**
  * Year Slider feature flag - controls the Year 1/Year 2 toggle on the blog page.
  * When disabled, only Year 1 posts are shown without the toggle.
  */
