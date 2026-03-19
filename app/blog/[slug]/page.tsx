@@ -124,7 +124,11 @@ function processContentWithEmbeds(content: string): string {
         <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="600" src="https://embed.figma.com/deck/tovF81JJShr77717qeJ883/FMP-Proposal?node-id=1-28&p=f&viewport=493%2C302%2C0.3&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&embed-host=share" allowfullscreen></iframe>
       </div>
     `,
-    
+    'fmp-mindmap': `
+      <div class="figma-wrapper">
+      <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/B9dwuVyhvqnIYIyi2NypXd/FMP-Moodboard?node-id=0-1&embed-host=share" allowfullscreen></iframe>
+      </div>
+    `,
     // Add more embeds here as needed
     // 'story-mindmap': '<div class="embed-wrapper">...</div>',
   };
