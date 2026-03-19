@@ -869,7 +869,9 @@ async function SectionBody({ slug, section }: { slug: string; section: string })
   if (!matched) return notFound();
 
   const featuredImageUrl = await getFeaturedImageUrlAsync(content);
-  const sectionContent = processContentWithEmbeds(matched.html);
+  const sectionContent = processContentWithEmbeds(
+    matched.html.replace(/^<h1[^>]*>[\s\S]*?<\/h1>\s*/i, '')
+  );
 
   return (
     <>
