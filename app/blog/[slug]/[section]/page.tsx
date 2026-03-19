@@ -1,35 +1,22 @@
 import type { Metadata } from "next";
 import { cache, Suspense } from "react";
 import Image from "next/image";
-import { fetchAllPosts, fetchPostBySlug, fetchPageBySlug, getFeaturedImageUrlAsync } from "../../../lib/wordpress";
-import type { WPPost } from "../../../lib/wordpress";
+import { fetchPostBySlug, fetchPageBySlug, getFeaturedImageUrlAsync } from "../../../../lib/wordpress";
+import type { WPPost } from "../../../../lib/wordpress";
 import { notFound } from "next/navigation";
-import Navigation from "../../components/Navigation";
-import LightboxClient from "../../components/LightboxClient";
+import Navigation from "../../../components/Navigation";
+import LightboxClient from "../../../components/LightboxClient";
 import Link from "next/link";
-import TableOfContents from "../TableOfContents";
-import BlogContent from "../BlogContent";
-import PostSearchBar from "../PostSearchBar";
-import { FMP_SLUG, extractH1Sections } from "../../../lib/fmpSections";
-import { featureFlags } from "../../../lib/featureFlags";
+import TableOfContents from "../../TableOfContents";
+import BlogContent from "../../BlogContent";
+import { FMP_SLUG, extractH1Sections } from "../../../../lib/fmpSections";
 
 export const revalidate = 300;
 
-// Pre-build all known post slugs at deploy time; new posts fall back to SSR
-export async function generateStaticParams() {
-  try {
-    const posts = await fetchAllPosts();
-    return posts.map((post) => ({ slug: post.slug }));
-  } catch {
-    return [];
-  }
-}
-
 interface PageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; section: string }>;
 }
 
-// Cached so generateMetadata and BlogPostBody share one fetch per request
 const getContentForSlug = cache(async (slug: string): Promise<WPPost | null> => {
   try {
     const post = await fetchPostBySlug(slug);
@@ -44,7 +31,7 @@ const getContentForSlug = cache(async (slug: string): Promise<WPPost | null> => 
 function stripHtmlAndDecode(value?: string): string {
   if (!value) return "";
   const withoutTags = value.replace(/<[^>]*>/g, " ");
-  const decoded = withoutTags
+  return withoutTags
     .replace(/&nbsp;/gi, " ")
     .replace(/&amp;/gi, "&")
     .replace(/&quot;/gi, '"')
@@ -56,93 +43,38 @@ function stripHtmlAndDecode(value?: string): string {
     .replace(/&#x([0-9a-f]+);/gi, (_, code: string) => String.fromCharCode(parseInt(code, 16)))
     .replace(/\s+/g, " ")
     .trim();
-  return decoded;
-}
-
-function truncate(value: string, maxLength = 160): string {
-  if (value.length <= maxLength) return value;
-  const sliceLength = Math.max(0, maxLength - 3);
-  return `${value.slice(0, sliceLength).trimEnd()}...`;
-}
-
-function getFeaturedImageAltText(post: WPPost): string | undefined {
-  return post._embedded?.['wp:featuredmedia']?.[0]?.alt_text?.trim() || undefined;
 }
 
 function countWords(content: string): number {
   const text = stripHtmlAndDecode(content);
   if (!text) return 0;
-  const words = text.trim().split(/\s+/).filter(word => word.length > 0);
-  return words.length;
+  return text.trim().split(/\s+/).filter(word => word.length > 0).length;
 }
 
 function countWordsAboveMarker(content: string, marker: string): number {
   const idx = content.indexOf(marker);
   if (idx === -1) return 0;
-  const contentAbove = content.substring(0, idx);
-  return countWords(contentAbove);
+  return countWords(content.substring(0, idx));
 }
 
 function processContentWithEmbeds(content: string): string {
-  // Define embed mappings - keyphrase to embed HTML
   const embedMap: Record<string, string> = {
-    'story-mindmap': `
-      <div class="figma-wrapper">
-        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/JFh3pE1bu21Ad74KUibZug/Unit-4---Storytelling?node-id=0-1&embed-host=share" allowfullscreen></iframe>
-      </div>
-    `,
-    'gdd-results': `
-      <div class="figma-wrapper">
-        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://forms.office.com/Pages/AnalysisPage.aspx?AnalyzerToken=Svsr8OjeTHhXu0MsS6MiWcVyyd1M3BbD&id=0JsvSSEvbkyhotOQXlsYcw32xjNmmxRNrKwdPrtn9KRUM0s1OEFZWFZLOUNLNklZRThROFc3U1ZQOS4u" allowfullscreen></iframe>
-      </div>
-    `,
-    'story-results': `
-      <div class="figma-wrapper">
-        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://forms.office.com/Pages/AnalysisPage.aspx?AnalyzerToken=etTOj7nVjPy1Bt4CWPzEeAfutjr6345P&id=0JsvSSEvbkyhotOQXlsYcw32xjNmmxRNrKwdPrtn9KRUNlJPUklRRlRXSDVCUkRCVUZMT1RINTRJTS4u" allowfullscreen></iframe>
-      </div>
-    `,
-    'google-doc-name': `
-      <div class="figma-wrapper">
-        <iframe src="https://docs.google.com/document/d/e/2PACX-1vRZR3r5IoEGDi0okO7E-GHVfb9yPtadU3H8v6urWH_bvpmze1qFmm_OZL_63jmjGfiG7ML-ahpuoSPC/pub?embedded=true"></iframe>
-      </div>
-    `,
-    'figma-ux-workflow': `
-      <div class="figma-wrapper">
-        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/S8xl4FFql9Q6V4O3S0Zayw/UX-Workflow?node-id=0-1&embed-host=share" allowfullscreen></iframe>
-      </div>
-    `,
-    'maps-embed': `
-      <div class="figma-wrapper">
-        <iframe src="https://www.google.com/maps/embed?pb=!4v1770888651744!6m8!1m7!1sEwCt_D72XDwMDw9hPLITpA!2m2!1d50.75749897863136!2d-2.076732351682947!3f240.73163492541838!4f-6.098039408431191!5f0.7820865974627469" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-      </div>
-    `,
-    'figma-prototype': `
-      <div class="figma-wrapper">
-        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="800" src="https://embed.figma.com/proto/mCrLxeF17zSEftGhESIB9u/One-UI-Setup-Flow?page-id=1%3A2&node-id=14-772&p=f&viewport=-4%2C538%2C0.13&scaling=min-zoom&content-scaling=responsive&starting-point-node-id=14%3A772&embed-host=share" allowfullscreen></iframe>
-      </div>
-    `,
-    'fmp-pitch-embed': `
-      <div class="figma-wrapper">
-        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="600" src="https://embed.figma.com/deck/tovF81JJShr77717qeJ883/FMP-Proposal?node-id=1-28&p=f&viewport=493%2C302%2C0.3&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&embed-host=share" allowfullscreen></iframe>
-      </div>
-    `,
-    'fmp-mindmap': `
-      <div class="figma-wrapper">
-      <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/B9dwuVyhvqnIYIyi2NypXd/FMP-Moodboard?node-id=0-1&embed-host=share" allowfullscreen></iframe>
-      </div>
-    `,
-    // Add more embeds here as needed
-    // 'story-mindmap': '<div class="embed-wrapper">...</div>',
+    'story-mindmap': `<div class="figma-wrapper"><iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/JFh3pE1bu21Ad74KUibZug/Unit-4---Storytelling?node-id=0-1&embed-host=share" allowfullscreen></iframe></div>`,
+    'gdd-results': `<div class="figma-wrapper"><iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://forms.office.com/Pages/AnalysisPage.aspx?AnalyzerToken=Svsr8OjeTHhXu0MsS6MiWcVyyd1M3BbD&id=0JsvSSEvbkyhotOQXlsYcw32xjNmmxRNrKwdPrtn9KRUM0s1OEFZWFZLOUNLNklZRThROFc3U1ZQOS4u" allowfullscreen></iframe></div>`,
+    'story-results': `<div class="figma-wrapper"><iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://forms.office.com/Pages/AnalysisPage.aspx?AnalyzerToken=etTOj7nVjPy1Bt4CWPzEeAfutjr6345P&id=0JsvSSEvbkyhotOQXlsYcw32xjNmmxRNrKwdPrtn9KRUNlJPUklRRlRXSDVCUkRCVUZMT1RINTRJTS4u" allowfullscreen></iframe></div>`,
+    'google-doc-name': `<div class="figma-wrapper"><iframe src="https://docs.google.com/document/d/e/2PACX-1vRZR3r5IoEGDi0okO7E-GHVfb9yPtadU3H8v6urWH_bvpmze1qFmm_OZL_63jmjGfiG7ML-ahpuoSPC/pub?embedded=true"></iframe></div>`,
+    'figma-ux-workflow': `<div class="figma-wrapper"><iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/S8xl4FFql9Q6V4O3S0Zayw/UX-Workflow?node-id=0-1&embed-host=share" allowfullscreen></iframe></div>`,
+    'maps-embed': `<div class="figma-wrapper"><iframe src="https://www.google.com/maps/embed?pb=!4v1770888651744!6m8!1m7!1sEwCt_D72XDwMDw9hPLITpA!2m2!1d50.75749897863136!2d-2.076732351682947!3f240.73163492541838!4f-6.098039408431191!5f0.7820865974627469" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>`,
+    'figma-prototype': `<div class="figma-wrapper"><iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="800" src="https://embed.figma.com/proto/mCrLxeF17zSEftGhESIB9u/One-UI-Setup-Flow?page-id=1%3A2&node-id=14-772&p=f&viewport=-4%2C538%2C0.13&scaling=min-zoom&content-scaling=responsive&starting-point-node-id=14%3A772&embed-host=share" allowfullscreen></iframe></div>`,
+    'fmp-pitch-embed': `<div class="figma-wrapper"><iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="600" src="https://embed.figma.com/deck/tovF81JJShr77717qeJ883/FMP-Proposal?node-id=1-28&p=f&viewport=493%2C302%2C0.3&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&embed-host=share" allowfullscreen></iframe></div>`,
+    'fmp-mindmap': `<div class="figma-wrapper"><iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/B9dwuVyhvqnIYIyi2NypXd/FMP-Moodboard?node-id=0-1&embed-host=share" allowfullscreen></iframe></div>`,
   };
 
   let processedContent = content;
-
-  // Replace each keyphrase with its corresponding embed
   Object.entries(embedMap).forEach(([keyphrase, embedHtml]) => {
     processedContent = processedContent.replace(keyphrase, embedHtml);
   });
 
-  // Replace "word-count" with a placeholder for the WordCounter component (rendered in BlogContent)
   const wordCountMarker = "word-count";
   const wordCounterPlaceholder = "{{WORD_COUNTER}}";
   if (processedContent.includes(wordCountMarker)) {
@@ -155,67 +87,28 @@ function processContentWithEmbeds(content: string): string {
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   try {
-    const { slug } = await props.params;
+    const { slug, section } = await props.params;
     const content = await getContentForSlug(slug);
-
     if (!content) {
-      return {
-        title: "Blog Post | That Josh Guy",
-        description: "Explore the latest stories from That Josh Guy.",
-      };
+      return { title: "Section | That Josh Guy" };
     }
 
-    const titleText = stripHtmlAndDecode(content.title?.rendered) || "That Josh Guy";
-    const excerptText = stripHtmlAndDecode(content.excerpt?.rendered);
-    const fallbackDescription = stripHtmlAndDecode(content.content?.rendered);
-    const description = truncate(excerptText || fallbackDescription || "Explore the latest stories from That Josh Guy.");
-    
-    let featuredImageUrl: string | null = null;
-    try {
-      featuredImageUrl = await getFeaturedImageUrlAsync(content);
-    } catch (error) {
-      console.error('Error fetching featured image:', error);
-    }
-    
-    const imageAlt = getFeaturedImageAltText(content) || titleText;
+    const sections = extractH1Sections(content.content?.rendered || '');
+    const matched = sections.find(s => s.slug === section);
+    const sectionTitle = matched?.title || section;
+    const postTitle = stripHtmlAndDecode(content.title?.rendered) || "That Josh Guy";
 
     return {
-      title: `${titleText} | That Josh Guy`,
-      description,
-      openGraph: {
-        title: `${titleText} | That Josh Guy`,
-        description,
-        type: "article",
-        images: featuredImageUrl
-          ? [
-              {
-                url: featuredImageUrl,
-                alt: imageAlt,
-              },
-            ]
-          : undefined,
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: `${titleText} | That Josh Guy`,
-        description,
-        images: featuredImageUrl ? [featuredImageUrl] : undefined,
-      },
-      alternates: {
-        canonical: content.link || undefined,
-      },
+      title: `${sectionTitle} - ${postTitle} | That Josh Guy`,
+      description: `${sectionTitle} section of ${postTitle}.`,
     };
-  } catch (error) {
-    console.error('Error generating metadata:', error);
-    return {
-      title: "Blog Post | That Josh Guy",
-      description: "Explore the latest stories from That Josh Guy.",
-    };
+  } catch {
+    return { title: "Section | That Josh Guy" };
   }
 }
 
-export default async function BlogPost(props: PageProps) {
-  const { slug } = await props.params;
+export default async function SectionPage(props: PageProps) {
+  const { slug, section } = await props.params;
 
   return (
     <div className="index">
@@ -247,15 +140,12 @@ export default async function BlogPost(props: PageProps) {
             margin: 12px 0 !important;
             padding: 0 !important;
           }
-          /* Word counter: full width like images, slightly wider than body text */
           .body-text .list3.word-counter {
             margin: 12px 0 !important;
             width: 100% !important;
             max-width: 100% !important;
             box-sizing: border-box !important;
           }
-
-          /* Jetpack Image Compare (before/after) -> custom slider */
           .body-text .ko-compare {
             margin: 24px 0 !important;
           }
@@ -334,16 +224,12 @@ export default async function BlogPost(props: PageProps) {
             overflow-x: auto !important;
             white-space: pre-wrap !important;
           }
-
-          /* Blog content heading sizes and spacing */
           .body-text h1 { font-size: 32px !important; margin: 14px 10px 8px 10px !important;}
           .body-text h2 { font-size: 28px !important; margin: 12px 10px 6px 10px !important; }
           .body-text h3 { font-size: 24px !important; margin: 10px 10px 6px 10px !important; }
           .body-text h4 { font-size: 20px !important; margin: 8px 10px 4px 10px !important; }
           .body-text h5 { font-size: 18px !important; margin: 8px 10px 4px 10px !important; }
           .body-text h6 { font-size: 16px !important; margin: 6px 10px 4px 10px !important; }
-
-          /* WordPress block alignment */
           .body-text .has-text-align-center { text-align: center !important; }
           .body-text .has-text-align-right { text-align: right !important; }
           .body-text .has-text-align-left { text-align: left !important; }
@@ -351,12 +237,8 @@ export default async function BlogPost(props: PageProps) {
           .body-text .aligncenter { text-align: center !important; }
           .body-text .alignright { text-align: right !important; }
           .body-text .alignleft { text-align: left !important; }
-
-          /* Lists spacing */
           .body-text ul, .body-text ol { margin: 6px 0 8px 20px !important; }
           .body-text li { margin: 4px 0 !important; }
-
-          /* Gutenberg Gallery */
           .body-text .wp-block-gallery,
           .body-text .blocks-gallery-grid {
             display: grid !important;
@@ -366,7 +248,6 @@ export default async function BlogPost(props: PageProps) {
             padding: 0 !important;
             list-style: none !important;
           }
-          /* Respect Gutenberg-provided column counts */
           .body-text .wp-block-gallery.has-1-columns,
           .body-text .blocks-gallery-grid.has-1-columns,
           .body-text .wp-block-gallery.columns-1,
@@ -399,8 +280,6 @@ export default async function BlogPost(props: PageProps) {
           .body-text .blocks-gallery-grid.has-8-columns,
           .body-text .wp-block-gallery.columns-8,
           .body-text .blocks-gallery-grid.columns-8 { grid-template-columns: repeat(8, 1fr) !important; }
-
-          /* Native slideshow images should not inherit blog image overrides */
           .body-text .native-slideshow img {
             margin: 0 !important;
             border-radius: var(--br-9xl) !important;
@@ -439,14 +318,10 @@ export default async function BlogPost(props: PageProps) {
             text-align: center !important;
             margin-top: 6px !important;
           }
-
-          /* Center all image captions */
           .body-text figcaption {
             text-align: center !important;
             color: var(--secondary) !important;
           }
-
-          /* Classic [gallery] shortcode */
           .body-text .gallery {
             display: grid !important;
             grid-template-columns: repeat(2, 1fr) !important;
@@ -470,7 +345,6 @@ export default async function BlogPost(props: PageProps) {
             text-align: center !important;
             margin: 6px 10px !important;
           }
-          /* Map classic gallery columns to CSS grid */
           .body-text .gallery.gallery-columns-1 { grid-template-columns: repeat(1, 1fr) !important; }
           .body-text .gallery.gallery-columns-2 { grid-template-columns: repeat(2, 1fr) !important; }
           .body-text .gallery.gallery-columns-3 { grid-template-columns: repeat(3, 1fr) !important; }
@@ -480,15 +354,11 @@ export default async function BlogPost(props: PageProps) {
           .body-text .gallery.gallery-columns-7 { grid-template-columns: repeat(7, 1fr) !important; }
           .body-text .gallery.gallery-columns-8 { grid-template-columns: repeat(8, 1fr) !important; }
           .body-text .gallery.gallery-columns-9 { grid-template-columns: repeat(9, 1fr) !important; }
-
-          /* Ensure gallery images don't inherit default image margins */
           .body-text .wp-block-gallery img,
           .body-text .blocks-gallery-item img,
           .body-text .gallery .gallery-item img {
             margin: 0 !important;
           }
-
-          /* Lightbox overlay */
           .lightbox-overlay {
             position: fixed !important;
             inset: 0 !important;
@@ -527,8 +397,6 @@ export default async function BlogPost(props: PageProps) {
           .lightbox-caption-wrap { position: absolute !important; left: 0 !important; right: 0 !important; bottom: 0 !important; padding: 24px !important; pointer-events: none !important; z-index: 2 !important; }
           .lightbox-caption-gradient { position: absolute !important; left: 0 !important; right: 0 !important; bottom: 0 !important; height: 40% !important; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%) !important; }
           .lightbox-caption { position: relative !important; max-width: min(900px, 90%) !important; color: #fff !important; font-size: 0.95rem !important; line-height: 1.4 !important; text-shadow: 0 1px 2px rgba(0,0,0,0.4) !important; }
-
-          /* WordPress Media & Text */
           .body-text .wp-block-media-text {
             display: grid !important;
             grid-template-columns: 1fr !important;
@@ -571,8 +439,6 @@ export default async function BlogPost(props: PageProps) {
             text-align: center !important;
             margin-top: 6px !important;
           }
-
-          /* WordPress Dividers */
           .body-text hr,
           .body-text .wp-block-separator,
           .body-text .wp-block-separator.is-style-dots,
@@ -604,8 +470,6 @@ export default async function BlogPost(props: PageProps) {
             margin-right: 0 !important;
             width: 100% !important;
           }
-
-          /* WordPress Quote Blocks */
           .body-text .wp-block-quote {
             position: relative !important;
             margin: 20px 10px !important;
@@ -672,8 +536,6 @@ export default async function BlogPost(props: PageProps) {
           .body-text .wp-block-quote .wp-block-quote__citation::before {
             content: '— ' !important;
           }
-
-          /* WordPress Tables */
           .body-text table,
           .body-text .wp-block-table {
             width: 100% !important;
@@ -725,7 +587,6 @@ export default async function BlogPost(props: PageProps) {
           .body-text .wp-block-table tbody tr:nth-child(even):hover {
             background: rgba(127, 127, 127, 0.08) !important;
           }
-          /* Responsive table wrapper */
           .body-text .wp-block-table__wrapper {
             overflow-x: auto !important;
             overflow-y: hidden !important;
@@ -742,11 +603,9 @@ export default async function BlogPost(props: PageProps) {
             width: 100% !important;
             display: table !important;
           }
-          /* Ensure regular tables are constrained */
           .body-text table {
             display: table !important;
           }
-          /* Ensure table cells wrap text to prevent overflow */
           .body-text table th,
           .body-text table td,
           .body-text .wp-block-table th,
@@ -754,7 +613,6 @@ export default async function BlogPost(props: PageProps) {
             word-wrap: break-word !important;
             overflow-wrap: break-word !important;
           }
-          /* For WordPress figure wrappers containing tables */
           .body-text figure.wp-block-table {
             overflow-x: auto !important;
             -webkit-overflow-scrolling: touch !important;
@@ -778,8 +636,6 @@ export default async function BlogPost(props: PageProps) {
               padding: 10px 12px !important;
             }
           }
-
-          /* Embed wrappers (Figma, Google, Maps, etc.) */
           .body-text .figma-wrapper,
           .body-text .embed-wrapper,
           .body-text .wp-block-embed {
@@ -806,8 +662,6 @@ export default async function BlogPost(props: PageProps) {
               height: 300px !important;
             }
           }
-
-          /* Custom Audio Player */
           .body-text figure.wp-block-audio[data-custom-player] {
             margin: 12px 0 !important;
             padding: 0 !important;
@@ -955,45 +809,30 @@ export default async function BlogPost(props: PageProps) {
         `
       }} />
       <div className="containers">
-        {/* Navigation renders immediately — client component, no server data */}
         <Navigation hideMobile={true} />
         <div className="main-content">
-          {/* Post body streams in; skeleton fallback keeps layout stable */}
-          <Suspense fallback={<BlogPostBodySkeleton />}>
-            <BlogPostBody slug={slug} />
+          <Suspense fallback={<SectionSkeleton />}>
+            <SectionBody slug={slug} section={section} />
           </Suspense>
         </div>
       </div>
-      {/* LightboxClient is a client component — renders immediately */}
       <LightboxClient />
     </div>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Skeleton shown while the post is fetching
-// ---------------------------------------------------------------------------
-function BlogPostBodySkeleton() {
+function SectionSkeleton() {
   return (
     <>
-      {/* Top app bar */}
       <div className="top-app-bar">
         <div className="top-app-bar-container back-only">
-          <Link href="/blog" className="top-app-bar-icon" aria-label="Back">
+          <Link href={`/blog/${FMP_SLUG}`} className="top-app-bar-icon" aria-label="Back">
             <svg width="10" height="20" viewBox="0 0 10 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path fillRule="evenodd" clipRule="evenodd" d="M9.56416 2.15216C9.85916 1.86116 9.86316 1.38616 9.57216 1.09116C9.28116 0.797162 8.80616 0.794162 8.51116 1.08516L0.733159 8.75516C0.397159 9.08616 0.212158 9.52916 0.212158 10.0012C0.212158 10.4722 0.397159 10.9162 0.733159 11.2472L8.51116 18.9162C8.65716 19.0592 8.84716 19.1312 9.03816 19.1312C9.23116 19.1312 9.42516 19.0562 9.57216 18.9082C9.86316 18.6132 9.85916 18.1382 9.56416 17.8472L1.78716 10.1782C1.72116 10.1152 1.71216 10.0402 1.71216 10.0012C1.71216 9.96216 1.72116 9.88616 1.78716 9.82316L9.56416 2.15216Z" fill="var(--primary)"/>
             </svg>
           </Link>
-          {/* TOC pill placeholder */}
-          <div
-            className="skeleton-box"
-            style={{ width: 80, height: 28, marginLeft: 'auto', borderRadius: 'var(--br-xl)' }}
-            aria-hidden="true"
-          />
         </div>
       </div>
-
-      {/* Hero image skeleton */}
       <div
         className="skeleton-box"
         style={{
@@ -1005,11 +844,9 @@ function BlogPostBodySkeleton() {
         }}
         aria-hidden="true"
       />
-
-      {/* Article body skeleton */}
       <div className="container settings" style={{ padding: 0, marginBottom: 0, maxWidth: '100%' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '0 10px' }}>
-          {[90, 100, 85, 100, 75, 100, 60, 100, 88, 100, 70].map((w, i) => (
+          {[90, 100, 85, 100, 75, 100, 60].map((w, i) => (
             <div
               key={i}
               className="skeleton-box"
@@ -1023,30 +860,30 @@ function BlogPostBodySkeleton() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Async component: fetches the post and renders the full content
-// ---------------------------------------------------------------------------
-async function BlogPostBody({ slug }: { slug: string }) {
+async function SectionBody({ slug, section }: { slug: string; section: string }) {
   const content = await getContentForSlug(slug);
   if (!content) return notFound();
 
+  const sections = extractH1Sections(content.content?.rendered || '');
+  const matched = sections.find(s => s.slug === section);
+  if (!matched) return notFound();
+
   const featuredImageUrl = await getFeaturedImageUrlAsync(content);
+  const sectionContent = processContentWithEmbeds(matched.html);
 
   return (
     <>
-      {/* Top app bar with real back button + Table of Contents */}
       <div className="top-app-bar">
         <div className="top-app-bar-container back-only">
-          <Link href="/blog" className="top-app-bar-icon" aria-label="Back">
+          <Link href={`/blog/${slug}`} className="top-app-bar-icon" aria-label="Back">
             <svg width="10" height="20" viewBox="0 0 10 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path fillRule="evenodd" clipRule="evenodd" d="M9.56416 2.15216C9.85916 1.86116 9.86316 1.38616 9.57216 1.09116C9.28116 0.797162 8.80616 0.794162 8.51116 1.08516L0.733159 8.75516C0.397159 9.08616 0.212158 9.52916 0.212158 10.0012C0.212158 10.4722 0.397159 10.9162 0.733159 11.2472L8.51116 18.9162C8.65716 19.0592 8.84716 19.1312 9.03816 19.1312C9.23116 19.1312 9.42516 19.0562 9.57216 18.9082C9.86316 18.6132 9.85916 18.1382 9.56416 17.8472L1.78716 10.1782C1.72116 10.1152 1.71216 10.0402 1.71216 10.0012C1.71216 9.96216 1.72116 9.88616 1.78716 9.82316L9.56416 2.15216Z" fill="var(--primary)"/>
             </svg>
           </Link>
-          <TableOfContents content={content.content?.rendered || ''} />
+          <TableOfContents content={matched.html} />
         </div>
       </div>
 
-      {/* Featured Image with Title Overlay */}
       <div style={{
         position: 'relative',
         width: '100%',
@@ -1088,7 +925,7 @@ async function BlogPostBody({ slug }: { slug: string }) {
                   textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)',
                   lineHeight: '1.2',
                   fontFamily: 'One UI Sans'
-                }} dangerouslySetInnerHTML={{ __html: content.title.rendered }} />
+                }}>{matched.title}</h1>
                 <div style={{
                   fontSize: '1rem',
                   opacity: 0.9,
@@ -1100,9 +937,9 @@ async function BlogPostBody({ slug }: { slug: string }) {
                   alignItems: 'center',
                   flexWrap: 'wrap'
                 }}>
-                  <span>{new Date(content.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                  <span style={{ opacity: 0.7 }}>•</span>
-                  <span>{countWords(content.content?.rendered || '').toLocaleString()} words</span>
+                  <span>{stripHtmlAndDecode(content.title?.rendered)}</span>
+                  <span style={{ opacity: 0.7 }}>·</span>
+                  <span>{countWords(matched.html).toLocaleString()} words</span>
                 </div>
               </div>
             </div>
@@ -1141,7 +978,7 @@ async function BlogPostBody({ slug }: { slug: string }) {
                   marginBottom: '8px',
                   lineHeight: '1.2',
                   fontFamily: 'One UI Sans'
-                }} dangerouslySetInnerHTML={{ __html: content.title.rendered }} />
+                }}>{matched.title}</h1>
                 <div style={{
                   fontSize: '1rem',
                   opacity: 0.7,
@@ -1152,100 +989,19 @@ async function BlogPostBody({ slug }: { slug: string }) {
                   alignItems: 'center',
                   flexWrap: 'wrap'
                 }}>
-                  <span>{new Date(content.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                  <span style={{ opacity: 0.5 }}>•</span>
-                  <span>{countWords(content.content?.rendered || '').toLocaleString()} words</span>
+                  <span>{stripHtmlAndDecode(content.title?.rendered)}</span>
+                  <span style={{ opacity: 0.5 }}>·</span>
+                  <span>{countWords(matched.html).toLocaleString()} words</span>
                 </div>
               </div>
             </div>
-            <div style={{
-              position: 'absolute',
-              top: 0, left: 0, right: 0, bottom: 0,
-              background: `
-                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 60%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)
-              `,
-              pointerEvents: 'none'
-            }} />
           </div>
         )}
       </div>
 
-      {slug === FMP_SLUG ? (
-        <FmpSectionButtons content={content.content?.rendered || ''} slug={slug} />
-      ) : (
-        <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
-          <BlogContent content={processContentWithEmbeds(content.content?.rendered || '')} />
-        </div>
-      )}
-      {(featureFlags.inPostSearchBarEnabled || (featureFlags.inPostSearchBarFmpEnabled && slug === FMP_SLUG)) && (
-        <PostSearchBar />
-      )}
-    </>
-  );
-}
-
-function FmpSectionButtons({ content, slug }: { content: string; slug: string }) {
-  const sections = extractH1Sections(content);
-
-  if (sections.length === 0) {
-    return (
       <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
-        <BlogContent content={processContentWithEmbeds(content)} />
+        <BlogContent content={sectionContent} />
       </div>
-    );
-  }
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
-      {sections.map((section) => (
-        <Link
-          key={section.slug}
-          href={`/blog/${slug}/${section.slug}`}
-          className="list3"
-          style={{
-            justifyContent: 'space-between',
-            textDecoration: 'none',
-            fontWeight: 600,
-            fontFamily: "'One UI Sans', sans-serif",
-            width: '100%',
-            maxWidth: '100%',
-            boxSizing: 'border-box',
-          }}
-        >
-          <span style={{ fontFamily: "'One UI Sans', sans-serif" }}>{section.title}</span>
-          {/* Section icon — replace the <path> below to change the icon */}
-          <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0, opacity: 0.45 }}>
-            <path fillRule="evenodd" clipRule="evenodd" d="M0.43584 1.15216C0.14084 0.861162 0.13684 0.386162 0.42784 0.091162C0.71884 -0.202838 1.19384 -0.205838 1.48884 0.085162L9.26684 7.75516C9.60284 8.08616 9.78784 8.52916 9.78784 9.00116C9.78784 9.47216 9.60284 9.91616 9.26684 10.2472L1.48884 17.9162C1.34284 18.0592 1.15284 18.1312 0.96184 18.1312C0.76884 18.1312 0.57484 18.0562 0.42784 17.9082C0.13684 17.6132 0.14084 17.1382 0.43584 16.8472L8.21284 9.17816C8.27884 9.11516 8.28784 9.04016 8.28784 9.00116C8.28784 8.96216 8.27884 8.88616 8.21284 8.82316L0.43584 1.15216Z" fill="currentColor"/>
-          </svg>
-        </Link>
-      ))}
-
-      {/* Disclaimer — update name and email below */}
-      <div style={{
-        marginTop: 24,
-        padding: '20px 20px',
-        borderRadius: 'var(--br-9xl)',
-        background: 'var(--container-background)',
-        fontFamily: "'One UI Sans', sans-serif",
-        fontSize: '0.875rem',
-        lineHeight: 1.6,
-        color: 'var(--secondary)',
-        width: '100%',
-        maxWidth: '100%',
-        boxSizing: 'border-box',
-      }}>
-        <p style={{ margin: '0 0 8px 0' }}>
-          I confirm that the following website and associated work within is all my own work and does not include any work completed by anyone else other than myself.
-        </p>
-        <p style={{ margin: 0, fontWeight: 600, color: 'var(--primary)' }}>
-          Josh Skinner<br />
-          <a href="mailto:10694305@student.bpc.ac.uk" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
-            10694305@student.bpc.ac.uk
-          </a>
-        </p>
-      </div>
-    </div>
+    </>
   );
 }
