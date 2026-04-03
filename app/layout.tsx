@@ -3,6 +3,7 @@ import { BlogFlagProvider } from './components/BlogFlagProvider';
 import { getBlogEnabled } from '../lib/getBlogFlag';
 import './globals.css';
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import ProgressiveBlur from './components/ProgressiveBlur';
 
 export const metadata = {
@@ -102,6 +103,7 @@ export default async function RootLayout({
           </BlogFlagProvider>
         </ThemeProvider>
         <Analytics />
+        <SpeedInsights />
         <svg width="0" height="0" style={{position:'absolute'}}>
           <filter id="progressive-blur" x="0" y="0" width="100%" height="100%">
             <feGaussianBlur stdDeviation="0 24" edgeMode="duplicate"/>
