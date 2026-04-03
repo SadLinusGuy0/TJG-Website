@@ -1,0 +1,15 @@
+{
+  "cleanUrls": true,
+  "git": {
+    "deploymentEnabled": {
+      "legacy": false
+    }
+  },
+  "redirects": [
+    {
+      "source": "/discord",
+      "destination": "https://discord.com/dRhJ78YH6M",
+      "permanent": false
+    }
+  ]
+}
