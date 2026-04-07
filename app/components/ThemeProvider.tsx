@@ -259,12 +259,12 @@ export function ThemeProvider({ children, liquidGlassAvailable = false }: ThemeP
       const value = getIconLiquidGlassFilter();
       icons.forEach((el) => {
         el.style.backdropFilter = value;
-        (el.style as Record<string, unknown>)['webkitBackdropFilter'] = value;
+        (el.style as unknown as Record<string, unknown>)['webkitBackdropFilter'] = value;
       });
     } else {
       icons.forEach((el) => {
         el.style.backdropFilter = '';
-        (el.style as Record<string, unknown>)['webkitBackdropFilter'] = '';
+        (el.style as unknown as Record<string, unknown>)['webkitBackdropFilter'] = '';
       });
     }
   }, [liquidGlass, liquidGlassAvailable]);
