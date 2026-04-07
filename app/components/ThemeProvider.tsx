@@ -1,7 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useCallback, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { getIconLiquidGlassFilter, supportsBackdropFilterUrl } from '../utils/liquidGlass';
 
 type Theme = 'light' | 'dark' | 'auto';
 export type AccentColor = 'blue' | 'coral' | 'mint' | 'lilac' | 'mono';
@@ -58,6 +59,9 @@ interface ThemeContextType {
   cornerSmoothing: boolean;
   setCornerSmoothing: (enabled: boolean) => void;
   cornerSmoothingSupported: boolean;
+  liquidGlass: boolean;
+  setLiquidGlass: (enabled: boolean) => void;
+  liquidGlassAvailable: boolean;
   hydrated: boolean;
 }
 
@@ -71,6 +75,9 @@ const ThemeContext = createContext<ThemeContextType>({
   cornerSmoothing: false,
   setCornerSmoothing: () => {},
   cornerSmoothingSupported: false,
+  liquidGlass: false,
+  setLiquidGlass: () => {},
+  liquidGlassAvailable: false,
   hydrated: false,
 });
 
@@ -107,6 +114,14 @@ const getInitialCornerSmoothing = (): boolean => {
   return true;
 };
 
+const getInitialLiquidGlass = (): boolean => {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('liquidGlass');
+    return saved === 'true';
+  }
+  return false;
+};
+
 const getInitialAccentColor = (): AccentColor => {
   if (typeof window !== 'undefined') {
     const saved = localStorage.getItem('accentColor') as AccentColor;
@@ -137,12 +152,18 @@ function updateThemeColorMeta(resolvedTheme: 'dark' | 'light', accent: AccentCol
   }
 }
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
+interface ThemeProviderProps {
+  children: React.ReactNode;
+  liquidGlassAvailable?: boolean;
+}
+
+export function ThemeProvider({ children, liquidGlassAvailable = false }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [accentColor, setAccentColorState] = useState<AccentColor>(getInitialAccentColor);
   const [blurEnabled, setBlurEnabledState] = useState<boolean>(getInitialBlurEnabled);
   const [cornerSmoothing, setCornerSmoothingState] = useState<boolean>(getInitialCornerSmoothing);
   const [cornerSmoothingSupported] = useState<boolean>(getCornerSmoothingSupported);
+  const [liquidGlass, setLiquidGlassState] = useState<boolean>(getInitialLiquidGlass);
   const [hydrated, setHydrated] = useState(false);
   const pathname = usePathname();
 
@@ -228,7 +249,30 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setHydrated(true);
     document.documentElement.dataset.cornerSmoothing = cornerSmoothing.toString();
+    document.documentElement.dataset.liquidGlass = (liquidGlassAvailable && liquidGlass).toString();
   }, []);
+
+  const applyIconLiquidGlass = useCallback(() => {
+    const isActive = liquidGlassAvailable && liquidGlass && supportsBackdropFilterUrl();
+    const icons = document.querySelectorAll<HTMLElement>('.top-app-bar-icon');
+    if (isActive) {
+      const value = getIconLiquidGlassFilter();
+      icons.forEach((el) => {
+        el.style.backdropFilter = value;
+        el.style.webkitBackdropFilter = value;
+      });
+    } else {
+      icons.forEach((el) => {
+        el.style.backdropFilter = '';
+        el.style.webkitBackdropFilter = '';
+      });
+    }
+  }, [liquidGlass, liquidGlassAvailable]);
+
+  useEffect(() => {
+    requestAnimationFrame(applyIconLiquidGlass);
+  }, [applyIconLiquidGlass, pathname]);
+
   if (!hydrated) return null;
 
   const setAccentColor = (color: AccentColor) => {
@@ -250,8 +294,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('cornerSmoothing', enabled.toString());
   };
 
+  const setLiquidGlass = (enabled: boolean) => {
+    setLiquidGlassState(enabled);
+    document.documentElement.dataset.liquidGlass = (liquidGlassAvailable && enabled).toString();
+    localStorage.setItem('liquidGlass', enabled.toString());
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, hydrated }}>
+    <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, liquidGlass, setLiquidGlass, liquidGlassAvailable, hydrated }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -874,6 +874,16 @@ button.list4:hover {
   width: 100%;
 }
 
+.stack-section {
+  width: 100%;
+  margin: 60px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  overflow: hidden;
+}
+
 .top-app-bar-container {
   display: flex !important;
   flex-direction: row;
@@ -970,6 +980,33 @@ button.list4:hover {
   backdrop-filter: blur(15px) !important;
   -webkit-backdrop-filter: blur(15px) !important;
   border-color: color-mix(in srgb, var(--primary) 30%, transparent 70%);
+}
+
+/* Liquid glass variant for top-app-bar icons */
+html[data-liquid-glass="true"] .top-app-bar-icon {
+  background: color-mix(in srgb, var(--container-background) 55%, rgba(255,255,255,0.3)) !important;
+  border: 1px solid rgba(255,255,255,0.45) !important;
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,0.5),
+    inset 0 -1px 1px rgba(0,0,0,0.04),
+    0 2px 8px rgba(0,0,0,0.08) !important;
+}
+
+html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon {
+  background: color-mix(in srgb, var(--container-background) 50%, rgba(255,255,255,0.06)) !important;
+  border-color: rgba(255,255,255,0.18) !important;
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,0.1),
+    inset 0 -1px 1px rgba(0,0,0,0.15),
+    0 2px 8px rgba(0,0,0,0.25) !important;
+}
+
+html[data-liquid-glass="true"] .top-app-bar-icon:hover {
+  background: color-mix(in srgb, var(--container-background) 65%, rgba(255,255,255,0.35)) !important;
+}
+
+html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
+  background: color-mix(in srgb, var(--container-background) 60%, rgba(255,255,255,0.1)) !important;
 }
 
 .title-container {
@@ -1392,70 +1429,64 @@ button.list4:hover {
   font-family: 'One UI Sans';
 }
 
-.stack-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  width: 100%;
-  padding: 0 0 20px 0;
-}
-
-.stack-chip {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-  background-color: var(--container-background);
-  border-radius: var(--br-lg);
-  transition: all 0.2s ease;
-  cursor: default;
-}
-
-.stack-chip:hover {
-  background-color: var(--container-background-hover, color-mix(in srgb, var(--container-background) 95%, var(--accent) 5%));
-  border-color: color-mix(in srgb, var(--primary) 25%, transparent 75%);
-  transform: translateY(-1px);
-}
-
-.stack-chip-icon {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--accent);
+.beta-chip {
+  background-color: #E0632D;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-right: 8px;
+  display: inline-block;
   font-family: 'One UI Sans';
-  min-width: 24px;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  letter-spacing: 0.02em;
   flex-shrink: 0;
 }
 
-.stack-chip-icon svg {
-  width: 100%;
-  height: 100%;
-  display: block;
+
+/* ============================================
+   STACK ICON GRID (hidden, kept for reference)
+   ============================================ */
+
+.stack-icon-grid {
+  display: none;
 }
 
-.stack-chip-name {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--primary);
-  font-family: 'One UI Sans';
+.stack-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: default;
+  position: relative;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stack-icon:hover {
+  transform: scale(1.12);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.stack-icon-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 16px;
 }
 
 /* ============================================
-   STACK MARQUEE STYLES
+   STACK MARQUEE (all breakpoints)
    ============================================ */
 
 .stack-marquee-wrapper {
   position: relative;
   width: 100%;
   overflow: hidden;
-  padding: 10px 0 20px 0;
+  padding: 24px 0;
 }
 
-/* Gradient masks on left and right */
 .stack-marquee-wrapper::before,
 .stack-marquee-wrapper::after {
   content: '';
@@ -1480,7 +1511,7 @@ button.list4:hover {
 .stack-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 30s linear infinite;
+  animation: stack-marquee-scroll 25s linear infinite;
 }
 
 .stack-marquee:hover {
@@ -1489,28 +1520,42 @@ button.list4:hover {
 
 .stack-marquee-content {
   display: flex;
-  gap: 12px;
-  padding-right: 12px;
+  gap: 16px;
+  padding-right: 16px;
 }
 
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+@keyframes stack-marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
-/* Reduce speed on mobile for better readability */
 @media screen and (max-width: 699px) {
-  .stack-marquee {
-    animation-duration: 20s;
+  .stack-marquee-wrapper {
+    padding: 16px 0;
   }
-  
+
   .stack-marquee-wrapper::before,
   .stack-marquee-wrapper::after {
     width: 40px;
+  }
+
+  .stack-marquee {
+    animation-duration: 20s;
+  }
+
+  .stack-marquee-content {
+    gap: 12px;
+    padding-right: 12px;
+  }
+
+  .stack-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+  }
+
+  .stack-icon-image {
+    border-radius: 13px;
   }
 }
 
@@ -1608,6 +1653,22 @@ button.list4:hover {
 
   .mobile-nav-tab--active .mobile-nav-label {
     font-weight: 500;
+  }
+
+  /* Liquid glass variant */
+  .mobile-nav-bar--liquid-glass {
+    background: color-mix(in srgb, var(--container-background) 50%, transparent);
+    border-color: rgba(255,255,255,0.25);
+    box-shadow:
+      0 4px 24px rgba(0,0,0,0.15),
+      inset 0 0 4px rgba(255,255,255,0.3);
+  }
+
+  html[data-theme="dark"] .mobile-nav-bar--liquid-glass {
+    border-color: rgba(255,255,255,0.15);
+    box-shadow:
+      0 4px 24px rgba(0,0,0,0.3),
+      inset 0 0 4px rgba(255,255,255,0.1);
   }
 }
 
@@ -2970,7 +3031,7 @@ justify-content: center;
 
 .journalist-headline {
   font-family: 'One UI Sans', sans-serif;
-  font-size: clamp(32px, 5vw, 64px);
+  font-size: clamp(24px, 5vw, 48px);
   font-weight: 700;
   color: var(--primary);
   line-height: 1.2;
@@ -3042,7 +3103,7 @@ justify-content: center;
 
 .design-projects-stack-headline {
   font-family: 'One UI Sans', sans-serif;
-  font-size: clamp(32px, 5vw, 64px);
+  font-size: clamp(24px, 5vw, 48px);
   font-weight: 700;
   color: var(--primary);
   line-height: 1.2;
@@ -3288,7 +3349,7 @@ justify-content: center;
 
 .featured-stories-headline {
   font-family: 'One UI Sans', sans-serif;
-  font-size: clamp(32px, 5vw, 64px);
+  font-size: clamp(24px, 5vw, 48px);
   font-weight: 700;
   color: var(--primary);
   line-height: 1.2;
@@ -3331,7 +3392,7 @@ justify-content: center;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  padding: 0 40px;
+  padding: 12px 40px;
 }
 
 .featured-stories-scroll::-webkit-scrollbar {
@@ -3343,7 +3404,6 @@ justify-content: center;
   width: 280px;
   background: var(--container-background);
   border-radius: var(--br-lg);
-  overflow: hidden;
   text-decoration: none;
   color: inherit;
   scroll-snap-align: start;
@@ -3360,6 +3420,7 @@ justify-content: center;
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
+  border-radius: var(--br-lg) var(--br-lg) 0 0;
   background: color-mix(in srgb, var(--container-background) 80%, var(--primary) 20%);
 }
 
@@ -3417,7 +3478,7 @@ justify-content: center;
 
   .featured-stories-scroll {
     gap: 12px;
-    padding: 0 20px;
+    padding: 12px 20px;
   }
 
   .story-card {
@@ -3704,5 +3765,566 @@ justify-content: center;
 
 .cta-button:active {
   transform: scale(0.98);
+}
+
+/* =============================================
+   Stats Bar
+   ============================================= */
+
+.stats-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 32px auto 0;
+  padding: 20px 32px;
+  background: var(--container-background);
+  border-radius: var(--br-9xl);
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0 28px;
+}
+
+.stat-number {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.1;
+}
+
+.stat-label {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--secondary);
+  white-space: nowrap;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--selected);
+  flex-shrink: 0;
+}
+
+/* =============================================
+   Design Projects Section
+   ============================================= */
+
+.design-projects-section {
+  width: 100%;
+  margin: 60px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.design-projects-headline {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: clamp(24px, 5vw, 48px);
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1.2;
+  margin: 0;
+  text-align: center;
+}
+
+.design-projects-subtitle {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--secondary);
+  text-align: center;
+  margin: 8px 0 0 0;
+}
+
+.design-projects-grid {
+  display: flex;
+  gap: 16px;
+  padding: 32px 0;
+  width: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.design-projects-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.design-project-card {
+  flex-shrink: 0;
+  width: 300px;
+  background: var(--container-background);
+  border-radius: var(--br-lg);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+}
+
+.design-project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.design-project-thumbnail {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--container-background) 80%, var(--primary) 20%);
+}
+
+.design-project-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.design-project-info {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.design-project-title {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary);
+  line-height: 1.35;
+}
+
+.design-project-tag {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  padding: 4px 10px;
+  border-radius: var(--br-xl);
+  white-space: nowrap;
+}
+
+.design-projects-cta-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 32px;
+  border-radius: var(--br-9xl);
+  background-color: var(--container-background);
+  color: var(--primary);
+  text-decoration: none;
+  font-family: 'One UI Sans';
+  font-weight: 600;
+  font-size: var(--subheading-size);
+  transition: transform 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.design-projects-cta-button svg path {
+  fill: var(--primary);
+}
+
+.design-projects-cta-button:hover {
+  transform: scale(1.02);
+  background-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.design-projects-cta-button:hover svg path {
+  fill: #fff;
+}
+
+.design-projects-cta-button:active {
+  transform: scale(0.98);
+}
+
+/* =============================================
+   Stack Section (enhanced from blank-div)
+   ============================================= */
+
+.stack-text {
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.stack-headline {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1.2;
+  margin: 0;
+  text-align: center;
+}
+
+.stack-subtitle {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--secondary);
+  text-align: center;
+  margin: 8px 0 0 0;
+}
+
+/* =============================================
+   About Section
+   ============================================= */
+
+.about-section {
+  width: 100%;
+  margin: 0 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 32px;
+  box-sizing: border-box;
+  background: var(--container-background);
+  border-radius: 28px;
+}
+
+.about-headline {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1.2;
+  margin: 0 0 16px 0;
+}
+
+.about-text {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--secondary);
+  line-height: 1.7;
+  margin: 0 0 12px 0;
+}
+
+.about-text:last-child {
+  margin-bottom: 0;
+}
+
+/* =============================================
+   Footer
+   ============================================= */
+
+.site-footer {
+  width: 100%;
+  margin: 60px 0 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 40px 0 0 0;
+  border-top: 1px solid var(--selected);
+}
+
+.footer-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.footer-cta-heading {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+  text-align: center;
+}
+
+.footer-email-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: var(--br-9xl);
+  background-color: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  font-family: 'One UI Sans';
+  font-weight: 600;
+  font-size: 16px;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.footer-email-button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.footer-email-button:active {
+  transform: scale(0.98);
+}
+
+.footer-socials {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--container-background);
+  color: var(--secondary);
+  text-decoration: none;
+  transition: transform 0.2s ease-out, background-color 0.2s ease-out, color 0.2s ease-out;
+}
+
+.footer-social-link:hover {
+  transform: scale(1.1);
+  background-color: var(--accent);
+  color: #fff;
+}
+
+.footer-social-link:active {
+  transform: scale(0.95);
+}
+
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-copyright {
+  font-family: 'One UI Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--secondary);
+}
+
+/* =============================================
+   Responsive: New Sections
+   ============================================= */
+
+@media screen and (max-width: 900px) {
+  .design-project-card {
+    width: 260px;
+  }
+}
+
+@media screen and (max-width: 699px) {
+  .stats-bar {
+    padding: 16px 16px;
+    border-radius: var(--br-lg);
+    width: 100%;
+  }
+
+  .stat-item {
+    padding: 0 16px;
+  }
+
+  .stat-number {
+    font-size: 22px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+  }
+
+  .stat-divider {
+    height: 32px;
+  }
+
+  .design-projects-section {
+    margin: 40px 0;
+  }
+
+  .design-projects-headline {
+    font-size: clamp(24px, 7vw, 48px);
+    padding: 0 16px;
+  }
+
+  .design-projects-subtitle {
+    padding: 0 16px;
+    font-size: 14px;
+  }
+
+  .design-projects-grid {
+    padding: 24px 0;
+    gap: 12px;
+    padding-left: 16px;
+  }
+
+  .design-projects-cta-button {
+    padding: 14px 24px;
+    font-size: 16px;
+  }
+
+  .stack-section {
+    margin: 40px 0;
+    flex-direction: column;
+    gap: 16px;
+    overflow: hidden;
+  }
+
+  .stack-headline {
+    font-size: clamp(24px, 7vw, 48px);
+    padding: 0 16px;
+    text-align: center;
+  }
+
+  .stack-subtitle {
+    padding: 0 16px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .about-section {
+    margin: 0 0 16px 0;
+    padding: 24px 20px;
+  }
+
+  .about-headline {
+    font-size: 24px;
+  }
+
+  .about-text {
+    font-size: 15px;
+  }
+
+  .site-footer {
+    margin: 40px 0 24px 0;
+    gap: 24px;
+    padding: 32px 0 0 0;
+  }
+
+  .footer-cta-heading {
+    font-size: 24px;
+  }
+
+  .footer-email-button {
+    padding: 12px 20px;
+    font-size: 15px;
+  }
+}
+
+/* ── Discord Banner ── */
+
+.discord-banner {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  translate: -50% 20px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 10px 10px 18px;
+  background: #5865F2;
+  border-radius: 999px;
+  cursor: pointer !important;
+  opacity: 0;
+  transition: opacity 0.3s ease, translate 0.3s ease;
+  box-shadow: 0 6px 32px rgba(88, 101, 242, 0.4);
+  font-family: 'One UI Sans', var(--body);
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.discord-banner-visible {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+.discord-banner-icon {
+  color: #fff;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.discord-banner * {
+  cursor: pointer !important;
+}
+
+.discord-banner-text {
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+
+.discord-banner-close {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.discord-banner-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+@media screen and (max-width: 500px) {
+  .discord-banner {
+    bottom: 110px;
+    gap: 10px;
+    padding: 8px 8px 8px 14px;
+  }
+
+  .discord-banner-text {
+    font-size: 14px;
+  }
+
+  .discord-banner-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .discord-banner-close {
+    width: 36px;
+    height: 36px;
+  }
 }
 

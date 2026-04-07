@@ -9,7 +9,7 @@ import Navigation from '../components/Navigation';
 import { LoadingDots } from '../components/LoadingAnim';
 
 function SettingsContent() {
-  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported } = useTheme();
+  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, liquidGlass, setLiquidGlass, liquidGlassAvailable } = useTheme();
   const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || '/';
@@ -242,6 +242,29 @@ function SettingsContent() {
             <span className="toggle-slider"></span>
           </div>
         </label>
+
+        {liquidGlassAvailable && (
+          <label htmlFor="liquid-glass-toggle" className="list3" style={{ cursor: 'pointer' }}>
+            <div className="test-toggle-group">
+              <div className="body-text" style={{ display: 'flex', alignItems: 'center' }}>
+                <span className="beta-chip">Beta</span>
+                Liquid Glass
+              </div>
+              <div className="information-wrapper">
+                <div className="information">Apply a glass refraction effect to UI elements. May impact performance on some devices.</div>
+              </div>
+            </div>
+            <div className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={liquidGlass}
+                onChange={(e) => setLiquidGlass(e.target.checked)}
+                id="liquid-glass-toggle"
+              />
+              <span className="toggle-slider"></span>
+            </div>
+          </label>
+        )}
 
         <div className="container1">
         </div>

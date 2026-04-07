@@ -1,10 +1,13 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
 import { useBlogEnabled } from './BlogFlagProvider';
+import { useTheme } from './ThemeProvider';
 import { useCursorFollow } from './useCursorFollow';
 import { HomeIcon, WorkIcon, ShopIcon, BlogIcon, ContactIcon } from './NavIcons';
+import { Drawer } from '@thatjoshguy/oneui-icons';
+import { getDisplacementFilter, supportsBackdropFilterUrl } from '../utils/liquidGlass';
 
 // Context to share collapsed state
 export const NavCollapseContext = createContext({ collapsed: false, setCollapsed: (_: boolean) => {} });
@@ -71,6 +74,41 @@ function DesktopNavButton({ href, isSelected, children }: { href: string; isSele
 export default function NavigationClient({ hideMobile = false, showBlog: propShowBlog = false }: NavigationClientProps) {
   const pathname = usePathname();
   const serverBlogEnabled = useBlogEnabled();
+  const { liquidGlass, liquidGlassAvailable } = useTheme();
+  const mobileNavRef = useRef<HTMLElement>(null);
+
+  const updateLiquidGlassFilter = useCallback((el: HTMLElement) => {
+    const isActive = liquidGlassAvailable && liquidGlass && supportsBackdropFilterUrl();
+    if (!isActive) {
+      el.style.backdropFilter = 'blur(24px)';
+      el.style.webkitBackdropFilter = 'blur(24px)';
+      return;
+    }
+    const rect = el.getBoundingClientRect();
+    const width = Math.round(rect.width);
+    const height = Math.round(rect.height);
+    const radius = 20;
+    const filterUrl = getDisplacementFilter({
+      width,
+      height,
+      radius,
+      depth: 20,
+      strength: 60,
+      chromaticAberration: 2,
+    });
+    const value = `blur(3px) url('${filterUrl}') blur(1px) brightness(1.1) saturate(1.3)`;
+    el.style.backdropFilter = value;
+    el.style.webkitBackdropFilter = value;
+  }, [liquidGlass, liquidGlassAvailable]);
+
+  useEffect(() => {
+    const el = mobileNavRef.current;
+    if (!el) return;
+    updateLiquidGlassFilter(el);
+    const observer = new ResizeObserver(() => updateLiquidGlassFilter(el));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [updateLiquidGlassFilter]);
   
   // Use Vercel Flags value from context (layout), fall back to static config
   const defaultEnabled = serverBlogEnabled ?? true;
@@ -159,15 +197,7 @@ export default function NavigationClient({ hideMobile = false, showBlog: propSho
             onClick={() => setCollapsed((c) => !c)}
             onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setCollapsed(c => !c); }}
           >
-            {collapsed ? (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 17.75C19.414 17.75 19.75 18.086 19.75 18.5C19.75 18.915 19.414 19.25 19 19.25H5C4.586 19.25 4.25 18.915 4.25 18.5C4.25 18.086 4.586 17.75 5 17.75H19ZM19 11.25C19.414 11.25 19.75 11.586 19.75 12C19.75 12.415 19.414 12.75 19 12.75H5C4.586 12.75 4.25 12.415 4.25 12C4.25 11.586 4.586 11.25 5 11.25H19ZM19 4.75C19.414 4.75 19.75 5.086 19.75 5.5C19.75 5.915 19.414 6.25 19 6.25H5C4.586 6.25 4.25 5.915 4.25 5.5C4.25 5.086 4.586 4.75 5 4.75H19Z" fill="var(--primary)"/>
-              </svg>
-            ) : (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 17.75C19.414 17.75 19.75 18.086 19.75 18.5C19.75 18.915 19.414 19.25 19 19.25H5C4.586 19.25 4.25 18.915 4.25 18.5C4.25 18.086 4.586 17.75 5 17.75H19ZM19 11.25C19.414 11.25 19.75 11.586 19.75 12C19.75 12.415 19.414 12.75 19 12.75H5C4.586 12.75 4.25 12.415 4.25 12C4.25 11.586 4.586 11.25 5 11.25H19ZM19 4.75C19.414 4.75 19.75 5.086 19.75 5.5C19.75 5.915 19.414 6.25 19 6.25H5C4.586 6.25 4.25 5.915 4.25 5.5C4.25 5.086 4.586 4.75 5 4.75H19Z" fill="var(--primary)"/>
-              </svg>
-            )}
+            <Drawer size={24} color="var(--primary)" />
           </div>
           
           <DesktopNavButton href="/" isSelected={pathname === '/'}>
@@ -196,7 +226,11 @@ export default function NavigationClient({ hideMobile = false, showBlog: propSho
       </nav>
 
       {!hideMobile && (
-        <nav className="mobile-nav-bar" style={{ backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)' }}>
+        <nav
+          ref={mobileNavRef}
+          className={`mobile-nav-bar${liquidGlassAvailable && liquidGlass ? ' mobile-nav-bar--liquid-glass' : ''}`}
+          style={{ backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)' }}
+        >
           <div className="mobile-nav-tabs">
             <MobileNavTab href="/" isSelected={pathname === '/'}>
               <HomeIcon selected={pathname === '/'} />
