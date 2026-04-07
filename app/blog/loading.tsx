@@ -5,28 +5,6 @@ import BlogIndexSkeleton from "./BlogIndexSkeleton";
 export default function BlogLoading() {
   return (
     <div className="index blog-page">
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          @media (min-width: 1024px) {
-            .blog-card-desktop-thumbnail { display: block !important; }
-            .blog-card-mobile-thumbnail  { display: none  !important; }
-            .blog-card-container         { flex-direction: row !important; }
-          }
-          @media (min-width: 768px) and (max-width: 1023px) {
-            .blog-card-desktop-thumbnail { display: block !important; }
-            .blog-card-mobile-thumbnail  { display: none  !important; }
-            .blog-card-container         { flex-direction: row !important; }
-            .blog-card-thumbnail         { width: 100px !important; height: 70px !important; }
-          }
-          @media (max-width: 767px) {
-            .blog-card-desktop-thumbnail { display: none  !important; }
-            .blog-card-mobile-thumbnail  { display: block !important; }
-            .blog-card-container         { flex-direction: column !important; }
-          }
-          .blog-page .progressive-blur-overlay { height: 240px !important; }
-        `
-      }} />
-
       {/* Top app bar — identical to the real page */}
       <div className="top-app-bar">
         <div className="top-app-bar-container settings-only">

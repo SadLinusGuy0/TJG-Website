@@ -81,7 +81,7 @@ export default async function RootLayout({
                     coral: '#ff6b6b',
                     mint: '#4ecdc4',
                     lilac: '#a78bfa',
-                    monochrome: '#808080'
+                    mono: '#808080'
                   };
                   document.documentElement.style.setProperty('--accent', accentColors[accentColor] || accentColors.blue);
                   var csSupported = window.CSS && CSS.supports && CSS.supports('corner-shape', 'squircle');

@@ -71,15 +71,6 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          .blog-posts-slide-wrapper {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                        opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: transform, opacity;
-          }
-        `
-      }} />
       <div
         className="blog-posts-slide-wrapper"
         style={{

@@ -127,6 +127,16 @@ const getInitialAccentColor = (): AccentColor => {
   return 'blue';
 };
 
+function updateThemeColorMeta(resolvedTheme: 'dark' | 'light', accent: AccentColor) {
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) {
+    const bg = resolvedTheme === 'dark'
+      ? ACCENT_DARK_BACKGROUNDS[accent]
+      : ACCENT_LIGHT_BACKGROUNDS[accent];
+    meta.setAttribute('content', bg);
+  }
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [accentColor, setAccentColorState] = useState<AccentColor>(getInitialAccentColor);
@@ -160,36 +170,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       if (savedTheme === 'auto') {
         const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         document.documentElement.dataset.theme = systemTheme;
-        // Update theme-color meta tag for Safari URL bar
-        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-        if (themeColorMeta) {
-          const accentColor = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
-          const bgColor = systemTheme === 'dark' 
-            ? ACCENT_DARK_BACKGROUNDS[accentColor] 
-            : ACCENT_LIGHT_BACKGROUNDS[accentColor];
-          themeColorMeta.setAttribute('content', bgColor);
-        }
+        const ac = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
+        updateThemeColorMeta(systemTheme, ac);
       } else {
         document.documentElement.dataset.theme = savedTheme;
-        // Update theme-color meta tag for Safari URL bar
-        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-        if (themeColorMeta) {
-          const accentColor = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
-          const bgColor = savedTheme === 'dark' 
-            ? ACCENT_DARK_BACKGROUNDS[accentColor] 
-            : ACCENT_LIGHT_BACKGROUNDS[accentColor];
-          themeColorMeta.setAttribute('content', bgColor);
-        }
+        const ac = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
+        updateThemeColorMeta(savedTheme as 'dark' | 'light', ac);
       }
     } else {
       // If no saved theme, use system preference
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       document.documentElement.dataset.theme = systemTheme;
-      // Update theme-color meta tag for Safari URL bar
-      const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-      if (themeColorMeta) {
-        themeColorMeta.setAttribute('content', systemTheme === 'dark' ? '#000' : '#f1f1f3');
-      }
+      updateThemeColorMeta(systemTheme, 'blue');
     }
 
     // Initialize accent color
@@ -203,18 +195,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       if ((localStorage.getItem('theme') as Theme) === 'auto') {
         const newTheme = e.matches ? 'dark' : 'light';
         document.documentElement.dataset.theme = newTheme;
-        // Update theme-color meta tag for Safari URL bar
-        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-        if (themeColorMeta) {
-          const accentColor = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
-          const bgColor = newTheme === 'dark' 
-            ? ACCENT_DARK_BACKGROUNDS[accentColor] 
-            : ACCENT_LIGHT_BACKGROUNDS[accentColor];
-          themeColorMeta.setAttribute('content', bgColor);
-        }
+        const ac = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
+        updateThemeColorMeta(newTheme, ac);
         // Reapply accent color backgrounds for new theme
-        const accentColor = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
-        applyAccentColor(accentColor);
+        applyAccentColor(ac);
       }
     };
     mediaQuery.addEventListener('change', handleChange);
@@ -231,14 +215,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       currentTheme = theme;
       document.documentElement.dataset.theme = theme;
     }
-    // Update theme-color meta tag for Safari URL bar
-    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-    if (themeColorMeta) {
-      const bgColor = currentTheme === 'dark' 
-        ? ACCENT_DARK_BACKGROUNDS[accentColor] 
-        : ACCENT_LIGHT_BACKGROUNDS[accentColor];
-      themeColorMeta.setAttribute('content', bgColor);
-    }
+    updateThemeColorMeta(currentTheme, accentColor);
     // Reapply accent color backgrounds for new theme
     applyAccentColor(accentColor);
   }, [theme, accentColor]);

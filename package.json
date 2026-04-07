@@ -13,7 +13,6 @@
   "dependencies": {
     "@flags-sdk/hypertune": "^0.2.0",
     "@flags-sdk/vercel": "^1.0.1",
-    "@types/leaflet": "^1.9.21",
     "@vercel/analytics": "^1.5.0",
     "@vercel/edge-config": "^1.4.3",
     "@vercel/flags-core": "^1.0.1",
@@ -27,6 +26,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.21",
     "@eslint/eslintrc": "^3.0.0",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",

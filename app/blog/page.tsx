@@ -9,65 +9,6 @@ export const revalidate = 300;
 export default function BlogIndex() {
   return (
     <div className="index blog-page">
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          @media (min-width: 1024px) {
-            .blog-card-desktop-thumbnail {
-              display: block !important;
-            }
-            .blog-card-mobile-thumbnail {
-              display: none !important;
-            }
-            .blog-card-container {
-              flex-direction: row !important;
-            }
-            .blog-card-text-content {
-              font-size: 1rem !important;
-              font-family: 'One UI Sans';
-            }
-          }
-          @media (min-width: 768px) and (max-width: 1023px) {
-            .blog-card-desktop-thumbnail {
-              display: block !important;
-            }
-            .blog-card-mobile-thumbnail {
-              display: none !important;
-            }
-            .blog-card-container {
-              flex-direction: row !important;
-            }
-            .blog-card-text-content {
-              font-size: 0.9rem !important;
-              font-family: 'One UI Sans';
-            }
-            .blog-card-thumbnail {
-              width: 100px !important;
-              height: 70px !important;
-            }
-          }
-          @media (max-width: 767px) {
-            .blog-card-desktop-thumbnail {
-              display: none !important;
-            }
-            .blog-card-mobile-thumbnail {
-              display: block !important;
-            }
-            .blog-card-container {
-              flex-direction: column !important;
-            }
-            .blog-card-text-content {
-              font-size: 0.9rem !important;
-              font-family: 'One UI Sans';
-            }
-          }
-
-          .blog-page .progressive-blur-overlay {
-            height: 240px !important;
-          }
-
-        `
-      }} />
-
       {/* Top app bar — static, renders immediately */}
       <div className="top-app-bar">
         <div className="top-app-bar-container settings-only">
