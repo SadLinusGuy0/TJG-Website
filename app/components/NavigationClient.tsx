@@ -81,7 +81,7 @@ export default function NavigationClient({ hideMobile = false, showBlog: propSho
     const isActive = liquidGlassAvailable && liquidGlass && supportsBackdropFilterUrl();
     if (!isActive) {
       el.style.backdropFilter = 'blur(24px)';
-      (el.style as unknown as Record<string, unknown>)['webkitBackdropFilter'] = 'blur(24px)';
+      (el.style as Record<string, unknown>)['webkitBackdropFilter'] = 'blur(24px)';
       return;
     }
     const rect = el.getBoundingClientRect();
@@ -98,7 +98,7 @@ export default function NavigationClient({ hideMobile = false, showBlog: propSho
     });
     const value = `blur(3px) url('${filterUrl}') blur(1px) brightness(1.1) saturate(1.3)`;
     el.style.backdropFilter = value;
-    (el.style as unknown as Record<string, unknown>)['webkitBackdropFilter'] = value;
+    (el.style as Record<string, unknown>)['webkitBackdropFilter'] = value;
   }, [liquidGlass, liquidGlassAvailable]);
 
   useEffect(() => {
