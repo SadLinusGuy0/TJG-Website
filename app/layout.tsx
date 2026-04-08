@@ -1,6 +1,7 @@
 import { ThemeProvider } from './components/ThemeProvider';
 import { BlogFlagProvider } from './components/BlogFlagProvider';
 import { getBlogEnabled } from '../lib/getBlogFlag';
+import { getCornerSmoothingEnabled } from '../lib/getCornerSmoothingFlag';
 import { getLiquidGlassEnabled } from '../lib/getLiquidGlassFlag';
 import './globals.css';
 import { Analytics } from "@vercel/analytics/next"
@@ -46,6 +47,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const blogEnabledValue = await getBlogEnabled();
+  const cornerSmoothingEnabledValue = await getCornerSmoothingEnabled();
   const liquidGlassEnabledValue = await getLiquidGlassEnabled();
   
   return (
@@ -87,9 +89,10 @@ export default async function RootLayout({
                     mono: '#808080'
                   };
                   document.documentElement.style.setProperty('--accent', accentColors[accentColor] || accentColors.blue);
+                  var csAvailable = ${cornerSmoothingEnabledValue ? 'true' : 'false'};
                   var csSupported = window.CSS && CSS.supports && CSS.supports('corner-shape', 'squircle');
                   var csSaved = localStorage.getItem('cornerSmoothing');
-                  var csEnabled = csSupported && (csSaved === null ? true : csSaved === 'true');
+                  var csEnabled = csAvailable && csSupported && (csSaved === null ? true : csSaved === 'true');
                   document.documentElement.dataset.cornerSmoothing = csEnabled ? 'true' : 'false';
                   var lgSaved = localStorage.getItem('liquidGlass');
                   document.documentElement.dataset.liquidGlass = lgSaved === 'true' ? 'true' : 'false';
@@ -100,7 +103,7 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        <ThemeProvider liquidGlassAvailable={liquidGlassEnabledValue}>
+        <ThemeProvider cornerSmoothingAvailable={cornerSmoothingEnabledValue} liquidGlassAvailable={liquidGlassEnabledValue}>
           <BlogFlagProvider blogEnabled={blogEnabledValue}>
             <ProgressiveBlur />
             <ProgressiveBlur position="bottom" />
