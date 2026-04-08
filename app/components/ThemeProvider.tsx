@@ -59,6 +59,7 @@ interface ThemeContextType {
   cornerSmoothing: boolean;
   setCornerSmoothing: (enabled: boolean) => void;
   cornerSmoothingSupported: boolean;
+  cornerSmoothingAvailable: boolean;
   liquidGlass: boolean;
   setLiquidGlass: (enabled: boolean) => void;
   liquidGlassAvailable: boolean;
@@ -75,6 +76,7 @@ const ThemeContext = createContext<ThemeContextType>({
   cornerSmoothing: false,
   setCornerSmoothing: () => {},
   cornerSmoothingSupported: false,
+  cornerSmoothingAvailable: false,
   liquidGlass: false,
   setLiquidGlass: () => {},
   liquidGlassAvailable: false,
@@ -154,10 +156,11 @@ function updateThemeColorMeta(resolvedTheme: 'dark' | 'light', accent: AccentCol
 
 interface ThemeProviderProps {
   children: React.ReactNode;
+  cornerSmoothingAvailable?: boolean;
   liquidGlassAvailable?: boolean;
 }
 
-export function ThemeProvider({ children, liquidGlassAvailable = false }: ThemeProviderProps) {
+export function ThemeProvider({ children, cornerSmoothingAvailable = false, liquidGlassAvailable = false }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [accentColor, setAccentColorState] = useState<AccentColor>(getInitialAccentColor);
   const [blurEnabled, setBlurEnabledState] = useState<boolean>(getInitialBlurEnabled);
@@ -248,7 +251,7 @@ export function ThemeProvider({ children, liquidGlassAvailable = false }: ThemeP
 
   useEffect(() => {
     setHydrated(true);
-    document.documentElement.dataset.cornerSmoothing = cornerSmoothing.toString();
+    document.documentElement.dataset.cornerSmoothing = (cornerSmoothingAvailable && cornerSmoothing).toString();
     document.documentElement.dataset.liquidGlass = (liquidGlassAvailable && liquidGlass).toString();
   }, []);
 
@@ -288,7 +291,7 @@ export function ThemeProvider({ children, liquidGlassAvailable = false }: ThemeP
   };
 
   const setCornerSmoothing = (enabled: boolean) => {
-    if (!cornerSmoothingSupported) return;
+    if (!cornerSmoothingAvailable || !cornerSmoothingSupported) return;
     setCornerSmoothingState(enabled);
     document.documentElement.dataset.cornerSmoothing = enabled.toString();
     localStorage.setItem('cornerSmoothing', enabled.toString());
@@ -301,7 +304,7 @@ export function ThemeProvider({ children, liquidGlassAvailable = false }: ThemeP
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, liquidGlass, setLiquidGlass, liquidGlassAvailable, hydrated }}>
+    <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable, hydrated }}>
       {children}
     </ThemeContext.Provider>
   );

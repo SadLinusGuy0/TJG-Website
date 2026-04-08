@@ -9,7 +9,7 @@ import Navigation from '../components/Navigation';
 import { LoadingDots } from '../components/LoadingAnim';
 
 function SettingsContent() {
-  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, liquidGlass, setLiquidGlass, liquidGlassAvailable } = useTheme();
+  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable } = useTheme();
   const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || '/';
@@ -212,36 +212,38 @@ function SettingsContent() {
           </div>
         </label>
 
-        <label
-          htmlFor="corner-smoothing-toggle"
-          className="list3"
-          style={{
-            cursor: cornerSmoothingSupported ? 'pointer' : 'default',
-            opacity: cornerSmoothingSupported ? 1 : 0.45,
-            pointerEvents: cornerSmoothingSupported ? 'auto' : 'none',
-          }}
-        >
-          <div className="test-toggle-group">
-            <div className="body-text">Corner smoothing</div>
-            <div className="information-wrapper">
-              <div className="information">
-                {cornerSmoothingSupported
-                  ? 'Use squircle-shaped corners for a smoother look'
-                  : 'Not supported on this browser'}
+        {cornerSmoothingAvailable && (
+          <label
+            htmlFor="corner-smoothing-toggle"
+            className="list3"
+            style={{
+              cursor: cornerSmoothingSupported ? 'pointer' : 'default',
+              opacity: cornerSmoothingSupported ? 1 : 0.45,
+              pointerEvents: cornerSmoothingSupported ? 'auto' : 'none',
+            }}
+          >
+            <div className="test-toggle-group">
+              <div className="body-text">Corner smoothing</div>
+              <div className="information-wrapper">
+                <div className="information">
+                  {cornerSmoothingSupported
+                    ? 'Use squircle-shaped corners for a smoother look'
+                    : 'Not supported on this browser'}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="toggle-switch">
-            <input
-              type="checkbox"
-              checked={cornerSmoothing}
-              onChange={(e) => setCornerSmoothing(e.target.checked)}
-              id="corner-smoothing-toggle"
-              disabled={!cornerSmoothingSupported}
-            />
-            <span className="toggle-slider"></span>
-          </div>
-        </label>
+            <div className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={cornerSmoothing}
+                onChange={(e) => setCornerSmoothing(e.target.checked)}
+                id="corner-smoothing-toggle"
+                disabled={!cornerSmoothingSupported}
+              />
+              <span className="toggle-slider"></span>
+            </div>
+          </label>
+        )}
 
         {liquidGlassAvailable && (
           <label htmlFor="liquid-glass-toggle" className="list3" style={{ cursor: 'pointer' }}>
