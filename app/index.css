@@ -319,62 +319,74 @@ button.list3:hover {
 
 }
 
-.theme-selection {
-  align-self: stretch;
+.theme-cards {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+}
+
+.theme-card {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  gap: var(--gap-xl);
-  font-family: 'One UI Sans';
-  font-weight: 400;
-  font-size: var(--body-size);
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  outline: none;
 }
 
-.theme-selection label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.theme-card-preview {
   width: 100%;
-  padding: 10px;
-  cursor: pointer;
-  font-size: var(--subheading-size);
+  max-width: 140px;
+  border-radius: var(--br-lg);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.theme-card-preview svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.theme-card:hover .theme-card-preview {
+  transform: scale(1.03);
+}
+
+.theme-card:active .theme-card-preview {
+  transform: scale(0.98);
+}
+
+.theme-card-label {
+  font-family: 'One UI Sans';
   font-weight: 500;
-  border-radius: var(--br-9xl);
-  transition: background-color 0.2s ease;
+  font-size: var(--subheading-size);
+  color: var(--secondary);
+  transition: color 0.2s ease;
 }
 
-.theme-selection label:hover {
-  background-color: var(--container-background-hover);
+.theme-card.selected .theme-card-label {
+  color: var(--accent);
 }
 
-.theme-selection input[type="radio"] {
-  appearance: none;
-  background-color: transparent;
-  margin: 0;
-  width: 24px;
-  height: 24px;
-  border: 2px solid var(--secondary);
+.theme-card-radio {
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  cursor: pointer;
-  transform: scale(1);
-  transition: transform 0.2s ease-out, background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.theme-selection input[type="radio"]:hover {
-  transform: scale(1.08);
-  background-color: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
-  border-color: color-mix(in srgb, var(--secondary) 80%, var(--primary) 20%);
-  transition: transform 0.2s ease-in, background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.theme-selection input[type="radio"]:checked {
-  border: 2px solid var(--accent);
-  background: var(--container-background);
+  border: 2px solid var(--secondary);
   position: relative;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
 }
 
-.theme-selection input[type="radio"]:checked::before {
+.theme-card.selected .theme-card-radio {
+  border-color: var(--accent);
+}
+
+.theme-card.selected .theme-card-radio::before {
   content: "";
   width: 12px;
   height: 12px;
@@ -385,6 +397,7 @@ button.list3:hover {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 
 /* Horizontal accent color picker */
 .accent-color-selection {

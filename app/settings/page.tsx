@@ -1,12 +1,76 @@
 "use client";
 
-import { useTheme, ACCENT_COLORS, AccentColor } from '../components/ThemeProvider';
+import { useTheme, ACCENT_COLORS, ACCENT_LIGHT_BACKGROUNDS, ACCENT_LIGHT_CONTAINER_BACKGROUNDS, ACCENT_DARK_BACKGROUNDS, ACCENT_DARK_CONTAINER_BACKGROUNDS, AccentColor } from '../components/ThemeProvider';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Navigation from '../components/Navigation';
 import { LoadingDots } from '../components/LoadingAnim';
+
+function ThemePreviewLight({ accent }: { accent: AccentColor }) {
+  const bg = ACCENT_LIGHT_BACKGROUNDS[accent];
+  const container = ACCENT_LIGHT_CONTAINER_BACKGROUNDS[accent];
+  const dot = ACCENT_COLORS[accent];
+  return (
+    <svg viewBox="0 0 160 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="160" height="112" rx="16" fill={bg}/>
+      <rect x="14" y="14" width="132" height="84" rx="12" fill={container}/>
+      <circle cx="34" cy="42" r="7" fill={dot}/>
+      <rect x="50" y="37" width="78" height="10" rx="5" fill="#CCCCD0"/>
+      <circle cx="34" cy="66" r="7" fill={dot}/>
+      <rect x="50" y="61" width="58" height="10" rx="5" fill="#CCCCD0"/>
+    </svg>
+  );
+}
+
+function ThemePreviewDark({ accent }: { accent: AccentColor }) {
+  const bg = ACCENT_DARK_BACKGROUNDS[accent];
+  const container = ACCENT_DARK_CONTAINER_BACKGROUNDS[accent];
+  const dot = ACCENT_COLORS[accent];
+  return (
+    <svg viewBox="0 0 160 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="160" height="112" rx="16" fill={bg}/>
+      <rect x="14" y="14" width="132" height="84" rx="12" fill={container}/>
+      <circle cx="34" cy="42" r="7" fill={dot}/>
+      <rect x="50" y="37" width="78" height="10" rx="5" fill="#3A3A3E"/>
+      <circle cx="34" cy="66" r="7" fill={dot}/>
+      <rect x="50" y="61" width="58" height="10" rx="5" fill="#3A3A3E"/>
+    </svg>
+  );
+}
+
+function ThemePreviewAuto({ accent }: { accent: AccentColor }) {
+  const lightBg = ACCENT_LIGHT_BACKGROUNDS[accent];
+  const lightContainer = ACCENT_LIGHT_CONTAINER_BACKGROUNDS[accent];
+  const darkBg = ACCENT_DARK_BACKGROUNDS[accent];
+  const darkContainer = ACCENT_DARK_CONTAINER_BACKGROUNDS[accent];
+  const dot = ACCENT_COLORS[accent];
+  return (
+    <svg viewBox="0 0 160 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="autoLeft"><polygon points="0,0 100,0 60,112 0,112"/></clipPath>
+        <clipPath id="autoRight"><polygon points="100,0 160,0 160,112 60,112"/></clipPath>
+      </defs>
+      <g clipPath="url(#autoLeft)">
+        <rect width="160" height="112" rx="16" fill={lightBg}/>
+        <rect x="14" y="14" width="132" height="84" rx="12" fill={lightContainer}/>
+        <circle cx="34" cy="42" r="7" fill={dot}/>
+        <rect x="50" y="37" width="78" height="10" rx="5" fill="#CCCCD0"/>
+        <circle cx="34" cy="66" r="7" fill={dot}/>
+        <rect x="50" y="61" width="58" height="10" rx="5" fill="#CCCCD0"/>
+      </g>
+      <g clipPath="url(#autoRight)">
+        <rect width="160" height="112" rx="16" fill={darkBg}/>
+        <rect x="14" y="14" width="132" height="84" rx="12" fill={darkContainer}/>
+        <circle cx="34" cy="42" r="7" fill={dot}/>
+        <rect x="50" y="37" width="78" height="10" rx="5" fill="#3A3A3E"/>
+        <circle cx="34" cy="66" r="7" fill={dot}/>
+        <rect x="50" y="61" width="58" height="10" rx="5" fill="#3A3A3E"/>
+      </g>
+    </svg>
+  );
+}
 
 function SettingsContent() {
   const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable } = useTheme();
@@ -40,42 +104,52 @@ function SettingsContent() {
           <div className="title">Theme</div>
         </div>
         <div className="container" style={{ padding: 'var(--padding-xll)' }}>
-          <div className="theme-selection">
-            {mounted && (
-              <>
-                <label>
-                  <input
-                    type="radio"
-                    name="theme"
-                    value="auto"
-                    checked={theme === 'auto'}
-                    onChange={() => setTheme('auto')}
-                  />
-                  Auto
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="theme"
-                    value="light"
-                    checked={theme === 'light'}
-                    onChange={() => setTheme('light')}
-                  />
-                  Light
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="theme"
-                    value="dark"
-                    checked={theme === 'dark'}
-                    onChange={() => setTheme('dark')}
-                  />
-                  Dark
-                </label>
-              </>
-            )}
-          </div>
+          {mounted && (
+            <div className="theme-cards">
+              <div
+                className={`theme-card${theme === 'auto' ? ' selected' : ''}`}
+                onClick={() => setTheme('auto')}
+                role="radio"
+                aria-checked={theme === 'auto'}
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && setTheme('auto')}
+              >
+                <div className="theme-card-preview">
+                  <ThemePreviewAuto accent={accentColor} />
+                </div>
+                <span className="theme-card-label">Auto</span>
+                <div className="theme-card-radio" />
+              </div>
+              <div
+                className={`theme-card${theme === 'light' ? ' selected' : ''}`}
+                onClick={() => setTheme('light')}
+                role="radio"
+                aria-checked={theme === 'light'}
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && setTheme('light')}
+              >
+                <div className="theme-card-preview">
+                  <ThemePreviewLight accent={accentColor} />
+                </div>
+                <span className="theme-card-label">Light</span>
+                <div className="theme-card-radio" />
+              </div>
+              <div
+                className={`theme-card${theme === 'dark' ? ' selected' : ''}`}
+                onClick={() => setTheme('dark')}
+                role="radio"
+                aria-checked={theme === 'dark'}
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && setTheme('dark')}
+              >
+                <div className="theme-card-preview">
+                  <ThemePreviewDark accent={accentColor} />
+                </div>
+                <span className="theme-card-label">Dark</span>
+                <div className="theme-card-radio" />
+              </div>
+            </div>
+          )}
         </div>
         
         <div className="container1">
