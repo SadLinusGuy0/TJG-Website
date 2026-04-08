@@ -319,71 +319,183 @@ button.list3:hover {
 
 }
 
-.theme-selection {
-  align-self: stretch;
+/* Theme picker with visual preview cards */
+.theme-picker {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.theme-picker-cards {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  padding-bottom: 4px;
+}
+
+.theme-picker-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  gap: var(--gap-xl);
-  font-family: 'One UI Sans';
-  font-weight: 400;
-  font-size: var(--body-size);
+  gap: 10px;
+  cursor: pointer;
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.theme-selection label {
+.theme-card-preview {
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  border-radius: var(--br-9xl);
+  padding: 14px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  transition: outline-color 0.2s ease, transform 0.15s ease;
+  outline: 3px solid transparent;
+  outline-offset: -3px;
+}
+
+.theme-card-preview.light {
+  background-color: #dcdce2;
+}
+
+.theme-card-preview.dark {
+  background-color: #636366;
+}
+
+.theme-picker-card.selected .theme-card-preview {
+  outline-color: var(--accent);
+}
+
+.theme-picker-card:active .theme-card-preview {
+  transform: scale(0.97);
+}
+
+.theme-card-screen {
   width: 100%;
-  padding: 10px;
-  cursor: pointer;
-  font-size: var(--subheading-size);
-  font-weight: 500;
-  border-radius: var(--br-9xl);
-  transition: background-color 0.2s ease;
-}
-
-.theme-selection label:hover {
-  background-color: var(--container-background-hover);
-}
-
-.theme-selection input[type="radio"] {
-  appearance: none;
-  background-color: transparent;
-  margin: 0;
-  width: 24px;
-  height: 24px;
-  border: 2px solid var(--secondary);
-  border-radius: 50%;
-  cursor: pointer;
-  transform: scale(1);
-  transition: transform 0.2s ease-out, background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.theme-selection input[type="radio"]:hover {
-  transform: scale(1.08);
-  background-color: color-mix(in srgb, var(--container-background) 90%, var(--primary) 10%);
-  border-color: color-mix(in srgb, var(--secondary) 80%, var(--primary) 20%);
-  transition: transform 0.2s ease-in, background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.theme-selection input[type="radio"]:checked {
-  border: 2px solid var(--accent);
-  background: var(--container-background);
+  height: 100%;
+  border-radius: calc(var(--br-9xl) - 6px);
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
   position: relative;
+  overflow: hidden;
 }
 
-.theme-selection input[type="radio"]:checked::before {
-  content: "";
+.theme-card-preview.light .theme-card-screen {
+  background-color: #f0f0f4;
+}
+
+.theme-card-preview.dark .theme-card-screen {
+  background-color: #4a4a4e;
+}
+
+.theme-card-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-card-dot {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--accent);
+  background-color: #4a90d9;
+  flex-shrink: 0;
+}
+
+.theme-card-line {
+  height: 7px;
+  border-radius: 4px;
+  flex: 1;
+  max-width: 70%;
+}
+
+.theme-card-preview.light .theme-card-line {
+  background-color: #c8c8cc;
+}
+
+.theme-card-preview.dark .theme-card-line {
+  background-color: #6a6a6e;
+}
+
+.theme-card-bar {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 16px;
+}
+
+.theme-card-preview.light .theme-card-bar {
+  background-color: #d4d4d8;
+}
+
+.theme-card-preview.dark .theme-card-bar {
+  background-color: #58585c;
+}
+
+.theme-card-label {
+  font-size: var(--body-size);
+  font-weight: 500;
+  color: var(--secondary);
+  transition: color 0.2s ease;
+}
+
+.theme-picker-card.selected .theme-card-label {
+  color: var(--accent);
+}
+
+.theme-card-radio {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.theme-picker-card.selected .theme-card-radio {
+  border-color: var(--accent);
+}
+
+.theme-picker-card.selected .theme-card-radio::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--accent);
+}
+
+.theme-picker-divider {
+  height: 1px;
+  background-color: var(--secondary);
+  opacity: 0.25;
+  margin: 14px 0 6px;
+}
+
+.theme-picker-system {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0 0;
+  cursor: pointer;
+}
+
+.theme-picker-system span {
+  font-size: var(--subheading-size);
+  font-weight: 500;
+  color: var(--primary);
 }
 
 /* Horizontal accent color picker */

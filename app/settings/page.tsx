@@ -11,6 +11,7 @@ import { LoadingDots } from '../components/LoadingAnim';
 function SettingsContent() {
   const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || '/';
 
@@ -19,6 +20,20 @@ function SettingsContent() {
     localStorage.setItem('progressiveBlur', blurEnabled.toString());
     document.documentElement.dataset.progressiveBlur = blurEnabled.toString();
   }, [blurEnabled]);
+
+  useEffect(() => {
+    if (theme === 'auto') {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)');
+      setResolvedTheme(mq.matches ? 'dark' : 'light');
+      const handler = (e: MediaQueryListEvent) => setResolvedTheme(e.matches ? 'dark' : 'light');
+      mq.addEventListener('change', handler);
+      return () => mq.removeEventListener('change', handler);
+    } else {
+      setResolvedTheme(theme as 'light' | 'dark');
+    }
+  }, [theme]);
+
+  const activeTheme = theme === 'auto' ? resolvedTheme : theme;
 
   return (
     <>
@@ -40,42 +55,75 @@ function SettingsContent() {
           <div className="title">Theme</div>
         </div>
         <div className="container" style={{ padding: 'var(--padding-xll)' }}>
-          <div className="theme-selection">
-            {mounted && (
-              <>
-                <label>
+          {mounted && (
+            <div className="theme-picker">
+              <div className="theme-picker-cards">
+                <button
+                  type="button"
+                  className={`theme-picker-card${activeTheme === 'light' ? ' selected' : ''}`}
+                  onClick={() => setTheme('light')}
+                  aria-label="Light theme"
+                >
+                  <div className="theme-card-preview light">
+                    <div className="theme-card-screen">
+                      <div className="theme-card-row">
+                        <div className="theme-card-dot" />
+                        <div className="theme-card-line" />
+                      </div>
+                      <div className="theme-card-row">
+                        <div className="theme-card-dot" />
+                        <div className="theme-card-line" />
+                      </div>
+                      <div className="theme-card-bar" />
+                    </div>
+                  </div>
+                  <span className="theme-card-label">Light</span>
+                  <div className="theme-card-radio" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  className={`theme-picker-card${activeTheme === 'dark' ? ' selected' : ''}`}
+                  onClick={() => setTheme('dark')}
+                  aria-label="Dark theme"
+                >
+                  <div className="theme-card-preview dark">
+                    <div className="theme-card-screen">
+                      <div className="theme-card-row">
+                        <div className="theme-card-dot" />
+                        <div className="theme-card-line" />
+                      </div>
+                      <div className="theme-card-row">
+                        <div className="theme-card-dot" />
+                        <div className="theme-card-line" />
+                      </div>
+                      <div className="theme-card-bar" />
+                    </div>
+                  </div>
+                  <span className="theme-card-label">Dark</span>
+                  <div className="theme-card-radio" aria-hidden="true" />
+                </button>
+              </div>
+              <div className="theme-picker-divider" />
+              <label className="theme-picker-system" htmlFor="system-theme-toggle">
+                <span>System default</span>
+                <div className="toggle-switch">
                   <input
-                    type="radio"
-                    name="theme"
-                    value="auto"
+                    type="checkbox"
                     checked={theme === 'auto'}
-                    onChange={() => setTheme('auto')}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setTheme('auto');
+                      } else {
+                        setTheme(resolvedTheme);
+                      }
+                    }}
+                    id="system-theme-toggle"
                   />
-                  Auto
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="theme"
-                    value="light"
-                    checked={theme === 'light'}
-                    onChange={() => setTheme('light')}
-                  />
-                  Light
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="theme"
-                    value="dark"
-                    checked={theme === 'dark'}
-                    onChange={() => setTheme('dark')}
-                  />
-                  Dark
-                </label>
-              </>
-            )}
-          </div>
+                  <span className="toggle-slider"></span>
+                </div>
+              </label>
+            </div>
+          )}
         </div>
         
         <div className="container1">
