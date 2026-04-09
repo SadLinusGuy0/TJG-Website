@@ -86,6 +86,10 @@ function processContentWithEmbeds(content: string): string {
   return processedContent;
 }
 
+function getFeaturedImageAltText(post: WPPost): string | undefined {
+  return post._embedded?.['wp:featuredmedia']?.[0]?.alt_text?.trim() || undefined;
+}
+
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   try {
     const { slug, section } = await props.params;
@@ -98,10 +102,38 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     const matched = sections.find(s => s.slug === section);
     const sectionTitle = matched?.title || section;
     const postTitle = stripHtmlAndDecode(content.title?.rendered) || "That Josh Guy";
+    const title = `${sectionTitle} - ${postTitle} | That Josh Guy`;
+    const description = `${sectionTitle} section of ${postTitle}.`;
+
+    let featuredImageUrl: string | null = null;
+    try {
+      featuredImageUrl = await getFeaturedImageUrlAsync(content);
+    } catch (error) {
+      console.error('Error fetching featured image:', error);
+    }
+
+    const imageAlt = getFeaturedImageAltText(content) || postTitle;
 
     return {
-      title: `${sectionTitle} - ${postTitle} | That Josh Guy`,
-      description: `${sectionTitle} section of ${postTitle}.`,
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        type: "article",
+        images: featuredImageUrl
+          ? [{ url: featuredImageUrl, alt: imageAlt }]
+          : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: featuredImageUrl ? [featuredImageUrl] : undefined,
+      },
+      alternates: {
+        canonical: content.link ? `${content.link}${section}` : undefined,
+      },
     };
   } catch {
     return { title: "Section | That Josh Guy" };
