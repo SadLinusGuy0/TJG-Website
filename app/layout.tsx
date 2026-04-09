@@ -1,10 +1,13 @@
 import { ThemeProvider } from './components/ThemeProvider';
 import { BlogFlagProvider } from './components/BlogFlagProvider';
 import { getBlogEnabled } from '../lib/getBlogFlag';
+import { getCornerSmoothingEnabled } from '../lib/getCornerSmoothingFlag';
+import { getLiquidGlassEnabled } from '../lib/getLiquidGlassFlag';
 import './globals.css';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import ProgressiveBlur from './components/ProgressiveBlur';
+import DiscordPopup from './components/DiscordPopup';
 
 export const metadata = {
   title: 'That Josh Guy',
@@ -15,7 +18,7 @@ export const metadata = {
     type: 'website',
     url: 'https://thatjoshguy.me',
     title: 'That Josh Guy',
-    description: 'This is my portfolio',
+    description: 'Designer, tech journalist, and Samsung/Android creator — explore my work, articles, and design projects.',
     images: [
       {
         url: '/images/preview.png',
@@ -30,7 +33,7 @@ export const metadata = {
     site: '@thatjoshguy69',
     creator: '@thatjoshguy69',
     title: 'That Josh Guy',
-    description: 'This is my portfolio',
+    description: 'Designer, tech journalist, and Samsung/Android creator — explore my work, articles, and design projects.',
     images: ['/images/preview.png']
   },
   icons: {
@@ -44,6 +47,8 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const blogEnabledValue = await getBlogEnabled();
+  const cornerSmoothingEnabledValue = await getCornerSmoothingEnabled();
+  const liquidGlassEnabledValue = await getLiquidGlassEnabled();
   
   return (
     <html suppressHydrationWarning>
@@ -81,13 +86,16 @@ export default async function RootLayout({
                     coral: '#ff6b6b',
                     mint: '#4ecdc4',
                     lilac: '#a78bfa',
-                    monochrome: '#808080'
+                    mono: '#808080'
                   };
                   document.documentElement.style.setProperty('--accent', accentColors[accentColor] || accentColors.blue);
+                  var csAvailable = ${cornerSmoothingEnabledValue ? 'true' : 'false'};
                   var csSupported = window.CSS && CSS.supports && CSS.supports('corner-shape', 'squircle');
                   var csSaved = localStorage.getItem('cornerSmoothing');
-                  var csEnabled = csSupported && (csSaved === null ? true : csSaved === 'true');
+                  var csEnabled = csAvailable && csSupported && (csSaved === null ? true : csSaved === 'true');
                   document.documentElement.dataset.cornerSmoothing = csEnabled ? 'true' : 'false';
+                  var lgSaved = localStorage.getItem('liquidGlass');
+                  document.documentElement.dataset.liquidGlass = lgSaved === 'true' ? 'true' : 'false';
                 } catch (e) {}
               })();
             `
@@ -95,11 +103,12 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        <ThemeProvider>
+        <ThemeProvider cornerSmoothingAvailable={cornerSmoothingEnabledValue} liquidGlassAvailable={liquidGlassEnabledValue}>
           <BlogFlagProvider blogEnabled={blogEnabledValue}>
             <ProgressiveBlur />
             <ProgressiveBlur position="bottom" />
             {children}
+            <DiscordPopup />
           </BlogFlagProvider>
         </ThemeProvider>
         <Analytics />

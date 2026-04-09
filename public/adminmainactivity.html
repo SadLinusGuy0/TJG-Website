@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdminMainActivity</title>
+<style>
+  :root {
+    --bg-color: #f2f2f2;
+    --menu-bg: #fff;
+    --text-main: #000;
+    --text-sub: #888;
+    --text-muted: #bbb;
+    --line-color: #e0e0e0;
+    --modal-bg: #f2f2f2;
+    --upd-bg: #fff;
+    
+    --bottom-bar-bg: #fff;
+    --bottom-tabs-active: #000;
+    --bottom-tabs-inactive: #888;
+    --accent-blue: #3b76ff;
+    --progress-bar-bg: #ddd;
+    --update-progress-bg: #e0e0e0; 
+    --update-progress-fill: #000;
+  }
+
+  body.dark-mode {
+    --bg-color: #000;
+    --menu-bg: #151515;
+    --text-main: #fff;
+    --text-sub: #aaa;
+    --text-muted: #555;
+    --line-color: #333;
+    --modal-bg: #1e1e1e;
+    --upd-bg: #000;
+    
+    --bottom-bar-bg: #000;
+    --bottom-tabs-active: #fff;
+    --bottom-tabs-inactive: #888;
+    --update-progress-bg: #333;
+    --update-progress-fill: #fff;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    color: var(--text-main);
+    overflow: hidden; /* fix double scroll */
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .menu-item,
+  .blue-btn,
+  .back-btn,
+  .view-more,
+  .modal-btns span,
+  .unpacking-btns span,
+  .alert-btns span {
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    box-shadow: none;
+  }
+
+  .menu-item:focus,
+  .menu-item:focus-visible,
+  .blue-btn:focus,
+  .blue-btn:focus-visible,
+  .back-btn:focus,
+  .back-btn:focus-visible,
+  .view-more:focus,
+  .view-more:focus-visible,
+  .modal-btns span:focus,
+  .modal-btns span:focus-visible,
+  .unpacking-btns span:focus,
+  .unpacking-btns span:focus-visible,
+  .alert-btns span:focus,
+  .alert-btns span:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+  
+  /* Main Menu */
+  #main-menu { 
+    height: 100vh;
+    width: 100vw;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  body.show-update #main-menu { 
+    transform: translateX(-30%); 
+  }
+
+  /* Update Screen */
+  #update-screen { 
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--upd-bg);
+    z-index: 50;
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    flex-direction: column;
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+  
+  body.show-update #update-screen { 
+    transform: translateX(0); 
+  }
+  
+  .scrollable-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 20px;
+  }
+
+  /* Main Menu Styling */
+  .header {
+    padding: 40px 20px 10px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .menu-list {
+    background: var(--menu-bg);
+    margin: 10px 15px;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .menu-item {
+    position: relative;
+    padding: 18px 20px;
+    cursor: pointer;
+  }
+  .menu-item:active { background: var(--line-color); }
+  
+  .menu-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 20px; right: 20px;
+    height: 1px;
+    background: var(--line-color);
+  }
+
+  .m-title { font-size: 16px; margin-bottom: 4px; color: var(--text-main); }
+  .m-sub { font-size: 13px; color: var(--text-sub); }
+  .m-title.disabled { color: var(--text-muted); }
+  .m-sub.disabled { color: var(--text-muted); opacity: 0.7; }
+  
+  /* Modals */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+  }
+  
+  .floating-sheet {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+    background: var(--modal-bg);
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .modal-header { padding: 25px 20px 10px; font-weight: bold; font-size: 18px; color: var(--text-main); }
+  
+  .file-list { flex: 1; overflow-y: auto; padding: 0 20px; }
+  .file-item { 
+    position: relative; display: flex; align-items: center; padding: 12px 0; font-size: 14px; 
+  }
+  .file-item input { margin-right: 12px; transform: scale(1.1); }
+  
+  .modal-btns {
+    display: flex;
+    justify-content: space-around;
+    padding: 15px;
+    background: var(--modal-bg);
+  }
+  .modal-btns span { font-weight: bold; cursor: pointer; padding: 15px 30px; font-size: 15px; color: var(--text-main); }
+  .modal-btns span:active { opacity: 0.6; }
+
+  /* Command Input */
+  .cmd-input-container { padding: 10px 20px 20px 20px; }
+  #cmd-input {
+    width: 100%; padding: 10px 0; box-sizing: border-box;
+    border: none; border-bottom: 2px solid var(--accent-blue);
+    background: transparent; color: var(--text-main);
+    font-size: 16px; outline: none;
+  }
+
+  /* Popups */
+  .unpacking-container, .alert-container {
+    padding: 25px 20px 15px 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .unpacking-header, .alert-header { font-weight: bold; font-size: 16px; color: var(--text-main); margin-bottom: 5px; text-align: center; }
+  .unpacking-count, .alert-text { font-size: 14px; color: var(--text-sub); text-align: center; margin-bottom: 15px; line-height: 1.4; }
+  .progress-container { width: 100%; height: 6px; background: var(--progress-bar-bg); border-radius: 3px; overflow: hidden; margin-bottom: 25px; }
+  #unpacking-progress { width: 0%; height: 100%; background: var(--accent-blue); border-radius: 3px; transition: width 0.1s linear; }
+  .unpacking-btns, .alert-btns { display: flex; justify-content: center; }
+  .unpacking-btns span, .alert-btns span { font-weight: bold; cursor: pointer; padding: 10px 40px; font-size: 15px; color: var(--text-main); border-radius: 20px; background: var(--line-color); }
+
+  /* Update Screen Elements */
+  .upd-img {
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  
+  .back-btn {
+    position: absolute; 
+    top: 40px; left: 20px;
+    width: 40px; height: 40px;
+    background: rgba(0, 0, 0, 0.3); 
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    cursor: pointer; z-index: 60;
+  }
+  .back-btn svg { width: 22px; height: 22px; stroke: #fff; }
+  
+  .upd-content { padding: 20px; }
+  .upd-title { font-size: 26px; font-weight: bold; margin-bottom: 15px; }
+  .upd-text { font-size: 15px; color: var(--text-sub); line-height: 1.4; margin-bottom: 20px; }
+  
+  .upd-section { position: relative; margin-top: 25px; padding-top: 20px; }
+  .upd-section::before {
+    content: ''; position: absolute; top: 0; left: 20px; right: 20px;
+    height: 1px; background: var(--line-color);
+  }
+
+  .upd-h3 { font-weight: bold; font-size: 16px; margin-bottom: 5px; color: var(--text-main); }
+  .view-more { font-weight: bold; text-decoration: underline; font-size: 14px; margin-top: 10px; display: inline-block; cursor: pointer; color: var(--text-main); }
+  
+  /* Bottom Bar */
+  .bottom-bar {
+    background: var(--bottom-bar-bg); 
+    padding: 20px 20px 30px 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .progress-tabs-container,
+  .progress-section {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+  
+  .progress-tabs-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 25px; 
+    padding: 0 5px;
+    box-sizing: border-box;
+    gap: 15px;
+  }
+  
+  .progress-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    text-align: center;
+  }
+
+  .progress-text {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    white-space: nowrap;
+  }
+  .progress-text.active { color: var(--bottom-tabs-active); }
+  .progress-text.inactive { color: var(--bottom-tabs-inactive); }
+
+  .bar-bg {
+    width: 100%;
+    height: 2px;
+    background: var(--update-progress-bg);
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--update-progress-fill);
+  }
+
+  .blue-btn {
+    background: var(--accent-blue); color: #fff;
+    border: none; border-radius: 40px;
+    width: 95%; height: 55px;
+    display: flex; justify-content: center; align-items: center;
+    padding: 0; margin: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  
+  /* Accurate Single Arc Spinner */
+  .spinner-arc {
+    width: 22px;
+    height: 22px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin-arc 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+  
+  @keyframes spin-arc { 
+    to { transform: rotate(360deg); } 
+  }
+</style>
+</head>
+<body>
+
+<div id="main-menu">
+  <div class="header">Software update</div>
+  <div class="menu-list">
+    <div class="menu-item" onclick="showUpdateScreen()">
+      <div class="m-title">Download and install</div>
+      <div class="m-sub">Update software by user initiation</div>
+    </div>
+    <div class="menu-item" onclick="showModal('delta-modal')">
+      <div class="m-title">Sideload</div>
+      <div class="m-sub">Update software by sideloading</div>
+    </div>
+    <div class="menu-item">
+      <div class="m-title disabled">DM settings</div>
+      <div class="m-sub disabled">Configure DM Account Profile</div>
+    </div>
+    <div class="menu-item" onclick="showModal('cmd-modal')">
+      <div class="m-title">Command</div>
+      <div class="m-sub">Pop up dialog to enter command</div>
+    </div>
+    <div class="menu-item" onclick="toggleStatus()" id="status-btn">
+      <div class="m-title">Device status</div>
+      <div class="m-sub" id="status-text">Click to check</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="delta-modal">
+  <div class="floating-sheet" style="height: auto; max-height: 75%;">
+    <div class="modal-header">Delta File List</div>
+    <div class="file-list">
+      <label class="file-item"><input type="radio" name="file" checked> /storage/emulated/0/update.zip</label>
+      <label class="file-item"><input type="radio" name="file"> /storage/emulated/0/update_package_OTA.zip</label>
+      <label class="file-item"><input type="radio" name="file"> /storage/emulated/0/FOTA_S918BXXU3BWJM.bin</label>
+      <label class="file-item"><input type="radio" name="file"> /storage/emulated/0/SM-F946B_OXM_EUX_14_update.zip</label>
+      <label class="file-item"><input type="radio" name="file"> /storage/emulated/0/delta_patch_V2.bin</label>
+      <label class="file-item"><input type="radio" name="file"> /storage/emulated/0/OTA_G998BXXU9EWH5.zip</label>
+      <label class="file-item"><input type="radio" name="file"> /storage/emulated/0/patch.zip</label>
+    </div>
+    <div class="modal-btns">
+      <span onclick="hideModal('delta-modal')">Cancel</span>
+      <span onclick="startUnpacking()">OK</span>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="cmd-modal">
+  <div class="floating-sheet" style="height: auto;">
+    <div class="modal-header">Command</div>
+    <div class="cmd-input-container">
+      <input type="text" id="cmd-input" placeholder="Enter command...">
+    </div>
+    <div class="modal-btns">
+      <span onclick="hideModal('cmd-modal')">Cancel</span>
+      <span onclick="runCmd()">OK</span>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="alert-modal">
+  <div class="floating-sheet" style="height: auto;">
+    <div class="alert-container">
+      <div class="alert-header" id="alert-title">Alert</div>
+      <div class="alert-text" id="alert-msg">Text</div>
+      <div class="alert-btns">
+        <span onclick="hideModal('alert-modal')">Close</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="unpacking-modal">
+  <div class="floating-sheet" style="height: auto;">
+    <div class="unpacking-container">
+      <div class="unpacking-header">Unpacking delta files...</div>
+      <div class="unpacking-count" id="unpacking-count-text">0 / 138 unpacked</div>
+      <div class="progress-container">
+        <div id="unpacking-progress"></div>
+      </div>
+      <div class="unpacking-btns">
+        <span onclick="hideModal('unpacking-modal')">Hide</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="update-screen">
+  <div class="back-btn" onclick="hideUpdateScreen()">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+  </div>
+  
+  <div class="scrollable-content">
+    <div class="upd-img">
+      <img src="/8.5_Glass.png" alt="banner" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;">
+    </div>
+    <div class="upd-content">
+      <div class="upd-title">Preparing to update..</div>
+      <div class="upd-text">Feel free to use your phone while the update is being installed. You'll get a notification when it's time to restart to finish the update.</div>
+      
+      <div class="upd-h3">• Stability and reliability</div>
+      <div class="upd-text" style="margin-bottom: 5px;">Device behavior has been improved.</div>
+      <div class="upd-text">These changes may vary depending on the model, country, or network operator of the customer environment.<br>To get the best from your device, please keep your device up to date and regularly check for software updates.</div>
+      
+      <div class="upd-section">
+        <div class="upd-h3">App updates</div>
+        <div class="upd-text" style="margin-bottom:0;">After the update, Samsung apps can be updated to the latest available version.</div>
+        <div class="view-more">View more</div>
+      </div>
+
+      <div class="upd-section">
+        <div class="upd-h3">Update information</div>
+        <div class="upd-text" style="color: var(--text-sub);">
+          • One UI version: 8.5<br>
+          • Android version: 16<br>
+          • Version: S947U1UEU1AZCF / S947U1OYM1AZCF / S947U1UEU1AZCF<br>
+          • Size: 872.75 MB<br>
+          • Security patch level: February 5, 2026
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="bottom-bar">
+    <div class="progress-tabs-container">
+      <div class="progress-section">
+        <div class="progress-text active">Download and install</div>
+        <div class="bar-bg">
+          <div class="bar-fill" style="width: 100%;"></div> 
+        </div>
+      </div>
+      
+      <div class="progress-section">
+        <div class="progress-text inactive">Verification</div>
+        <div class="bar-bg">
+          <div class="bar-fill" style="width: 0%;"></div> 
+        </div>
+      </div>
+    </div>
+    
+    <button class="blue-btn">
+      <div class="spinner-arc"></div>
+    </button>
+  </div>
+</div>
+
+<script>
+  let checkPending = false;
+  let resultLocked = false;
+  
+  let isUnpacking = false;
+  const totalFiles = 138;
+  let unpackedCount = 0;
+
+  function showModal(id) { 
+    document.getElementById(id).style.display = 'block'; 
+    if(id === 'cmd-modal') document.getElementById('cmd-input').focus();
+  }
+  
+  function hideModal(id) { 
+    document.getElementById(id).style.display = 'none'; 
+    if(id === 'cmd-modal') document.getElementById('cmd-input').value = '';
+  }
+
+  function showAlert(title, msg) {
+    document.getElementById('alert-title').innerText = title;
+    document.getElementById('alert-msg').innerHTML = msg;
+    showModal('alert-modal');
+  }
+
+  function runCmd() {
+    const input = document.getElementById('cmd-input').value.trim().toLowerCase();
+    hideModal('cmd-modal');
+    
+    // Commands & Easter Eggs
+    if (input === 'theme') {
+      document.body.classList.toggle('dark-mode');
+    } else if (input === 'creator') {
+      showAlert("Credits", "Created by:<br><br><b>GitHub:</b> DaDevMikey<br><b>Website:</b> Damanmikey.me");
+    } else if (input === 'ping') {
+      showAlert("Network", "Pong!");
+    } else if (input === 'do a barrel roll') {
+      document.body.style.transition = "transform 1s ease";
+      document.body.style.transform = "rotate(360deg)";
+      setTimeout(() => { 
+        document.body.style.transition = ""; 
+        document.body.style.transform = ""; 
+      }, 1000);
+    } else if (input === 'matrix') {
+      document.documentElement.style.setProperty('--bg-color', '#000');
+      document.documentElement.style.setProperty('--text-main', '#0f0');
+      document.documentElement.style.setProperty('--menu-bg', '#000');
+      document.documentElement.style.setProperty('--modal-bg', '#000');
+      showAlert("System", "Matrix mode engaged.");
+    } else if (input === 'version') {
+      showAlert("System Info", "AdminMainActivity v2.5.0<br>Kernel: Linux localhost<br>Build: TQ3A.230805.001");
+    } else if (input !== '') {
+      showAlert("Error", "Command not recognized.");
+    }
+  }
+
+  function startUnpacking() {
+    hideModal('delta-modal');
+    if (isUnpacking) return; 
+    
+    isUnpacking = true;
+    unpackedCount = 0;
+    document.getElementById('unpacking-count-text').innerText = `0 / ${totalFiles} unpacked`;
+    document.getElementById('unpacking-progress').style.width = `0%`;
+    showModal('unpacking-modal');
+
+    const targetTotalTime = Math.floor(Math.random() * (12000 - 3000 + 1)) + 3000; 
+    const avgTimePerFile = targetTotalTime / totalFiles;
+
+    unpackNext(avgTimePerFile);
+  }
+
+  function unpackNext(avgTime) {
+    if (!isUnpacking) return;
+
+    if (unpackedCount < totalFiles) {
+      unpackedCount++;
+      document.getElementById('unpacking-count-text').innerText = `${unpackedCount} / ${totalFiles} unpacked`;
+      document.getElementById('unpacking-progress').style.width = `${(unpackedCount / totalFiles) * 100}%`;
+
+      if (unpackedCount < totalFiles) {
+        let randomDelay = avgTime * (Math.random() * 1.5 + 0.2);
+        setTimeout(() => unpackNext(avgTime), randomDelay);
+      } else {
+        isUnpacking = false;
+        setTimeout(() => {
+          hideModal('unpacking-modal');
+          showUpdateScreen();
+        }, 500);
+      }
+    }
+  }
+
+  function showUpdateScreen() { 
+    hideModal('delta-modal');
+    document.body.classList.add('show-update');
+  }
+  
+  function hideUpdateScreen() { 
+    document.body.classList.remove('show-update');
+  }
+
+  function toggleStatus() {
+    if(checkPending || resultLocked) return;
+    
+    const textEl = document.getElementById('status-text');
+    
+    if(textEl.innerText === 'Click to check') {
+      checkPending = true;
+      textEl.innerText = 'Checking...';
+      
+      setTimeout(() => {
+        const randomChance = Math.random();
+        
+        if (randomChance < 0.05) {
+          textEl.innerText = 'Unofficial / Unknown (checked by integrity check failed)';
+          textEl.style.color = '#ff4444'; 
+        } else {
+          textEl.innerText = 'Official (checked by ro.boot.flash.locked)';
+        }
+        
+        checkPending = false;
+        resultLocked = true; 
+      }, 1500); 
+    }
+  }
+</script>
+
+</body>
+</html>

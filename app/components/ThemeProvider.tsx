@@ -1,7 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useCallback, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { getIconLiquidGlassFilter, supportsBackdropFilterUrl } from '../utils/liquidGlass';
 
 type Theme = 'light' | 'dark' | 'auto';
 export type AccentColor = 'blue' | 'coral' | 'mint' | 'lilac' | 'mono';
@@ -58,6 +59,10 @@ interface ThemeContextType {
   cornerSmoothing: boolean;
   setCornerSmoothing: (enabled: boolean) => void;
   cornerSmoothingSupported: boolean;
+  cornerSmoothingAvailable: boolean;
+  liquidGlass: boolean;
+  setLiquidGlass: (enabled: boolean) => void;
+  liquidGlassAvailable: boolean;
   hydrated: boolean;
 }
 
@@ -71,6 +76,10 @@ const ThemeContext = createContext<ThemeContextType>({
   cornerSmoothing: false,
   setCornerSmoothing: () => {},
   cornerSmoothingSupported: false,
+  cornerSmoothingAvailable: false,
+  liquidGlass: false,
+  setLiquidGlass: () => {},
+  liquidGlassAvailable: false,
   hydrated: false,
 });
 
@@ -107,6 +116,14 @@ const getInitialCornerSmoothing = (): boolean => {
   return true;
 };
 
+const getInitialLiquidGlass = (): boolean => {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('liquidGlass');
+    return saved === 'true';
+  }
+  return false;
+};
+
 const getInitialAccentColor = (): AccentColor => {
   if (typeof window !== 'undefined') {
     const saved = localStorage.getItem('accentColor') as AccentColor;
@@ -127,12 +144,29 @@ const getInitialAccentColor = (): AccentColor => {
   return 'blue';
 };
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
+function updateThemeColorMeta(resolvedTheme: 'dark' | 'light', accent: AccentColor) {
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) {
+    const bg = resolvedTheme === 'dark'
+      ? ACCENT_DARK_BACKGROUNDS[accent]
+      : ACCENT_LIGHT_BACKGROUNDS[accent];
+    meta.setAttribute('content', bg);
+  }
+}
+
+interface ThemeProviderProps {
+  children: React.ReactNode;
+  cornerSmoothingAvailable?: boolean;
+  liquidGlassAvailable?: boolean;
+}
+
+export function ThemeProvider({ children, cornerSmoothingAvailable = false, liquidGlassAvailable = false }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [accentColor, setAccentColorState] = useState<AccentColor>(getInitialAccentColor);
   const [blurEnabled, setBlurEnabledState] = useState<boolean>(getInitialBlurEnabled);
   const [cornerSmoothing, setCornerSmoothingState] = useState<boolean>(getInitialCornerSmoothing);
   const [cornerSmoothingSupported] = useState<boolean>(getCornerSmoothingSupported);
+  const [liquidGlass, setLiquidGlassState] = useState<boolean>(getInitialLiquidGlass);
   const [hydrated, setHydrated] = useState(false);
   const pathname = usePathname();
 
@@ -160,36 +194,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       if (savedTheme === 'auto') {
         const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         document.documentElement.dataset.theme = systemTheme;
-        // Update theme-color meta tag for Safari URL bar
-        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-        if (themeColorMeta) {
-          const accentColor = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
-          const bgColor = systemTheme === 'dark' 
-            ? ACCENT_DARK_BACKGROUNDS[accentColor] 
-            : ACCENT_LIGHT_BACKGROUNDS[accentColor];
-          themeColorMeta.setAttribute('content', bgColor);
-        }
+        const ac = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
+        updateThemeColorMeta(systemTheme, ac);
       } else {
         document.documentElement.dataset.theme = savedTheme;
-        // Update theme-color meta tag for Safari URL bar
-        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-        if (themeColorMeta) {
-          const accentColor = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
-          const bgColor = savedTheme === 'dark' 
-            ? ACCENT_DARK_BACKGROUNDS[accentColor] 
-            : ACCENT_LIGHT_BACKGROUNDS[accentColor];
-          themeColorMeta.setAttribute('content', bgColor);
-        }
+        const ac = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
+        updateThemeColorMeta(savedTheme as 'dark' | 'light', ac);
       }
     } else {
       // If no saved theme, use system preference
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       document.documentElement.dataset.theme = systemTheme;
-      // Update theme-color meta tag for Safari URL bar
-      const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-      if (themeColorMeta) {
-        themeColorMeta.setAttribute('content', systemTheme === 'dark' ? '#000' : '#f1f1f3');
-      }
+      updateThemeColorMeta(systemTheme, 'blue');
     }
 
     // Initialize accent color
@@ -203,18 +219,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       if ((localStorage.getItem('theme') as Theme) === 'auto') {
         const newTheme = e.matches ? 'dark' : 'light';
         document.documentElement.dataset.theme = newTheme;
-        // Update theme-color meta tag for Safari URL bar
-        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-        if (themeColorMeta) {
-          const accentColor = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
-          const bgColor = newTheme === 'dark' 
-            ? ACCENT_DARK_BACKGROUNDS[accentColor] 
-            : ACCENT_LIGHT_BACKGROUNDS[accentColor];
-          themeColorMeta.setAttribute('content', bgColor);
-        }
+        const ac = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
+        updateThemeColorMeta(newTheme, ac);
         // Reapply accent color backgrounds for new theme
-        const accentColor = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
-        applyAccentColor(accentColor);
+        applyAccentColor(ac);
       }
     };
     mediaQuery.addEventListener('change', handleChange);
@@ -231,14 +239,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       currentTheme = theme;
       document.documentElement.dataset.theme = theme;
     }
-    // Update theme-color meta tag for Safari URL bar
-    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-    if (themeColorMeta) {
-      const bgColor = currentTheme === 'dark' 
-        ? ACCENT_DARK_BACKGROUNDS[accentColor] 
-        : ACCENT_LIGHT_BACKGROUNDS[accentColor];
-      themeColorMeta.setAttribute('content', bgColor);
-    }
+    updateThemeColorMeta(currentTheme, accentColor);
     // Reapply accent color backgrounds for new theme
     applyAccentColor(accentColor);
   }, [theme, accentColor]);
@@ -250,8 +251,31 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     setHydrated(true);
-    document.documentElement.dataset.cornerSmoothing = cornerSmoothing.toString();
+    document.documentElement.dataset.cornerSmoothing = (cornerSmoothingAvailable && cornerSmoothing).toString();
+    document.documentElement.dataset.liquidGlass = (liquidGlassAvailable && liquidGlass).toString();
   }, []);
+
+  const applyIconLiquidGlass = useCallback(() => {
+    const isActive = liquidGlassAvailable && liquidGlass && supportsBackdropFilterUrl();
+    const icons = document.querySelectorAll<HTMLElement>('.top-app-bar-icon');
+    if (isActive) {
+      const value = getIconLiquidGlassFilter();
+      icons.forEach((el) => {
+        el.style.backdropFilter = value;
+        (el.style as unknown as Record<string, unknown>)['webkitBackdropFilter'] = value;
+      });
+    } else {
+      icons.forEach((el) => {
+        el.style.backdropFilter = '';
+        (el.style as unknown as Record<string, unknown>)['webkitBackdropFilter'] = '';
+      });
+    }
+  }, [liquidGlass, liquidGlassAvailable]);
+
+  useEffect(() => {
+    requestAnimationFrame(applyIconLiquidGlass);
+  }, [applyIconLiquidGlass, pathname]);
+
   if (!hydrated) return null;
 
   const setAccentColor = (color: AccentColor) => {
@@ -267,14 +291,20 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   const setCornerSmoothing = (enabled: boolean) => {
-    if (!cornerSmoothingSupported) return;
+    if (!cornerSmoothingAvailable || !cornerSmoothingSupported) return;
     setCornerSmoothingState(enabled);
     document.documentElement.dataset.cornerSmoothing = enabled.toString();
     localStorage.setItem('cornerSmoothing', enabled.toString());
   };
 
+  const setLiquidGlass = (enabled: boolean) => {
+    setLiquidGlassState(enabled);
+    document.documentElement.dataset.liquidGlass = (liquidGlassAvailable && enabled).toString();
+    localStorage.setItem('liquidGlass', enabled.toString());
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, hydrated }}>
+    <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable, hydrated }}>
       {children}
     </ThemeContext.Provider>
   );

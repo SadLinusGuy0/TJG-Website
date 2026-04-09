@@ -7,6 +7,7 @@ import { useTheme } from '../components/ThemeProvider';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import Navigation from '../components/Navigation';
+import Footer from '../components/Footer';
 
 export default function WorkPage() {
   const { theme } = useTheme();
@@ -214,6 +215,7 @@ export default function WorkPage() {
               </div>
             </a>
           </div>
+          <Footer />
         </div>
       </div>
     </div>

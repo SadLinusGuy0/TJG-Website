@@ -73,3 +73,33 @@ export const yearSliderEnabled = flag({
     { value: false, label: 'Disabled' },
   ],
 });
+
+/**
+ * Corner Smoothing feature flag - enables the squircle corner smoothing toggle in Settings.
+ * When enabled, users with a supported browser can opt in to squircle-shaped corners.
+ */
+export const cornerSmoothingEnabled = flag({
+  key: 'corner-smoothing-enabled',
+  adapter: vercelAdapter(),
+  defaultValue: false,
+  description: 'Enable corner smoothing (squircle) toggle in Settings',
+  options: [
+    { value: true, label: 'Enabled' },
+    { value: false, label: 'Disabled' },
+  ],
+});
+
+/**
+ * Liquid Glass feature flag - enables the liquid glass refraction effect on the mobile nav bar.
+ * When enabled, a toggle appears in Settings for users to opt in.
+ */
+export const liquidGlassEnabled = flag({
+  key: 'liquid-glass-enabled',
+  adapter: vercelAdapter(),
+  defaultValue: false,
+  description: 'Enable liquid glass effect on mobile navigation bar',
+  options: [
+    { value: true, label: 'Enabled' },
+    { value: false, label: 'Disabled' },
+  ],
+});
