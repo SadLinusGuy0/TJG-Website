@@ -113,6 +113,9 @@ function processContentWithEmbeds(content: string): string {
         <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/S8xl4FFql9Q6V4O3S0Zayw/UX-Workflow?node-id=0-1&embed-host=share" allowfullscreen></iframe>
       </div>
     `,
+    'transit-model': `
+      <div class="sketchfab-embed-wrapper figma-wrapper"> <iframe title="2020 Ford Transit" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/9801fbf49bfc456497495e45efa6df0c/embed?autostart=1&transparent=1"> </iframe> <p style="font-size: 13px; font-weight: normal; margin: 5px; color: #4A4A4A;"> <a href="https://sketchfab.com/3d-models/2020-ford-transit-9801fbf49bfc456497495e45efa6df0c?utm_medium=embed&utm_campaign=share-popup&utm_content=9801fbf49bfc456497495e45efa6df0c" target="_blank" rel="nofollow" style="font-weight: bold; color: #1CAAD9;"> 2020 Ford Transit </a> by <a href="https://sketchfab.com/tonielpro520?utm_medium=embed&utm_campaign=share-popup&utm_content=9801fbf49bfc456497495e45efa6df0c" target="_blank" rel="nofollow" style="font-weight: bold; color: #1CAAD9;"> tonielpro520 </a> on <a href="https://sketchfab.com?utm_medium=embed&utm_campaign=share-popup&utm_content=9801fbf49bfc456497495e45efa6df0c" target="_blank" rel="nofollow" style="font-weight: bold; color: #1CAAD9;">Sketchfab</a></p></div>
+    `,
     'maps-embed': `
       <div class="figma-wrapper">
         <iframe src="https://www.google.com/maps/embed?pb=!4v1770888651744!6m8!1m7!1sEwCt_D72XDwMDw9hPLITpA!2m2!1d50.75749897863136!2d-2.076732351682947!3f240.73163492541838!4f-6.098039408431191!5f0.7820865974627469" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
