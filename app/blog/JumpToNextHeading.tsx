@@ -125,69 +125,6 @@ export default function JumpToNextHeading() {
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          .jump-heading-btn {
-            position: fixed;
-            bottom: 24px;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            background: color-mix(in srgb, var(--container-background) 60%, transparent 40%);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid color-mix(in srgb, var(--primary) 10%, transparent 80%);
-            border-radius: var(--br-sm);
-            color: var(--primary);
-            font-family: 'One UI Sans', sans-serif;
-            font-size: 0.9rem;
-            cursor: pointer;
-            max-width: min(320px, calc(100vw - 48px));
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            animation: jumpBtnIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            transition: background 0.2s ease, backdrop-filter 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-          }
-
-          .jump-heading-btn:hover {
-            background: color-mix(in srgb, var(--container-background) 75%, transparent 25%);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-color: color-mix(in srgb, var(--primary) 30%, transparent 70%);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          }
-
-          .jump-heading-btn:active {
-            transform: scale(0.97);
-          }
-
-          .jump-heading-btn svg {
-            flex-shrink: 0;
-            width: 16px;
-            height: 16px;
-          }
-
-          .jump-heading-label {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-weight: 700;
-          }
-
-          @keyframes jumpBtnIn {
-            from {
-              opacity: 0;
-              transform: translateY(12px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-        `
-      }} />
       <button
         className="jump-heading-btn"
         style={{ right: `${rightOffset}px` }}

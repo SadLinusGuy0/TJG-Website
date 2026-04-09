@@ -1,5 +1,6 @@
 "use client";
 import Navigation from "../components/Navigation";
+import Footer from "../components/Footer";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -113,6 +114,7 @@ export default function Shop() {
               )}
             </div>
           </div>
+          <Footer />
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Navigation from '../components/Navigation';
+import Footer from '../components/Footer';
 import { usePathname } from "next/navigation";
 
 export default function Contact() {
@@ -159,6 +160,7 @@ export default function Contact() {
               </a>
             </div>
           </div>
+          <Footer />
         </div>
       </div>
     </div>
