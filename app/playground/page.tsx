@@ -9,6 +9,7 @@ import { LoadingDots } from "../components/LoadingAnim";
 import Toast from "../components/Toast";
 import ProgressiveBlur from "../components/ProgressiveBlur";
 import NativeSlideshow from "../blog/NativeSlideshow";
+import { useTheme, ACCENT_COLORS, ACCENT_DARK_BACKGROUNDS, ACCENT_LIGHT_BACKGROUNDS, ACCENT_DARK_CONTAINER_BACKGROUNDS, ACCENT_LIGHT_CONTAINER_BACKGROUNDS, type AccentColor } from "../components/ThemeProvider";
 
 /* ------------------------------------------------------------------ */
 /*  Section wrapper – keeps each demo visually grouped                */
@@ -779,6 +780,220 @@ function DemoListItems() {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Colour Palette Previewer                                           */
+/* ------------------------------------------------------------------ */
+function DemoColourPalette() {
+  const { theme, accentColor } = useTheme();
+
+  const resolvedTheme: 'light' | 'dark' =
+    theme === 'auto'
+      ? typeof document !== 'undefined'
+        ? ((document.documentElement.dataset.theme as 'light' | 'dark') ?? 'dark')
+        : 'dark'
+      : theme;
+
+  const accentNames = Object.keys(ACCENT_COLORS) as AccentColor[];
+
+  const coreVars = [
+    { name: '--background', label: 'Background' },
+    { name: '--container-background', label: 'Container' },
+    { name: '--primary', label: 'Primary' },
+    { name: '--secondary', label: 'Secondary' },
+    { name: '--accent', label: 'Accent' },
+    { name: '--selected', label: 'Selected' },
+  ];
+
+  const stateVars = [
+    { name: '--container-background-hover', label: 'Hover' },
+    { name: '--container-background-active', label: 'Active' },
+  ];
+
+  const skeletonVars = [
+    { name: '--skeleton-base', label: 'Base' },
+    { name: '--skeleton-highlight', label: 'Highlight' },
+  ];
+
+  const groupLabel: React.CSSProperties = {
+    fontFamily: 'One UI Sans',
+    fontWeight: 600,
+    fontSize: 'var(--body-size)',
+    color: 'var(--secondary)',
+    marginBottom: 10,
+  };
+
+  const swatchGrid: React.CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(88px, 1fr))',
+    gap: 12,
+  };
+
+  function CssVarSwatch({ name, label }: { name: string; label: string }) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+        <div
+          style={{
+            height: 52,
+            borderRadius: 'var(--br-sm)',
+            backgroundColor: `var(${name})`,
+            border: '1px solid color-mix(in srgb, var(--secondary) 20%, transparent)',
+          }}
+        />
+        <span style={{ fontFamily: 'One UI Sans', fontSize: 11, fontWeight: 500, color: 'var(--primary)', lineHeight: 1.3 }}>
+          {label}
+        </span>
+        <span style={{ fontFamily: '"Courier New", monospace', fontSize: 10, color: 'var(--secondary)', lineHeight: 1.3 }}>
+          {name}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, width: '100%' }}>
+      {/* Core theme colours */}
+      <div>
+        <div style={groupLabel}>Theme</div>
+        <div style={swatchGrid}>
+          {coreVars.map(({ name, label }) => (
+            <CssVarSwatch key={name} name={name} label={label} />
+          ))}
+        </div>
+      </div>
+
+      {/* Accent palette */}
+      <div>
+        <div style={groupLabel}>Accent Palette</div>
+        <div style={swatchGrid}>
+          {accentNames.map(name => {
+            const isActive = name === accentColor;
+            return (
+              <div key={name} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                <div
+                  style={{
+                    height: 52,
+                    borderRadius: 'var(--br-sm)',
+                    backgroundColor: ACCENT_COLORS[name],
+                    border: isActive ? '2px solid var(--primary)' : '1px solid transparent',
+                    position: 'relative',
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  {isActive && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: 5,
+                        right: 5,
+                        width: 16,
+                        height: 16,
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(0,0,0,0.35)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
+                        <path d="M1 3L3 5L7 1" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                <span
+                  style={{
+                    fontFamily: 'One UI Sans',
+                    fontSize: 11,
+                    fontWeight: isActive ? 600 : 500,
+                    color: isActive ? 'var(--primary)' : 'var(--secondary)',
+                    lineHeight: 1.3,
+                    textTransform: 'capitalize',
+                  }}
+                >
+                  {name}
+                </span>
+                <span style={{ fontFamily: '"Courier New", monospace', fontSize: 10, color: 'var(--secondary)', lineHeight: 1.3 }}>
+                  {ACCENT_COLORS[name]}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Accent-specific background palette */}
+      <div>
+        <div style={groupLabel}>
+          Accent Backgrounds&nbsp;
+          <span style={{ fontWeight: 400, textTransform: 'capitalize' }}>({resolvedTheme})</span>
+        </div>
+        <div style={swatchGrid}>
+          {accentNames.map(name => {
+            const bg = resolvedTheme === 'dark' ? ACCENT_DARK_BACKGROUNDS[name] : ACCENT_LIGHT_BACKGROUNDS[name];
+            const containerBg = resolvedTheme === 'dark' ? ACCENT_DARK_CONTAINER_BACKGROUNDS[name] : ACCENT_LIGHT_CONTAINER_BACKGROUNDS[name];
+            const isActive = name === accentColor;
+            return (
+              <div key={name} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                <div
+                  style={{
+                    height: 52,
+                    borderRadius: 'var(--br-sm)',
+                    overflow: 'hidden',
+                    border: isActive
+                      ? '2px solid var(--accent)'
+                      : '1px solid color-mix(in srgb, var(--secondary) 20%, transparent)',
+                    boxSizing: 'border-box',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <div style={{ flex: 1, backgroundColor: bg }} />
+                  <div style={{ height: 18, backgroundColor: containerBg }} />
+                </div>
+                <span
+                  style={{
+                    fontFamily: 'One UI Sans',
+                    fontSize: 11,
+                    fontWeight: isActive ? 600 : 500,
+                    color: isActive ? 'var(--primary)' : 'var(--secondary)',
+                    lineHeight: 1.3,
+                    textTransform: 'capitalize',
+                  }}
+                >
+                  {name}
+                </span>
+                <span style={{ fontFamily: '"Courier New", monospace', fontSize: 10, color: 'var(--secondary)', lineHeight: 1.3 }}>
+                  {bg}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Interactive states */}
+      <div>
+        <div style={groupLabel}>Interactive States</div>
+        <div style={swatchGrid}>
+          {stateVars.map(({ name, label }) => (
+            <CssVarSwatch key={name} name={name} label={label} />
+          ))}
+        </div>
+      </div>
+
+      {/* Skeleton colours */}
+      <div>
+        <div style={groupLabel}>Skeleton</div>
+        <div style={swatchGrid}>
+          {skeletonVars.map(({ name, label }) => (
+            <CssVarSwatch key={name} name={name} label={label} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /*  Main playground content                                            */
 /* ------------------------------------------------------------------ */
 function PlaygroundContent() {
@@ -824,6 +1039,11 @@ function PlaygroundContent() {
       </div>
 
       <div className="main-content" style={{ animation: "fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards", opacity: 0 }}>
+        {/* ---- Colour Palette ---- */}
+        <Section title="Colour Palette" description="All colour variables for the current theme and accent">
+          <DemoColourPalette />
+        </Section>
+
         {/* ---- Typography ---- */}
         <Section title="Typography" description="Font scale used across the site">
           <DemoTypography />
