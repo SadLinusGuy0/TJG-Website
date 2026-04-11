@@ -47,6 +47,7 @@ export default function WorkPage() {
           </div>
 
           <div className="blank-div" style={{ marginBottom: 0 }}>
+            <div className="list-group">
             <a href="https://sammyguru.com/author/emailthatjoshguy-me/" className="list3" role="button" aria-label="View articles">
               <div className="shape">
                 <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -92,8 +93,9 @@ export default function WorkPage() {
                 </svg>
               </div>
             </a>
+            </div>
           </div>
-          
+
 
           <div className="container1">
             <div className="title">Design projects</div>
@@ -156,6 +158,7 @@ export default function WorkPage() {
               <div className="title">Other projects</div>
             </div>
 
+            <div className="list-group">
             <a href="https://legacy.thatjoshguy.me" className="list3" role="button" aria-label="View legacy website">
               <div className="shape">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -214,6 +217,7 @@ export default function WorkPage() {
                 </svg>
               </div>
             </a>
+            </div>
           </div>
           <Footer />
         </div>

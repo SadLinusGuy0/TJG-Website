@@ -473,28 +473,30 @@ function FmpSectionButtons({ content, slug }: { content: string; slug: string })
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
-      {sections.map((section) => (
-        <Link
-          key={section.slug}
-          href={`/blog/${slug}/${section.slug}`}
-          className="list3"
-          style={{
-            justifyContent: 'space-between',
-            textDecoration: 'none',
-            fontWeight: 600,
-            fontFamily: "'One UI Sans', sans-serif",
-            width: '100%',
-            maxWidth: '100%',
-            boxSizing: 'border-box',
-          }}
-        >
-          <span style={{ fontFamily: "'One UI Sans', sans-serif" }}>{section.title}</span>
-          {/* Section icon — replace the <path> below to change the icon */}
-          <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0, opacity: 0.45 }}>
-            <path fillRule="evenodd" clipRule="evenodd" d="M0.43584 1.15216C0.14084 0.861162 0.13684 0.386162 0.42784 0.091162C0.71884 -0.202838 1.19384 -0.205838 1.48884 0.085162L9.26684 7.75516C9.60284 8.08616 9.78784 8.52916 9.78784 9.00116C9.78784 9.47216 9.60284 9.91616 9.26684 10.2472L1.48884 17.9162C1.34284 18.0592 1.15284 18.1312 0.96184 18.1312C0.76884 18.1312 0.57484 18.0562 0.42784 17.9082C0.13684 17.6132 0.14084 17.1382 0.43584 16.8472L8.21284 9.17816C8.27884 9.11516 8.28784 9.04016 8.28784 9.00116C8.28784 8.96216 8.27884 8.88616 8.21284 8.82316L0.43584 1.15216Z" fill="currentColor"/>
-          </svg>
-        </Link>
-      ))}
+      <div className="list-group">
+        {sections.map((section) => (
+          <Link
+            key={section.slug}
+            href={`/blog/${slug}/${section.slug}`}
+            className="list3"
+            style={{
+              justifyContent: 'space-between',
+              textDecoration: 'none',
+              fontWeight: 600,
+              fontFamily: "'One UI Sans', sans-serif",
+              width: '100%',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
+            }}
+          >
+            <span style={{ fontFamily: "'One UI Sans', sans-serif" }}>{section.title}</span>
+            <div className="list-item-separator" />
+            <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0, opacity: 0.45 }}>
+              <path fillRule="evenodd" clipRule="evenodd" d="M0.43584 1.15216C0.14084 0.861162 0.13684 0.386162 0.42784 0.091162C0.71884 -0.202838 1.19384 -0.205838 1.48884 0.085162L9.26684 7.75516C9.60284 8.08616 9.78784 8.52916 9.78784 9.00116C9.78784 9.47216 9.60284 9.91616 9.26684 10.2472L1.48884 17.9162C1.34284 18.0592 1.15284 18.1312 0.96184 18.1312C0.76884 18.1312 0.57484 18.0562 0.42784 17.9082C0.13684 17.6132 0.14084 17.1382 0.43584 16.8472L8.21284 9.17816C8.27884 9.11516 8.28784 9.04016 8.28784 9.00116C8.28784 8.96216 8.27884 8.88616 8.21284 8.82316L0.43584 1.15216Z" fill="currentColor"/>
+            </svg>
+          </Link>
+        ))}
+      </div>
 
       {/* Disclaimer — update name and email below */}
       <div style={{

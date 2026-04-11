@@ -80,7 +80,7 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
       >
         {displayedPosts.length > 0 ? (
           <div className="blank-div">
-            <div className="theme-container">
+            <div className="list-group">
               {displayedPosts.map((post) => {
                 const featuredImageUrl = featuredImages.get(post.id);
                 

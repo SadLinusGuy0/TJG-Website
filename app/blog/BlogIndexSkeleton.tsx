@@ -22,7 +22,7 @@ export default function BlogIndexSkeleton() {
 
       {/* Post card skeletons */}
       <div className="blank-div">
-        <div className="theme-container">
+        <div className="list-group">
           {Array.from({ length: 6 }).map((_, i) => (
             <SkeletonCard key={i} />
           ))}

@@ -43,9 +43,9 @@ export default function Shop() {
           </div>
 
           <div className="blank-div">
-            <div className="theme-container">
+            <div className="list-group">
               {/* Gumroad main card */}
-              <a href="https://shop.thatjoshguy.me/" className="list3" role="button" aria-label="Gumroad" style={{ marginBottom: 20 }}>
+              <a href="https://shop.thatjoshguy.me/" className="list3" role="button" aria-label="Gumroad">
                 <div className="shape">
                   {/* Gumroad SVG */}
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

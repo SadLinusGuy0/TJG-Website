@@ -15,10 +15,10 @@ function AboutContent() {
   const [tapCount, setTapCount] = useState(0);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [showDevDialog, setShowDevDialog] = useState(false);
   const tapTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleVersionTap = () => {
-    // Clear any existing timeout
     if (tapTimeoutRef.current) {
       clearTimeout(tapTimeoutRef.current);
     }
@@ -26,33 +26,34 @@ function AboutContent() {
     const newCount = tapCount + 1;
     setTapCount(newCount);
 
-    // Reset tap count after 2 seconds of no taps
     tapTimeoutRef.current = setTimeout(() => {
       setTapCount(0);
     }, 2000);
 
-    // If 7 taps reached, toggle blog state and show toast
     if (newCount >= 7) {
-      const currentlyEnabled =
-        localStorage.getItem("college-blogs-enabled") === "true";
-      const newState = !currentlyEnabled;
+      const alreadyEnabled =
+        localStorage.getItem("developer-options-enabled") === "true";
 
-      if (newState) {
-        localStorage.setItem("college-blogs-enabled", "true");
-        setToastMessage("College blogs enabled");
-        window.dispatchEvent(new Event("college-blogs-enabled"));
+      if (alreadyEnabled) {
+        setToastMessage("Developer options are already enabled");
+        setShowToast(true);
       } else {
-        localStorage.removeItem("college-blogs-enabled");
-        setToastMessage("College blogs hidden");
-        window.dispatchEvent(new Event("college-blogs-disabled"));
+        setShowDevDialog(true);
       }
 
-      setShowToast(true);
       setTapCount(0);
       if (tapTimeoutRef.current) {
         clearTimeout(tapTimeoutRef.current);
       }
     }
+  };
+
+  const handleDevOptionsAccept = () => {
+    localStorage.setItem("developer-options-enabled", "true");
+    window.dispatchEvent(new Event("developer-options-changed"));
+    setShowDevDialog(false);
+    setToastMessage("Developer options enabled");
+    setShowToast(true);
   };
 
   useEffect(() => {
@@ -138,7 +139,7 @@ function AboutContent() {
         <div className="container1" style={{ paddingTop: "0" }}>
             <div className="title">Credits</div>
           </div>
-          <div className="theme-container">
+          <div className="list-group">
             <a
               href="https://x.com/BennettBuhner"
               className="list3"
@@ -241,7 +242,7 @@ function AboutContent() {
               </p>
             </div>
           </div>
-          <div className="theme-container">
+          <div className="list-group">
             <a
               href="https://github.com/SadLinusGuy0/TJG-Website/tree/main"
               className="list3"
@@ -297,6 +298,21 @@ function AboutContent() {
           </div>
         </div>
       </div>
+
+      {showDevDialog && (
+        <div className="dialog-overlay" onClick={() => setShowDevDialog(false)}>
+          <div className="dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="dialog-body">
+              <div className="dialog-title">Developer options</div>
+              <div className="dialog-text">Enable developer options? This will show additional settings.</div>
+            </div>
+            <div className="dialog-actions">
+              <button className="dialog-btn" onClick={() => setShowDevDialog(false)}>Cancel</button>
+              <button className="dialog-btn dialog-btn--primary" onClick={handleDevOptionsAccept}>Accept</button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

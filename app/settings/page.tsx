@@ -75,6 +75,8 @@ function ThemePreviewAuto({ accent }: { accent: AccentColor }) {
 function SettingsContent() {
   const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [devOptionsEnabled, setDevOptionsEnabled] = useState(false);
+  const [blogOverride, setBlogOverride] = useState(false);
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || '/';
 
@@ -83,6 +85,16 @@ function SettingsContent() {
     localStorage.setItem('progressiveBlur', blurEnabled.toString());
     document.documentElement.dataset.progressiveBlur = blurEnabled.toString();
   }, [blurEnabled]);
+
+  useEffect(() => {
+    const checkDevOptions = () => {
+      setDevOptionsEnabled(localStorage.getItem('developer-options-enabled') === 'true');
+      setBlogOverride(localStorage.getItem('college-blogs-enabled') === 'true');
+    };
+    checkDevOptions();
+    window.addEventListener('developer-options-changed', checkDevOptions);
+    return () => window.removeEventListener('developer-options-changed', checkDevOptions);
+  }, []);
 
   return (
     <>
@@ -268,88 +280,145 @@ function SettingsContent() {
             )}
           </div>
         </div>
-        <label htmlFor="progressive-blur-toggle" className="list3" style={{ cursor: 'pointer' }}>
-          <div className="test-toggle-group">
-            <div className="body-text">Blur effects</div>
-            <div className="information-wrapper">
-              <div className="information">Enable or disable the blur effects on scroll</div>
-            </div>
-          </div>
-          <div className="toggle-switch">
-            <input
-              type="checkbox"
-              checked={blurEnabled}
-              onChange={(e) => setBlurEnabled(e.target.checked)}
-              id="progressive-blur-toggle"
-            />
-            <span className="toggle-slider"></span>
-          </div>
-        </label>
-
-        {cornerSmoothingAvailable && (
-          <label
-            htmlFor="corner-smoothing-toggle"
-            className="list3"
-            style={{
-              cursor: cornerSmoothingSupported ? 'pointer' : 'default',
-              opacity: cornerSmoothingSupported ? 1 : 0.45,
-              pointerEvents: cornerSmoothingSupported ? 'auto' : 'none',
-            }}
-          >
+        <div className="list-group">
+          <label htmlFor="progressive-blur-toggle" className="list3" style={{ cursor: 'pointer' }}>
             <div className="test-toggle-group">
-              <div className="body-text">Corner smoothing</div>
+              <div className="body-text">Blur effects</div>
               <div className="information-wrapper">
-                <div className="information">
-                  {cornerSmoothingSupported
-                    ? 'Use squircle-shaped corners for a smoother look'
-                    : 'Not supported on this browser'}
+                <div className="information">Enable or disable the blur effects on scroll</div>
+              </div>
+            </div>
+            <div className="toggle-switch">
+              <input
+                type="checkbox"
+                checked={blurEnabled}
+                onChange={(e) => setBlurEnabled(e.target.checked)}
+                id="progressive-blur-toggle"
+              />
+              <span className="toggle-slider"></span>
+            </div>
+          </label>
+
+          {cornerSmoothingAvailable && (
+            <label
+              htmlFor="corner-smoothing-toggle"
+              className="list3"
+              style={{
+                cursor: cornerSmoothingSupported ? 'pointer' : 'default',
+                opacity: cornerSmoothingSupported ? 1 : 0.45,
+                pointerEvents: cornerSmoothingSupported ? 'auto' : 'none',
+              }}
+            >
+              <div className="test-toggle-group">
+                <div className="body-text">Corner smoothing</div>
+                <div className="information-wrapper">
+                  <div className="information">
+                    {cornerSmoothingSupported
+                      ? 'Use squircle-shaped corners for a smoother look'
+                      : 'Not supported on this browser'}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="toggle-switch">
-              <input
-                type="checkbox"
-                checked={cornerSmoothing}
-                onChange={(e) => setCornerSmoothing(e.target.checked)}
-                id="corner-smoothing-toggle"
-                disabled={!cornerSmoothingSupported}
-              />
-              <span className="toggle-slider"></span>
-            </div>
-          </label>
-        )}
+              <div className="toggle-switch">
+                <input
+                  type="checkbox"
+                  checked={cornerSmoothing}
+                  onChange={(e) => setCornerSmoothing(e.target.checked)}
+                  id="corner-smoothing-toggle"
+                  disabled={!cornerSmoothingSupported}
+                />
+                <span className="toggle-slider"></span>
+              </div>
+            </label>
+          )}
 
-        {liquidGlassAvailable && (
-          <label htmlFor="liquid-glass-toggle" className="list3" style={{ cursor: 'pointer' }}>
-            <div className="test-toggle-group">
-              <div className="body-text" style={{ display: 'flex', alignItems: 'center' }}>
-                <span className="beta-chip">Beta</span>
-                Liquid Glass
+          {liquidGlassAvailable && (
+            <label htmlFor="liquid-glass-toggle" className="list3" style={{ cursor: 'pointer' }}>
+              <div className="test-toggle-group">
+                <div className="body-text" style={{ display: 'flex', alignItems: 'center' }}>
+                  <span className="beta-chip">Beta</span>
+                  Liquid Glass
+                </div>
+                <div className="information-wrapper">
+                  <div className="information">Apply a glass refraction effect to UI elements. May impact performance on some devices.</div>
+                </div>
               </div>
-              <div className="information-wrapper">
-                <div className="information">Apply a glass refraction effect to UI elements. May impact performance on some devices.</div>
+              <div className="toggle-switch">
+                <input
+                  type="checkbox"
+                  checked={liquidGlass}
+                  onChange={(e) => setLiquidGlass(e.target.checked)}
+                  id="liquid-glass-toggle"
+                />
+                <span className="toggle-slider"></span>
               </div>
+            </label>
+          )}
+        </div>
+
+        {devOptionsEnabled && (
+          <>
+            <div className="container1">
+              <div className="title">Developer options</div>
             </div>
-            <div className="toggle-switch">
-              <input
-                type="checkbox"
-                checked={liquidGlass}
-                onChange={(e) => setLiquidGlass(e.target.checked)}
-                id="liquid-glass-toggle"
-              />
-              <span className="toggle-slider"></span>
+            <div className="list-group">
+              <label htmlFor="blog-override-toggle" className="list3" style={{ cursor: 'pointer' }}>
+                <div className="test-toggle-group">
+                  <div className="body-text">Blog page</div>
+                  <div className="information-wrapper">
+                    <div className="information">Override the cloud flag and show the Blog tab</div>
+                  </div>
+                </div>
+                <div className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    checked={blogOverride}
+                    onChange={(e) => {
+                      const enabled = e.target.checked;
+                      setBlogOverride(enabled);
+                      if (enabled) {
+                        localStorage.setItem('college-blogs-enabled', 'true');
+                        window.dispatchEvent(new Event('college-blogs-enabled'));
+                      } else {
+                        localStorage.removeItem('college-blogs-enabled');
+                        window.dispatchEvent(new Event('college-blogs-disabled'));
+                      }
+                    }}
+                    id="blog-override-toggle"
+                  />
+                  <span className="toggle-slider"></span>
+                </div>
+              </label>
+              <a href="/playground" className="list3" role="button" aria-label="Component Playground">
+                <div className="test-toggle-group">
+                  <div className="body-text">Component Playground</div>
+                  <div className="information-wrapper">
+                    <div className="information">Browse and test UI components</div>
+                  </div>
+                </div>
+                <div className="list-item-separator" />
+                <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
+                  <path d="M1 1L7 7L1 13" stroke="var(--secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
             </div>
-          </label>
+          </>
         )}
 
         <div className="container1">
         </div>
 
+        <div className="list-group">
           <a href="/settings/about" className="list3" role="button" aria-label="About this site">
             <div className="test-toggle-group">
               <div className="body-text">About this site</div>
             </div>
+            <div className="list-item-separator" />
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
+              <path d="M1 1L7 7L1 13" stroke="var(--secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </a>
+        </div>
         </div>
     </>
   );

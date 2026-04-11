@@ -613,6 +613,269 @@ html[data-theme="dark"] button.list3:hover {
   cursor: not-allowed;
 }
 
+/* ------------------------------------------------------------------ */
+/*  Grouped list items                                                 */
+/* ------------------------------------------------------------------ */
+.list-group {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--br-9xl);
+  background-color: var(--container-background);
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.list-group > .list3,
+.list-group > a.list3,
+.list-group > button.list3,
+.list-group > label.list3 {
+  background-color: transparent;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
+.list-group > .list3:not(:last-child)::after,
+.list-group > a.list3:not(:last-child)::after,
+.list-group > label.list3:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: color-mix(in srgb, var(--secondary) 15%, transparent);
+}
+
+.list-group > .list3 {
+  position: relative;
+}
+
+/* Inside groups: no scale on hover, just background change */
+.list-group > .list3:hover,
+.list-group > a.list3:hover,
+.list-group > button.list3:hover,
+.list-group > label.list3:hover {
+  transform: none !important;
+  outline: none;
+}
+
+html[data-theme="light"] .list-group > .list3:hover,
+html[data-theme="light"] .list-group > a.list3:hover,
+html[data-theme="light"] .list-group > button.list3:hover,
+html[data-theme="light"] .list-group > label.list3:hover {
+  transform: none !important;
+  outline: none;
+}
+
+html[data-theme="dark"] .list-group > .list3:hover,
+html[data-theme="dark"] .list-group > a.list3:hover,
+html[data-theme="dark"] .list-group > button.list3:hover,
+html[data-theme="dark"] .list-group > label.list3:hover {
+  transform: none !important;
+  outline: none;
+}
+
+@media (prefers-color-scheme: light) {
+  .list-group > .list3:hover,
+  .list-group > a.list3:hover,
+  .list-group > button.list3:hover,
+  .list-group > label.list3:hover {
+    transform: none !important;
+    outline: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .list-group > .list3:hover,
+  .list-group > a.list3:hover,
+  .list-group > button.list3:hover,
+  .list-group > label.list3:hover {
+    transform: none !important;
+    outline: none;
+  }
+}
+
+/* Vertical separator between content and trailing action */
+.list-item-separator {
+  width: 1px;
+  align-self: stretch;
+  background-color: color-mix(in srgb, var(--secondary) 20%, transparent);
+  flex-shrink: 0;
+  margin: -4px 0;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Sliders                                                            */
+/* ------------------------------------------------------------------ */
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.slider-track {
+  position: relative;
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--secondary) 30%, transparent);
+  cursor: pointer;
+  touch-action: none;
+}
+
+.slider-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  pointer-events: none;
+}
+
+.slider-thumb {
+  position: absolute;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary);
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  z-index: 2;
+  transition: box-shadow 0.15s ease;
+}
+
+.slider-thumb:active {
+  cursor: grabbing;
+}
+
+.slider-thumb--segmented {
+  background: var(--container-background);
+  border: 2.5px solid var(--accent);
+  box-sizing: border-box;
+}
+
+.slider-stop {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--secondary) 40%, transparent);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Dialog                                                             */
+/* ------------------------------------------------------------------ */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 2000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+  animation: dialogOverlayIn 0.2s ease forwards;
+}
+
+@keyframes dialogOverlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes dialogSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dialog {
+  width: 100%;
+  max-width: 420px;
+  background: color-mix(in srgb, var(--container-background) 97%, transparent);
+  backdrop-filter: blur(120px) saturate(1.8);
+  -webkit-backdrop-filter: blur(120px) saturate(1.8);
+  border-radius: 28px;
+  border: 1px solid color-mix(in srgb, var(--secondary) 15%, transparent);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: dialogSlideUp 0.25s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+}
+
+.dialog-body {
+  padding: 24px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dialog-title {
+  font-family: var(--body);
+  font-weight: 700;
+  font-size: var(--subtitle-size);
+  color: var(--primary);
+}
+
+.dialog-text {
+  font-family: var(--body);
+  font-weight: 400;
+  font-size: var(--body-size);
+  color: var(--secondary);
+}
+
+.dialog-actions {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.dialog-btn {
+  flex: 1;
+  padding: 16px;
+  border: none;
+  background: none;
+  font-family: var(--body);
+  font-weight: 700;
+  font-size: var(--subheading-size);
+  color: var(--primary);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  position: relative;
+}
+
+.dialog-btn:hover {
+  background-color: color-mix(in srgb, var(--secondary) 10%, transparent);
+}
+
+.dialog-btn:active {
+  background-color: color-mix(in srgb, var(--secondary) 20%, transparent);
+}
+
+.dialog-btn + .dialog-btn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 20px;
+  background: color-mix(in srgb, var(--secondary) 25%, transparent);
+}
+
+.dialog-btn--primary {
+  color: var(--accent);
+}
+
 .list4 {
   align-self: stretch;
   border-radius: var(--br-9xl);
@@ -1163,6 +1426,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   .container1,
   .list3,
   .list4,
+  .list-group,
   .button-container,
   .theme-container {
       width: 100%;
@@ -1198,6 +1462,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
 
   .list3,
   .list4,
+  .list-group,
   .container,
   .theme-container,
   .button-container {

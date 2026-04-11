@@ -133,7 +133,7 @@ export default function OneUIDesignKitPage() {
             </div>
           </div>
 
-          <div className="theme-container">
+          <div className="list-group">
             <a href="https://www.figma.com/community/file/1456035621603784201/one-ui-design-kit" className="list3" role="button" aria-label="Try One UI Design Kit in Figma">
               <div className="shape">
                 <svg width="19" height="26" viewBox="0 0 19 26" fill="none" xmlns="http://www.w3.org/2000/svg">
