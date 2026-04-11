@@ -2198,25 +2198,31 @@ background: rgba(255,255,255,0.08);
 
 .progressive-blur-overlay {
 position: fixed;
-top: 0;
 left: 0;
 width: 100vw;
-height: 160px;
+height: 92px;
 pointer-events: none;
 z-index: 9;
-backdrop-filter: blur(120px);
--webkit-backdrop-filter: blur(120px);
-mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
--webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
+isolation: isolate;
+}
+
+.progressive-blur-overlay--top {
+top: 0;
+}
+
+.progressive-blur-overlay--bottom {
+bottom: 0;
+}
+
+.progressive-blur-layer,
+.progressive-blur-gradient {
+position: absolute;
+inset: 0;
 }
 
 @media (max-width: 900px) {
 .progressive-blur-overlay {
-  height: 120px;
-  backdrop-filter: blur(160px);
-  -webkit-backdrop-filter: blur(160px);
-  mask-image: linear-gradient(to bottom, black 0%, transparent 60%);
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 60%);
+  height: 68px;
 }
 }
 
@@ -4605,4 +4611,3 @@ justify-content: center;
     height: 36px;
   }
 }
-

@@ -16,13 +16,16 @@ const BLUR_LAYERS = [
   { blur: 64, stops: [70, 100] },
 ];
 
-function getMask(stops: number[], flip: boolean): string {
-  const s = flip ? stops.map(v => 100 - v).reverse() : stops;
+function buildMask(stops: number[], position: 'top' | 'bottom'): string {
+  const isTop = position === 'top';
+  const s = isTop ? stops.map(v => 100 - v).reverse() : stops;
+
   if (stops.length === 2) {
-    return flip
+    return isTop
       ? `linear-gradient(rgba(0,0,0,1) ${s[0]}%, rgba(0,0,0,0) ${s[1]}%)`
       : `linear-gradient(rgba(0,0,0,0) ${s[0]}%, rgba(0,0,0,1) ${s[1]}%)`;
   }
+
   return `linear-gradient(rgba(0,0,0,0) ${s[0]}%, rgba(0,0,0,1) ${s[1]}%, rgba(0,0,0,1) ${s[2]}%, rgba(0,0,0,0) ${s[3]}%)`;
 }
 
@@ -50,35 +53,27 @@ export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurPro
 
   return (
     <div
-      className="progressive-blur-overlay"
+      className={`progressive-blur-overlay progressive-blur-overlay--${position}`}
       aria-hidden="true"
-      style={{
-        position: 'fixed',
-        pointerEvents: 'none',
-        [isTop ? 'top' : 'bottom']: 0,
-        left: 0,
-        width: '100vw',
-        height: '160px',
-        zIndex: 9,
-      }}
     >
-      {BLUR_LAYERS.map((layer, i) => (
-        <div
-          key={i}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backdropFilter: `blur(${layer.blur}px)`,
-            WebkitBackdropFilter: `blur(${layer.blur}px)`,
-            mask: getMask(layer.stops, isTop),
-            WebkitMask: getMask(layer.stops, isTop),
-          }}
-        />
-      ))}
+      {BLUR_LAYERS.map((layer, i) => {
+        const mask = buildMask(layer.stops, position);
+        return (
+          <div
+            key={i}
+            className="progressive-blur-layer"
+            style={{
+              backdropFilter: `blur(${layer.blur}px)`,
+              WebkitBackdropFilter: `blur(${layer.blur}px)`,
+              maskImage: mask,
+              WebkitMaskImage: mask,
+            }}
+          />
+        );
+      })}
       <div
+        className="progressive-blur-gradient"
         style={{
-          position: 'absolute',
-          inset: 0,
           background: isTop
             ? 'linear-gradient(var(--background), transparent)'
             : 'linear-gradient(transparent, var(--background))',
