@@ -80,78 +80,69 @@ function setCookieOverride(key: string, state: OverrideState) {
   }
 }
 
-function cycleState(current: OverrideState): OverrideState {
-  if (current === 'cloud') return 'on';
-  if (current === 'on') return 'off';
-  return 'cloud';
-}
-
 function OverrideControl({
+  flagKey,
   state,
   onSelect,
 }: {
+  flagKey: string;
   state: OverrideState;
   onSelect: (next: OverrideState) => void;
 }) {
-  const segments: { value: OverrideState; label: string }[] = [
-    { value: 'cloud', label: 'Cloud' },
-    { value: 'on', label: 'On' },
-    { value: 'off', label: 'Off' },
-  ];
+  const isOverriding = state !== 'cloud';
+  const isOn = state === 'on';
+
+  const handleToggleChange = () => {
+    if (state === 'cloud') {
+      onSelect('on');
+    } else {
+      onSelect(isOn ? 'off' : 'on');
+    }
+  };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        gap: '2px',
-        padding: '3px',
-        background: 'rgba(120,120,128,0.12)',
-        borderRadius: '10px',
-        flexShrink: 0,
-      }}
-    >
-      {segments.map(seg => {
-        const isSelected = state === seg.value;
-        let bg = 'transparent';
-        let color = 'var(--secondary)';
-        if (isSelected) {
-          if (seg.value === 'cloud') {
-            bg = 'var(--container-background)';
-            color = 'var(--primary)';
-          } else if (seg.value === 'on') {
-            bg = 'var(--accent)';
-            color = '#fff';
-          } else {
-            bg = '#FF3B30';
-            color = '#fff';
-          }
-        }
-        return (
-          <button
-            key={seg.value}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              onSelect(seg.value);
-            }}
-            style={{
-              padding: '5px 11px',
-              borderRadius: '7px',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '13px',
-              fontWeight: isSelected ? 600 : 400,
-              background: bg,
-              color,
-              transition: 'all 0.15s ease-out',
-              fontFamily: 'var(--body)',
-              boxShadow: isSelected ? '0 1px 3px rgba(0,0,0,0.15)' : 'none',
-            }}
-          >
-            {seg.label}
-          </button>
-        );
-      })}
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          onSelect('cloud');
+        }}
+        aria-label="Revert to cloud value"
+        style={{
+          opacity: isOverriding ? 1 : 0,
+          pointerEvents: isOverriding ? 'auto' : 'none',
+          transition: 'opacity 0.15s ease-out',
+          width: '22px',
+          height: '22px',
+          borderRadius: '50%',
+          background: 'rgba(120,120,128,0.18)',
+          border: 'none',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 0,
+          flexShrink: 0,
+        }}
+      >
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+          <path d="M1 1L7 7M7 1L1 7" stroke="var(--secondary)" strokeWidth="1.5" strokeLinecap="round"/>
+        </svg>
+      </button>
+
+      <div
+        className="toggle-switch"
+        style={{ opacity: state === 'cloud' ? 0.4 : 1, transition: 'opacity 0.15s ease-out' }}
+      >
+        <input
+          type="checkbox"
+          id={`flag-toggle-${flagKey}`}
+          checked={isOn}
+          onChange={handleToggleChange}
+        />
+        <span className="toggle-slider" />
+      </div>
     </div>
   );
 }
@@ -205,7 +196,7 @@ function FeatureFlagsContent() {
       </div>
 
       <div className="main-content" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0 }}>
-        <div className="container" style={{ padding: 'var(--padding-xll)' }}>
+        <div style={{ padding: 'var(--padding-xll)' }}>
           <div className="information-wrapper">
             <div className="information">
               Override Vercel feature flags locally. Changes take effect on the next page load. Overrides are stored as cookies and do not affect other users.
@@ -226,6 +217,7 @@ function FeatureFlagsContent() {
                 </div>
                 {mounted && (
                   <OverrideControl
+                    flagKey={flag.key}
                     state={state}
                     onSelect={(next) => handleSelect(flag.key, next)}
                   />
