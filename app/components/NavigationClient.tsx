@@ -121,6 +121,12 @@ export default function NavigationClient({ hideMobile = false, showBlog: propSho
   });
   const [showBlog, setShowBlog] = useState(() => {
     if (typeof window !== 'undefined') {
+      // Check cookie override from Feature Flags page first
+      const cookieMatch = document.cookie.split('; ').find(c => c.startsWith('ff-blog-enabled='));
+      if (cookieMatch) {
+        return cookieMatch.split('=')[1] === 'true' || propShowBlog;
+      }
+      // Fall back to legacy localStorage override
       const localStorageValue = localStorage.getItem('college-blogs-enabled');
       if (localStorageValue !== null) {
         return localStorageValue === 'true' || propShowBlog;
@@ -133,8 +139,15 @@ export default function NavigationClient({ hideMobile = false, showBlog: propSho
   useEffect(() => {
     const checkBlogFlag = () => {
       if (typeof window !== 'undefined') {
+        // Check cookie override from Feature Flags page first
+        const cookieMatch = document.cookie.split('; ').find(c => c.startsWith('ff-blog-enabled='));
+        if (cookieMatch) {
+          setShowBlog(cookieMatch.split('=')[1] === 'true' || propShowBlog);
+          return;
+        }
+        // Fall back to legacy localStorage override
         const localStorageValue = localStorage.getItem('college-blogs-enabled');
-        const enabled = localStorageValue !== null 
+        const enabled = localStorageValue !== null
           ? localStorageValue === 'true'
           : defaultEnabled;
         setShowBlog(enabled || propShowBlog);
@@ -149,12 +162,12 @@ export default function NavigationClient({ hideMobile = false, showBlog: propSho
       }
     };
     window.addEventListener('storage', handleStorageChange);
-    
+
     const handleBlogEnabled = () => checkBlogFlag();
     const handleBlogDisabled = () => checkBlogFlag();
     window.addEventListener('college-blogs-enabled', handleBlogEnabled);
     window.addEventListener('college-blogs-disabled', handleBlogDisabled);
-    
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('college-blogs-enabled', handleBlogEnabled);
