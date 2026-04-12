@@ -131,9 +131,10 @@ function OverrideControl({
         </svg>
       </button>
 
-      <div
+      <label
+        htmlFor={`flag-toggle-${flagKey}`}
         className="toggle-switch"
-        style={{ opacity: state === 'cloud' ? 0.4 : 1, transition: 'opacity 0.15s ease-out' }}
+        style={{ opacity: state === 'cloud' ? 0.4 : 1, transition: 'opacity 0.15s ease-out', cursor: 'pointer' }}
       >
         <input
           type="checkbox"
@@ -142,7 +143,7 @@ function OverrideControl({
           onChange={handleToggleChange}
         />
         <span className="toggle-slider" />
-      </div>
+      </label>
     </div>
   );
 }
