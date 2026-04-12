@@ -76,7 +76,6 @@ function SettingsContent() {
   const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [devOptionsEnabled, setDevOptionsEnabled] = useState(false);
-  const [blogOverride, setBlogOverride] = useState(false);
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || '/';
 
@@ -89,7 +88,6 @@ function SettingsContent() {
   useEffect(() => {
     const checkDevOptions = () => {
       setDevOptionsEnabled(localStorage.getItem('developer-options-enabled') === 'true');
-      setBlogOverride(localStorage.getItem('college-blogs-enabled') === 'true');
     };
     checkDevOptions();
     window.addEventListener('developer-options-changed', checkDevOptions);
@@ -362,33 +360,18 @@ function SettingsContent() {
               <div className="title">Developer options</div>
             </div>
             <div className="list-group">
-              <label htmlFor="blog-override-toggle" className="list3" style={{ cursor: 'pointer' }}>
+              <a href="/settings/feature-flags" className="list3" role="button" aria-label="Feature Flags">
                 <div className="test-toggle-group">
-                  <div className="body-text">Blog page</div>
+                  <div className="body-text">Feature Flags</div>
                   <div className="information-wrapper">
-                    <div className="information">Override the cloud flag and show the Blog tab</div>
+                    <div className="information">Locally override Vercel feature flags</div>
                   </div>
                 </div>
-                <div className="toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={blogOverride}
-                    onChange={(e) => {
-                      const enabled = e.target.checked;
-                      setBlogOverride(enabled);
-                      if (enabled) {
-                        localStorage.setItem('college-blogs-enabled', 'true');
-                        window.dispatchEvent(new Event('college-blogs-enabled'));
-                      } else {
-                        localStorage.removeItem('college-blogs-enabled');
-                        window.dispatchEvent(new Event('college-blogs-disabled'));
-                      }
-                    }}
-                    id="blog-override-toggle"
-                  />
-                  <span className="toggle-slider"></span>
-                </div>
-              </label>
+                <div className="list-item-separator" />
+                <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
+                  <path d="M1 1L7 7L1 13" stroke="var(--secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
               <a href="/playground" className="list3" role="button" aria-label="Component Playground">
                 <div className="test-toggle-group">
                   <div className="body-text">Component Playground</div>
