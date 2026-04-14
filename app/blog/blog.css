@@ -885,9 +885,7 @@
 
 .floating-search-positioner {
   position: relative;
-  width: calc(
-    100% - clamp(260px, 33vw, 420px) + (100vw - min(100vw, 1600px)) / 2
-  );
+  width: 64%;
   padding-left: 20px;
   padding-right: 20px;
   box-sizing: border-box;
@@ -901,9 +899,7 @@ body.nav-collapsed .floating-search-positioner {
 
 @media (min-width: 700px) {
   .floating-search-positioner {
-    margin-left: calc(
-      clamp(260px, 33vw, 420px) - (100vw - min(100vw, 1600px)) / 2
-    ) !important;
+    margin-left: 35% !important;
   }
   body.nav-collapsed .floating-search-positioner {
     margin-left: 14% !important;
@@ -1123,12 +1119,8 @@ mark.post-search-hl {
 
 .post-search-positioner {
   position: relative;
-  margin-left: calc(
-    clamp(260px, 33vw, 420px) - (100vw - min(100vw, 1600px)) / 2
-  );
-  width: calc(
-    100% - clamp(260px, 33vw, 420px) + (100vw - min(100vw, 1600px)) / 2
-  );
+  margin-left: 34%;
+  width: 64%;
   padding-left: 20px;
   box-sizing: border-box;
 }
@@ -1142,9 +1134,7 @@ body.nav-collapsed .post-search-positioner {
 
 @media (min-width: 700px) {
   .post-search-positioner {
-    margin-left: calc(
-      clamp(260px, 33vw, 420px) - (100vw - min(100vw, 1600px)) / 2
-    ) !important;
+    margin-left: 35% !important;
   }
   body.nav-collapsed .post-search-positioner {
     margin-left: 15% !important;
