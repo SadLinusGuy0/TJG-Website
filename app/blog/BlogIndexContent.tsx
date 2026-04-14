@@ -1,5 +1,6 @@
 import { fetchAllPosts, fetchCategories, fetchTags, WPPost, WPCategory, WPTag } from "../../lib/wordpress";
 import { getYearSliderEnabled } from "../../lib/getYearSliderFlag";
+import { getWordpressSourceUrl } from "../../lib/getWordpressSourceUrlFlag";
 import { BlogSearchProvider } from "./BlogSearchWrapper";
 import BlogPostsWithSearch from "./BlogPostsWithSearch";
 import YearSlider from "./YearSlider";
@@ -12,15 +13,21 @@ export default async function BlogIndexContent() {
   let year2Posts: WPPost[] = [];
   let yearSliderFlag = true;
 
-  const [fetchedCategories, fetchedTags, fetchedFlag] = await Promise.allSettled([
-    fetchCategories(),
-    fetchTags(),
+  // Resolve flags first (sub-millisecond — reads from cookie/config, not network)
+  const [apiBaseUrl, yearSliderResult] = await Promise.all([
+    getWordpressSourceUrl(),
     getYearSliderEnabled(),
+  ]);
+  yearSliderFlag = yearSliderResult;
+
+  // Fetch WordPress data using the resolved URL
+  const [fetchedCategories, fetchedTags] = await Promise.allSettled([
+    fetchCategories(apiBaseUrl),
+    fetchTags(apiBaseUrl),
   ]);
 
   if (fetchedCategories.status === 'fulfilled') categories = fetchedCategories.value;
   if (fetchedTags.status === 'fulfilled') tags = fetchedTags.value;
-  if (fetchedFlag.status === 'fulfilled') yearSliderFlag = fetchedFlag.value;
 
   const customOrder = ['blender', 'unit-1', 'unit-2', 'unit-3', 'unit-4', 'unit-5', 'unit-6', 'unit-7', 'final-major-project', 'uncategorized'];
   const sortedCategories = [...categories].sort((a, b) => {
@@ -37,15 +44,15 @@ export default async function BlogIndexContent() {
 
   try {
     if (year1Tag) {
-      year1Posts = await fetchAllPosts({ tagId: year1Tag.id });
+      year1Posts = await fetchAllPosts({ tagId: year1Tag.id, apiBaseUrl });
     }
 
     if (yearSliderFlag && year2Tag) {
-      year2Posts = await fetchAllPosts({ tagId: year2Tag.id });
+      year2Posts = await fetchAllPosts({ tagId: year2Tag.id, apiBaseUrl });
     }
 
     if (!year1Tag && !year2Tag) {
-      year1Posts = await fetchAllPosts();
+      year1Posts = await fetchAllPosts({ apiBaseUrl });
     }
   } catch (error) {
     console.error('Failed to fetch posts:', error);

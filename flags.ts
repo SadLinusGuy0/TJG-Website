@@ -103,3 +103,18 @@ export const liquidGlassEnabled = flag({
     { value: false, label: 'Disabled' },
   ],
 });
+
+/**
+ * WordPress source URL flag - controls which WordPress site the blog loads from.
+ * Configure per-environment in the Vercel Dashboard (e.g. college vs main site).
+ */
+export const wordpressSourceUrl = flag<string>({
+  key: 'wordpress-source-url',
+  adapter: vercelAdapter(),
+  defaultValue: 'https://tjg8.wordpress.com',
+  description: 'The WordPress site URL used as the blog data source',
+  options: [
+    { value: 'https://tjg8.wordpress.com', label: 'Main Site' },
+    { value: 'https://joshskinnertjg.wordpress.com', label: 'College Site' },
+  ],
+});

@@ -10,6 +10,7 @@ import LightboxClient from "../../../components/LightboxClient";
 import TableOfContents from "../../TableOfContents";
 import BlogContent from "../../BlogContent";
 import { FMP_SLUG, extractH1Sections } from "../../../../lib/fmpSections";
+import { getWordpressSourceUrl } from "../../../../lib/getWordpressSourceUrlFlag";
 
 export const revalidate = 300;
 
@@ -17,11 +18,11 @@ interface PageProps {
   params: Promise<{ slug: string; section: string }>;
 }
 
-const getContentForSlug = cache(async (slug: string): Promise<WPPost | null> => {
+const getContentForSlug = cache(async (slug: string, apiBaseUrl?: string): Promise<WPPost | null> => {
   try {
-    const post = await fetchPostBySlug(slug);
+    const post = await fetchPostBySlug(slug, apiBaseUrl);
     if (post) return post;
-    return await fetchPageBySlug(slug);
+    return await fetchPageBySlug(slug, apiBaseUrl);
   } catch (error) {
     console.error(`Failed to fetch content for slug "${slug}":`, error);
     return null;
@@ -88,7 +89,8 @@ function processContentWithEmbeds(content: string): string {
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   try {
     const { slug, section } = await props.params;
-    const content = await getContentForSlug(slug);
+    const apiBaseUrl = await getWordpressSourceUrl();
+    const content = await getContentForSlug(slug, apiBaseUrl);
     if (!content) {
       return { title: "Section | That Josh Guy" };
     }
@@ -165,14 +167,15 @@ function SectionSkeleton() {
 }
 
 async function SectionBody({ slug, section }: { slug: string; section: string }) {
-  const content = await getContentForSlug(slug);
+  const apiBaseUrl = await getWordpressSourceUrl();
+  const content = await getContentForSlug(slug, apiBaseUrl);
   if (!content) return notFound();
 
   const sections = extractH1Sections(content.content?.rendered || '');
   const matched = sections.find(s => s.slug === section);
   if (!matched) return notFound();
 
-  const featuredImageUrl = await getFeaturedImageUrlAsync(content);
+  const featuredImageUrl = await getFeaturedImageUrlAsync(content, apiBaseUrl);
   const sectionContent = processContentWithEmbeds(
     matched.html.replace(/^<h1[^>]*>[\s\S]*?<\/h1>\s*/i, '')
   );

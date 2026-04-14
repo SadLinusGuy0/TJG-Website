@@ -2,14 +2,18 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import Navigation from "../../components/Navigation";
 import { LoadingDots } from "../../components/LoadingAnim";
 
 const FLAG_COOKIE_PREFIX = 'ff-';
 const FLAG_COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
-const FLAGS = [
+type BooleanFlag = { key: string; name: string; description: string; type?: 'boolean' };
+type StringFlag = { key: string; name: string; description: string; type: 'string'; defaultValue: string };
+type FlagDef = BooleanFlag | StringFlag;
+
+const FLAGS: FlagDef[] = [
   {
     key: 'blog-enabled',
     name: 'Blog page',
@@ -45,16 +49,33 @@ const FLAGS = [
     name: 'Liquid Glass toggle',
     description: 'Show the Liquid Glass toggle in Settings',
   },
+  {
+    key: 'wordpress-source-url',
+    name: 'WordPress source URL',
+    description: 'The WordPress site URL used as the blog data source',
+    type: 'string',
+    defaultValue: 'https://tjg8.wordpress.com',
+  },
 ];
 
 type OverrideState = 'cloud' | 'on' | 'off';
 
-function getCookieOverride(key: string): OverrideState {
-  if (typeof document === 'undefined') return 'cloud';
+function getCookieValue(key: string): string | null {
+  if (typeof document === 'undefined') return null;
   const cookieName = FLAG_COOKIE_PREFIX + key;
   const match = document.cookie.split('; ').find(c => c.startsWith(cookieName + '='));
-  if (!match) return 'cloud';
-  return match.split('=')[1] === 'true' ? 'on' : 'off';
+  if (!match) return null;
+  return decodeURIComponent(match.split('=').slice(1).join('='));
+}
+
+function getBooleanCookieOverride(key: string): OverrideState {
+  const value = getCookieValue(key);
+  if (value === null) return 'cloud';
+  return value === 'true' ? 'on' : 'off';
+}
+
+function getStringCookieOverride(key: string): string | null {
+  return getCookieValue(key);
 }
 
 function setCookieOverride(key: string, state: OverrideState) {
@@ -77,6 +98,15 @@ function setCookieOverride(key: string, state: OverrideState) {
         window.dispatchEvent(new Event('college-blogs-disabled'));
       }
     }
+  }
+}
+
+function setStringCookieOverride(key: string, value: string | null) {
+  const cookieName = FLAG_COOKIE_PREFIX + key;
+  if (value === null) {
+    document.cookie = `${cookieName}=; path=/; max-age=0`;
+  } else {
+    document.cookie = `${cookieName}=${encodeURIComponent(value)}; path=/; max-age=${FLAG_COOKIE_MAX_AGE}`;
   }
 }
 
@@ -148,38 +178,174 @@ function OverrideControl({
   );
 }
 
+function StringOverrideControl({
+  flagKey,
+  value,
+  defaultValue,
+  onChange,
+  onClear,
+}: {
+  flagKey: string;
+  value: string | null;
+  defaultValue: string;
+  onChange: (value: string) => void;
+  onClear: () => void;
+}) {
+  const isOverriding = value !== null;
+  const [inputValue, setInputValue] = useState(value ?? '');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Sync external value changes (e.g. reset all)
+  useEffect(() => {
+    setInputValue(value ?? '');
+  }, [value]);
+
+  const commitValue = () => {
+    const trimmed = inputValue.trim();
+    if (trimmed && trimmed !== value) {
+      onChange(trimmed);
+    } else if (!trimmed && isOverriding) {
+      onClear();
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0, minWidth: 0, flex: 1, justifyContent: 'flex-end' }}>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          onClear();
+          setInputValue('');
+        }}
+        aria-label="Revert to cloud value"
+        style={{
+          opacity: isOverriding ? 1 : 0,
+          pointerEvents: isOverriding ? 'auto' : 'none',
+          transition: 'opacity 0.15s ease-out',
+          width: '22px',
+          height: '22px',
+          borderRadius: '50%',
+          background: 'rgba(120,120,128,0.18)',
+          border: 'none',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 0,
+          flexShrink: 0,
+        }}
+      >
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+          <path d="M1 1L7 7M7 1L1 7" stroke="var(--secondary)" strokeWidth="1.5" strokeLinecap="round"/>
+        </svg>
+      </button>
+
+      <input
+        ref={inputRef}
+        id={`flag-string-${flagKey}`}
+        type="text"
+        value={inputValue}
+        placeholder={defaultValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onBlur={commitValue}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            commitValue();
+            inputRef.current?.blur();
+          }
+        }}
+        style={{
+          fontFamily: "'One UI Sans', sans-serif",
+          fontSize: '0.85rem',
+          padding: '6px 10px',
+          borderRadius: 'var(--br-sm)',
+          border: '1px solid rgba(120,120,128,0.2)',
+          background: isOverriding ? 'var(--container-background)' : 'transparent',
+          color: 'var(--primary)',
+          opacity: isOverriding ? 1 : 0.5,
+          outline: 'none',
+          transition: 'opacity 0.15s ease-out, border-color 0.15s ease-out',
+          width: '100%',
+          maxWidth: '260px',
+          minWidth: 0,
+        }}
+        onFocus={(e) => {
+          e.target.style.borderColor = 'var(--accent)';
+          e.target.style.opacity = '1';
+        }}
+        onBlurCapture={(e) => {
+          e.target.style.borderColor = 'rgba(120,120,128,0.2)';
+          if (!isOverriding) e.target.style.opacity = '0.5';
+        }}
+      />
+    </div>
+  );
+}
+
 function FeatureFlagsContent() {
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || '/settings';
-  const [overrides, setOverrides] = useState<Record<string, OverrideState>>({});
+  const [booleanOverrides, setBooleanOverrides] = useState<Record<string, OverrideState>>({});
+  const [stringOverrides, setStringOverrides] = useState<Record<string, string | null>>({});
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const initial: Record<string, OverrideState> = {};
+    const initialBooleans: Record<string, OverrideState> = {};
+    const initialStrings: Record<string, string | null> = {};
     for (const flag of FLAGS) {
-      initial[flag.key] = getCookieOverride(flag.key);
+      if (flag.type === 'string') {
+        initialStrings[flag.key] = getStringCookieOverride(flag.key);
+      } else {
+        initialBooleans[flag.key] = getBooleanCookieOverride(flag.key);
+      }
     }
-    setOverrides(initial);
+    setBooleanOverrides(initialBooleans);
+    setStringOverrides(initialStrings);
     setMounted(true);
   }, []);
 
-  const handleSelect = useCallback((key: string, next: OverrideState) => {
+  const handleBooleanSelect = useCallback((key: string, next: OverrideState) => {
     setCookieOverride(key, next);
-    setOverrides(prev => ({ ...prev, [key]: next }));
+    setBooleanOverrides(prev => ({ ...prev, [key]: next }));
+  }, []);
+
+  const handleStringChange = useCallback((key: string, value: string) => {
+    setStringCookieOverride(key, value);
+    setStringOverrides(prev => ({ ...prev, [key]: value }));
+  }, []);
+
+  const handleStringClear = useCallback((key: string) => {
+    setStringCookieOverride(key, null);
+    setStringOverrides(prev => ({ ...prev, [key]: null }));
   }, []);
 
   const handleResetAll = useCallback(() => {
     for (const flag of FLAGS) {
-      setCookieOverride(flag.key, 'cloud');
+      if (flag.type === 'string') {
+        setStringCookieOverride(flag.key, null);
+      } else {
+        setCookieOverride(flag.key, 'cloud');
+      }
     }
-    const reset: Record<string, OverrideState> = {};
+    const resetBooleans: Record<string, OverrideState> = {};
+    const resetStrings: Record<string, string | null> = {};
     for (const flag of FLAGS) {
-      reset[flag.key] = 'cloud';
+      if (flag.type === 'string') {
+        resetStrings[flag.key] = null;
+      } else {
+        resetBooleans[flag.key] = 'cloud';
+      }
     }
-    setOverrides(reset);
+    setBooleanOverrides(resetBooleans);
+    setStringOverrides(resetStrings);
   }, []);
 
-  const hasAnyOverride = mounted && Object.values(overrides).some(v => v !== 'cloud');
+  const hasAnyOverride = mounted && (
+    Object.values(booleanOverrides).some(v => v !== 'cloud') ||
+    Object.values(stringOverrides).some(v => v !== null)
+  );
 
   return (
     <>
@@ -207,7 +373,30 @@ function FeatureFlagsContent() {
 
         <div className="list-group">
           {FLAGS.map(flag => {
-            const state = mounted ? (overrides[flag.key] ?? 'cloud') : 'cloud';
+            if (flag.type === 'string') {
+              const value = mounted ? (stringOverrides[flag.key] ?? null) : null;
+              return (
+                <div key={flag.key} className="list3" style={{ cursor: 'default', gap: '12px' }}>
+                  <div className="test-toggle-group" style={{ flex: '0 1 auto', minWidth: 0 }}>
+                    <div className="body-text">{flag.name}</div>
+                    <div className="information-wrapper">
+                      <div className="information">{flag.description}</div>
+                    </div>
+                  </div>
+                  {mounted && (
+                    <StringOverrideControl
+                      flagKey={flag.key}
+                      value={value}
+                      defaultValue={flag.defaultValue}
+                      onChange={(v) => handleStringChange(flag.key, v)}
+                      onClear={() => handleStringClear(flag.key)}
+                    />
+                  )}
+                </div>
+              );
+            }
+
+            const state = mounted ? (booleanOverrides[flag.key] ?? 'cloud') : 'cloud';
             return (
               <div key={flag.key} className="list3" style={{ cursor: 'default' }}>
                 <div className="test-toggle-group" style={{ flex: 1 }}>
@@ -220,7 +409,7 @@ function FeatureFlagsContent() {
                   <OverrideControl
                     flagKey={flag.key}
                     state={state}
-                    onSelect={(next) => handleSelect(flag.key, next)}
+                    onSelect={(next) => handleBooleanSelect(flag.key, next)}
                   />
                 )}
               </div>
