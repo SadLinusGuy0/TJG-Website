@@ -65,6 +65,7 @@ function processContentWithEmbeds(content: string): string {
     'story-results': `<div class="figma-wrapper"><iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://forms.office.com/Pages/AnalysisPage.aspx?AnalyzerToken=etTOj7nVjPy1Bt4CWPzEeAfutjr6345P&id=0JsvSSEvbkyhotOQXlsYcw32xjNmmxRNrKwdPrtn9KRUNlJPUklRRlRXSDVCUkRCVUZMT1RINTRJTS4u" allowfullscreen></iframe></div>`,
     'google-doc-name': `<div class="figma-wrapper"><iframe src="https://docs.google.com/document/d/e/2PACX-1vRZR3r5IoEGDi0okO7E-GHVfb9yPtadU3H8v6urWH_bvpmze1qFmm_OZL_63jmjGfiG7ML-ahpuoSPC/pub?embedded=true"></iframe></div>`,
     'figma-ux-workflow': `<div class="figma-wrapper"><iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/S8xl4FFql9Q6V4O3S0Zayw/UX-Workflow?node-id=0-1&embed-host=share" allowfullscreen></iframe></div>`,
+    'transit-model': `<div class="sketchfab-embed-wrapper figma-wrapper"> <iframe title="2020 Ford Transit" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/9801fbf49bfc456497495e45efa6df0c/embed?autostart=1&transparent=1"> </iframe> <p style="font-size: 13px; font-weight: normal; margin: 5px; color: #4A4A4A;"> <a href="https://sketchfab.com/3d-models/2020-ford-transit-9801fbf49bfc456497495e45efa6df0c?utm_medium=embed&utm_campaign=share-popup&utm_content=9801fbf49bfc456497495e45efa6df0c" target="_blank" rel="nofollow" style="font-weight: bold; color: #1CAAD9;"> 2020 Ford Transit </a> by <a href="https://sketchfab.com/tonielpro520?utm_medium=embed&utm_campaign=share-popup&utm_content=9801fbf49bfc456497495e45efa6df0c" target="_blank" rel="nofollow" style="font-weight: bold; color: #1CAAD9;"> tonielpro520 </a> on <a href="https://sketchfab.com?utm_medium=embed&utm_campaign=share-popup&utm_content=9801fbf49bfc456497495e45efa6df0c" target="_blank" rel="nofollow" style="font-weight: bold; color: #1CAAD9;">Sketchfab</a></p></div>`,
     'maps-embed': `<div class="figma-wrapper"><iframe src="https://www.google.com/maps/embed?pb=!4v1770888651744!6m8!1m7!1sEwCt_D72XDwMDw9hPLITpA!2m2!1d50.75749897863136!2d-2.076732351682947!3f240.73163492541838!4f-6.098039408431191!5f0.7820865974627469" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>`,
     'figma-prototype': `<div class="figma-wrapper"><iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="800" src="https://embed.figma.com/proto/mCrLxeF17zSEftGhESIB9u/One-UI-Setup-Flow?page-id=1%3A2&node-id=14-772&p=f&viewport=-4%2C538%2C0.13&scaling=min-zoom&content-scaling=responsive&starting-point-node-id=14%3A772&embed-host=share" allowfullscreen></iframe></div>`,
     'fmp-pitch-embed': `<div class="figma-wrapper"><iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="600" src="https://embed.figma.com/deck/tovF81JJShr77717qeJ883/FMP-Proposal?node-id=1-28&p=f&viewport=493%2C302%2C0.3&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&embed-host=share" allowfullscreen></iframe></div>`,
@@ -86,6 +87,10 @@ function processContentWithEmbeds(content: string): string {
   return processedContent;
 }
 
+function getFeaturedImageAltText(post: WPPost): string | undefined {
+  return post._embedded?.['wp:featuredmedia']?.[0]?.alt_text?.trim() || undefined;
+}
+
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   try {
     const { slug, section } = await props.params;
@@ -99,10 +104,38 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     const matched = sections.find(s => s.slug === section);
     const sectionTitle = matched?.title || section;
     const postTitle = stripHtmlAndDecode(content.title?.rendered) || "That Josh Guy";
+    const title = `${sectionTitle} - ${postTitle} | That Josh Guy`;
+    const description = `${sectionTitle} section of ${postTitle}.`;
+
+    let featuredImageUrl: string | null = null;
+    try {
+      featuredImageUrl = await getFeaturedImageUrlAsync(content);
+    } catch (error) {
+      console.error('Error fetching featured image:', error);
+    }
+
+    const imageAlt = getFeaturedImageAltText(content) || postTitle;
 
     return {
-      title: `${sectionTitle} - ${postTitle} | That Josh Guy`,
-      description: `${sectionTitle} section of ${postTitle}.`,
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        type: "article",
+        images: featuredImageUrl
+          ? [{ url: featuredImageUrl, alt: imageAlt }]
+          : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: featuredImageUrl ? [featuredImageUrl] : undefined,
+      },
+      alternates: {
+        canonical: content.link ? `${content.link}${section}` : undefined,
+      },
     };
   } catch {
     return { title: "Section | That Josh Guy" };
