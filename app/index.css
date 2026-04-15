@@ -1869,9 +1869,8 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
     transform: translateX(-50%);
     width: calc(100% - 32px);
     max-width: 480px;
-    bottom: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
     padding: 8px;
-    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
     box-sizing: border-box;
     background: color-mix(in srgb, var(--container-background) 85%, transparent);
     border-radius: var(--br-xl);
