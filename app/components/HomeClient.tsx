@@ -388,16 +388,17 @@ export default function HomeClient({
             </div>
             <div className="stack-marquee-wrapper">
               <div className="stack-marquee">
-                <div className="stack-marquee-content">
-                  {stackTools.map((tool, index) => (
-                    <StackIcon key={`m-${index}`} tool={tool} />
-                  ))}
-                </div>
-                <div className="stack-marquee-content" aria-hidden="true">
-                  {stackTools.map((tool, index) => (
-                    <StackIcon key={`m-dup-${index}`} tool={tool} />
-                  ))}
-                </div>
+                {[0, 1, 2, 3].map((copyIndex) => (
+                  <div
+                    key={copyIndex}
+                    className="stack-marquee-content"
+                    aria-hidden={copyIndex > 0 ? 'true' : undefined}
+                  >
+                    {stackTools.map((tool, index) => (
+                      <StackIcon key={`m-${copyIndex}-${index}`} tool={tool} />
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
           </div>

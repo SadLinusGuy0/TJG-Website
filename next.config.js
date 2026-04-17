@@ -37,7 +37,7 @@ const nextConfig = {
             "default-src 'self'",
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
             "style-src 'self' 'unsafe-inline'",
-            "img-src 'self' data: blob: https://*.wordpress.com https://*.wp.com https://*.gravatar.com https://joshskinnertjg.wordpress.com https://static.gumroad.com https://public-files.gumroad.com",
+            "img-src 'self' data: blob: https:",
             "font-src 'self'",
             "connect-src 'self' https://*.wordpress.com https://*.wp.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
             "frame-src 'self' https://embed.figma.com https://www.figma.com https://forms.office.com https://docs.google.com https://www.google.com https://www.youtube.com https://www.youtube-nocookie.com",

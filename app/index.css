@@ -1738,12 +1738,6 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   cursor: default;
   position: relative;
   flex-shrink: 0;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.stack-icon:hover {
-  transform: scale(1.12);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .stack-icon-image {
@@ -1792,10 +1786,6 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   animation: stack-marquee-scroll 25s linear infinite;
 }
 
-.stack-marquee:hover {
-  animation-play-state: paused;
-}
-
 .stack-marquee-content {
   display: flex;
   gap: 16px;
@@ -1804,7 +1794,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
 
 @keyframes stack-marquee-scroll {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(-25%); }
 }
 
 @media screen and (max-width: 699px) {
