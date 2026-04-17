@@ -8,6 +8,7 @@ import { Settings } from '@thatjoshguy/oneui-icons';
 import Footer from "./Footer";
 import { ReactNode } from "react";
 import type { FeaturedStory } from "../../lib/featured-stories";
+import type { RecentBlogPost } from "../../lib/recent-blog-posts";
 
 interface StackTool {
   name: string;
@@ -72,9 +73,17 @@ function PublicationLogo({ logo, alt }: { logo: string | ReactNode; alt: string 
 export default function HomeClient({
   featuredStories,
   popularStoriesEnabled = true,
+  mergedWorkCarouselEnabled = true,
+  miscSectionEnabled = true,
+  recentBlogPostsEnabled = true,
+  recentBlogPosts = [],
 }: {
   featuredStories: FeaturedStory[];
   popularStoriesEnabled?: boolean;
+  mergedWorkCarouselEnabled?: boolean;
+  miscSectionEnabled?: boolean;
+  recentBlogPostsEnabled?: boolean;
+  recentBlogPosts?: RecentBlogPost[];
 }) {
   const stackTools: StackTool[] = [
     { name: 'Notion', icon: '/images/stack/notion.png' },
@@ -308,71 +317,161 @@ export default function HomeClient({
               <h2 className="featured-stories-headline">Popular Stories</h2>
               <div className="featured-stories-scroll-wrapper">
                 <div className="featured-stories-scroll">
-                  {featuredStories.map((story, index) => (
-                    <StoryCard key={index} story={story} />
-                  ))}
+                  <div className="featured-stories-scroll-inner">
+                    {featuredStories.map((story, index) => (
+                      <StoryCard key={index} story={story} />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           {/* Design Projects Preview */}
-          <div className="design-projects-section">
+          <div className="design-projects-section" id="design-work">
             <h2 className="design-projects-headline">Design Work</h2>
             <p className="design-projects-subtitle">A selection of UI/UX projects across Samsung, Android, and beyond.</p>
-            <div className="design-projects-grid">
-              <Link href="/work" className="design-project-card">
-                <div className="design-project-thumbnail">
-                  <Image
-                    src="/images/projects/oneui-design-kit-cover-light.png"
-                    alt="One UI Design Kit"
-                    width={400}
-                    height={225}
-                    className="design-project-image"
-                  />
+            <div className="design-projects-scroll-wrapper">
+              <div className="design-projects-scroll">
+                <div className="design-projects-scroll-inner">
+              {mergedWorkCarouselEnabled ? (
+                <>
+                  <Link href="/work/oneui-design-kit" className="design-project-card">
+                    <div className="design-project-thumbnail">
+                      <Image
+                        src="/images/projects/oneuialt.png"
+                        alt="One UI Design Kit"
+                        width={400}
+                        height={225}
+                        className="design-project-image"
+                      />
+                    </div>
+                    <div className="design-project-info">
+                      <span className="design-project-title">One UI Design Kit</span>
+                      <span className="design-project-tag">UI Kit</span>
+                    </div>
+                  </Link>
+                  <a
+                    href="https://youtu.be/RCb5AaginpM"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="design-project-card"
+                  >
+                    <div className="design-project-thumbnail">
+                      <Image
+                        src="/images/projects/whatsapp.png"
+                        alt="WhatsApp You"
+                        width={400}
+                        height={225}
+                        className="design-project-image"
+                      />
+                    </div>
+                    <div className="design-project-info">
+                      <span className="design-project-title">WhatsApp You</span>
+                      <span className="design-project-tag">Concept</span>
+                    </div>
+                  </a>
+                  <a
+                    href="https://youtu.be/s3JQj6HCIwk"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="design-project-card"
+                  >
+                    <div className="design-project-thumbnail">
+                      <Image
+                        src="/images/projects/youtube-music.png"
+                        alt="YouTube Music Redesign"
+                        width={400}
+                        height={225}
+                        className="design-project-image"
+                      />
+                    </div>
+                    <div className="design-project-info">
+                      <span className="design-project-title">YouTube Music Redesign</span>
+                      <span className="design-project-tag">Concept</span>
+                    </div>
+                  </a>
+                  <a
+                    href="https://youtu.be/4QKPQKkJf3k"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="design-project-card"
+                  >
+                    <div className="design-project-thumbnail">
+                      <Image
+                        src="/images/projects/twitter-remake.png"
+                        alt="Better Twitter"
+                        width={400}
+                        height={225}
+                        className="design-project-image"
+                      />
+                    </div>
+                    <div className="design-project-info">
+                      <span className="design-project-title">Better Twitter</span>
+                      <span className="design-project-tag">Concept</span>
+                    </div>
+                  </a>
+                </>
+              ) : (
+                <>
+                  <Link href="/work" className="design-project-card">
+                    <div className="design-project-thumbnail">
+                      <Image
+                        src="/images/projects/oneui-design-kit-cover-light.png"
+                        alt="One UI Design Kit"
+                        width={400}
+                        height={225}
+                        className="design-project-image"
+                      />
+                    </div>
+                    <div className="design-project-info">
+                      <span className="design-project-title">One UI Design Kit</span>
+                      <span className="design-project-tag">UI Kit</span>
+                    </div>
+                  </Link>
+                  <Link href="/work" className="design-project-card">
+                    <div className="design-project-thumbnail">
+                      <Image
+                        src="/images/projects/youtube-music.png"
+                        alt="YouTube Music Redesign"
+                        width={400}
+                        height={225}
+                        className="design-project-image"
+                      />
+                    </div>
+                    <div className="design-project-info">
+                      <span className="design-project-title">YouTube Music Redesign</span>
+                      <span className="design-project-tag">Concept</span>
+                    </div>
+                  </Link>
+                  <Link href="/work" className="design-project-card">
+                    <div className="design-project-thumbnail">
+                      <Image
+                        src="/images/projects/twitter-remake.png"
+                        alt="Twitter Remake"
+                        width={400}
+                        height={225}
+                        className="design-project-image"
+                      />
+                    </div>
+                    <div className="design-project-info">
+                      <span className="design-project-title">Twitter Remake</span>
+                      <span className="design-project-tag">Concept</span>
+                    </div>
+                  </Link>
+                </>
+              )}
                 </div>
-                <div className="design-project-info">
-                  <span className="design-project-title">One UI Design Kit</span>
-                  <span className="design-project-tag">UI Kit</span>
-                </div>
-              </Link>
-              <Link href="/work" className="design-project-card">
-                <div className="design-project-thumbnail">
-                  <Image
-                    src="/images/projects/youtube-music.png"
-                    alt="YouTube Music Redesign"
-                    width={400}
-                    height={225}
-                    className="design-project-image"
-                  />
-                </div>
-                <div className="design-project-info">
-                  <span className="design-project-title">YouTube Music Redesign</span>
-                  <span className="design-project-tag">Concept</span>
-                </div>
-              </Link>
-              <Link href="/work" className="design-project-card">
-                <div className="design-project-thumbnail">
-                  <Image
-                    src="/images/projects/twitter-remake.png"
-                    alt="Twitter Remake"
-                    width={400}
-                    height={225}
-                    className="design-project-image"
-                  />
-                </div>
-                <div className="design-project-info">
-                  <span className="design-project-title">Twitter Remake</span>
-                  <span className="design-project-tag">Concept</span>
-                </div>
-              </Link>
+              </div>
             </div>
-            <Link href="/work" className="design-projects-cta-button">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path fill="#fff" fillRule="nonzero" d="M7.625,4.125C5.764,4.125 4.25,5.639 4.25,7.5C4.25,9.361 5.764,10.875 7.625,10.875C9.487,10.875 11,9.361 11,7.5C11,5.639 9.487,4.125 7.625,4.125M16.375,10.875C18.237,10.875 19.75,9.361 19.75,7.5C19.75,5.639 18.237,4.125 16.375,4.125C14.514,4.125 13,5.639 13,7.5C13,9.361 14.514,10.875 16.375,10.875M7.625,13.125C5.764,13.125 4.25,14.639 4.25,16.5C4.25,18.361 5.764,19.875 7.625,19.875C9.487,19.875 11,18.361 11,16.5C11,14.639 9.487,13.125 7.625,13.125M16.375,13.125C14.514,13.125 13,14.639 13,16.5C13,18.361 14.514,19.875 16.375,19.875C18.237,19.875 19.75,18.361 19.75,16.5C19.75,14.639 18.237,13.125 16.375,13.125" />
-              </svg>
-              <span>See All Projects</span>
-            </Link>
+            {!mergedWorkCarouselEnabled && (
+              <Link href="/work" className="design-projects-cta-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path fill="#fff" fillRule="nonzero" d="M7.625,4.125C5.764,4.125 4.25,5.639 4.25,7.5C4.25,9.361 5.764,10.875 7.625,10.875C9.487,10.875 11,9.361 11,7.5C11,5.639 9.487,4.125 7.625,4.125M16.375,10.875C18.237,10.875 19.75,9.361 19.75,7.5C19.75,5.639 18.237,4.125 16.375,4.125C14.514,4.125 13,5.639 13,7.5C13,9.361 14.514,10.875 16.375,10.875M7.625,13.125C5.764,13.125 4.25,14.639 4.25,16.5C4.25,18.361 5.764,19.875 7.625,19.875C9.487,19.875 11,18.361 11,16.5C11,14.639 9.487,13.125 7.625,13.125M16.375,13.125C14.514,13.125 13,14.639 13,16.5C13,18.361 14.514,19.875 16.375,19.875C18.237,19.875 19.75,18.361 19.75,16.5C19.75,14.639 18.237,13.125 16.375,13.125" />
+                </svg>
+                <span>See All Projects</span>
+              </Link>
+            )}
           </div>
 
           {/* My Stack */}
@@ -402,6 +501,71 @@ export default function HomeClient({
               </div>
             </div>
           </div>
+
+          {recentBlogPostsEnabled && recentBlogPosts.length > 0 && (
+            <div className="design-projects-section">
+              <h2 className="design-projects-headline">Recent Blog Posts</h2>
+              <p className="design-projects-subtitle">Fresh off the press.</p>
+              <div className="design-projects-scroll-wrapper">
+                <div className="design-projects-scroll">
+                  <div className="design-projects-scroll-inner">
+                    {recentBlogPosts.map((post) => (
+                      <Link key={post.id} href={`/blog/${post.slug}`} className="design-project-card">
+                        <div className="design-project-thumbnail">
+                          {post.thumbnail && (
+                            <Image
+                              src={post.thumbnail}
+                              alt={post.title.replace(/<[^>]*>/g, '')}
+                              width={400}
+                              height={225}
+                              className="design-project-image"
+                              unoptimized
+                            />
+                          )}
+                        </div>
+                        <div className="design-project-info">
+                          <span className="design-project-title" dangerouslySetInnerHTML={{ __html: post.title }}></span>
+                          <span className="design-project-tag">Blog</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {miscSectionEnabled && (
+            <div className="blank-div">
+              <div className="container1">
+                <div className="title">Misc</div>
+              </div>
+
+              <div className="list-group">
+                <a href="https://legacy.thatjoshguy.me" className="list3" role="button" aria-label="View legacy website">
+                  <div className="shape">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <mask id="mask0_misc_home" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                        <rect width="24" height="24" fill="#D9D9D9" />
+                      </mask>
+                      <g mask="url(#mask0_misc_home)">
+                        <path
+                          d="M4.825 12.025L8.7 15.9C8.88334 16.0833 8.975 16.3167 8.975 16.6C8.975 16.8833 8.88334 17.1167 8.7 17.3C8.51667 17.4833 8.28334 17.575 8 17.575C7.71667 17.575 7.48334 17.4833 7.3 17.3L2.7 12.7C2.6 12.6 2.52917 12.4917 2.4875 12.375C2.44584 12.2583 2.425 12.1333 2.425 12C2.425 11.8667 2.44584 11.7417 2.4875 11.625C2.52917 11.5083 2.6 11.4 2.7 11.3L7.3 6.7C7.5 6.5 7.7375 6.4 8.0125 6.4C8.2875 6.4 8.525 6.5 8.725 6.7C8.925 6.9 9.025 7.1375 9.025 7.4125C9.025 7.6875 8.925 7.925 8.725 8.125L4.825 12.025ZM19.175 11.975L15.3 8.1C15.1167 7.91667 15.025 7.68333 15.025 7.4C15.025 7.11667 15.1167 6.88333 15.3 6.7C15.4833 6.51667 15.7167 6.425 16 6.425C16.2833 6.425 16.5167 6.51667 16.7 6.7L21.3 11.3C21.4 11.4 21.4708 11.5083 21.5125 11.625C21.5542 11.7417 21.575 11.8667 21.575 12C21.575 12.1333 21.5542 12.2583 21.5125 12.375C21.4708 12.4917 21.4 12.6 21.3 12.7L16.7 17.3C16.5 17.5 16.2667 17.5958 16 17.5875C15.7333 17.5792 15.5 17.475 15.3 17.275C15.1 17.075 15 16.8375 15 16.5625C15 16.2875 15.1 16.05 15.3 15.85L19.175 11.975Z"
+                          fill="var(--accent)"
+                        />
+                      </g>
+                    </svg>
+                  </div>
+                  <div className="test-toggle-group">
+                    <div className="body-text">My old site</div>
+                    <div className="information-wrapper">
+                      <div className="information">legacy.thatjoshguy.me, made in conjunction with Dhiren Vasnani</div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          )}
 
           <Footer />
         </div>
