@@ -25,6 +25,21 @@ const FLAGS: FlagDef[] = [
     description: 'Show the Popular Stories section on the home page',
   },
   {
+    key: 'merged-work-carousel-enabled',
+    name: 'Merged Work carousel',
+    description: 'Show all 4 design projects on the Home carousel (merged from /work)',
+  },
+  {
+    key: 'misc-section-enabled',
+    name: 'Misc section',
+    description: 'Show the Misc section on the Home page',
+  },
+  {
+    key: 'recent-blog-posts-enabled',
+    name: 'Recent Blog Posts',
+    description: 'Show the Recent Blog Posts carousel on the Home page',
+  },
+  {
     key: 'year-slider-enabled',
     name: 'Year slider',
     description: 'Show the Year 1/Year 2 slider on the blog page',

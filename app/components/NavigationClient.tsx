@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback, createContext, useContext } f
 import { useBlogEnabled } from './BlogFlagProvider';
 import { useTheme } from './ThemeProvider';
 import { useCursorFollow } from './useCursorFollow';
-import { HomeIcon, WorkIcon, ShopIcon, BlogIcon, ContactIcon } from './NavIcons';
+import { HomeIcon, ShopIcon, BlogIcon, ContactIcon } from './NavIcons';
 import { Drawer } from '@thatjoshguy/oneui-icons';
 import { getDisplacementFilter, supportsBackdropFilterUrl } from '../utils/liquidGlass';
 
@@ -217,10 +217,6 @@ export default function NavigationClient({ hideMobile = false, showBlog: propSho
             <HomeIcon selected={pathname === '/'} />
             <div className={pathname === '/' ? 'nav-label-selected' : 'nav-label'}>Home</div>
           </DesktopNavButton>
-          <DesktopNavButton href="/work" isSelected={pathname === '/work'}>
-            <WorkIcon selected={pathname === '/work'} />
-            <div className={pathname === '/work' ? 'nav-label-selected' : 'nav-label'}>Work</div>
-          </DesktopNavButton>
           <DesktopNavButton href="/shop" isSelected={pathname === '/shop'}>
             <ShopIcon selected={pathname === '/shop'} />
             <div className={pathname === '/shop' ? 'nav-label-selected' : 'nav-label'}>Shop</div>
@@ -248,10 +244,6 @@ export default function NavigationClient({ hideMobile = false, showBlog: propSho
             <MobileNavTab href="/" isSelected={pathname === '/'}>
               <HomeIcon selected={pathname === '/'} />
               <span className="mobile-nav-label">Home</span>
-            </MobileNavTab>
-            <MobileNavTab href="/work" isSelected={pathname === '/work'}>
-              <WorkIcon selected={pathname === '/work'} />
-              <span className="mobile-nav-label">Work</span>
             </MobileNavTab>
             <MobileNavTab href="/shop" isSelected={pathname === '/shop'}>
               <ShopIcon selected={pathname === '/shop'} />

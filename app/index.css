@@ -1152,7 +1152,7 @@ button.list4:hover {
 
 .stack-section {
   width: 100%;
-  margin: 60px 0;
+  margin: 36px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1738,12 +1738,6 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   cursor: default;
   position: relative;
   flex-shrink: 0;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.stack-icon:hover {
-  transform: scale(1.12);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .stack-icon-image {
@@ -1792,10 +1786,6 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   animation: stack-marquee-scroll 25s linear infinite;
 }
 
-.stack-marquee:hover {
-  animation-play-state: paused;
-}
-
 .stack-marquee-content {
   display: flex;
   gap: 16px;
@@ -1804,7 +1794,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
 
 @keyframes stack-marquee-scroll {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(-25%); }
 }
 
 @media screen and (max-width: 699px) {
@@ -1869,9 +1859,8 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
     transform: translateX(-50%);
     width: calc(100% - 32px);
     max-width: 480px;
-    bottom: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
     padding: 8px;
-    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
     box-sizing: border-box;
     background: color-mix(in srgb, var(--container-background) 85%, transparent);
     border-radius: var(--br-xl);
@@ -3307,7 +3296,7 @@ justify-content: center;
 
 .journalist-section {
   width: 100%;
-  margin: 60px 0;
+  margin: 36px 0;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -3327,61 +3316,13 @@ justify-content: center;
   padding: 0 20px;
 }
 
-.journalist-cta-button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 16px 32px;
-  border-radius: var(--br-9xl);
-  background-color: var(--container-background);
-  color: var(--primary);
-  text-decoration: none;
-  font-family: 'One UI Sans';
-  font-weight: 600;
-  font-size: var(--subheading-size);
-  transition: transform 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-  margin: 20px auto 0;
-  width: fit-content;
-}
-
-.journalist-cta-button svg {
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-}
-
-.journalist-cta-button svg path {
-  fill: var(--primary);
-}
-
-.journalist-cta-button:hover {
-  transform: scale(1.02);
-  background-color: var(--accent);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease-in, background-color 0.2s ease-in, box-shadow 0.2s ease-in;
-}
-
-.journalist-cta-button:hover svg path {
-  fill: var(--primary);
-}
-
-.journalist-cta-button:active {
-  transform: scale(0.98);
-}
-
 /* Design Projects Stack */
 .design-projects-stack-section {
   width: 100%;
-  margin: 60px 0;
+  margin: 36px 0;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 22px;
   align-items: center;
 }
 
@@ -3522,7 +3463,7 @@ justify-content: center;
   position: relative;
   width: 100%;
   overflow: hidden;
-  padding: 40px 0;
+  padding: 28px 0;
 }
 
 .publications-marquee-wrapper::before,
@@ -3625,10 +3566,11 @@ justify-content: center;
 
 .featured-stories-section {
   width: 100%;
-  margin: 60px 0;
+  margin: 36px 0;
   display: flex;
   flex-direction: column;
   gap: 0;
+  overflow: visible;
 }
 
 .featured-stories-headline {
@@ -3643,44 +3585,44 @@ justify-content: center;
 
 .featured-stories-scroll-wrapper {
   position: relative;
-  width: 100%;
-  overflow: hidden;
-  padding: 32px 0;
+  /* Bleed left + right past the column so a peek of the next card shows and shadows have air */
+  --featured-stories-peek: min(72px, 10vw);
+  /* Align first card with main column (peek bleed + .main-content horizontal padding); mandatory snap otherwise scrolls past padding-left */
+  --featured-stories-card-start-inset: calc(var(--featured-stories-peek) + 20px);
+  width: calc(100% + 2 * var(--featured-stories-peek));
+  margin-left: calc(-1 * var(--featured-stories-peek));
+  margin-right: calc(-1 * var(--featured-stories-peek));
+  padding: 24px 0;
+  overflow-x: visible;
+  overflow-y: visible;
 }
 
-.featured-stories-scroll-wrapper::before,
-.featured-stories-scroll-wrapper::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 80px;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.featured-stories-scroll-wrapper::before {
-  left: 0;
-  background: linear-gradient(to right, var(--background) 0%, transparent 100%);
-}
-
-.featured-stories-scroll-wrapper::after {
-  right: 0;
-  background: linear-gradient(to left, var(--background) 0%, transparent 100%);
+body.nav-collapsed .featured-stories-scroll-wrapper {
+  --featured-stories-card-start-inset: calc(var(--featured-stories-peek) + 10px);
 }
 
 .featured-stories-scroll {
-  display: flex;
-  gap: 16px;
   overflow-x: auto;
+  overflow-y: visible;
   scroll-snap-type: x mandatory;
+  scroll-padding-left: var(--featured-stories-card-start-inset);
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  padding: 12px 40px;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .featured-stories-scroll::-webkit-scrollbar {
   display: none;
+}
+
+/* Inner row: left inset matches snapport so mandatory x-snap does not flush the first card to the column edge */
+.featured-stories-scroll-inner {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  box-sizing: border-box;
+  padding: 18px 28px 36px var(--featured-stories-card-start-inset);
 }
 
 .story-card {
@@ -3719,6 +3661,7 @@ justify-content: center;
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   gap: 6px;
 }
 
@@ -3728,10 +3671,9 @@ justify-content: center;
   font-weight: 600;
   color: var(--primary);
   line-height: 1.35;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .story-card-site {
@@ -3739,11 +3681,12 @@ justify-content: center;
   font-size: 13px;
   font-weight: 500;
   color: var(--secondary);
+  line-height: 1.3;
 }
 
 @media screen and (max-width: 699px) {
   .featured-stories-section {
-    margin: 40px 0;
+    margin: 28px 0;
   }
 
   .featured-stories-headline {
@@ -3753,16 +3696,16 @@ justify-content: center;
 
   .featured-stories-scroll-wrapper {
     padding: 24px 0;
+    --featured-stories-peek: min(48px, 12vw);
+    --featured-stories-card-start-inset: calc(var(--featured-stories-peek) + 10px);
+    width: calc(100% + 2 * var(--featured-stories-peek));
+    margin-left: calc(-1 * var(--featured-stories-peek));
+    margin-right: calc(-1 * var(--featured-stories-peek));
   }
 
-  .featured-stories-scroll-wrapper::before,
-  .featured-stories-scroll-wrapper::after {
-    width: 40px;
-  }
-
-  .featured-stories-scroll {
+  .featured-stories-scroll-inner {
     gap: 12px;
-    padding: 12px 20px;
+    padding: 16px 20px 32px var(--featured-stories-card-start-inset);
   }
 
   .story-card {
@@ -3772,7 +3715,7 @@ justify-content: center;
 
 @media screen and (max-width: 699px) {
   .journalist-section {
-    margin: 40px 0;
+    margin: 28px 0;
     gap: 0;
   }
   
@@ -3781,14 +3724,8 @@ justify-content: center;
     padding: 0 16px;
   }
   
-  .journalist-cta-button {
-    padding: 14px 24px;
-    font-size: 16px;
-    margin: 16px auto 0;
-  }
-  
   .publications-marquee-wrapper {
-    padding: 32px 0;
+    padding: 24px 0;
   }
   
   .publications-marquee {
@@ -3816,8 +3753,8 @@ justify-content: center;
   }
   
   .design-projects-stack-section {
-    margin: 40px 0;
-    gap: 24px;
+    margin: 28px 0;
+    gap: 18px;
   }
   
   .design-projects-stack-headline {
@@ -3997,60 +3934,6 @@ justify-content: center;
   }
 }
 
-/* CTA Buttons */
-.cta-buttons-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  margin-bottom: 40px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.cta-button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 16px;
-  border-radius: var(--br-9xl);
-  background-color: var(--container-background);
-  color: var(--primary);
-  text-decoration: none;
-  font-family: 'One UI Sans';
-  font-weight: 600;
-  font-size: var(--subheading-size);
-  transition: transform 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  flex: 1;
-  box-sizing: border-box;
-  min-width: 0;
-}
-
-.cta-button svg {
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-}
-
-.cta-button svg path {
-  fill: var(--primary);
-}
-
-.cta-button:hover {
-  transform: scale(1.02);
-  background-color: var(--accent);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease-in, background-color 0.2s ease-in, box-shadow 0.2s ease-in;
-}
-
-.cta-button:active {
-  transform: scale(0.98);
-}
-
 /* =============================================
    Stats Bar
    ============================================= */
@@ -4107,7 +3990,7 @@ justify-content: center;
 
 .design-projects-section {
   width: 100%;
-  margin: 60px 0;
+  margin: 36px 0;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -4132,19 +4015,44 @@ justify-content: center;
   margin: 8px 0 0 0;
 }
 
-.design-projects-grid {
-  display: flex;
-  gap: 16px;
-  padding: 32px 0;
-  width: 100%;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+/* Design Work carousel: same bleed + snap inset pattern as Popular Stories */
+.design-projects-scroll-wrapper {
+  position: relative;
+  --design-projects-peek: min(72px, 10vw);
+  --design-projects-card-start-inset: calc(var(--design-projects-peek) + 20px);
+  width: calc(100% + 2 * var(--design-projects-peek));
+  margin-left: calc(-1 * var(--design-projects-peek));
+  margin-right: calc(-1 * var(--design-projects-peek));
+  padding: 24px 0;
+  overflow-x: visible;
+  overflow-y: visible;
 }
 
-.design-projects-grid::-webkit-scrollbar {
+body.nav-collapsed .design-projects-scroll-wrapper {
+  --design-projects-card-start-inset: calc(var(--design-projects-peek) + 10px);
+}
+
+.design-projects-scroll {
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: var(--design-projects-card-start-inset);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.design-projects-scroll::-webkit-scrollbar {
   display: none;
+}
+
+.design-projects-scroll-inner {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  box-sizing: border-box;
+  padding: 18px 28px 36px var(--design-projects-card-start-inset);
 }
 
 .design-project-card {
@@ -4207,6 +4115,7 @@ justify-content: center;
   padding: 4px 10px;
   border-radius: var(--br-xl);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .design-projects-cta-button {
@@ -4322,7 +4231,7 @@ justify-content: center;
 
 .site-footer {
   width: 100%;
-  margin: 60px 0 40px 0;
+  margin: 36px 0 28px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -4451,7 +4360,7 @@ justify-content: center;
   }
 
   .design-projects-section {
-    margin: 40px 0;
+    margin: 28px 0;
   }
 
   .design-projects-headline {
@@ -4464,10 +4373,18 @@ justify-content: center;
     font-size: 14px;
   }
 
-  .design-projects-grid {
+  .design-projects-scroll-wrapper {
     padding: 24px 0;
+    --design-projects-peek: min(48px, 12vw);
+    --design-projects-card-start-inset: calc(var(--design-projects-peek) + 10px);
+    width: calc(100% + 2 * var(--design-projects-peek));
+    margin-left: calc(-1 * var(--design-projects-peek));
+    margin-right: calc(-1 * var(--design-projects-peek));
+  }
+
+  .design-projects-scroll-inner {
     gap: 12px;
-    padding-left: 16px;
+    padding: 16px 20px 32px var(--design-projects-card-start-inset);
   }
 
   .design-projects-cta-button {
@@ -4476,7 +4393,7 @@ justify-content: center;
   }
 
   .stack-section {
-    margin: 40px 0;
+    margin: 28px 0;
     flex-direction: column;
     gap: 16px;
     overflow: hidden;
@@ -4508,7 +4425,7 @@ justify-content: center;
   }
 
   .site-footer {
-    margin: 40px 0 24px 0;
+    margin: 28px 0 20px 0;
     gap: 24px;
     padding: 32px 0 0 0;
   }

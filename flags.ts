@@ -30,6 +30,39 @@ export const popularStoriesEnabled = flag({
   ],
 });
 
+export const mergedWorkCarouselEnabled = flag({
+  key: 'merged-work-carousel-enabled',
+  adapter: vercelAdapter(),
+  defaultValue: true,
+  description: 'Show all 4 design projects on the Home carousel (merged from /work)',
+  options: [
+    { value: true, label: 'Enabled' },
+    { value: false, label: 'Disabled' },
+  ],
+});
+
+export const miscSectionEnabled = flag({
+  key: 'misc-section-enabled',
+  adapter: vercelAdapter(),
+  defaultValue: true,
+  description: 'Show the Misc section on the Home page',
+  options: [
+    { value: true, label: 'Enabled' },
+    { value: false, label: 'Disabled' },
+  ],
+});
+
+export const recentBlogPostsEnabled = flag({
+  key: 'recent-blog-posts-enabled',
+  adapter: vercelAdapter(),
+  defaultValue: true,
+  description: 'Show the Recent Blog Posts carousel on the Home page',
+  options: [
+    { value: true, label: 'Enabled' },
+    { value: false, label: 'Disabled' },
+  ],
+});
+
 /**
  * In-post search bar feature flag - shows the search bar on every blog post.
  */
