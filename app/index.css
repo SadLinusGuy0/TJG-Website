@@ -1152,7 +1152,7 @@ button.list4:hover {
 
 .stack-section {
   width: 100%;
-  margin: 60px 0;
+  margin: 36px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3296,7 +3296,7 @@ justify-content: center;
 
 .journalist-section {
   width: 100%;
-  margin: 60px 0;
+  margin: 36px 0;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -3316,61 +3316,13 @@ justify-content: center;
   padding: 0 20px;
 }
 
-.journalist-cta-button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 16px 32px;
-  border-radius: var(--br-9xl);
-  background-color: var(--container-background);
-  color: var(--primary);
-  text-decoration: none;
-  font-family: 'One UI Sans';
-  font-weight: 600;
-  font-size: var(--subheading-size);
-  transition: transform 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-  margin: 20px auto 0;
-  width: fit-content;
-}
-
-.journalist-cta-button svg {
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-}
-
-.journalist-cta-button svg path {
-  fill: var(--primary);
-}
-
-.journalist-cta-button:hover {
-  transform: scale(1.02);
-  background-color: var(--accent);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease-in, background-color 0.2s ease-in, box-shadow 0.2s ease-in;
-}
-
-.journalist-cta-button:hover svg path {
-  fill: var(--primary);
-}
-
-.journalist-cta-button:active {
-  transform: scale(0.98);
-}
-
 /* Design Projects Stack */
 .design-projects-stack-section {
   width: 100%;
-  margin: 60px 0;
+  margin: 36px 0;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 22px;
   align-items: center;
 }
 
@@ -3511,7 +3463,7 @@ justify-content: center;
   position: relative;
   width: 100%;
   overflow: hidden;
-  padding: 40px 0;
+  padding: 28px 0;
 }
 
 .publications-marquee-wrapper::before,
@@ -3614,7 +3566,7 @@ justify-content: center;
 
 .featured-stories-section {
   width: 100%;
-  margin: 60px 0;
+  margin: 36px 0;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -3640,7 +3592,7 @@ justify-content: center;
   width: calc(100% + 2 * var(--featured-stories-peek));
   margin-left: calc(-1 * var(--featured-stories-peek));
   margin-right: calc(-1 * var(--featured-stories-peek));
-  padding: 32px 0;
+  padding: 24px 0;
   overflow-x: visible;
   overflow-y: visible;
 }
@@ -3734,7 +3686,7 @@ body.nav-collapsed .featured-stories-scroll-wrapper {
 
 @media screen and (max-width: 699px) {
   .featured-stories-section {
-    margin: 40px 0;
+    margin: 28px 0;
   }
 
   .featured-stories-headline {
@@ -3763,7 +3715,7 @@ body.nav-collapsed .featured-stories-scroll-wrapper {
 
 @media screen and (max-width: 699px) {
   .journalist-section {
-    margin: 40px 0;
+    margin: 28px 0;
     gap: 0;
   }
   
@@ -3772,14 +3724,8 @@ body.nav-collapsed .featured-stories-scroll-wrapper {
     padding: 0 16px;
   }
   
-  .journalist-cta-button {
-    padding: 14px 24px;
-    font-size: 16px;
-    margin: 16px auto 0;
-  }
-  
   .publications-marquee-wrapper {
-    padding: 32px 0;
+    padding: 24px 0;
   }
   
   .publications-marquee {
@@ -3807,8 +3753,8 @@ body.nav-collapsed .featured-stories-scroll-wrapper {
   }
   
   .design-projects-stack-section {
-    margin: 40px 0;
-    gap: 24px;
+    margin: 28px 0;
+    gap: 18px;
   }
   
   .design-projects-stack-headline {
@@ -3988,60 +3934,6 @@ body.nav-collapsed .featured-stories-scroll-wrapper {
   }
 }
 
-/* CTA Buttons */
-.cta-buttons-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  margin-bottom: 40px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.cta-button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 16px;
-  border-radius: var(--br-9xl);
-  background-color: var(--container-background);
-  color: var(--primary);
-  text-decoration: none;
-  font-family: 'One UI Sans';
-  font-weight: 600;
-  font-size: var(--subheading-size);
-  transition: transform 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  flex: 1;
-  box-sizing: border-box;
-  min-width: 0;
-}
-
-.cta-button svg {
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-}
-
-.cta-button svg path {
-  fill: var(--primary);
-}
-
-.cta-button:hover {
-  transform: scale(1.02);
-  background-color: var(--accent);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease-in, background-color 0.2s ease-in, box-shadow 0.2s ease-in;
-}
-
-.cta-button:active {
-  transform: scale(0.98);
-}
-
 /* =============================================
    Stats Bar
    ============================================= */
@@ -4098,7 +3990,7 @@ body.nav-collapsed .featured-stories-scroll-wrapper {
 
 .design-projects-section {
   width: 100%;
-  margin: 60px 0;
+  margin: 36px 0;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -4131,7 +4023,7 @@ body.nav-collapsed .featured-stories-scroll-wrapper {
   width: calc(100% + 2 * var(--design-projects-peek));
   margin-left: calc(-1 * var(--design-projects-peek));
   margin-right: calc(-1 * var(--design-projects-peek));
-  padding: 32px 0;
+  padding: 24px 0;
   overflow-x: visible;
   overflow-y: visible;
 }
@@ -4339,7 +4231,7 @@ body.nav-collapsed .design-projects-scroll-wrapper {
 
 .site-footer {
   width: 100%;
-  margin: 60px 0 40px 0;
+  margin: 36px 0 28px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -4468,7 +4360,7 @@ body.nav-collapsed .design-projects-scroll-wrapper {
   }
 
   .design-projects-section {
-    margin: 40px 0;
+    margin: 28px 0;
   }
 
   .design-projects-headline {
@@ -4501,7 +4393,7 @@ body.nav-collapsed .design-projects-scroll-wrapper {
   }
 
   .stack-section {
-    margin: 40px 0;
+    margin: 28px 0;
     flex-direction: column;
     gap: 16px;
     overflow: hidden;
@@ -4533,7 +4425,7 @@ body.nav-collapsed .design-projects-scroll-wrapper {
   }
 
   .site-footer {
-    margin: 40px 0 24px 0;
+    margin: 28px 0 20px 0;
     gap: 24px;
     padding: 32px 0 0 0;
   }
