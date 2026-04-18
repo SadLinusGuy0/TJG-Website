@@ -13,6 +13,7 @@ import { useTheme, ACCENT_COLORS, ACCENT_DARK_BACKGROUNDS, ACCENT_LIGHT_BACKGROU
 import { useRouter } from "next/navigation";
 import PageHeading from "../components/PageHeading";
 import { Back } from "@thatjoshguy/oneui-icons";
+import Switch from "../components/Switch";
 
 /* ------------------------------------------------------------------ */
 /*  Section wrapper – keeps each demo visually grouped                */
@@ -61,10 +62,7 @@ function ToggleRow({ id, label, description, checked, onChange, badge }: {
           </div>
         )}
       </div>
-      <div className="switch">
-        <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} id={id} />
-        <span className="slider"></span>
-      </div>
+      <Switch id={id} checked={checked} onChange={onChange} />
     </label>
   );
 }
@@ -736,10 +734,7 @@ function DemoListItems() {
             </div>
           </div>
           <div className="list-item-separator" />
-          <div className="switch">
-            <input type="checkbox" checked={wifiOn} onChange={(e) => setWifiOn(e.target.checked)} id="demo-wifi" />
-            <span className="slider"></span>
-          </div>
+          <Switch id="demo-wifi" checked={wifiOn} onChange={setWifiOn} />
         </label>
         <label htmlFor="demo-bt" className="list3" style={{ cursor: "pointer" }}>
           <div className="test-toggle-group">
@@ -749,19 +744,13 @@ function DemoListItems() {
             </div>
           </div>
           <div className="list-item-separator" />
-          <div className="switch">
-            <input type="checkbox" checked={btOn} onChange={(e) => setBtOn(e.target.checked)} id="demo-bt" />
-            <span className="slider"></span>
-          </div>
+          <Switch id="demo-bt" checked={btOn} onChange={setBtOn} />
         </label>
         <label htmlFor="demo-nfc" className="list3" style={{ cursor: "pointer" }}>
           <div className="test-toggle-group">
             <div className="body-text">NFC &amp; contactless payments</div>
           </div>
-          <div className="switch">
-            <input type="checkbox" checked={nfcOn} onChange={(e) => setNfcOn(e.target.checked)} id="demo-nfc" />
-            <span className="slider"></span>
-          </div>
+          <Switch id="demo-nfc" checked={nfcOn} onChange={setNfcOn} />
         </label>
       </div>
 
