@@ -1,10 +1,9 @@
+import BlogDynamicHeader from "./BlogDynamicHeader";
+
 export default function BlogIndexSkeleton() {
   return (
     <div className="main-content">
-      {/* Page title */}
-      <div className="header-container">
-        <div className="title" style={{ paddingBottom: 8 }}>Blog</div>
-      </div>
+      <BlogDynamicHeader />
 
       {/* Year slider skeleton */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>

@@ -41,6 +41,10 @@ html[data-theme="dark"] {
     --primary: var(--dark-primary);
     --accent: var(--accent);
     --selected: var(--dark-selected);
+    --foreground: #2E2E30;
+    --divider: #2E2E30;
+    --button-divider: #2E2E30;
+    --press-highlight: rgba(255, 255, 255, 0.18);
 }
 
 html[data-theme="light"] {
@@ -50,6 +54,10 @@ html[data-theme="light"] {
     --primary: var(--light-primary);
     --accent: var(--accent);
     --selected: var(--light-selected);
+    --foreground: #FCFCFF;
+    --divider: #E8E8EA;
+    --button-divider: #E8E8EA;
+    --press-highlight: rgba(0, 0, 0, 0.12);
 }
 
 /* Experimental UI Theme Variables */
@@ -82,6 +90,10 @@ html[data-experimental="true"][data-theme="light"] {
         --primary: var(--dark-primary);
         --accent: var(--accent);
         --selected: var(--dark-selected);
+        --foreground: #2E2E30;
+        --divider: #2E2E30;
+        --button-divider: #2E2E30;
+        --press-highlight: rgba(255, 255, 255, 0.18);
     }
 }
 
@@ -93,6 +105,10 @@ html[data-experimental="true"][data-theme="light"] {
         --primary: var(--light-primary);
         --accent: var(--accent);
         --selected: var(--light-selected);
+        --foreground: #FCFCFF;
+        --divider: #E8E8EA;
+        --button-divider: #E8E8EA;
+        --press-highlight: rgba(0, 0, 0, 0.12);
     }
 }
 
@@ -161,6 +177,15 @@ a {
     --br-9xl: 28px;
     --br-10xl: 40px;
     --br-11xs: 2px;
+    --foreground: #FCFCFF;
+    --divider: #E8E8EA;
+    --button-divider: #E8E8EA;
+    --card-radius: 28px;
+    --inner-radius: 12px;
+    --press-highlight: rgba(0, 0, 0, 0.12);
+    --header-expanded: 38vh;
+    --header-collapsed: 72px;
+    --header-top-padding: 12px;
 }
 
 @font-face {
@@ -248,8 +273,10 @@ a {
     html[data-corner-smoothing="true"] * {
         corner-shape: squircle;
     }
-    html[data-corner-smoothing="true"] .toggle-switch,
-    html[data-corner-smoothing="true"] .toggle-switch *,
+    html[data-corner-smoothing="true"] .switch,
+    html[data-corner-smoothing="true"] .switch *,
+    html[data-corner-smoothing="true"] .slider,
+    html[data-corner-smoothing="true"] .slider *,
     html[data-corner-smoothing="true"] .theme-card-radio,
     html[data-corner-smoothing="true"] .theme-card-radio::before,
     html[data-corner-smoothing="true"] .accent-color-swatch,

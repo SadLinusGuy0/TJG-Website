@@ -10,6 +10,9 @@ import Toast from "../components/Toast";
 import ProgressiveBlur from "../components/ProgressiveBlur";
 import NativeSlideshow from "../blog/NativeSlideshow";
 import { useTheme, ACCENT_COLORS, ACCENT_DARK_BACKGROUNDS, ACCENT_LIGHT_BACKGROUNDS, ACCENT_DARK_CONTAINER_BACKGROUNDS, ACCENT_LIGHT_CONTAINER_BACKGROUNDS, type AccentColor } from "../components/ThemeProvider";
+import { useRouter } from "next/navigation";
+import PageHeading from "../components/PageHeading";
+import { Back } from "@thatjoshguy/oneui-icons";
 
 /* ------------------------------------------------------------------ */
 /*  Section wrapper – keeps each demo visually grouped                */
@@ -58,9 +61,9 @@ function ToggleRow({ id, label, description, checked, onChange, badge }: {
           </div>
         )}
       </div>
-      <div className="toggle-switch">
+      <div className="switch">
         <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} id={id} />
-        <span className="toggle-slider"></span>
+        <span className="slider"></span>
       </div>
     </label>
   );
@@ -596,15 +599,16 @@ function Dialog({ title, text, cancelLabel = "Cancel", confirmLabel = "Apply", o
   onConfirm: () => void;
 }) {
   return (
-    <div className="dialog-overlay" onClick={onCancel}>
-      <div className="dialog" onClick={(e) => e.stopPropagation()}>
-        <div className="dialog-body">
-          <div className="dialog-title">{title}</div>
-          <div className="dialog-text">{text}</div>
+    <div className="dialogue-overlay show" onClick={onCancel}>
+      <div className="dialogue-sheet" onClick={(e) => e.stopPropagation()}>
+        <div className="dialogue-content">
+          <div className="dialogue-title">{title}</div>
+          <div className="dialogue-body">{text}</div>
         </div>
-        <div className="dialog-actions">
-          <button className="dialog-btn" onClick={onCancel}>{cancelLabel}</button>
-          <button className="dialog-btn dialog-btn--primary" onClick={onConfirm}>{confirmLabel}</button>
+        <div className="dialogue-buttons">
+          <button className="dialogue-btn cancel-btn" onClick={onCancel}>{cancelLabel}</button>
+          <div className="dialogue-btn-separator" />
+          <button className="dialogue-btn confirm-btn" onClick={onConfirm}>{confirmLabel}</button>
         </div>
       </div>
     </div>
@@ -732,9 +736,9 @@ function DemoListItems() {
             </div>
           </div>
           <div className="list-item-separator" />
-          <div className="toggle-switch">
+          <div className="switch">
             <input type="checkbox" checked={wifiOn} onChange={(e) => setWifiOn(e.target.checked)} id="demo-wifi" />
-            <span className="toggle-slider"></span>
+            <span className="slider"></span>
           </div>
         </label>
         <label htmlFor="demo-bt" className="list3" style={{ cursor: "pointer" }}>
@@ -745,18 +749,18 @@ function DemoListItems() {
             </div>
           </div>
           <div className="list-item-separator" />
-          <div className="toggle-switch">
+          <div className="switch">
             <input type="checkbox" checked={btOn} onChange={(e) => setBtOn(e.target.checked)} id="demo-bt" />
-            <span className="toggle-slider"></span>
+            <span className="slider"></span>
           </div>
         </label>
         <label htmlFor="demo-nfc" className="list3" style={{ cursor: "pointer" }}>
           <div className="test-toggle-group">
             <div className="body-text">NFC &amp; contactless payments</div>
           </div>
-          <div className="toggle-switch">
+          <div className="switch">
             <input type="checkbox" checked={nfcOn} onChange={(e) => setNfcOn(e.target.checked)} id="demo-nfc" />
-            <span className="toggle-slider"></span>
+            <span className="slider"></span>
           </div>
         </label>
       </div>
@@ -1004,6 +1008,7 @@ function PlaygroundContent() {
   const [toastMsg, setToastMsg] = useState("");
   const [showDialog, setShowDialog] = useState(false);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const from = searchParams.get("from") || "/settings";
 
   const fireToast = useCallback((msg: string) => {
@@ -1019,26 +1024,17 @@ function PlaygroundContent() {
 
   return (
     <>
-      {/* Top app bar */}
-      <div className="top-app-bar">
-        <div className="top-app-bar-container back-only">
-          <Link href={from} className="top-app-bar-icon" aria-label="Back">
-            <svg width="10" height="20" viewBox="0 0 10 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M9.56416 2.15216C9.85916 1.86116 9.86316 1.38616 9.57216 1.09116C9.28116 0.797162 8.80616 0.794162 8.51116 1.08516L0.733159 8.75516C0.397159 9.08616 0.212158 9.52916 0.212158 10.0012C0.212158 10.4722 0.397159 10.9162 0.733159 11.2472L8.51116 18.9162C8.65716 19.0592 8.84716 19.1312 9.03816 19.1312C9.23116 19.1312 9.42516 19.0562 9.57216 18.9082C9.86316 18.6132 9.85916 18.1382 9.56416 17.8472L1.78716 10.1782C1.72116 10.1152 1.71216 10.0402 1.71216 10.0012C1.71216 9.96216 1.72116 9.88616 1.78716 9.82316L9.56416 2.15216Z"
-                fill="var(--primary)"
-              />
-            </svg>
-          </Link>
-          <div className="title-container">
-            <div className="title">Component Playground</div>
-          </div>
-        </div>
-      </div>
-
       <div className="main-content" style={{ animation: "fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards", opacity: 0 }}>
+        <PageHeading
+          title="Component Playground"
+          leadingAction={
+            <Link href={from} className="top-app-bar-icon" aria-label="Back" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
+              <Back color="var(--primary)" />
+            </Link>
+          }
+          onBack={() => router.push(from)}
+        />
+
         {/* ---- Colour Palette ---- */}
         <Section title="Colour Palette" description="All colour variables for the current theme and accent">
           <DemoColourPalette />

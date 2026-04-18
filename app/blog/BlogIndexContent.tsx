@@ -5,6 +5,7 @@ import { BlogSearchProvider } from "./BlogSearchWrapper";
 import BlogPostsWithSearch from "./BlogPostsWithSearch";
 import YearSlider from "./YearSlider";
 import FloatingSearchBar from "./FloatingSearchBar";
+import BlogDynamicHeader from "./BlogDynamicHeader";
 
 export default async function BlogIndexContent() {
   let categories: WPCategory[] = [];
@@ -68,9 +69,7 @@ export default async function BlogIndexContent() {
       yearSliderEnabled={yearSliderFlag}
     >
       <div className="main-content">
-        <div className="header-container">
-          <div className="title" style={{ paddingBottom: 8 }}>Blog</div>
-        </div>
+        <BlogDynamicHeader />
 
         <YearSlider />
 
