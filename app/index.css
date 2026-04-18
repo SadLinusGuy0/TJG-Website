@@ -5253,6 +5253,7 @@ html[data-theme="light"] .dialogue-btn-separator {
 .page-heading-hero-title {
     font-size: 34px;
     font-weight: 700;
+    font-family: 'One UI Sans', var(--body), sans-serif;
     color: var(--primary);
     padding: 0 48px;
     word-break: break-word;
