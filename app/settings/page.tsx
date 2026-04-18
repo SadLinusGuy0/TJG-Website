@@ -10,6 +10,7 @@ import Navigation from '../components/Navigation';
 import { LoadingDots } from '../components/LoadingAnim';
 import PageHeading from '../components/PageHeading';
 import { Back } from '@thatjoshguy/oneui-icons';
+import Switch from '../components/Switch';
 
 function ThemePreviewLight({ accent }: { accent: AccentColor }) {
   const bg = ACCENT_LIGHT_BACKGROUNDS[accent];
@@ -286,15 +287,7 @@ function SettingsContent() {
                 <div className="information">Enable or disable the blur effects on scroll</div>
               </div>
             </div>
-            <div className="switch">
-              <input
-                type="checkbox"
-                checked={blurEnabled}
-                onChange={(e) => setBlurEnabled(e.target.checked)}
-                id="progressive-blur-toggle"
-              />
-              <span className="slider"></span>
-            </div>
+            <Switch id="progressive-blur-toggle" checked={blurEnabled} onChange={setBlurEnabled} />
           </label>
 
           {cornerSmoothingAvailable && (
@@ -317,16 +310,7 @@ function SettingsContent() {
                   </div>
                 </div>
               </div>
-              <div className="switch">
-                <input
-                  type="checkbox"
-                  checked={cornerSmoothing}
-                  onChange={(e) => setCornerSmoothing(e.target.checked)}
-                  id="corner-smoothing-toggle"
-                  disabled={!cornerSmoothingSupported}
-                />
-                <span className="slider"></span>
-              </div>
+              <Switch id="corner-smoothing-toggle" checked={cornerSmoothing} onChange={setCornerSmoothing} disabled={!cornerSmoothingSupported} />
             </label>
           )}
 
@@ -341,15 +325,7 @@ function SettingsContent() {
                   <div className="information">Apply a glass refraction effect to UI elements. May impact performance on some devices.</div>
                 </div>
               </div>
-              <div className="switch">
-                <input
-                  type="checkbox"
-                  checked={liquidGlass}
-                  onChange={(e) => setLiquidGlass(e.target.checked)}
-                  id="liquid-glass-toggle"
-                />
-                <span className="slider"></span>
-              </div>
+              <Switch id="liquid-glass-toggle" checked={liquidGlass} onChange={setLiquidGlass} />
             </label>
           )}
         </div>

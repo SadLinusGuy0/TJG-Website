@@ -8,6 +8,7 @@ import Navigation from "../../components/Navigation";
 import { LoadingDots } from "../../components/LoadingAnim";
 import PageHeading from "../../components/PageHeading";
 import { Back } from "@thatjoshguy/oneui-icons";
+import Switch from "../../components/Switch";
 
 const FLAG_COOKIE_PREFIX = 'ff-';
 const FLAG_COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
@@ -179,19 +180,13 @@ function OverrideControl({
         </svg>
       </button>
 
-      <label
-        htmlFor={`flag-toggle-${flagKey}`}
-        className="switch"
+      <Switch
+        id={`flag-toggle-${flagKey}`}
+        checked={isOn}
+        onChange={() => handleToggleChange()}
+        asLabel
         style={{ opacity: state === 'cloud' ? 0.4 : 1, transition: 'opacity 0.15s ease-out', cursor: 'pointer' }}
-      >
-        <input
-          type="checkbox"
-          id={`flag-toggle-${flagKey}`}
-          checked={isOn}
-          onChange={handleToggleChange}
-        />
-        <span className="slider" />
-      </label>
+      />
     </div>
   );
 }
