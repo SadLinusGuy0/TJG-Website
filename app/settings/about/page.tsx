@@ -5,12 +5,16 @@ import "../../globals.css";
 import Navigation from "../../components/Navigation";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useRef, Suspense } from "react";
+import { useRouter } from "next/navigation";
 import Toast from "../../components/Toast";
 import AnimatedText from "../../components/AnimatedText";
 import { LoadingDots } from "../../components/LoadingAnim";
+import PageHeading from "../../components/PageHeading";
+import { Back } from "@thatjoshguy/oneui-icons";
 
 function AboutContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const from = searchParams.get("from") || "/settings";
   const [tapCount, setTapCount] = useState(0);
   const [showToast, setShowToast] = useState(false);
@@ -72,30 +76,6 @@ function AboutContent() {
           onClose={() => setShowToast(false)}
         />
       )}
-      <div className="top-app-bar">
-        <div className="top-app-bar-container back-only">
-          <Link href={from} className="top-app-bar-icon" aria-label="Back">
-            <svg
-              width="10"
-              height="20"
-              viewBox="0 0 10 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M9.56416 2.15216C9.85916 1.86116 9.86316 1.38616 9.57216 1.09116C9.28116 0.797162 8.80616 0.794162 8.51116 1.08516L0.733159 8.75516C0.397159 9.08616 0.212158 9.52916 0.212158 10.0012C0.212158 10.4722 0.397159 10.9162 0.733159 11.2472L8.51116 18.9162C8.65716 19.0592 8.84716 19.1312 9.03816 19.1312C9.23116 19.1312 9.42516 19.0562 9.57216 18.9082C9.86316 18.6132 9.85916 18.1382 9.56416 17.8472L1.78716 10.1782C1.72116 10.1152 1.71216 10.0402 1.71216 10.0012C1.71216 9.96216 1.72116 9.88616 1.78716 9.82316L9.56416 2.15216Z"
-                fill="var(--primary)"
-              />
-            </svg>
-          </Link>
-          <div className="title-container">
-            <div className="title">About this site</div>
-          </div>
-        </div>
-      </div>
-
       <div
         className="main-content"
         style={{
@@ -104,14 +84,23 @@ function AboutContent() {
           opacity: 0,
         }}
       >
-        <div className="header-container">
+        <PageHeading
+          title="About this site"
+          leadingAction={
+            <Link href={from} className="top-app-bar-icon" aria-label="Back" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
+              <Back color="var(--primary)" />
+            </Link>
+          }
+          onBack={() => router.push(from)}
+        />
+        <div className="header-container" style={{ marginTop: 0, height: 'auto', minHeight: 0 }}>
           <div
             style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               gap: "8px",
-              paddingBottom: "20%",
+              paddingBottom: "24px",
             }}
           >
             <div className="title" style={{ paddingBottom: 0 }}>
@@ -135,6 +124,8 @@ function AboutContent() {
             </div>
           </div>
         </div>
+
+        <div style={{ height: 200 }} />
 
         <div className="container1" style={{ paddingTop: "0" }}>
             <div className="title">Credits</div>
@@ -300,15 +291,16 @@ function AboutContent() {
       </div>
 
       {showDevDialog && (
-        <div className="dialog-overlay" onClick={() => setShowDevDialog(false)}>
-          <div className="dialog" onClick={(e) => e.stopPropagation()}>
-            <div className="dialog-body">
-              <div className="dialog-title">Developer options</div>
-              <div className="dialog-text">Enable developer options? This will show additional settings.</div>
+        <div className="dialogue-overlay show" onClick={() => setShowDevDialog(false)}>
+          <div className="dialogue-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="dialogue-content">
+              <div className="dialogue-title">Developer options</div>
+              <div className="dialogue-body">Enable developer options? This will show additional settings.</div>
             </div>
-            <div className="dialog-actions">
-              <button className="dialog-btn" onClick={() => setShowDevDialog(false)}>Cancel</button>
-              <button className="dialog-btn dialog-btn--primary" onClick={handleDevOptionsAccept}>Accept</button>
+            <div className="dialogue-buttons">
+              <button className="dialogue-btn cancel-btn" onClick={() => setShowDevDialog(false)}>Cancel</button>
+              <div className="dialogue-btn-separator" />
+              <button className="dialogue-btn confirm-btn" onClick={handleDevOptionsAccept}>Accept</button>
             </div>
           </div>
         </div>
