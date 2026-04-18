@@ -696,6 +696,20 @@ html[data-theme="dark"] .list-group > label.list3:hover {
   }
 }
 
+/* No hover/active highlight on toggle rows (non-navigating) */
+.list3:has(.switch):hover,
+.list3:has(.switch):active,
+html[data-theme="light"] .list3:has(.switch):hover,
+html[data-theme="light"] label.list3:has(.switch):hover,
+html[data-theme="dark"] .list3:has(.switch):hover,
+html[data-theme="dark"] label.list3:has(.switch):hover,
+.list-group > .list3:has(.switch):hover,
+.list-group > label.list3:has(.switch):hover {
+  background-color: var(--container-background) !important;
+  transform: none !important;
+  outline: none !important;
+}
+
 /* Vertical separator between content and trailing action */
 .list-item-separator {
   width: 1px;
@@ -4925,6 +4939,31 @@ input:checked + .slider::after {
 
 input:checked + .slider {
     background-color: var(--accent);
+}
+
+/* Switch-level interaction states (React component) */
+.switch:hover .slider::after {
+    background-color: var(--press-highlight);
+    --highlight-scale: 1.7;
+}
+
+.switch.is-active .slider::after,
+.switch.is-dragging .slider::after {
+    background-color: var(--press-highlight);
+    --highlight-scale: 1.7;
+}
+
+.switch.is-active .slider:before,
+.switch.is-dragging .slider:before {
+    --knob-scale: 0.88;
+}
+
+.switch.is-dragging .slider::after {
+    transition: none !important;
+}
+
+.switch.is-dragging .slider:before {
+    transition: none !important;
 }
 
 /* Element Badges */
