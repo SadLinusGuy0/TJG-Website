@@ -1486,7 +1486,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   }
   
   body.nav-collapsed .top-app-bar {
-      left: calc(8% + 10px) !important;
+      left: calc(8% + 20px) !important;
       right: calc(12% + 10px) !important;
       width: auto !important;
       padding-left: 0 !important;
