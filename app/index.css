@@ -1481,15 +1481,16 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
       padding-right: 10px !important;
   }
   body.nav-collapsed .top-app-bar-container {
-      padding-left: 10px !important;
-      padding-right: 10px !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
   }
   
   body.nav-collapsed .top-app-bar {
-      left: 8% !important;
-      width: calc(92% - 20px) !important;
-      padding-left: 10px !important;
-      padding-right: 10px !important;
+      left: calc(8% + 10px) !important;
+      right: 10px !important;
+      width: auto !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
   }
   .top-app-bar {
       margin-top: 40px;
