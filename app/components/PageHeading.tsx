@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Back } from '@thatjoshguy/oneui-icons';
 
-const SCROLL_RANGE = 120; // px of scroll over which the crossfade happens
+const SCROLL_RANGE = 530; // px of scroll over which the crossfade happens
 
 interface PageHeadingProps {
   title: string;
