@@ -11,6 +11,7 @@ import TableOfContents from "../../TableOfContents";
 import BlogContent from "../../BlogContent";
 import { FMP_SLUG, extractH1Sections } from "../../../../lib/fmpSections";
 import { getWordpressSourceUrl } from "../../../../lib/getWordpressSourceUrlFlag";
+import { replaceTransitModelPlaceholder } from "../../../../lib/transitModelSketchfabEmbed";
 
 export const revalidate = 300;
 
@@ -83,6 +84,8 @@ function processContentWithEmbeds(content: string): string {
     const wordsAbove = countWordsAboveMarker(processedContent, wordCountMarker);
     processedContent = processedContent.replace(wordCountMarker, `${wordCounterPlaceholder}:${wordsAbove}`);
   }
+
+  processedContent = replaceTransitModelPlaceholder(processedContent);
 
   return processedContent;
 }
