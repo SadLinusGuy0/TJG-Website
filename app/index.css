@@ -1128,6 +1128,12 @@ button.list4:hover {
   pointer-events: auto;
 }
 
+@media screen and (min-width: 700px) {
+  .top-app-bar .top-app-bar-icon[aria-label="Settings"] {
+    display: none !important;
+  }
+}
+
 /* For back button in settings and similar pages */
 .top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon,
 .top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon,
