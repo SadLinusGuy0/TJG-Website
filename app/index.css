@@ -5323,3 +5323,10 @@ html[data-theme="light"] .dialogue-btn-separator {
     flex-shrink: 0;
     margin-right: -5px;
 }
+
+/* Keep page content clear of the desktop bottom progressive blur */
+@media screen and (min-width: 700px) {
+  .main-content {
+    padding-bottom: 140px !important;
+  }
+}
