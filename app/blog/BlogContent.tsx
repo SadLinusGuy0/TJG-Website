@@ -3,6 +3,7 @@
 import { useEffect, useRef, useMemo } from 'react';
 import { enhanceImageCompare } from './enhanceImageCompare';
 import { enhanceAudioPlayer } from './enhanceAudioPlayer';
+import { enhanceWpBlockEmbeds } from './enhanceWpBlockEmbeds';
 import WordCounter from './WordCounter';
 import NativeSlideshow, { type SlideData } from './NativeSlideshow';
 
@@ -105,6 +106,7 @@ export default function BlogContent({ content }: BlogContentProps) {
     });
 
     enhanceImageCompare(contentRef.current);
+    enhanceWpBlockEmbeds(contentRef.current);
     const cleanupAudio = enhanceAudioPlayer(contentRef.current);
 
     return () => { cleanupAudio(); };

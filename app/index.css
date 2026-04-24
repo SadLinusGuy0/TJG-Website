@@ -35,9 +35,16 @@ form {
   color: var(--primary);
 }
 
-a {
+a:any-link {
   text-decoration: none;
-  color: var(--primary);
+  color: var(--accent);
+  position: relative;
+}
+
+/* <a> without href (e.g. WP embed “load” controls) — not matched by :any-link */
+a:not(:any-link) {
+  text-decoration: none;
+  color: var(--accent);
   position: relative;
 }
 
@@ -146,6 +153,15 @@ a:hover,
 .list4:hover {
   transform: scale(1.02);
   transition: transform 0.2s ease-in;
+}
+
+/* Rich text / embeds: scaling <a> breaks lazy-load & consent iframe swap UX */
+.body-text a:hover,
+.body-text .figma-wrapper a:hover,
+.body-text .embed-wrapper a:hover,
+.body-text .wp-block-embed a:hover {
+  transform: none !important;
+  transition: none !important;
 }
 
 /* Update and strengthen hover effect selectors */
@@ -807,6 +823,10 @@ html[data-theme="dark"] label.list3:has(.switch):hover,
   position: relative;
   overflow: visible;
   min-height: 200px;
+}
+
+a.list4 {
+  color: var(--accent);
 }
 
 .list4:hover,
