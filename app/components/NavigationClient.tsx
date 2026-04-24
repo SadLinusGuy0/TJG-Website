@@ -6,7 +6,7 @@ import { useBlogEnabled } from './BlogFlagProvider';
 import { useTheme } from './ThemeProvider';
 import { useCursorFollow } from './useCursorFollow';
 import { HomeIcon, ShopIcon, BlogIcon, ContactIcon } from './NavIcons';
-import { Drawer } from '@thatjoshguy/oneui-icons';
+import { Drawer, Settings } from '@thatjoshguy/oneui-icons';
 import { getDisplacementFilter, supportsBackdropFilterUrl } from '../utils/liquidGlass';
 
 // Context to share collapsed state
@@ -195,10 +195,9 @@ export default function NavigationClient({ hideMobile = false, showBlog: propSho
     <NavCollapseContext.Provider value={{ collapsed, setCollapsed }}>
       <nav className={`tab-container desktop-nav${collapsed ? ' collapsed' : ''}`}
         style={{
-          borderTopRightRadius: 'var(--br-2lg)',
-          width: collapsed ? 72 : '33%',
-          minWidth: collapsed ? 72 : 260,
-          maxWidth: collapsed ? 72 : 420,
+          width: collapsed ? 72 : '32%',
+          minWidth: collapsed ? 72 : 200,
+          maxWidth: collapsed ? 72 : 360,
           transition: 'width 0.2s cubic-bezier(0.4,0,0.2,1)'
         }}>
         <div className="icon-container">
@@ -230,6 +229,12 @@ export default function NavigationClient({ hideMobile = false, showBlog: propSho
           <DesktopNavButton href="/contact" isSelected={pathname === '/contact'}>
             <ContactIcon selected={pathname === '/contact'} />
             <div className={pathname === '/contact' ? 'nav-label-selected' : 'nav-label'}>Contact</div>
+          </DesktopNavButton>
+        </div>
+        <div className="nav-footer">
+          <DesktopNavButton href="/settings" isSelected={pathname === '/settings' || pathname?.startsWith('/settings/')}>
+            <Settings size={24} color="var(--primary)" />
+            <div className={pathname === '/settings' || pathname?.startsWith('/settings/') ? 'nav-label-selected' : 'nav-label'} style={{ color: 'var(--primary)' }}>Settings</div>
           </DesktopNavButton>
         </div>
       </nav>
