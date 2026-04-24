@@ -1394,15 +1394,30 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
 
 @media screen and (min-width: 699px) {
   .desktop-nav .icon-container {
-      padding-top: 0 !important;
-      padding-bottom: 0;
-      padding-left: 0;
-      padding-right: 0;
-      gap: 8px;
+      padding: 0 12px !important;
+      gap: 8px !important;
+      max-width: none;
+      box-sizing: border-box;
+  }
+  .desktop-nav .nav-footer {
+      margin-top: auto;
+      width: 100%;
+      padding: 0 12px 10px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+  }
+  body.nav-collapsed .desktop-nav .nav-footer {
+      padding: 0 0 10px;
+      align-items: center;
+  }
+  .top-app-bar .top-app-bar-container.settings-only {
+      display: none !important;
   }
   .desktop-nav .nav-icon-container,
   .desktop-nav .nav-icon-container-selected {
-      margin: 0 16px;
+      margin: 0;
       gap: 12px;
       width: auto;
   }
@@ -1418,20 +1433,19 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   }
   .tab-container {
       position: fixed;
-      top: 40px;
-      left: 0;
-      bottom: 40px;
-      width: 33%;
+      top: 16px;
+      left: 16px;
+      bottom: 16px;
+      width: 32%;
       min-width: 200px;
-      max-width: 420px;
+      max-width: 360px;
       background-color: var(--container-background);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
       z-index: 1000;
-      border-top-right-radius: var(--br-2lg);
-      border-bottom-right-radius: var(--br-2lg);
+      border-radius: var(--br-2lg);
   }
   .icon-container {
       width: 100%;
@@ -1457,6 +1471,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
       margin-left: 34%;
       width: 64%;
       max-width: 100%;
+      padding-top: 16px;
       padding-left: 20px;
       padding-right: 20px;
       align-items: flex-start;
@@ -1761,6 +1776,14 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
 
 /* --- Mobile Navigation Bar --- */
 .mobile-nav-bar { display: none; }
+
+/* Desktop uses sidebar settings nav; hide duplicate top-app-bar settings icon. */
+@media screen and (min-width: 700px) {
+  .top-app-bar .top-app-bar-icon[aria-label="Settings"],
+  .page-heading-hero-actions .top-app-bar-icon[aria-label="Settings"] {
+    display: none !important;
+  }
+}
 
 @media screen and (max-width: 699px) {
   .desktop-nav { display: none !important; }
@@ -2185,9 +2208,9 @@ transition: gap 0.3s cubic-bezier(0.4,0,0.2,1);
 transition: gap 0.3s cubic-bezier(0.4,0,0.2,1), padding 0.3s cubic-bezier(0.4,0,0.2,1), width 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 .tab-container.desktop-nav {
-width: 30%;
+width: 32%;
 min-width: 200px;
-max-width: 420px;
+max-width: 360px;
 transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 body.nav-collapsed .tab-container.desktop-nav {
