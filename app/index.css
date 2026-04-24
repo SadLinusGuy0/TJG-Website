@@ -1481,15 +1481,16 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
       padding-right: 10px !important;
   }
   body.nav-collapsed .top-app-bar-container {
-      padding-left: 10px !important;
-      padding-right: 10px !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
   }
   
   body.nav-collapsed .top-app-bar {
-      left: 8% !important;
-      width: calc(92% - 20px) !important;
-      padding-left: 10px !important;
-      padding-right: 10px !important;
+      left: 15.5% !important;
+      right: 7% !important;
+      width: auto !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
   }
   .top-app-bar {
       margin-top: 40px;
@@ -5321,4 +5322,11 @@ html[data-theme="light"] .dialogue-btn-separator {
     gap: 8px;
     flex-shrink: 0;
     margin-right: -5px;
+}
+
+/* Keep page content clear of the desktop bottom progressive blur */
+@media screen and (min-width: 700px) {
+  .main-content {
+    padding-bottom: 140px !important;
+  }
 }
