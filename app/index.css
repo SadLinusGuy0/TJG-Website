@@ -2106,7 +2106,7 @@ inset: 0;
 
 @media (max-width: 900px) {
 .main-content {
-  padding: 40px 20px 60px 20px;
+  padding: 16px 20px 60px 20px;
   box-sizing: border-box !important;
   overflow-x: visible !important;
   }
