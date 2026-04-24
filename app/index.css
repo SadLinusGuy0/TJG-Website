@@ -37,15 +37,43 @@ form {
 
 a:any-link {
   text-decoration: none;
-  color: var(--accent);
+  color: var(--primary);
   position: relative;
 }
 
 /* <a> without href (e.g. WP embed “load” controls) — not matched by :any-link */
 a:not(:any-link) {
   text-decoration: none;
-  color: var(--accent);
+  color: var(--primary);
   position: relative;
+}
+
+/* Inline hyperlinks in prose / WordPress only — not list rows (list3/list4) */
+.body-text a:any-link:not(.list3):not(.list4),
+.body-text a:not(:any-link):not(.list3):not(.list4) {
+  color: var(--accent);
+}
+
+.information a:any-link,
+.information a:not(:any-link) {
+  color: var(--accent);
+}
+
+/* Nav tabs: beat a:any-link (inactive = secondary, active = primary) */
+a.mobile-nav-tab:any-link {
+  color: var(--secondary);
+}
+
+a.mobile-nav-tab--active:any-link {
+  color: var(--primary);
+}
+
+a.nav-icon-container:any-link {
+  color: var(--secondary);
+}
+
+a.nav-icon-container-selected:any-link {
+  color: var(--primary);
 }
 
 .header-container {
@@ -826,7 +854,7 @@ html[data-theme="dark"] label.list3:has(.switch):hover,
 }
 
 a.list4 {
-  color: var(--accent);
+  color: var(--primary);
 }
 
 .list4:hover,
@@ -1146,6 +1174,12 @@ button.list4:hover {
   border: 1px solid color-mix(in srgb, var(--primary) 10%, transparent 80%);
   transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   pointer-events: auto;
+}
+
+@media screen and (min-width: 700px) {
+  .top-app-bar .top-app-bar-icon[aria-label="Settings"] {
+    display: none !important;
+  }
 }
 
 /* For back button in settings and similar pages */
