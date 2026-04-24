@@ -139,16 +139,11 @@ body::after {
 
 a:any-link {
     text-decoration: none;
-    color: var(--accent);
+    color: var(--primary);
 }
 
 a:not(:any-link) {
     text-decoration: none;
-    color: var(--accent);
-}
-
-/* List row links (list3) — card UI, primary like .list3; overrides a:any-link */
-a.list3 {
     color: var(--primary);
 }
 
