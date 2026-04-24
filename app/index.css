@@ -1471,6 +1471,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
       margin-left: 34%;
       width: 64%;
       max-width: 100%;
+      padding-top: 16px;
       padding-left: 20px;
       padding-right: 20px;
       align-items: flex-start;

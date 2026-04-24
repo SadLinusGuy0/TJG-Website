@@ -56,7 +56,7 @@ export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurPro
       return;
     }
 
-    const FADE_DISTANCE = 140;
+    const FADE_DISTANCE = 4;
     const updateOpacity = () => {
       const progress = Math.min(1, Math.max(0, window.scrollY / FADE_DISTANCE));
       setTopHomeOpacity(progress);
