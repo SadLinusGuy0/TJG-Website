@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useTheme } from './ThemeProvider';
+import { usePathname } from 'next/navigation';
 
 interface ProgressiveBlurProps {
   position?: 'top' | 'bottom';
@@ -31,9 +32,13 @@ function buildMask(stops: number[], position: 'top' | 'bottom'): string {
 
 export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurProps) {
   const { blurEnabled, hydrated } = useTheme();
+  const pathname = usePathname();
   const [isDesktop, setIsDesktop] = useState(
     typeof window !== 'undefined' ? window.innerWidth > 900 : true
   );
+  const [topHomeOpacity, setTopHomeOpacity] = useState(1);
+
+  const isTopHomeBlur = position === 'top' && pathname === '/';
 
   useEffect(() => {
     if (position !== 'bottom') return;
@@ -45,6 +50,23 @@ export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurPro
     return () => window.removeEventListener('resize', handleResize);
   }, [position]);
 
+  useEffect(() => {
+    if (!isTopHomeBlur) {
+      setTopHomeOpacity(1);
+      return;
+    }
+
+    const FADE_DISTANCE = 140;
+    const updateOpacity = () => {
+      const progress = Math.min(1, Math.max(0, window.scrollY / FADE_DISTANCE));
+      setTopHomeOpacity(progress);
+    };
+
+    updateOpacity();
+    window.addEventListener('scroll', updateOpacity, { passive: true });
+    return () => window.removeEventListener('scroll', updateOpacity);
+  }, [isTopHomeBlur]);
+
   if (!hydrated) return null;
   if (!blurEnabled) return null;
   if (position === 'bottom' && !isDesktop) return null;
@@ -55,6 +77,10 @@ export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurPro
     <div
       className={`progressive-blur-overlay progressive-blur-overlay--${position}`}
       aria-hidden="true"
+      style={{
+        opacity: isTopHomeBlur ? topHomeOpacity : 1,
+        transition: isTopHomeBlur ? 'opacity 180ms ease-out' : undefined,
+      }}
     >
       {BLUR_LAYERS.map((layer, i) => {
         const mask = buildMask(layer.stops, position);
