@@ -3795,80 +3795,17 @@ body.nav-collapsed .featured-stories-scroll-wrapper {
   }
 }
 
-/* Loading Dots Animation */
-.loading-dots {
-  width: var(--loading-size, 56px);
-  height: var(--loading-size, 56px);
-  position: relative;
+/* Loading Animation (Lottie) */
+.loading-anim {
   display: inline-block;
-  animation: loading-rotate calc(var(--loading-speed, 900ms) * 3.5) linear infinite;
+  line-height: 0;
 }
 
-.loading-dots-centered {
+.loading-anim-centered {
   display: flex;
   margin: 0 auto;
   justify-content: center;
   align-items: center;
-}
-
-.loading-dot {
-  width: var(--loading-dot-size, 12px);
-  height: var(--loading-dot-size, 12px);
-  border-radius: 999px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  animation: loading-pulse calc(var(--loading-speed, 900ms) * 0.9) ease-in-out infinite;
-  will-change: transform, opacity;
-}
-
-/* Colors using CSS variables for theme support */
-.loading-dot-blue {
-  background: var(--accent, #4a86ff);
-}
-
-.loading-dot-green {
-  background: #2bd48f;
-}
-
-/* Place dots on a cross, then rotate the whole spinner */
-.loading-dot-top {
-  transform: translate(-50%, -50%) translate(0, calc(var(--loading-radius, 16px) * -1));
-  animation-delay: 0ms;
-}
-
-.loading-dot-right {
-  transform: translate(-50%, -50%) translate(var(--loading-radius, 16px), 0);
-  animation-delay: 90ms;
-}
-
-.loading-dot-bottom {
-  transform: translate(-50%, -50%) translate(0, var(--loading-radius, 16px));
-  animation-delay: 180ms;
-}
-
-.loading-dot-left {
-  transform: translate(-50%, -50%) translate(calc(var(--loading-radius, 16px) * -1), 0);
-  animation-delay: 270ms;
-}
-
-@keyframes loading-rotate {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Keep the dots mostly steady, with a tiny scale/opacity wave */
-@keyframes loading-pulse {
-  0%,
-  100% {
-    opacity: 0.9;
-  }
-  50% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.08);
-  }
 }
 
 /* =============================================

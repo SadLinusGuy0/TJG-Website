@@ -21,6 +21,7 @@
     "flags": "^4.0.1",
     "hypertune": "^2.7.2",
     "leaflet": "^1.9.4",
+    "lottie-react": "^2.4.1",
     "next": "^16.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

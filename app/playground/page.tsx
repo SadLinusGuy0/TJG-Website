@@ -1144,10 +1144,10 @@ function PlaygroundContent() {
         </Section>
 
         {/* ---- Loading Animation ---- */}
-        <Section title="Loading Dots" description="Animated loading spinner in different sizes">
+        <Section title="Loading Animation" description="Lottie circle progress spinner in different sizes">
           <div style={{ display: "flex", gap: 32, alignItems: "center", flexWrap: "wrap" }}>
             <div style={{ textAlign: "center" }}>
-              <LoadingDots size={32} dotSize={7} />
+              <LoadingDots size={32} />
               <div style={{ color: "var(--secondary)", fontSize: 12, fontFamily: "One UI Sans", marginTop: 8 }}>Small</div>
             </div>
             <div style={{ textAlign: "center" }}>
@@ -1155,7 +1155,7 @@ function PlaygroundContent() {
               <div style={{ color: "var(--secondary)", fontSize: 12, fontFamily: "One UI Sans", marginTop: 8 }}>Default</div>
             </div>
             <div style={{ textAlign: "center" }}>
-              <LoadingDots size={80} dotSize={16} />
+              <LoadingDots size={80} />
               <div style={{ color: "var(--secondary)", fontSize: 12, fontFamily: "One UI Sans", marginTop: 8 }}>Large</div>
             </div>
           </div>
