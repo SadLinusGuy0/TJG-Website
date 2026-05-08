@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Navigation from "../components/Navigation";
 import BlogIndexContent from "./BlogIndexContent";
-import BlogIndexSkeleton from "./BlogIndexSkeleton";
+import { LoadingDots } from "../components/LoadingAnim";
 export const revalidate = 300;
 
 export default function BlogIndex() {
@@ -10,7 +10,13 @@ export default function BlogIndex() {
       <div className="containers">
         <Navigation />
 
-        <Suspense fallback={<BlogIndexSkeleton />}>
+        <Suspense fallback={
+          <div className="main-content">
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+              <LoadingDots />
+            </div>
+          </div>
+        }>
           <BlogIndexContent />
         </Suspense>
       </div>

@@ -123,21 +123,6 @@ function DemoChips() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Skeleton loading demo                                              */
-/* ------------------------------------------------------------------ */
-function DemoSkeleton() {
-  return (
-    <div style={{ display: "flex", gap: 12, alignItems: "center", width: "100%" }}>
-      <div className="skeleton-box" style={{ width: 48, height: 48, borderRadius: "50%", flexShrink: 0 }} />
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
-        <div className="skeleton-box" style={{ width: "70%", height: 14 }} />
-        <div className="skeleton-box" style={{ width: "45%", height: 14 }} />
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /*  Button showcase                                                    */
 /* ------------------------------------------------------------------ */
 function DemoButtons() {
@@ -1161,12 +1146,10 @@ function PlaygroundContent() {
           </div>
         </Section>
 
-        {/* ---- Skeleton Loading ---- */}
-        <Section title="Skeleton Loading" description="Shimmer placeholders for loading content">
-          <div style={{ display: "flex", flexDirection: "column", gap: 16, width: "100%" }}>
-            <DemoSkeleton />
-            <DemoSkeleton />
-            <DemoSkeleton />
+        {/* ---- Loading Animation (full-width demo) ---- */}
+        <Section title="Loading State" description="Lottie circle progress animation used as a page loading indicator">
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200, width: "100%" }}>
+            <LoadingDots />
           </div>
         </Section>
 
