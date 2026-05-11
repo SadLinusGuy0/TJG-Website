@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { GUMROAD_PRODUCTS, GumroadProduct } from "../../../../lib/gumroad";
+import { GumroadProduct } from "../../../../lib/gumroad";
 
 interface GumroadApiProduct {
   id: string;
@@ -21,7 +21,8 @@ export const revalidate = 3600;
 export async function GET() {
   const token = process.env.GUMROAD_ACCESS_TOKEN;
   if (!token) {
-    return NextResponse.json({ products: GUMROAD_PRODUCTS, source: "fallback" });
+    console.error("GUMROAD_ACCESS_TOKEN is not set");
+    return NextResponse.json({ products: [] }, { status: 500 });
   }
 
   try {
@@ -32,12 +33,12 @@ export async function GET() {
 
     if (!res.ok) {
       console.error(`Gumroad API returned ${res.status}`);
-      return NextResponse.json({ products: GUMROAD_PRODUCTS, source: "fallback" });
+      return NextResponse.json({ products: [] }, { status: 502 });
     }
 
     const data = (await res.json()) as GumroadApiResponse;
     if (!data.success || !Array.isArray(data.products)) {
-      return NextResponse.json({ products: GUMROAD_PRODUCTS, source: "fallback" });
+      return NextResponse.json({ products: [] }, { status: 502 });
     }
 
     const products: GumroadProduct[] = data.products
@@ -51,9 +52,9 @@ export async function GET() {
       }))
       .filter((p) => p.imageUrl);
 
-    return NextResponse.json({ products, source: "gumroad" });
+    return NextResponse.json({ products });
   } catch (error) {
     console.error("Failed to fetch Gumroad products:", error);
-    return NextResponse.json({ products: GUMROAD_PRODUCTS, source: "fallback" });
+    return NextResponse.json({ products: [] }, { status: 502 });
   }
 }
