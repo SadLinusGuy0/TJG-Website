@@ -4132,6 +4132,34 @@ body.nav-collapsed .design-projects-scroll-wrapper {
   transform: scale(0.98);
 }
 
+.shop-gumroad-button {
+  align-self: center;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: var(--br-9xl);
+  background-color: var(--accent);
+  color: var(--primary);
+  text-decoration: none;
+  font-family: 'One UI Sans';
+  font-weight: 600;
+  font-size: 16px;
+  margin-top: 8px;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shop-gumroad-button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.shop-gumroad-button:active {
+  transform: scale(0.98);
+}
+
 .footer-socials {
   display: flex;
   flex-direction: row;
