@@ -89,25 +89,13 @@ export default function Shop() {
                     aria-label={product.name}
                     style={{ marginBottom: 20, aspectRatio: '16 / 9', minHeight: 'auto' }}
                   >
-                    <div className="test-toggle-frame">
-                      <div className="body-text" style={{ marginLeft: 10, textAlign: 'left', display: 'flex', alignItems: 'center' }}>
-                        {product.name}
-                      </div>
-                      <div className="others2">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <g id="Shape">
-                            <path id="Vector 3" d="M8.80005 20L15.3858 13.4142C16.1669 12.6332 16.1669 11.3668 15.3858 10.5858L8.80005 4" stroke="#ACACB1" strokeWidth="2" strokeLinecap="round"/>
-                          </g>
-                        </svg>
-                      </div>
-                    </div>
                     <Image
                       src={product.imageUrl}
                       alt={product.name}
                       width={600}
                       height={338}
-                      style={{ width: '100%', height: '100%', borderRadius: 'var(--br-2lg)' }}
                     />
+                    <div className="list4-label">{product.name}</div>
                   </a>
                 ))
               ) : (
