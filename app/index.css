@@ -850,7 +850,7 @@ html[data-theme="dark"] label.list3:has(.switch):hover,
   margin-bottom: 20px;
   position: relative;
   overflow: visible;
-  min-height: 200px;
+  min-height: 280px;
 }
 
 a.list4 {
