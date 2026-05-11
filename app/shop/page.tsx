@@ -87,7 +87,7 @@ export default function Shop() {
                     href={product.url}
                     className="list4"
                     aria-label={product.name}
-                    style={{ marginBottom: 20 }}
+                    style={{ marginBottom: 20, aspectRatio: '16 / 9', minHeight: 'auto' }}
                   >
                     <div className="test-toggle-frame">
                       <div className="body-text" style={{ marginLeft: 10, textAlign: 'left', display: 'flex', alignItems: 'center' }}>
