@@ -1665,30 +1665,6 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   }
 }
 
-.new-chip {
-  background-color: #64DD88;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 14px;
-  font-weight: 600;
-  margin-right: 8px;
-  display: inline-block;
-  font-family: 'One UI Sans';
-}
-
-.hot-chip {
-  background-color: #E0632D;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 14px;
-  font-weight: 600;
-  margin-right: 8px;
-  display: inline-block;
-  font-family: 'One UI Sans';
-}
-
 .beta-chip {
   background-color: #E0632D;
   color: white;

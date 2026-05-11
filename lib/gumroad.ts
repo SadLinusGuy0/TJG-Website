@@ -3,25 +3,22 @@ export interface GumroadProduct {
   name: string;
   url: string;
   imageUrl: string;
-  badge?: 'new' | 'hot';
   description?: string;
 }
 
-// Manual product list - update this when you add/remove products from Gumroad
+// Fallback list used when the Gumroad API is unavailable or unconfigured.
 export const GUMROAD_PRODUCTS: GumroadProduct[] = [
   {
     id: 'flip7',
     name: 'Z Flip 7 Recreation',
     url: 'https://thatjoshguy.gumroad.com/l/flip7',
     imageUrl: '/images/wallpapers/flip7.png',
-    badge: 'new',
   },
   {
     id: 'oneui8',
     name: 'One UI 8',
     url: 'https://thatjoshguy.gumroad.com/l/oneui8',
     imageUrl: '/images/wallpapers/oui8-dark.png',
-    badge: 'hot',
   },
   {
     id: 's25u',
@@ -74,8 +71,12 @@ export const GUMROAD_PRODUCTS: GumroadProduct[] = [
 ];
 
 export async function getGumroadProducts(): Promise<GumroadProduct[]> {
-  // For now, return the static list
-  // In the future, this could fetch from an API or cache
-  return GUMROAD_PRODUCTS;
+  try {
+    const res = await fetch('/api/gumroad/products');
+    if (!res.ok) return GUMROAD_PRODUCTS;
+    const data = (await res.json()) as { products?: GumroadProduct[] };
+    return data.products && data.products.length > 0 ? data.products : GUMROAD_PRODUCTS;
+  } catch {
+    return GUMROAD_PRODUCTS;
+  }
 }
-

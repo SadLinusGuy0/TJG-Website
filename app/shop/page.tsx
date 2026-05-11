@@ -91,8 +91,6 @@ export default function Shop() {
                   >
                     <div className="test-toggle-frame">
                       <div className="body-text" style={{ marginLeft: 10, textAlign: 'left', display: 'flex', alignItems: 'center' }}>
-                        {product.badge === 'new' && <span className="new-chip">New</span>}
-                        {product.badge === 'hot' && <span className="hot-chip">Hot</span>}
                         {product.name}
                       </div>
                       <div className="others2">
