@@ -1648,6 +1648,7 @@ html[data-theme="dark"] .post-search-bar {
   margin: 24px 0;
 }
 
+.body-text .blog-button,
 .blog-button {
   display: flex;
   align-items: center;
@@ -1655,7 +1656,7 @@ html[data-theme="dark"] .post-search-bar {
   padding: 14px 28px;
   border-radius: var(--br-9xl);
   background-color: var(--accent);
-  color: #fff;
+  color: #fff !important;
   text-decoration: none;
   font-family: 'One UI Sans';
   font-weight: 600;
