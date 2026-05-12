@@ -49,8 +49,8 @@ a:not(:any-link) {
 }
 
 /* Inline hyperlinks in prose / WordPress only — not list rows (list3/list4) */
-.body-text a:any-link:not(.list3):not(.list4),
-.body-text a:not(:any-link):not(.list3):not(.list4) {
+.body-text a:any-link:not(.list3):not(.list4):not(.blog-button),
+.body-text a:not(:any-link):not(.list3):not(.list4):not(.blog-button) {
   color: var(--accent);
 }
 
