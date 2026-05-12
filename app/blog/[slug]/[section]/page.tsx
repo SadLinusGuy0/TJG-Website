@@ -87,6 +87,17 @@ function processContentWithEmbeds(content: string): string {
 
   processedContent = replaceTransitModelPlaceholder(processedContent);
 
+  // Replace button syntax: (Label)[url]{IconName} or (Label)[url]
+  // WordPress wraps standalone lines in <p> tags, so match through them
+  processedContent = processedContent.replace(
+    /<p>\s*\(([^)]+)\)\[([^\]]+)\](?:\{([^}]+)\})?\s*<\/p>/g,
+    (_match, label: string, href: string, icon?: string) => {
+      return icon
+        ? `{{BUTTON:${label}|${href}|${icon}}}`
+        : `{{BUTTON:${label}|${href}}}`;
+    }
+  );
+
   return processedContent;
 }
 

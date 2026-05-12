@@ -6,8 +6,10 @@ import { enhanceAudioPlayer } from './enhanceAudioPlayer';
 import { enhanceWpBlockEmbeds } from './enhanceWpBlockEmbeds';
 import WordCounter from './WordCounter';
 import NativeSlideshow, { type SlideData } from './NativeSlideshow';
+import BlogButton from './BlogButton';
 
 const WORD_COUNTER_REGEX = /\{\{WORD_COUNTER\}\}:(\d+)/;
+const BUTTON_REGEX = /\{\{BUTTON:([^|]+)\|([^|}]+)(?:\|([^}]+))?\}\}/;
 
 const SLIDESHOW_GALLERY_RE =
   /<figure\b[^>]*class="[^"]*(?:is-style-slideshow|is-slideshow)[^"]*"[^>]*>[\s\S]*?<\/figure>(?:\s*<\/figure>)*/gi;
@@ -144,12 +146,26 @@ export default function BlogContent({ content }: BlogContentProps) {
         );
       }
 
+      const btnMatch = html.match(BUTTON_REGEX);
+      if (btnMatch) {
+        const [label, href, iconName] = [btnMatch[1], btnMatch[2], btnMatch[3]];
+        const [before, after] = html.split(btnMatch[0]);
+        return (
+          <div key={`html-${i}`}>
+            {before && <div dangerouslySetInnerHTML={{ __html: before }} />}
+            <BlogButton label={label} href={href} iconName={iconName} />
+            {after && <div dangerouslySetInnerHTML={{ __html: after }} />}
+          </div>
+        );
+      }
+
       return <div key={`html-${i}`} dangerouslySetInnerHTML={{ __html: html }} />;
     });
 
   const hasSlideshows = segments.some(s => s.type === 'slideshow');
+  const hasButtons = BUTTON_REGEX.test(content || '');
 
-  if (hasSlideshows || wordCountMatch) {
+  if (hasSlideshows || wordCountMatch || hasButtons) {
     return (
       <div ref={contentRef} className="body-text" style={bodyTextStyle}>
         {renderSegments(segments)}
