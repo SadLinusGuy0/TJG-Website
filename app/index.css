@@ -1523,12 +1523,13 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   }
   .main-content {
       margin-left: 34%;
-      width: 64%;
+      width: calc(100% - 34%);
       max-width: 100%;
       padding-top: 16px;
       padding-left: 20px;
       padding-right: 20px;
       align-items: flex-start;
+      box-sizing: border-box;
   }
   .top-app-bar-container {
       padding-left: 36% !important;
@@ -1545,7 +1546,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   }
   body.nav-collapsed .main-content {
       margin-left: 8% !important;
-      width: 80% !important;
+      width: calc(100% - 8%) !important;
       padding-left: 10px !important;
       padding-right: 10px !important;
   }
