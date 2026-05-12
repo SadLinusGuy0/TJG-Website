@@ -1545,8 +1545,8 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
       padding: 0;
   }
   body.nav-collapsed .main-content {
-      margin-left: 8% !important;
-      width: calc(100% - 8%) !important;
+      margin-left: max(8%, 88px) !important;
+      width: calc(100% - max(8%, 88px)) !important;
       padding-left: 10px !important;
       padding-right: 10px !important;
   }
@@ -1556,7 +1556,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   }
   
   body.nav-collapsed .top-app-bar {
-      left: 15.5% !important;
+      left: max(15.5%, 88px) !important;
       right: 7% !important;
       width: auto !important;
       padding-left: 0 !important;
