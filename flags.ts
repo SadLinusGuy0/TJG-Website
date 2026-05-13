@@ -138,6 +138,21 @@ export const liquidGlassEnabled = flag({
 });
 
 /**
+ * FMP Separated View feature flag - controls visibility of the FMP view toggle in Settings.
+ * When enabled, the toggle appears allowing users to switch between separated and combined views.
+ */
+export const fmpSeparatedViewEnabled = flag({
+  key: 'fmp-separated-view-enabled',
+  adapter: vercelAdapter(),
+  defaultValue: false,
+  description: 'Show the FMP separated/combined view toggle in Settings',
+  options: [
+    { value: true, label: 'Enabled' },
+    { value: false, label: 'Disabled' },
+  ],
+});
+
+/**
  * WordPress source URL flag - controls which WordPress site the blog loads from.
  * Configure per-environment in the Vercel Dashboard (e.g. college vs main site).
  */

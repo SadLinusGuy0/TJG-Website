@@ -63,6 +63,7 @@ interface ThemeContextType {
   liquidGlass: boolean;
   setLiquidGlass: (enabled: boolean) => void;
   liquidGlassAvailable: boolean;
+  fmpSeparatedViewAvailable: boolean;
   hydrated: boolean;
 }
 
@@ -80,6 +81,7 @@ const ThemeContext = createContext<ThemeContextType>({
   liquidGlass: false,
   setLiquidGlass: () => {},
   liquidGlassAvailable: false,
+  fmpSeparatedViewAvailable: false,
   hydrated: false,
 });
 
@@ -158,9 +160,10 @@ interface ThemeProviderProps {
   children: React.ReactNode;
   cornerSmoothingAvailable?: boolean;
   liquidGlassAvailable?: boolean;
+  fmpSeparatedViewAvailable?: boolean;
 }
 
-export function ThemeProvider({ children, cornerSmoothingAvailable = false, liquidGlassAvailable = false }: ThemeProviderProps) {
+export function ThemeProvider({ children, cornerSmoothingAvailable = false, liquidGlassAvailable = false, fmpSeparatedViewAvailable = false }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [accentColor, setAccentColorState] = useState<AccentColor>(getInitialAccentColor);
   const [blurEnabled, setBlurEnabledState] = useState<boolean>(getInitialBlurEnabled);
@@ -304,7 +307,7 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, liqu
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable, hydrated }}>
+    <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable, fmpSeparatedViewAvailable, hydrated }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -77,11 +77,10 @@ function ThemePreviewAuto({ accent }: { accent: AccentColor }) {
 }
 
 function SettingsContent() {
-  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable } = useTheme();
+  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable, fmpSeparatedViewAvailable } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [devOptionsEnabled, setDevOptionsEnabled] = useState(false);
   const [fmpSeparatedView, setFmpSeparatedView] = useState(true);
-  const [showFmpToggle, setShowFmpToggle] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   const from = searchParams.get('from') || '/';
@@ -99,9 +98,6 @@ function SettingsContent() {
     checkDevOptions();
     const saved = localStorage.getItem('fmpCombinedView');
     setFmpSeparatedView(saved === null ? true : saved !== 'true');
-    const wpCookie = document.cookie.split('; ').find(c => c.startsWith('ff-wordpress-source-url='));
-    const wpUrl = wpCookie ? decodeURIComponent(wpCookie.split('=')[1]) : '';
-    setShowFmpToggle(wpUrl.includes('joshskinnertjg.wordpress.com'));
     window.addEventListener('developer-options-changed', checkDevOptions);
     return () => window.removeEventListener('developer-options-changed', checkDevOptions);
   }, []);
@@ -337,7 +333,7 @@ function SettingsContent() {
           )}
         </div>
 
-        {showFmpToggle && (
+        {fmpSeparatedViewAvailable && (
           <>
             <div className="container1">
               <div className="title">Blog</div>

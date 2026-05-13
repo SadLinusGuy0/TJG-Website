@@ -3,6 +3,7 @@ import { BlogFlagProvider } from './components/BlogFlagProvider';
 import { getBlogEnabled } from '../lib/getBlogFlag';
 import { getCornerSmoothingEnabled } from '../lib/getCornerSmoothingFlag';
 import { getLiquidGlassEnabled } from '../lib/getLiquidGlassFlag';
+import { getFmpSeparatedViewEnabled } from '../lib/getFmpSeparatedViewFlag';
 import './globals.css';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -49,6 +50,7 @@ export default async function RootLayout({
   const blogEnabledValue = await getBlogEnabled();
   const cornerSmoothingEnabledValue = await getCornerSmoothingEnabled();
   const liquidGlassEnabledValue = await getLiquidGlassEnabled();
+  const fmpSeparatedViewEnabledValue = await getFmpSeparatedViewEnabled();
   
   return (
     <html suppressHydrationWarning>
@@ -103,7 +105,7 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        <ThemeProvider cornerSmoothingAvailable={cornerSmoothingEnabledValue} liquidGlassAvailable={liquidGlassEnabledValue}>
+        <ThemeProvider cornerSmoothingAvailable={cornerSmoothingEnabledValue} liquidGlassAvailable={liquidGlassEnabledValue} fmpSeparatedViewAvailable={fmpSeparatedViewEnabledValue}>
           <BlogFlagProvider blogEnabled={blogEnabledValue}>
             <ProgressiveBlur />
             <ProgressiveBlur position="bottom" />
