@@ -80,6 +80,7 @@ function SettingsContent() {
   const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [devOptionsEnabled, setDevOptionsEnabled] = useState(false);
+  const [fmpCombinedView, setFmpCombinedView] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   const from = searchParams.get('from') || '/';
@@ -95,6 +96,7 @@ function SettingsContent() {
       setDevOptionsEnabled(localStorage.getItem('developer-options-enabled') === 'true');
     };
     checkDevOptions();
+    setFmpCombinedView(localStorage.getItem('fmpCombinedView') === 'true');
     window.addEventListener('developer-options-changed', checkDevOptions);
     return () => window.removeEventListener('developer-options-changed', checkDevOptions);
   }, []);
@@ -328,6 +330,24 @@ function SettingsContent() {
               <Switch id="liquid-glass-toggle" checked={liquidGlass} onChange={setLiquidGlass} />
             </label>
           )}
+        </div>
+
+        <div className="container1">
+          <div className="title">Blog</div>
+        </div>
+        <div className="list-group">
+          <label htmlFor="fmp-combined-view-toggle" className="list3" style={{ cursor: 'pointer' }}>
+            <div className="test-toggle-group">
+              <div className="body-text">FMP combined view</div>
+              <div className="information-wrapper">
+                <div className="information">Show all FMP sections on one page instead of separate pages</div>
+              </div>
+            </div>
+            <Switch id="fmp-combined-view-toggle" checked={fmpCombinedView} onChange={(val) => {
+              setFmpCombinedView(val);
+              localStorage.setItem('fmpCombinedView', val.toString());
+            }} />
+          </label>
         </div>
 
         {devOptionsEnabled && (
