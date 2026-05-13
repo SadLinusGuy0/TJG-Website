@@ -80,7 +80,7 @@ function SettingsContent() {
   const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [devOptionsEnabled, setDevOptionsEnabled] = useState(false);
-  const [fmpCombinedView, setFmpCombinedView] = useState(false);
+  const [fmpSeparatedView, setFmpSeparatedView] = useState(true);
   const searchParams = useSearchParams();
   const router = useRouter();
   const from = searchParams.get('from') || '/';
@@ -96,7 +96,8 @@ function SettingsContent() {
       setDevOptionsEnabled(localStorage.getItem('developer-options-enabled') === 'true');
     };
     checkDevOptions();
-    setFmpCombinedView(localStorage.getItem('fmpCombinedView') === 'true');
+    const saved = localStorage.getItem('fmpCombinedView');
+    setFmpSeparatedView(saved === null ? true : saved !== 'true');
     window.addEventListener('developer-options-changed', checkDevOptions);
     return () => window.removeEventListener('developer-options-changed', checkDevOptions);
   }, []);
@@ -338,14 +339,14 @@ function SettingsContent() {
         <div className="list-group">
           <label htmlFor="fmp-combined-view-toggle" className="list3" style={{ cursor: 'pointer' }}>
             <div className="test-toggle-group">
-              <div className="body-text">FMP combined view</div>
+              <div className="body-text">FMP separated view</div>
               <div className="information-wrapper">
-                <div className="information">Show all FMP sections on one page instead of separate pages</div>
+                <div className="information">Show FMP sections on separate pages instead of one combined page</div>
               </div>
             </div>
-            <Switch id="fmp-combined-view-toggle" checked={fmpCombinedView} onChange={(val) => {
-              setFmpCombinedView(val);
-              localStorage.setItem('fmpCombinedView', val.toString());
+            <Switch id="fmp-combined-view-toggle" checked={fmpSeparatedView} onChange={(val) => {
+              setFmpSeparatedView(val);
+              localStorage.setItem('fmpCombinedView', (!val).toString());
             }} />
           </label>
         </div>
