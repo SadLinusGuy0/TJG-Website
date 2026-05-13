@@ -81,6 +81,7 @@ function SettingsContent() {
   const [mounted, setMounted] = useState(false);
   const [devOptionsEnabled, setDevOptionsEnabled] = useState(false);
   const [fmpSeparatedView, setFmpSeparatedView] = useState(true);
+  const [showFmpToggle, setShowFmpToggle] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   const from = searchParams.get('from') || '/';
@@ -98,6 +99,9 @@ function SettingsContent() {
     checkDevOptions();
     const saved = localStorage.getItem('fmpCombinedView');
     setFmpSeparatedView(saved === null ? true : saved !== 'true');
+    const wpCookie = document.cookie.split('; ').find(c => c.startsWith('ff-wordpress-source-url='));
+    const wpUrl = wpCookie ? decodeURIComponent(wpCookie.split('=')[1]) : '';
+    setShowFmpToggle(wpUrl.includes('joshskinnertjg.wordpress.com'));
     window.addEventListener('developer-options-changed', checkDevOptions);
     return () => window.removeEventListener('developer-options-changed', checkDevOptions);
   }, []);
@@ -333,23 +337,27 @@ function SettingsContent() {
           )}
         </div>
 
-        <div className="container1">
-          <div className="title">Blog</div>
-        </div>
-        <div className="list-group">
-          <label htmlFor="fmp-combined-view-toggle" className="list3" style={{ cursor: 'pointer' }}>
-            <div className="test-toggle-group">
-              <div className="body-text">FMP separated view</div>
-              <div className="information-wrapper">
-                <div className="information">Show FMP sections on separate pages instead of one combined page</div>
-              </div>
+        {showFmpToggle && (
+          <>
+            <div className="container1">
+              <div className="title">Blog</div>
             </div>
-            <Switch id="fmp-combined-view-toggle" checked={fmpSeparatedView} onChange={(val) => {
-              setFmpSeparatedView(val);
-              localStorage.setItem('fmpCombinedView', (!val).toString());
-            }} />
-          </label>
-        </div>
+            <div className="list-group">
+              <label htmlFor="fmp-combined-view-toggle" className="list3" style={{ cursor: 'pointer' }}>
+                <div className="test-toggle-group">
+                  <div className="body-text">FMP separated view</div>
+                  <div className="information-wrapper">
+                    <div className="information">Show FMP sections on separate pages instead of one combined page</div>
+                  </div>
+                </div>
+                <Switch id="fmp-combined-view-toggle" checked={fmpSeparatedView} onChange={(val) => {
+                  setFmpSeparatedView(val);
+                  localStorage.setItem('fmpCombinedView', (!val).toString());
+                }} />
+              </label>
+            </div>
+          </>
+        )}
 
         {devOptionsEnabled && (
           <>
