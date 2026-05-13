@@ -365,7 +365,7 @@ function SettingsContent() {
                 <div className="test-toggle-group">
                   <div className="body-text">Feature Flags</div>
                   <div className="information-wrapper">
-                    <div className="information">Locally override Vercel feature flags</div>
+                    <div className="information">Override server side feature flags</div>
                   </div>
                 </div>
                 <div className="list-item-separator" />
