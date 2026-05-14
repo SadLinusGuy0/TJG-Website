@@ -13,6 +13,7 @@ import BlogContent from "../../BlogContent";
 import { FMP_SLUG, extractH1Sections } from "../../../../lib/fmpSections";
 import { getWordpressSourceUrl } from "../../../../lib/getWordpressSourceUrlFlag";
 import { replaceTransitModelPlaceholder } from "../../../../lib/transitModelSketchfabEmbed";
+import { sanitizeBlogButtonHref } from "../../../../lib/sanitizeBlogButtonHref";
 
 export const revalidate = 300;
 
@@ -92,9 +93,10 @@ function processContentWithEmbeds(content: string): string {
   processedContent = processedContent.replace(
     /<p[^>]*>\s*\(([^)]+)\)\[([^\]]+)\](?:\{([^}]+)\})?\s*<\/p>/g,
     (_match, label: string, href: string, icon?: string) => {
+      const safeHref = sanitizeBlogButtonHref(href);
       return icon
-        ? `{{BUTTON:${label}|${href}|${icon}}}`
-        : `{{BUTTON:${label}|${href}}}`;
+        ? `{{BUTTON:${label}|${safeHref}|${icon}}}`
+        : `{{BUTTON:${label}|${safeHref}}}`;
     }
   );
 

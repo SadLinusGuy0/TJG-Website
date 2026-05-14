@@ -18,6 +18,7 @@ import { getInPostSearchBarEnabled } from "../../../lib/getInPostSearchBarFlag";
 import { getInPostSearchBarFmpEnabled } from "../../../lib/getInPostSearchBarFmpFlag";
 import { getWordpressSourceUrl } from "../../../lib/getWordpressSourceUrlFlag";
 import ForceRefreshButton from "./ForceRefreshButton";
+import { sanitizeBlogButtonHref } from "../../../lib/sanitizeBlogButtonHref";
 
 export const revalidate = 300;
 
@@ -163,9 +164,10 @@ function processContentWithEmbeds(content: string): string {
   processedContent = processedContent.replace(
     /<p[^>]*>\s*\(([^)]+)\)\[([^\]]+)\](?:\{([^}]+)\})?\s*<\/p>/g,
     (_match, label: string, href: string, icon?: string) => {
+      const safeHref = sanitizeBlogButtonHref(href);
       return icon
-        ? `{{BUTTON:${label}|${href}|${icon}}}`
-        : `{{BUTTON:${label}|${href}}}`;
+        ? `{{BUTTON:${label}|${safeHref}|${icon}}}`
+        : `{{BUTTON:${label}|${safeHref}}}`;
     }
   );
 
