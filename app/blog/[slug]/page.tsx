@@ -225,8 +225,8 @@ export default async function BlogPost(props: PageProps) {
   const { slug } = await props.params;
 
   return (
-    <div className="index">
-      <div className="containers">
+    <div className="page">
+      <div className="page-body">
         {/* Navigation renders immediately — client component, no server data */}
         <Navigation hideMobile={true} />
         <div className="main-content">
@@ -279,7 +279,7 @@ function BlogPostBodySkeleton() {
       />
 
       {/* Article body skeleton */}
-      <div className="container settings" style={{ padding: 0, marginBottom: 0, maxWidth: '100%' }}>
+      <div className="panel settings" style={{ padding: 0, marginBottom: 0, maxWidth: '100%' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '0 10px' }}>
           {[90, 100, 85, 100, 75, 100, 60, 100, 88, 100, 70].map((w, i) => (
             <div
@@ -455,7 +455,7 @@ async function BlogPostBody({ slug }: { slug: string }) {
       {slug === FMP_SLUG ? (
         <FmpSectionButtons content={content.content?.rendered || ''} slug={slug} />
       ) : (
-        <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
+        <div className="panel settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
           <BlogContent content={processContentWithEmbeds(content.content?.rendered || '')} />
         </div>
       )}
@@ -471,7 +471,7 @@ function FmpSectionButtons({ content, slug }: { content: string; slug: string })
 
   if (sections.length === 0) {
     return (
-      <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
+      <div className="panel settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
         <BlogContent content={processContentWithEmbeds(content)} />
       </div>
     );
@@ -484,7 +484,7 @@ function FmpSectionButtons({ content, slug }: { content: string; slug: string })
           <Link
             key={section.slug}
             href={`/blog/${slug}/${section.slug}`}
-            className="list3"
+            className="list"
             style={{
               justifyContent: 'space-between',
               textDecoration: 'none',

@@ -37,14 +37,14 @@ interface PlayerCleanup {
 }
 
 function buildPlayer(audio: HTMLAudioElement, title: string | null): PlayerCleanup {
-  const container = document.createElement('div');
-  container.className = 'custom-audio-player';
+  const panel = document.createElement('div');
+  panel.className = 'custom-audio-player';
 
   if (title) {
     const titleEl = document.createElement('div');
     titleEl.className = 'custom-audio-player__title';
     titleEl.textContent = title;
-    container.appendChild(titleEl);
+    panel.appendChild(titleEl);
   }
 
   const progressRow = document.createElement('div');
@@ -71,7 +71,7 @@ function buildPlayer(audio: HTMLAudioElement, title: string | null): PlayerClean
   progressRow.appendChild(timeEl);
   progressRow.appendChild(seekBar);
   progressRow.appendChild(durationEl);
-  container.appendChild(progressRow);
+  panel.appendChild(progressRow);
 
   const controlsRow = document.createElement('div');
   controlsRow.className = 'custom-audio-player__controls';
@@ -118,11 +118,11 @@ function buildPlayer(audio: HTMLAudioElement, title: string | null): PlayerClean
 
   controlsRow.appendChild(playBtn);
   controlsRow.appendChild(rightControls);
-  container.appendChild(controlsRow);
+  panel.appendChild(controlsRow);
 
   audio.style.display = 'none';
   audio.removeAttribute('controls');
-  audio.parentElement!.insertBefore(container, audio.nextSibling);
+  audio.parentElement!.insertBefore(panel, audio.nextSibling);
 
   let prevVolume = 1;
 
@@ -207,7 +207,7 @@ function buildPlayer(audio: HTMLAudioElement, title: string | null): PlayerClean
       audio.removeEventListener('ended', onEnded);
       audio.removeEventListener('volumechange', onVolumeChange);
       audio.pause();
-      container.remove();
+      panel.remove();
     },
   };
 }

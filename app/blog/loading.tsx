@@ -4,7 +4,7 @@ import BlogIndexSkeleton from "./BlogIndexSkeleton";
 
 export default function BlogLoading() {
   return (
-    <div className="index blog-page">
+    <div className="page blog-page">
       {/* Top app bar — identical to the real page */}
       <div className="top-app-bar">
         <div className="top-app-bar-container settings-only">
@@ -14,7 +14,7 @@ export default function BlogLoading() {
         </div>
       </div>
 
-      <div className="containers">
+      <div className="page-body">
         <Navigation />
         <BlogIndexSkeleton />
       </div>

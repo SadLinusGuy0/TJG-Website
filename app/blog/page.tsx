@@ -6,8 +6,8 @@ export const revalidate = 300;
 
 export default function BlogIndex() {
   return (
-    <div className="index blog-page">
-      <div className="containers">
+    <div className="page blog-page">
+      <div className="page-body">
         <Navigation />
 
         <Suspense fallback={<BlogIndexSkeleton />}>

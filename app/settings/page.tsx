@@ -14,12 +14,12 @@ import Switch from '../components/Switch';
 
 function ThemePreviewLight({ accent }: { accent: AccentColor }) {
   const bg = ACCENT_LIGHT_BACKGROUNDS[accent];
-  const container = ACCENT_LIGHT_CONTAINER_BACKGROUNDS[accent];
+  const panel = ACCENT_LIGHT_CONTAINER_BACKGROUNDS[accent];
   const dot = ACCENT_COLORS[accent];
   return (
     <svg viewBox="0 0 160 112" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="160" height="112" rx="16" fill={bg}/>
-      <rect x="14" y="14" width="132" height="84" rx="12" fill={container}/>
+      <rect x="14" y="14" width="132" height="84" rx="12" fill={panel}/>
       <circle cx="34" cy="42" r="7" fill={dot}/>
       <rect x="50" y="37" width="78" height="10" rx="5" fill="#CCCCD0"/>
       <circle cx="34" cy="66" r="7" fill={dot}/>
@@ -30,12 +30,12 @@ function ThemePreviewLight({ accent }: { accent: AccentColor }) {
 
 function ThemePreviewDark({ accent }: { accent: AccentColor }) {
   const bg = ACCENT_DARK_BACKGROUNDS[accent];
-  const container = ACCENT_DARK_CONTAINER_BACKGROUNDS[accent];
+  const panel = ACCENT_DARK_CONTAINER_BACKGROUNDS[accent];
   const dot = ACCENT_COLORS[accent];
   return (
     <svg viewBox="0 0 160 112" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="160" height="112" rx="16" fill={bg}/>
-      <rect x="14" y="14" width="132" height="84" rx="12" fill={container}/>
+      <rect x="14" y="14" width="132" height="84" rx="12" fill={panel}/>
       <circle cx="34" cy="42" r="7" fill={dot}/>
       <rect x="50" y="37" width="78" height="10" rx="5" fill="#3A3A3E"/>
       <circle cx="34" cy="66" r="7" fill={dot}/>
@@ -77,9 +77,10 @@ function ThemePreviewAuto({ accent }: { accent: AccentColor }) {
 }
 
 function SettingsContent() {
-  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable } = useTheme();
+  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable, fmpSeparatedViewAvailable } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [devOptionsEnabled, setDevOptionsEnabled] = useState(false);
+  const [fmpSeparatedView, setFmpSeparatedView] = useState(true);
   const searchParams = useSearchParams();
   const router = useRouter();
   const from = searchParams.get('from') || '/';
@@ -95,6 +96,8 @@ function SettingsContent() {
       setDevOptionsEnabled(localStorage.getItem('developer-options-enabled') === 'true');
     };
     checkDevOptions();
+    const saved = localStorage.getItem('fmpCombinedView');
+    setFmpSeparatedView(saved === null ? true : saved !== 'true');
     window.addEventListener('developer-options-changed', checkDevOptions);
     return () => window.removeEventListener('developer-options-changed', checkDevOptions);
   }, []);
@@ -111,10 +114,10 @@ function SettingsContent() {
           }
           onBack={() => router.push(from)}
         />
-        <div className="container1">
+        <div className="section-header">
           <div className="title">Theme</div>
         </div>
-        <div className="container" style={{ padding: 'var(--padding-xll)' }}>
+        <div className="panel" style={{ padding: 'var(--padding-xll)' }}>
           {mounted && (
             <div className="theme-cards">
               <div
@@ -163,11 +166,11 @@ function SettingsContent() {
           )}
         </div>
         
-        <div className="container1">
+        <div className="section-header">
           <div className="title">Accent color</div>
         </div>
         <div
-          className="container accent-color-scroll"
+          className="panel accent-color-scroll"
           style={{
             marginBottom: '10px',
             padding: 'var(--padding-xll)',
@@ -280,8 +283,8 @@ function SettingsContent() {
           </div>
         </div>
         <div className="list-group">
-          <label htmlFor="progressive-blur-toggle" className="list3" style={{ cursor: 'pointer' }}>
-            <div className="test-toggle-group">
+          <label htmlFor="progressive-blur-toggle" className="list" style={{ cursor: 'pointer' }}>
+            <div className="list-item-content">
               <div className="body-text">Blur effects</div>
               <div className="information-wrapper">
                 <div className="information">Enable or disable the blur effects on scroll</div>
@@ -293,14 +296,14 @@ function SettingsContent() {
           {cornerSmoothingAvailable && (
             <label
               htmlFor="corner-smoothing-toggle"
-              className="list3"
+              className="list"
               style={{
                 cursor: cornerSmoothingSupported ? 'pointer' : 'default',
                 opacity: cornerSmoothingSupported ? 1 : 0.45,
                 pointerEvents: cornerSmoothingSupported ? 'auto' : 'none',
               }}
             >
-              <div className="test-toggle-group">
+              <div className="list-item-content">
                 <div className="body-text">Corner smoothing</div>
                 <div className="information-wrapper">
                   <div className="information">
@@ -315,8 +318,8 @@ function SettingsContent() {
           )}
 
           {liquidGlassAvailable && (
-            <label htmlFor="liquid-glass-toggle" className="list3" style={{ cursor: 'pointer' }}>
-              <div className="test-toggle-group">
+            <label htmlFor="liquid-glass-toggle" className="list" style={{ cursor: 'pointer' }}>
+              <div className="list-item-content">
                 <div className="body-text" style={{ display: 'flex', alignItems: 'center' }}>
                   <span className="beta-chip">Beta</span>
                   Liquid Glass
@@ -330,17 +333,39 @@ function SettingsContent() {
           )}
         </div>
 
+        {fmpSeparatedViewAvailable && (
+          <>
+            <div className="section-header">
+              <div className="title">Blog</div>
+            </div>
+            <div className="list-group">
+              <label htmlFor="fmp-combined-view-toggle" className="list" style={{ cursor: 'pointer' }}>
+                <div className="list-item-content">
+                  <div className="body-text">FMP separated view</div>
+                  <div className="information-wrapper">
+                    <div className="information">Show FMP sections on separate pages instead of one combined page</div>
+                  </div>
+                </div>
+                <Switch id="fmp-combined-view-toggle" checked={fmpSeparatedView} onChange={(val) => {
+                  setFmpSeparatedView(val);
+                  localStorage.setItem('fmpCombinedView', (!val).toString());
+                }} />
+              </label>
+            </div>
+          </>
+        )}
+
         {devOptionsEnabled && (
           <>
-            <div className="container1">
+            <div className="section-header">
               <div className="title">Developer options</div>
             </div>
             <div className="list-group">
-              <a href="/settings/feature-flags" className="list3" role="button" aria-label="Feature Flags">
-                <div className="test-toggle-group">
+              <a href="/settings/feature-flags" className="list" role="button" aria-label="Feature Flags">
+                <div className="list-item-content">
                   <div className="body-text">Feature Flags</div>
                   <div className="information-wrapper">
-                    <div className="information">Locally override Vercel feature flags</div>
+                    <div className="information">Override server side feature flags</div>
                   </div>
                 </div>
                 <div className="list-item-separator" />
@@ -348,8 +373,8 @@ function SettingsContent() {
                   <path d="M1 1L7 7L1 13" stroke="var(--secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </a>
-              <a href="/playground" className="list3" role="button" aria-label="Component Playground">
-                <div className="test-toggle-group">
+              <a href="/playground" className="list" role="button" aria-label="Component Playground">
+                <div className="list-item-content">
                   <div className="body-text">Component Playground</div>
                   <div className="information-wrapper">
                     <div className="information">Browse and test UI components</div>
@@ -364,12 +389,12 @@ function SettingsContent() {
           </>
         )}
 
-        <div className="container1">
+        <div className="section-header">
         </div>
 
         <div className="list-group">
-          <a href="/settings/about" className="list3" role="button" aria-label="About this site">
-            <div className="test-toggle-group">
+          <a href="/settings/about" className="list" role="button" aria-label="About this site">
+            <div className="list-item-content">
               <div className="body-text">About this site</div>
             </div>
             <div className="list-item-separator" />
@@ -385,8 +410,8 @@ function SettingsContent() {
 
 export default function Settings() {
   return (
-    <div className="index settings-page">
-      <div className="containers">
+    <div className="page settings-page">
+      <div className="page-body">
         <Navigation hideMobile={true} />
         <Suspense fallback={
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>

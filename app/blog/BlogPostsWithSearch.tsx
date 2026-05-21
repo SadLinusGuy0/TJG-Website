@@ -79,13 +79,13 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
         }}
       >
         {displayedPosts.length > 0 ? (
-          <div className="blank-div">
+          <div className="section">
             <div className="list-group">
               {displayedPosts.map((post) => {
                 const featuredImageUrl = featuredImages.get(post.id);
                 
                 return (
-                  <Link key={post.id} href={`/blog/${post.slug}`} className="list3">
+                  <Link key={post.id} href={`/blog/${post.slug}`} className="list">
                     <div className="blog-card-container" style={{ 
                       display: 'flex', 
                       gap: '16px', 
@@ -189,11 +189,11 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
             </div>
           </div>
         ) : (
-          <div className="blank-div">
-            <div className="container1">
+          <div className="section">
+            <div className="section-header">
               <div className="title">No Posts Found</div>
             </div>
-            <div className="container settings">
+            <div className="panel settings">
               <div className="body-text">
                 <p>No articles match your search. Try different keywords.</p>
               </div>

@@ -127,18 +127,18 @@ function AboutContent() {
 
         <div style={{ height: 200 }} />
 
-        <div className="container1" style={{ paddingTop: "0" }}>
+        <div className="section-header" style={{ paddingTop: "0" }}>
             <div className="title">Credits</div>
           </div>
           <div className="list-group">
             <a
               href="https://x.com/BennettBuhner"
-              className="list3"
+              className="list"
               role="button"
               aria-label="Bennett Buhner"
             >
               <div
-                className="shape"
+                className="list-item-icon"
                 style={{ height: "30px", width: "30px" }}
               >
                 <Image
@@ -149,7 +149,7 @@ function AboutContent() {
                   style={{ borderRadius: "50%" }}
                 />
               </div>
-              <div className="test-toggle-group">
+              <div className="list-item-content">
                 <div className="body-text">Bennett Buhner</div>
                 <div className="information-wrapper">
                   <div className="information">
@@ -157,7 +157,7 @@ function AboutContent() {
                   </div>
                 </div>
               </div>
-              <div className="others2">
+              <div className="list-item-chevron">
                 <svg
                   width="24"
                   height="24"
@@ -179,12 +179,12 @@ function AboutContent() {
             </a>
             <a
               href="https://dhirenv.in"
-              className="list3"
+              className="list"
               role="button"
               aria-label="Dhiren Vasnani"
             >
               <div
-                className="shape"
+                className="list-item-icon"
                 style={{ height: "30px", width: "30px" }}
               >
                 <Image
@@ -195,7 +195,7 @@ function AboutContent() {
                   style={{ borderRadius: "50%" }}
                 />
               </div>
-              <div className="test-toggle-group">
+              <div className="list-item-content">
                 <div className="body-text">Dhiren Vasnani</div>
                 <div className="information-wrapper">
                   <div className="information">
@@ -203,7 +203,7 @@ function AboutContent() {
                   </div>
                 </div>
               </div>
-              <div className="others2">
+              <div className="list-item-chevron">
                 <svg
                   width="24"
                   height="24"
@@ -225,9 +225,9 @@ function AboutContent() {
             </a>
           </div>
 
-          <div className="container settings">
+          <div className="panel settings">
             <div className="body-text">
-              <p className="containers-are-the">
+              <p className="prose">
                 This site was created using my One UI Design Kit, and built
                 using Next.js.
               </p>
@@ -236,11 +236,11 @@ function AboutContent() {
           <div className="list-group">
             <a
               href="https://github.com/SadLinusGuy0/TJG-Website/tree/main"
-              className="list3"
+              className="list"
               role="button"
               aria-label="GitHub Repository"
             >
-              <div className="shape">
+              <div className="list-item-icon">
                 <svg
                   width="24"
                   height="24"
@@ -256,7 +256,7 @@ function AboutContent() {
                   />
                 </svg>
               </div>
-              <div className="test-toggle-group">
+              <div className="list-item-content">
                 <div className="body-text">GitHub Repo</div>
                 <div className="information-wrapper">
                   <div className="information">
@@ -264,7 +264,7 @@ function AboutContent() {
                   </div>
                 </div>
               </div>
-              <div className="others2">
+              <div className="list-item-chevron">
                 <svg
                   width="24"
                   height="24"
@@ -285,7 +285,7 @@ function AboutContent() {
               </div>
             </a>
 
-          <div className="container1">
+          <div className="section-header">
           </div>
         </div>
       </div>
@@ -311,8 +311,8 @@ function AboutContent() {
 
 export default function Home() {
   return (
-    <div className="index settings-page">
-      <div className="containers">
+    <div className="page settings-page">
+      <div className="page-body">
         <Navigation hideMobile={true} />
         <Suspense fallback={
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>

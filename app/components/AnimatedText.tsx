@@ -79,7 +79,7 @@ export default function AnimatedText({ text, className, style, inverse = false }
       const charRect = charRef.getBoundingClientRect();
       const containerRect = containerRef.current.getBoundingClientRect();
       
-      // Get center position of the character relative to container
+      // Get center position of the character relative to panel
       const charCenterX = charRect.left - containerRect.left + charRect.width / 2;
       const charCenterY = charRect.top - containerRect.top + charRect.height / 2;
       

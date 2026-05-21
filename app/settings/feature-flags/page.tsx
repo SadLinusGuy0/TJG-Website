@@ -69,6 +69,11 @@ const FLAGS: FlagDef[] = [
     description: 'Show the Liquid Glass toggle in Settings',
   },
   {
+    key: 'fmp-separated-view-enabled',
+    name: 'FMP view toggle',
+    description: 'Show the FMP separated/combined view toggle in Settings',
+  },
+  {
     key: 'wordpress-source-url',
     name: 'WordPress source URL',
     description: 'The WordPress site URL used as the blog data source',
@@ -223,7 +228,7 @@ function StringOverrideControl({
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0, minWidth: 0, flex: 1, justifyContent: 'flex-end' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, width: '100%' }}>
       <button
         onClick={(e) => {
           e.stopPropagation();
@@ -281,7 +286,6 @@ function StringOverrideControl({
           outline: 'none',
           transition: 'opacity 0.15s ease-out, border-color 0.15s ease-out',
           width: '100%',
-          maxWidth: '260px',
           minWidth: 0,
         }}
         onFocus={(e) => {
@@ -386,8 +390,8 @@ function FeatureFlagsContent() {
             if (flag.type === 'string') {
               const value = mounted ? (stringOverrides[flag.key] ?? null) : null;
               return (
-                <div key={flag.key} className="list3" style={{ cursor: 'default', gap: '12px' }}>
-                  <div className="test-toggle-group" style={{ flex: '0 1 auto', minWidth: 0 }}>
+                <div key={flag.key} className="list" style={{ cursor: 'default', flexDirection: 'column', alignItems: 'stretch', gap: '10px' }}>
+                  <div className="list-item-content">
                     <div className="body-text">{flag.name}</div>
                     <div className="information-wrapper">
                       <div className="information">{flag.description}</div>
@@ -408,8 +412,8 @@ function FeatureFlagsContent() {
 
             const state = mounted ? (booleanOverrides[flag.key] ?? 'cloud') : 'cloud';
             return (
-              <div key={flag.key} className="list3" style={{ cursor: 'default' }}>
-                <div className="test-toggle-group" style={{ flex: 1 }}>
+              <div key={flag.key} className="list" style={{ cursor: 'default' }}>
+                <div className="list-item-content" style={{ flex: 1 }}>
                   <div className="body-text">{flag.name}</div>
                   <div className="information-wrapper">
                     <div className="information">{flag.description}</div>
@@ -429,14 +433,14 @@ function FeatureFlagsContent() {
 
         {hasAnyOverride && (
           <>
-            <div className="container1" />
+            <div className="section-header" />
             <div className="list-group">
               <button
-                className="list3"
+                className="list"
                 onClick={handleResetAll}
                 style={{ cursor: 'pointer' }}
               >
-                <div className="test-toggle-group">
+                <div className="list-item-content">
                   <div className="body-text" style={{ color: '#FF3B30' }}>Reset all overrides</div>
                   <div className="information-wrapper">
                     <div className="information">Restore all flags to their cloud values</div>
@@ -447,7 +451,7 @@ function FeatureFlagsContent() {
           </>
         )}
 
-        <div className="container1" />
+        <div className="section-header" />
       </div>
     </>
   );
@@ -455,8 +459,8 @@ function FeatureFlagsContent() {
 
 export default function FeatureFlagsPage() {
   return (
-    <div className="index settings-page">
-      <div className="containers">
+    <div className="page settings-page">
+      <div className="page-body">
         <Navigation hideMobile={true} />
         <Suspense fallback={
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>

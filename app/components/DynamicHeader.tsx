@@ -7,7 +7,7 @@ import { useEffect, useRef, useState, useCallback, RefObject } from 'react';
 
 /**
  * Tracks scroll progress (0 = fully expanded, 1 = fully collapsed) inside
- * a .submenu-page container, matching the CSS token values:
+ * a .submenu-page panel, matching the CSS token values:
  *   --header-expanded (38vh) – --header-collapsed (72px) – --header-top-padding (12px)
  */
 export function useDynamicHeader(scrollContainer: RefObject<HTMLElement | null>) {
@@ -40,7 +40,7 @@ export function useDynamicHeader(scrollContainer: RefObject<HTMLElement | null>)
 interface DynamicHeaderProps {
   /** The title shown both in the expanded big-title and the collapsed small-title. */
   title: string;
-  /** Ref to the .submenu-page scroll container. The hook attaches its listener here. */
+  /** Ref to the .submenu-page scroll panel. The hook attaches its listener here. */
   scrollContainer: RefObject<HTMLElement | null>;
   /** If provided, a back button is rendered. */
   onBack?: () => void;
@@ -56,7 +56,7 @@ interface DynamicHeaderProps {
  *  Expanded  → large `.big-title` centred in the hero area (opacity 1 → 0)
  *  Collapsed → small `.small-title` inside the sticky bar (opacity 0 → 1)
  *
- * Place this as the FIRST child inside a `.submenu-page` container.
+ * Place this as the FIRST child inside a `.submenu-page` panel.
  * The sibling content should live in a `.scroll-content` wrapper so the
  * padding/margin tokens from budd.css push it below the hero area.
  *

@@ -48,9 +48,9 @@ a:not(:any-link) {
   position: relative;
 }
 
-/* Inline hyperlinks in prose / WordPress only — not list rows (list3/list4) */
-.body-text a:any-link:not(.list3):not(.list4),
-.body-text a:not(:any-link):not(.list3):not(.list4) {
+/* Inline hyperlinks in prose / WordPress only — not list rows (list/media-card) */
+.body-text a:any-link:not(.list):not(.media-card):not(.blog-button),
+.body-text a:not(:any-link):not(.list):not(.media-card):not(.blog-button) {
   color: var(--accent);
 }
 
@@ -95,7 +95,7 @@ a.nav-icon-container-selected:any-link {
   }
 }
 
-.containers-are-the {
+.prose {
   margin: 0;
 }
 
@@ -105,7 +105,7 @@ a.nav-icon-container-selected:any-link {
   font-weight: 400;
 }
 
-.container {
+.panel {
   align-self: stretch;
   border-radius: var(--br-9xl);
   background-color: var(--container-background);
@@ -118,19 +118,19 @@ a.nav-icon-container-selected:any-link {
   font-size: var(--body-size);
 }
 
-.container .settings {
+.panel .settings {
   margin-top: 10px;
   margin-bottom: 10px;
   background-color: none;
 }
 
-.container.settings {
+.panel.settings {
   background: none !important;
   border: none !important;
   box-shadow: none !important;
 }
 
-.container1 {
+.section-header {
   align-self: stretch;
   display: flex;
   flex-direction: column;
@@ -169,16 +169,16 @@ a.nav-icon-container-selected:any-link {
 /* Hover scale effect for links and buttons */
 a,
 .button,
-.list3,
-.list4 {
+.list,
+.media-card {
   transform: scale(1);
   transition: transform 0.2s ease-out;
 }
 
 a:hover,
 .button:hover,
-.list3:hover,
-.list4:hover {
+.list:hover,
+.media-card:hover {
   transform: scale(1.02);
   transition: transform 0.2s ease-in;
 }
@@ -193,16 +193,16 @@ a:hover,
 }
 
 /* Update and strengthen hover effect selectors */
-.list3,
-a.list3,
-button.list3 {
+.list,
+a.list,
+button.list {
   transform: scale(1);
   transition: transform 0.2s ease-out, background-color 0.2s ease-out !important;
 }
 
-.list3:hover,
-a.list3:hover,
-button.list3:hover {
+.list:hover,
+a.list:hover,
+button.list:hover {
   transform: scale(1.02);
   background-color: var(--container-background-hover);
   transition: transform 0.2s ease-in, background-color 0.2s ease-in !important;
@@ -210,16 +210,16 @@ button.list3:hover {
 
 /* Remove the old hover rules that might conflict */
 /* Make hover effects apply universally with higher specificity */
-.list3,
-a.list3,
-button.list3 {
+.list,
+a.list,
+button.list {
   transform: scale(1) !important;
   transition: transform 0.2s ease-out, background-color 0.2s ease-out !important;
 }
 
-.list3:hover,
-a.list3:hover,
-button.list3:hover {
+.list:hover,
+a.list:hover,
+button.list:hover {
   transform: scale(1.02) !important;
   background-color: var(--container-background-hover) !important;
   transition: transform 0.2s ease-in, background-color 0.2s ease-in !important;
@@ -234,124 +234,9 @@ button.list3:hover {
   transition: none !important;
 }
 
-.button-container {
-  width: 100%;
-  top: 20px;
-  position: relative;
-  height: 47px;
-  overflow: visible;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0px auto;
-  box-sizing: border-box;
-  text-align: left;
-  font-size: 20px;
-  color: #fff;
-  font-family: 'One UI Sans';
-}
-
-.left-side-icon {
-  width: auto;
-  /* Change to auto or a percentage */
-  height: auto;
-  /* Change to auto or a percentage */
-  position: absolute;
-  margin: 0 !important;
-  bottom: 0px;
-  left: 0px;
-  object-fit: cover;
-  z-index: 0;
-}
-
-.right-side-icon {
-  width: auto;
-  /* Change to auto or a percentage */
-  height: auto;
-  /* Change to auto or a percentage */
-  position: absolute;
-  margin: 0 !important;
-  right: 0px;
-  bottom: 0px;
-  object-fit: cover;
-  z-index: 1;
-}
-
-.seperation-icon {
-  width: 100%;
-  height: auto;
-  /* Change to auto or a percentage */
-  position: absolute;
-  margin: 0 !important;
-  top: 98.25%;
-  right: 0%;
-  left: 0%;
-  border-radius: var(--br-11xs);
-  max-width: 100%;
-  overflow: visible;
-  object-fit: cover;
-  z-index: 2;
-}
-
-.test-toggle-wrapper {
-  align-self: stretch;
-  flex: 1;
-  overflow: visible;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  z-index: 3;
-}
-
-.others {
-  width: 61px;
-  height: 22px;
-  z-index: 4;
-}
-
-.list {
-  align-self: stretch;
-  border-radius: var(--br-9xl);
-  background-color: var(--container-background);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  padding: var(--padding-xl);
-  position: relative;
-  gap: var(--gap-xl);
-}
-
-.test-toggle-frame {
-  align-self: stretch;
-  flex: 1;
-  overflow: visible;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  padding: 0 10px;
-}
-
-.others2 {
+.list-item-chevron {
   width: 33px;
   height: 22px;
-}
-
-.list2 {
-  align-self: stretch;
-  border-radius: var(--br-9xl);
-  background-color: var(--container-background);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  padding: var(--padding-xl);
-  gap: var(--gap-xl);
 }
 
 .theme-container {
@@ -517,19 +402,7 @@ button.list3:hover {
   text-align: center;
 }
 
-.div {
-  position: absolute;
-  top: calc(50% - 11px);
-  left: calc(50% - 11px);
-  line-height: 133.53%;
-  display: inline-block;
-  width: 22px;
-  height: 23px;
-  font-family: 'One UI Sans';
-  font-weight: 600;
-}
-
-.shape {
+.list-item-icon {
   width: 24px;
   position: relative;
   height: 24px;
@@ -561,19 +434,7 @@ button.list3:hover {
   flex-direction: column;
 }
 
-.test-toggle-parent {
-  align-self: stretch;
-  flex: 1;
-  overflow: visible;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: var(--gap-11xs);
-  width: 100%;
-}
-
-.list3 {
+.list {
   align-self: stretch;
   border-radius: var(--br-9xl);
   background-color: var(--container-background);
@@ -596,20 +457,20 @@ button.list3:hover {
   transition: transform 0.2s ease-out, background-color 0.2s ease-out !important;
 }
 
-.list3 .settings {
+.list .settings {
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
-.list3:focus {
+.list:focus {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
 /* Light mode hover */
-html[data-theme="light"] .list3:hover,
-html[data-theme="light"] a.list3:hover,
-html[data-theme="light"] button.list3:hover {
+html[data-theme="light"] .list:hover,
+html[data-theme="light"] a.list:hover,
+html[data-theme="light"] button.list:hover {
   background-color: #e3e3e3 !important;
   outline: 1.5px solid color-mix(in srgb, currentColor 20%, transparent);
   transform: scale(1.02) !important;
@@ -617,9 +478,9 @@ html[data-theme="light"] button.list3:hover {
 }
 
 @media (prefers-color-scheme: light) {
-  .list3:hover,
-  a.list3:hover,
-  button.list3:hover {
+  .list:hover,
+  a.list:hover,
+  button.list:hover {
     background-color: #e3e3e3 !important;
     outline: 1.5px solid color-mix(in srgb, currentColor 20%, transparent);
     transform: scale(1.02) !important;
@@ -628,9 +489,9 @@ html[data-theme="light"] button.list3:hover {
 }
 
 /* Dark mode hover */
-html[data-theme="dark"] .list3:hover,
-html[data-theme="dark"] a.list3:hover,
-html[data-theme="dark"] button.list3:hover {
+html[data-theme="dark"] .list:hover,
+html[data-theme="dark"] a.list:hover,
+html[data-theme="dark"] button.list:hover {
   background-color: #2a2a2d !important;
   outline: 1.5px solid color-mix(in srgb, currentColor 20%, transparent);
   transform: scale(1.02) !important;
@@ -638,9 +499,9 @@ html[data-theme="dark"] button.list3:hover {
 }
 
 @media (prefers-color-scheme: dark) {
-  .list3:hover,
-  a.list3:hover,
-  button.list3:hover {
+  .list:hover,
+  a.list:hover,
+  button.list:hover {
     background-color: #2a2a2d !important;
     outline: 1.5px solid color-mix(in srgb, currentColor 20%, transparent);
     transform: scale(1.02) !important;
@@ -648,11 +509,11 @@ html[data-theme="dark"] button.list3:hover {
   }
 }
 
-.list3:active {
+.list:active {
   background-color: var(--container-background-active);
 }
 
-.list3:disabled {
+.list:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -670,18 +531,18 @@ html[data-theme="dark"] button.list3:hover {
   box-sizing: border-box;
 }
 
-.list-group > .list3,
-.list-group > a.list3,
-.list-group > button.list3,
-.list-group > label.list3 {
+.list-group > .list,
+.list-group > a.list,
+.list-group > button.list,
+.list-group > label.list {
   background-color: transparent;
   border-radius: 0;
   margin-bottom: 0;
 }
 
-.list-group > .list3:not(:last-child)::after,
-.list-group > a.list3:not(:last-child)::after,
-.list-group > label.list3:not(:last-child)::after {
+.list-group > .list:not(:last-child)::after,
+.list-group > a.list:not(:last-child)::after,
+.list-group > label.list:not(:last-child)::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -691,64 +552,64 @@ html[data-theme="dark"] button.list3:hover {
   background: color-mix(in srgb, var(--secondary) 15%, transparent);
 }
 
-.list-group > .list3 {
+.list-group > .list {
   position: relative;
 }
 
 /* Inside groups: no scale on hover, just background change */
-.list-group > .list3:hover,
-.list-group > a.list3:hover,
-.list-group > button.list3:hover,
-.list-group > label.list3:hover {
+.list-group > .list:hover,
+.list-group > a.list:hover,
+.list-group > button.list:hover,
+.list-group > label.list:hover {
   transform: none !important;
   outline: none;
 }
 
-html[data-theme="light"] .list-group > .list3:hover,
-html[data-theme="light"] .list-group > a.list3:hover,
-html[data-theme="light"] .list-group > button.list3:hover,
-html[data-theme="light"] .list-group > label.list3:hover {
+html[data-theme="light"] .list-group > .list:hover,
+html[data-theme="light"] .list-group > a.list:hover,
+html[data-theme="light"] .list-group > button.list:hover,
+html[data-theme="light"] .list-group > label.list:hover {
   transform: none !important;
   outline: none;
 }
 
-html[data-theme="dark"] .list-group > .list3:hover,
-html[data-theme="dark"] .list-group > a.list3:hover,
-html[data-theme="dark"] .list-group > button.list3:hover,
-html[data-theme="dark"] .list-group > label.list3:hover {
+html[data-theme="dark"] .list-group > .list:hover,
+html[data-theme="dark"] .list-group > a.list:hover,
+html[data-theme="dark"] .list-group > button.list:hover,
+html[data-theme="dark"] .list-group > label.list:hover {
   transform: none !important;
   outline: none;
 }
 
 @media (prefers-color-scheme: light) {
-  .list-group > .list3:hover,
-  .list-group > a.list3:hover,
-  .list-group > button.list3:hover,
-  .list-group > label.list3:hover {
+  .list-group > .list:hover,
+  .list-group > a.list:hover,
+  .list-group > button.list:hover,
+  .list-group > label.list:hover {
     transform: none !important;
     outline: none;
   }
 }
 
 @media (prefers-color-scheme: dark) {
-  .list-group > .list3:hover,
-  .list-group > a.list3:hover,
-  .list-group > button.list3:hover,
-  .list-group > label.list3:hover {
+  .list-group > .list:hover,
+  .list-group > a.list:hover,
+  .list-group > button.list:hover,
+  .list-group > label.list:hover {
     transform: none !important;
     outline: none;
   }
 }
 
 /* No hover/active highlight on toggle rows (non-navigating) */
-.list3:has(.switch):hover,
-.list3:has(.switch):active,
-html[data-theme="light"] .list3:has(.switch):hover,
-html[data-theme="light"] label.list3:has(.switch):hover,
-html[data-theme="dark"] .list3:has(.switch):hover,
-html[data-theme="dark"] label.list3:has(.switch):hover,
-.list-group > .list3:has(.switch):hover,
-.list-group > label.list3:has(.switch):hover {
+.list:has(.switch):hover,
+.list:has(.switch):active,
+html[data-theme="light"] .list:has(.switch):hover,
+html[data-theme="light"] label.list:has(.switch):hover,
+html[data-theme="dark"] .list:has(.switch):hover,
+html[data-theme="dark"] label.list:has(.switch):hover,
+.list-group > .list:has(.switch):hover,
+.list-group > label.list:has(.switch):hover {
   background-color: var(--container-background) !important;
   transform: none !important;
   outline: none !important;
@@ -832,7 +693,7 @@ html[data-theme="dark"] label.list3:has(.switch):hover,
 
 /* ------------------------------------------------------------------ */
 
-.list4 {
+.media-card {
   align-self: stretch;
   border-radius: var(--br-9xl);
   background-color: transparent;
@@ -853,33 +714,33 @@ html[data-theme="dark"] label.list3:has(.switch):hover,
   min-height: 200px;
 }
 
-a.list4 {
+a.media-card {
   color: var(--primary);
 }
 
-.list4:hover,
-a.list4:hover,
-button.list4:hover {
+.media-card:hover,
+a.media-card:hover,
+button.media-card:hover {
   transform: scale(1.02) !important;
   transition: transform 0.3s ease !important;
 }
 
-.list4:hover .list4-label {
+.media-card:hover .media-card-label {
   background: rgba(0, 0, 0, 0.8) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
 }
 
-.list4:active {
+.media-card:active {
   background-color: var(--container-background-active);
 }
 
-.list4:focus {
+.media-card:focus {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
-.list4 img {
+.media-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -890,7 +751,7 @@ button.list4:hover {
   z-index: 1;
 }
 
-.list4-label {
+.media-card-label {
   position: absolute;
   bottom: 16px;
   left: 16px;
@@ -911,7 +772,7 @@ button.list4:hover {
   white-space: nowrap;
 }
 
-.test-toggle-group {
+.list-item-content {
   align-self: stretch;
   flex: 1;
   overflow: visible;
@@ -922,7 +783,7 @@ button.list4:hover {
   gap: var(--gap-11xs);
 }
 
-.containers {
+.page-body {
   top: 0px;
   left: 0px;
   min-height: 100vh;
@@ -1090,7 +951,7 @@ button.list4:hover {
   transition-delay: 1s;
 }
 
-.index {
+.page {
   /* Remove height limit */
   /* height: 1071px; */
   width: 100%;
@@ -1106,7 +967,7 @@ button.list4:hover {
   /* Add this */
 }
 
-.blank-div {
+.section {
   width: 100%;
 }
 
@@ -1368,7 +1229,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
 
 /* Fix mobile centering */
 @media screen and (max-width: 699px) {
-  .containers {
+  .page-body {
       padding: 10px 0;
       width: 100%;
       max-width: none;
@@ -1388,10 +1249,10 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
       padding-top: 40px;
   }
 
-  .container,
-  .container1,
-  .list3,
-  .list4,
+  .panel,
+  .section-header,
+  .list,
+  .media-card,
   .list-group,
   .button-container,
   .theme-container {
@@ -1409,7 +1270,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
 
 /* Update mobile styles */
 @media screen and (max-width: 699px) {
-  .containers {
+  .page-body {
       width: 100%;
       max-width: none;
       padding: 2% 0;
@@ -1426,10 +1287,10 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
       padding-top: 80px;
   }
 
-  .list3,
-  .list4,
+  .list,
+  .media-card,
   .list-group,
-  .container,
+  .panel,
   .theme-container,
   .button-container {
       width: 100%;
@@ -1441,7 +1302,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   }
 }
 
-.container1 {
+.section-header {
   padding-left: 14px;
   padding-right: 14px;
 }
@@ -1522,19 +1383,20 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
       gap: 12px;
   }
   .main-content {
-      margin-left: 34%;
-      width: 64%;
+      margin-left: min(34%, 396px);
+      width: calc(100% - min(34%, 396px));
       max-width: 100%;
       padding-top: 16px;
       padding-left: 20px;
       padding-right: 20px;
       align-items: flex-start;
+      box-sizing: border-box;
   }
   .top-app-bar-container {
-      padding-left: 36% !important;
+      padding-left: min(36%, 416px) !important;
       padding-right: 20px !important;
   }
-  .containers {
+  .page-body {
       flex-direction: row;
       align-items: flex-start;
       justify-content: center;
@@ -1544,8 +1406,8 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
       padding: 0;
   }
   body.nav-collapsed .main-content {
-      margin-left: 8% !important;
-      width: 80% !important;
+      margin-left: max(8%, 88px) !important;
+      width: calc(100% - max(8%, 88px)) !important;
       padding-left: 10px !important;
       padding-right: 10px !important;
   }
@@ -1555,7 +1417,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   }
   
   body.nav-collapsed .top-app-bar {
-      left: 15.5% !important;
+      left: max(15.5%, 88px) !important;
       right: 7% !important;
       width: auto !important;
       padding-left: 0 !important;
@@ -1574,7 +1436,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
 } */
 
 /* Add proper spacing between paragraphs */
-.container.settings .body-text {
+.panel.settings .body-text {
   display: flex;
   flex-direction: column;
 }
@@ -1583,14 +1445,14 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   width: 100%;
 }
 
-/* Adjust GitHub repo container spacing */
-.list3.settings {
+/* Adjust GitHub repo panel spacing */
+.list.settings {
   margin-top: 0;
-  /* Remove top margin since parent container has bottom margin */
+  /* Remove top margin since parent panel has bottom margin */
   padding: var(--padding-xl);
 }
 
-.button.list4:hover {
+.button.media-card:hover {
   background-color: var(--container-background-hover);
   color: var(--primary);
   border: 1px solid var(--primary);
@@ -1663,30 +1525,6 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
   .theme-aware-image {
       content: attr(data-light-src);
   }
-}
-
-.new-chip {
-  background-color: #64DD88;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 14px;
-  font-weight: 600;
-  margin-right: 8px;
-  display: inline-block;
-  font-family: 'One UI Sans';
-}
-
-.hot-chip {
-  background-color: #E0632D;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 14px;
-  font-weight: 600;
-  margin-right: 8px;
-  display: inline-block;
-  font-family: 'One UI Sans';
 }
 
 .beta-chip {
@@ -1943,11 +1781,11 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
 }
 
 @media screen and (max-width: 699px) {
-  .containers,
+  .page-body,
   .main-content,
   .settings-content,
-  .container,
-  .container1,
+  .panel,
+  .section-header,
   .theme-container,
   .settings-section,
   .credits-grid {
@@ -2173,7 +2011,7 @@ inset: 0;
 }
 
 @media (max-width: 700px) {
-.index {
+.page {
   padding-top: 0 !important;
   margin-top: 0 !important;
 }
@@ -2203,7 +2041,7 @@ padding-top: 80px !important;
 }
 
 /* Remove excessive height and padding for settings page */
-.settings-page.index {
+.settings-page.page {
   min-height: auto !important;
   padding-bottom: 0 !important;
 }
@@ -2228,7 +2066,7 @@ mask-image: linear-gradient(to bottom, black 0%, transparent 100%) !important;
 }
 
 /* Remove excessive height and padding for One UI Design Kit page */
-.oneui-design-kit-page.index {
+.oneui-design-kit-page.page {
   min-height: auto !important;
   padding-bottom: 0 !important;
 }
@@ -2762,7 +2600,7 @@ justify-content: center;
     width: 100%;
   }
   
-  .bento-page .containers {
+  .bento-page .page-body {
     padding: 0;
   }
   
@@ -2801,6 +2639,7 @@ justify-content: center;
   width: 100%;
   height: 100%;
   min-height: 400px;
+  max-height: calc(100vh - 80px);
   border-radius: var(--br-9xl);
   overflow: hidden;
   background: var(--container-background);
@@ -3091,6 +2930,8 @@ justify-content: center;
     max-width: 100%;
     aspect-ratio: 3/4;
     min-height: unset;
+    max-height: calc(100vh - 120px);
+    max-height: calc(100dvh - 120px);
     margin: 0;
     border-radius: var(--br-9xl);
   }
@@ -3795,80 +3636,17 @@ body.nav-collapsed .featured-stories-scroll-wrapper {
   }
 }
 
-/* Loading Dots Animation */
-.loading-dots {
-  width: var(--loading-size, 56px);
-  height: var(--loading-size, 56px);
-  position: relative;
+/* Loading Animation (Lottie) */
+.loading-anim {
   display: inline-block;
-  animation: loading-rotate calc(var(--loading-speed, 900ms) * 3.5) linear infinite;
+  line-height: 0;
 }
 
-.loading-dots-centered {
+.loading-anim-centered {
   display: flex;
   margin: 0 auto;
   justify-content: center;
   align-items: center;
-}
-
-.loading-dot {
-  width: var(--loading-dot-size, 12px);
-  height: var(--loading-dot-size, 12px);
-  border-radius: 999px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  animation: loading-pulse calc(var(--loading-speed, 900ms) * 0.9) ease-in-out infinite;
-  will-change: transform, opacity;
-}
-
-/* Colors using CSS variables for theme support */
-.loading-dot-blue {
-  background: var(--accent, #4a86ff);
-}
-
-.loading-dot-green {
-  background: #2bd48f;
-}
-
-/* Place dots on a cross, then rotate the whole spinner */
-.loading-dot-top {
-  transform: translate(-50%, -50%) translate(0, calc(var(--loading-radius, 16px) * -1));
-  animation-delay: 0ms;
-}
-
-.loading-dot-right {
-  transform: translate(-50%, -50%) translate(var(--loading-radius, 16px), 0);
-  animation-delay: 90ms;
-}
-
-.loading-dot-bottom {
-  transform: translate(-50%, -50%) translate(0, var(--loading-radius, 16px));
-  animation-delay: 180ms;
-}
-
-.loading-dot-left {
-  transform: translate(-50%, -50%) translate(calc(var(--loading-radius, 16px) * -1), 0);
-  animation-delay: 270ms;
-}
-
-@keyframes loading-rotate {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Keep the dots mostly steady, with a tiny scale/opacity wave */
-@keyframes loading-pulse {
-  0%,
-  100% {
-    opacity: 0.9;
-  }
-  50% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.08);
-  }
 }
 
 /* =============================================
@@ -4097,7 +3875,7 @@ body.nav-collapsed .design-projects-scroll-wrapper {
 }
 
 /* =============================================
-   Stack Section (enhanced from blank-div)
+   Stack Section (enhanced from section)
    ============================================= */
 
 .stack-text {
@@ -4216,6 +3994,34 @@ body.nav-collapsed .design-projects-scroll-wrapper {
 }
 
 .footer-email-button:active {
+  transform: scale(0.98);
+}
+
+.shop-gumroad-button {
+  align-self: center;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: var(--br-9xl);
+  background-color: var(--accent);
+  color: var(--primary);
+  text-decoration: none;
+  font-family: 'One UI Sans';
+  font-weight: 600;
+  font-size: 16px;
+  margin-top: 8px;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shop-gumroad-button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.shop-gumroad-button:active {
   transform: scale(0.98);
 }
 

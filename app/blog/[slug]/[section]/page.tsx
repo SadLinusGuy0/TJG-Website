@@ -116,8 +116,8 @@ export default async function SectionPage(props: PageProps) {
   const { slug, section } = await props.params;
 
   return (
-    <div className="index">
-      <div className="containers">
+    <div className="page">
+      <div className="page-body">
         <Navigation hideMobile={true} />
         <div className="main-content">
           <Suspense fallback={<SectionSkeleton />}>
@@ -153,7 +153,7 @@ function SectionSkeleton() {
         }}
         aria-hidden="true"
       />
-      <div className="container settings" style={{ padding: 0, marginBottom: 0, maxWidth: '100%' }}>
+      <div className="panel settings" style={{ padding: 0, marginBottom: 0, maxWidth: '100%' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '0 10px' }}>
           {[90, 100, 85, 100, 75, 100, 60].map((w, i) => (
             <div
@@ -311,7 +311,7 @@ async function SectionBody({ slug, section }: { slug: string; section: string })
         )}
       </div>
 
-      <div className="container settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
+      <div className="panel settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
         <BlogContent content={sectionContent} />
       </div>
     </>

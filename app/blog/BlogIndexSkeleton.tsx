@@ -20,7 +20,7 @@ export default function BlogIndexSkeleton() {
       </div>
 
       {/* Post card skeletons */}
-      <div className="blank-div">
+      <div className="section">
         <div className="list-group">
           {Array.from({ length: 6 }).map((_, i) => (
             <SkeletonCard key={i} />
@@ -34,7 +34,7 @@ export default function BlogIndexSkeleton() {
 function SkeletonCard() {
   return (
     <div
-      className="list3"
+      className="list"
       style={{ pointerEvents: 'none' }}
       aria-hidden="true"
     >

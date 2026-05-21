@@ -3,9 +3,8 @@ import Navigation from "../../components/Navigation";
 
 export default function BlogPostLoading() {
   return (
-    <div className="index">
-      <div className="containers">
-        {/* Navigation renders immediately */}
+    <div className="page">
+      <div className="page-body">
         <Navigation hideMobile={true} />
 
         <div className="main-content">
@@ -40,7 +39,7 @@ export default function BlogPostLoading() {
           />
 
           {/* Article body skeleton — alternating paragraph widths for realism */}
-          <div className="container settings" style={{ padding: 0, marginBottom: 0, maxWidth: '100%' }}>
+          <div className="panel settings" style={{ padding: 0, marginBottom: 0, maxWidth: '100%' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '0 10px' }}>
               {[90, 100, 85, 100, 75, 100, 60, 100, 88, 100, 70].map((w, i) => (
                 <div

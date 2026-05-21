@@ -76,11 +76,11 @@ export default async function BlogIndexContent() {
         {hasPosts ? (
           <BlogPostsWithSearch categoryMap={categoryMapObj} />
         ) : (
-          <div className="blank-div">
-            <div className="container1">
+          <div className="section">
+            <div className="section-header">
               <div className="title">No Posts Available</div>
             </div>
-            <div className="container settings">
+            <div className="panel settings">
               <div className="body-text">
                 <p>Unable to load blog posts. Please check your WordPress API configuration.</p>
                 <p>Make sure to set the <code>WP_API_URL</code> environment variable with your WordPress site URL.</p>

@@ -15,7 +15,7 @@ export default function Error({
 
   return (
     <div
-      className="index"
+      className="page"
       style={{
         display: "flex",
         alignItems: "center",

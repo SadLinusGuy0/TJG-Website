@@ -21,7 +21,7 @@ import Switch from "../components/Switch";
 function Section({ title, description, bare, children }: { title: string; description?: string; bare?: boolean; children: React.ReactNode }) {
   return (
     <>
-      <div className="container1">
+      <div className="section-header">
         <div className="title" style={{ fontSize: 'var(--subheading-size)' }}>{title}</div>
         {description && (
           <div style={{ color: 'var(--secondary)', fontSize: 'var(--body-size)', fontFamily: 'One UI Sans' }}>
@@ -30,7 +30,7 @@ function Section({ title, description, bare, children }: { title: string; descri
         )}
       </div>
       {bare ? children : (
-        <div className="container" style={{ padding: 'var(--padding-xll)', gap: 16 }}>
+        <div className="panel" style={{ padding: 'var(--padding-xll)', gap: 16 }}>
           {children}
         </div>
       )}
@@ -50,8 +50,8 @@ function ToggleRow({ id, label, description, checked, onChange, badge }: {
   badge?: string;
 }) {
   return (
-    <label htmlFor={id} className="list3" style={{ cursor: "pointer" }}>
-      <div className="test-toggle-group">
+    <label htmlFor={id} className="list" style={{ cursor: "pointer" }}>
+      <div className="list-item-content">
         <div className="body-text" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {badge && <span className="beta-chip">{badge}</span>}
           {label}
@@ -726,8 +726,8 @@ function DemoListItems() {
     <div style={{ display: "flex", flexDirection: "column", gap: 16, width: "100%" }}>
       {/* Toggle group with subtext and vertical separators */}
       <div className="list-group">
-        <label htmlFor="demo-wifi" className="list3" style={{ cursor: "pointer" }}>
-          <div className="test-toggle-group">
+        <label htmlFor="demo-wifi" className="list" style={{ cursor: "pointer" }}>
+          <div className="list-item-content">
             <div className="body-text">Wi-Fi</div>
             <div className="information-wrapper">
               <div className="information">SammyGuru</div>
@@ -736,8 +736,8 @@ function DemoListItems() {
           <div className="list-item-separator" />
           <Switch id="demo-wifi" checked={wifiOn} onChange={setWifiOn} />
         </label>
-        <label htmlFor="demo-bt" className="list3" style={{ cursor: "pointer" }}>
-          <div className="test-toggle-group">
+        <label htmlFor="demo-bt" className="list" style={{ cursor: "pointer" }}>
+          <div className="list-item-content">
             <div className="body-text">Bluetooth</div>
             <div className="information-wrapper">
               <div className="information">That Josh Guy</div>
@@ -746,8 +746,8 @@ function DemoListItems() {
           <div className="list-item-separator" />
           <Switch id="demo-bt" checked={btOn} onChange={setBtOn} />
         </label>
-        <label htmlFor="demo-nfc" className="list3" style={{ cursor: "pointer" }}>
-          <div className="test-toggle-group">
+        <label htmlFor="demo-nfc" className="list" style={{ cursor: "pointer" }}>
+          <div className="list-item-content">
             <div className="body-text">NFC &amp; contactless payments</div>
           </div>
           <Switch id="demo-nfc" checked={nfcOn} onChange={setNfcOn} />
@@ -757,8 +757,8 @@ function DemoListItems() {
       {/* Navigation group with chevrons */}
       <div className="list-group">
         {["Account settings", "Notifications", "Privacy", "Help & Support"].map((item) => (
-          <div key={item} className="list3" style={{ cursor: "pointer" }}>
-            <div className="test-toggle-group">
+          <div key={item} className="list" style={{ cursor: "pointer" }}>
+            <div className="list-item-content">
               <div className="body-text">{item}</div>
             </div>
             <div className="list-item-separator" />
@@ -1094,7 +1094,7 @@ function PlaygroundContent() {
         </Section>
 
         {/* ---- Cards ---- */}
-        <Section title="Cards" description="Hoverable card containers">
+        <Section title="Cards" description="Hoverable card page-body">
           <DemoCards />
         </Section>
 
@@ -1215,8 +1215,8 @@ function PlaygroundContent() {
 /* ------------------------------------------------------------------ */
 export default function Playground() {
   return (
-    <div className="index settings-page">
-      <div className="containers">
+    <div className="page settings-page">
+      <div className="page-body">
         <Navigation hideMobile={true} />
         <Suspense
           fallback={

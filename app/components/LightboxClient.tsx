@@ -72,9 +72,9 @@ export default function LightboxClient(): JSX.Element | null {
 
   useEffect(() => {
     // Collect images inside post content
-    const container = document.querySelector<HTMLElement>(".body-text");
-    if (!container) return;
-    const imgs = Array.from(container.querySelectorAll<HTMLImageElement>("img"));
+    const panel = document.querySelector<HTMLElement>(".body-text");
+    if (!panel) return;
+    const imgs = Array.from(panel.querySelectorAll<HTMLImageElement>("img"));
     if (!imgs.length) return;
 
     setImages(imgs);

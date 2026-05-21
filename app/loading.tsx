@@ -3,7 +3,7 @@ import Navigation from "./components/Navigation";
 
 export default function HomeLoading() {
   return (
-    <div className="index">
+    <div className="page">
       {/* Top app bar — identical to the real home page */}
       <div className="top-app-bar">
         <div className="top-app-bar-container settings-only">
@@ -18,26 +18,22 @@ export default function HomeLoading() {
         </div>
       </div>
 
-      <div className="containers">
-        {/* Navigation renders immediately */}
+      <div className="page-body">
         <Navigation />
 
         <div className="main-content">
           {/* Hero skeleton */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, paddingTop: 32, paddingBottom: 24 }}>
-            {/* Avatar circle */}
             <div
               className="skeleton-box"
               style={{ width: 120, height: 120, borderRadius: '50%' }}
               aria-hidden="true"
             />
-            {/* Name lines */}
             <div className="skeleton-box" style={{ height: 20, width: 120 }} aria-hidden="true" />
             <div className="skeleton-box" style={{ height: 40, width: 240 }} aria-hidden="true" />
             <div className="skeleton-box" style={{ height: 16, width: 200 }} aria-hidden="true" />
           </div>
 
-          {/* Role / info card skeletons */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 24 }}>
             {[1, 2].map((i) => (
               <div
@@ -49,10 +45,8 @@ export default function HomeLoading() {
             ))}
           </div>
 
-          {/* Section label */}
           <div className="skeleton-box" style={{ height: 16, width: 140, marginBottom: 12 }} aria-hidden="true" />
 
-          {/* Featured story card skeletons */}
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             {[1, 2, 3].map((i) => (
               <div

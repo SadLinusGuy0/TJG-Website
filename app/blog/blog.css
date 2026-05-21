@@ -30,7 +30,7 @@
   margin: 12px 0 !important;
   padding: 0 !important;
 }
-.body-text .list3.word-counter {
+.body-text .list.word-counter {
   margin: 12px 0 !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -1487,7 +1487,7 @@ html[data-theme="dark"] .post-search-bar {
   position: absolute;
   top: calc(100% + 4px);
   right: 0;
-  background: var(--container-experimental);
+  background: var(--panel-experimental);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: var(--br-sm);

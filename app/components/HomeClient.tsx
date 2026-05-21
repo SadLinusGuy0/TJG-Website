@@ -98,7 +98,7 @@ export default function HomeClient({
   ];
 
   return (
-    <div className="index">
+    <div className="page">
       <div className="top-app-bar">
         <div className="top-app-bar-container settings-only">
           <TopAppBarIcon href="/settings" ariaLabel="Settings">
@@ -107,7 +107,7 @@ export default function HomeClient({
         </div>
       </div>
       
-      <div className="containers">
+      <div className="page-body">
         <Navigation />
         <div className="main-content">
           {/* Hero + Role Cards Layout */}
@@ -280,7 +280,7 @@ export default function HomeClient({
                     )},
                     
                   ].map((pub, index) => (
-                    <div key={`${copy}-${index}`} className="publication-item" title={pub.name}>
+                    <div key={`${copy}-${page}`} className="publication-item" title={pub.name}>
                       <PublicationLogo logo={pub.logo} alt={pub.name} />
                     </div>
                   ))}
@@ -472,7 +472,7 @@ export default function HomeClient({
                     aria-hidden={copyIndex > 0 ? 'true' : undefined}
                   >
                     {stackTools.map((tool, index) => (
-                      <StackIcon key={`m-${copyIndex}-${index}`} tool={tool} />
+                      <StackIcon key={`m-${copyIndex}-${page}`} tool={tool} />
                     ))}
                   </div>
                 ))}
@@ -514,14 +514,14 @@ export default function HomeClient({
           )}
 
           {miscSectionEnabled && (
-            <div className="blank-div">
-              <div className="container1">
+            <div className="section">
+              <div className="section-header">
                 <div className="title">Misc</div>
               </div>
 
               <div className="list-group">
-                <a href="https://legacy.thatjoshguy.me" className="list3" role="button" aria-label="View legacy website">
-                  <div className="shape">
+                <a href="https://legacy.thatjoshguy.me" className="list" role="button" aria-label="View legacy website">
+                  <div className="list-item-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <mask id="mask0_misc_home" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
                         <rect width="24" height="24" fill="#D9D9D9" />
@@ -534,7 +534,7 @@ export default function HomeClient({
                       </g>
                     </svg>
                   </div>
-                  <div className="test-toggle-group">
+                  <div className="list-item-content">
                     <div className="body-text">My old site</div>
                     <div className="information-wrapper">
                       <div className="information">legacy.thatjoshguy.me, made in conjunction with Dhiren Vasnani</div>

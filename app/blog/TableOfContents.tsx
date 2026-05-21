@@ -44,7 +44,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
             .replace(/\s+/g, '-')
             .replace(/-+/g, '-')
             .trim();
-          id = slug || `heading-${index}`;
+          id = slug || `heading-${page}`;
           heading.id = id;
         }
 
@@ -144,7 +144,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
             className={`toc-dropdown ${isHovered ? 'visible' : ''}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={(e) => {
-              // Only close if mouse is not moving to the dashes container
+              // Only close if mouse is not moving to the dashes panel
               const relatedTarget = e.relatedTarget as Node | null;
               if (!containerRef.current?.contains(relatedTarget)) {
                 setIsHovered(false);

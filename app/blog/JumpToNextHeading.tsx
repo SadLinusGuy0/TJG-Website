@@ -42,7 +42,7 @@ export default function JumpToNextHeading() {
             .replace(/\s+/g, '-')
             .replace(/-+/g, '-')
             .trim();
-          id = slug || `heading-${index}`;
+          id = slug || `heading-${page}`;
           el.id = id;
         }
 
