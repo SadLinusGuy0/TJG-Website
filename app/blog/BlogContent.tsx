@@ -40,7 +40,7 @@ function extractSlides(galleryHtml: string): SlideData[] {
     const alt = tag.match(/alt="([^"]*?)"/i)?.[1] || '';
 
     let caption = '';
-    const afterImg = galleryHtml.slice(imgMatch.page + tag.length);
+    const afterImg = galleryHtml.slice(imgMatch.index + tag.length);
     const capMatch = afterImg.match(/<figcaption[^>]*>([\s\S]*?)<\/figcaption>/i);
     if (capMatch) {
       caption = capMatch[1].replace(/<[^>]*>/g, '').trim();
@@ -103,7 +103,7 @@ export default function BlogContent({ content }: BlogContentProps) {
           .replace(/\s+/g, '-')
           .replace(/-+/g, '-')
           .trim();
-        heading.id = slug || `heading-${page}`;
+        heading.id = slug || `heading-${index}`;
       }
     });
 

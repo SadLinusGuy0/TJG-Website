@@ -280,7 +280,7 @@ export default function HomeClient({
                     )},
                     
                   ].map((pub, index) => (
-                    <div key={`${copy}-${page}`} className="publication-item" title={pub.name}>
+                    <div key={`${copy}-${index}`} className="publication-item" title={pub.name}>
                       <PublicationLogo logo={pub.logo} alt={pub.name} />
                     </div>
                   ))}
@@ -472,7 +472,7 @@ export default function HomeClient({
                     aria-hidden={copyIndex > 0 ? 'true' : undefined}
                   >
                     {stackTools.map((tool, index) => (
-                      <StackIcon key={`m-${copyIndex}-${page}`} tool={tool} />
+                      <StackIcon key={`m-${copyIndex}-${index}`} tool={tool} />
                     ))}
                   </div>
                 ))}

@@ -22,7 +22,7 @@ export default function NativeSlideshow({ slides }: NativeSlideshowProps) {
 
   const total = slides.length;
 
-  const goTo = useCallback((page: number) => {
+  const goTo = useCallback((index: number) => {
     setCurrent(Math.max(0, Math.min(total - 1, index)));
   }, [total]);
 

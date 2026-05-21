@@ -44,7 +44,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
             .replace(/\s+/g, '-')
             .replace(/-+/g, '-')
             .trim();
-          id = slug || `heading-${page}`;
+          id = slug || `heading-${index}`;
           heading.id = id;
         }
 
