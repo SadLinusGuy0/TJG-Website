@@ -1,12 +1,11 @@
-import Link from "next/link";
 import Navigation from "../../components/Navigation";
+import { LoadingDots } from "../../components/LoadingAnim";
 
 export default function BlogPostLoading() {
   return (
     <div className="page">
       <div className="page-body">
         <Navigation hideMobile={true} />
-
         <div className="main-content">
           {/* Top app bar with back button + skeleton TOC pill */}
           <div className="top-app-bar">

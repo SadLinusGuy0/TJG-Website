@@ -1,6 +1,5 @@
-import Link from "next/link";
 import Navigation from "../components/Navigation";
-import BlogIndexSkeleton from "./BlogIndexSkeleton";
+import { LoadingDots } from "../components/LoadingAnim";
 
 export default function BlogLoading() {
   return (
@@ -16,7 +15,11 @@ export default function BlogLoading() {
 
       <div className="page-body">
         <Navigation />
-        <BlogIndexSkeleton />
+        <div className="main-content">
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+            <LoadingDots />
+          </div>
+        </div>
       </div>
     </div>
   );

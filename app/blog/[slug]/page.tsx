@@ -6,16 +6,19 @@ import type { WPPost } from "../../../lib/wordpress";
 import { notFound } from "next/navigation";
 import Navigation from "../../components/Navigation";
 import LightboxClient from "../../components/LightboxClient";
+import { LoadingDots } from "../../components/LoadingAnim";
 import Link from "next/link";
 import TableOfContents from "../TableOfContents";
 import BlogContent from "../BlogContent";
 import PostSearchBar from "../PostSearchBar";
-import { FMP_SLUG, extractH1Sections } from "../../../lib/fmpSections";
+import { FMP_SLUG } from "../../../lib/fmpSections";
+import FmpViewWrapper from "./FmpViewWrapper";
 import { replaceTransitModelPlaceholder } from "../../../lib/transitModelSketchfabEmbed";
 import { getInPostSearchBarEnabled } from "../../../lib/getInPostSearchBarFlag";
 import { getInPostSearchBarFmpEnabled } from "../../../lib/getInPostSearchBarFmpFlag";
 import { getWordpressSourceUrl } from "../../../lib/getWordpressSourceUrlFlag";
 import ForceRefreshButton from "./ForceRefreshButton";
+import { sanitizeBlogButtonHref } from "../../../lib/sanitizeBlogButtonHref";
 
 export const revalidate = 300;
 
@@ -125,6 +128,11 @@ function processContentWithEmbeds(content: string): string {
         <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="800" src="https://embed.figma.com/proto/mCrLxeF17zSEftGhESIB9u/One-UI-Setup-Flow?page-id=1%3A2&node-id=14-772&p=f&viewport=-4%2C538%2C0.13&scaling=min-zoom&content-scaling=responsive&starting-point-node-id=14%3A772&embed-host=share" allowfullscreen></iframe>
       </div>
     `,
+    'figma-fmp-design': `
+      <div class="figma-wrapper">
+        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/3QmNHhQMlANCj511sSQuXr/Getaway-Driver---FMP?node-id=0-1&embed-host=share" allowfullscreen></iframe>
+      </div>
+    `,
     'fmp-pitch-embed': `
       <div class="figma-wrapper">
         <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="600" src="https://embed.figma.com/deck/tovF81JJShr77717qeJ883/FMP-Proposal?node-id=1-28&p=f&viewport=493%2C302%2C0.3&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&embed-host=share" allowfullscreen></iframe>
@@ -155,6 +163,18 @@ function processContentWithEmbeds(content: string): string {
   }
 
   processedContent = replaceTransitModelPlaceholder(processedContent);
+
+  // Replace button syntax: (Label)[url]{IconName} or (Label)[url]
+  // WordPress wraps standalone lines in <p> tags, so match through them
+  processedContent = processedContent.replace(
+    /<p[^>]*>\s*\(([^)]+)\)\[([^\]]+)\](?:\{([^}]+)\})?\s*<\/p>/g,
+    (_match, label: string, href: string, icon?: string) => {
+      const safeHref = sanitizeBlogButtonHref(href);
+      return icon
+        ? `{{BUTTON:${label}|${safeHref}|${icon}}}`
+        : `{{BUTTON:${label}|${safeHref}}}`;
+    }
+  );
 
   return processedContent;
 }
@@ -230,8 +250,11 @@ export default async function BlogPost(props: PageProps) {
         {/* Navigation renders immediately — client component, no server data */}
         <Navigation hideMobile={true} />
         <div className="main-content">
-          {/* Post body streams in; skeleton fallback keeps layout stable */}
-          <Suspense fallback={<BlogPostBodySkeleton />}>
+          <Suspense fallback={
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+              <LoadingDots />
+            </div>
+          }>
             <BlogPostBody slug={slug} />
           </Suspense>
         </div>
@@ -453,7 +476,11 @@ async function BlogPostBody({ slug }: { slug: string }) {
       </div>
 
       {slug === FMP_SLUG ? (
-        <FmpSectionButtons content={content.content?.rendered || ''} slug={slug} />
+        <FmpViewWrapper
+          rawContent={content.content?.rendered || ''}
+          processedContent={processContentWithEmbeds(content.content?.rendered || '')}
+          slug={slug}
+        />
       ) : (
         <div className="panel settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
           <BlogContent content={processContentWithEmbeds(content.content?.rendered || '')} />

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { getGumroadProducts, GumroadProduct } from "../../lib/gumroad";
 import { LoadingDots } from "../components/LoadingAnim";
 import PageHeading from "../components/PageHeading";
-import { Settings } from "@thatjoshguy/oneui-icons";
+import { Settings, Shopping } from "@thatjoshguy/oneui-icons";
 
 export default function Shop() {
   const pathname = usePathname();
@@ -79,23 +79,33 @@ export default function Shop() {
                   <LoadingDots />
                 </div>
               ) : products.length > 0 ? (
-                products.map((product) => (
+                <>
+                  {products.map((product) => (
+                    <a
+                      key={product.id}
+                      href={product.url}
+                      className="media-card"
+                      aria-label={product.name}
+                      style={{ marginBottom: 20, aspectRatio: '16 / 9', minHeight: 'auto' }}
+                    >
+                      <Image
+                        src={product.imageUrl}
+                        alt={product.name}
+                        width={600}
+                        height={338}
+                      />
+                      <div className="media-card-label">{product.name}</div>
+                    </a>
+                  ))}
                   <a
-                    key={product.id}
-                    href={product.url}
-                    className="media-card"
-                    aria-label={product.name}
-                    style={{ marginBottom: 20, aspectRatio: '16 / 9', minHeight: 'auto' }}
+                    href="https://thatjoshguy.gumroad.com/"
+                    className="shop-gumroad-button"
+                    aria-label="View all on Gumroad"
                   >
-                    <Image
-                      src={product.imageUrl}
-                      alt={product.name}
-                      width={600}
-                      height={338}
-                    />
-                    <div className="media-card-label">{product.name}</div>
+                    <Shopping size={20} color="var(--primary)" />
+                    <span>View all on Gumroad</span>
                   </a>
-                ))
+                </>
               ) : (
                 <div className="panel" style={{ padding: 'var(--padding-xll)' }}>
                   <div className="body-text">No products available at the moment.</div>

@@ -123,21 +123,6 @@ function DemoChips() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Skeleton loading demo                                              */
-/* ------------------------------------------------------------------ */
-function DemoSkeleton() {
-  return (
-    <div style={{ display: "flex", gap: 12, alignItems: "center", width: "100%" }}>
-      <div className="skeleton-box" style={{ width: 48, height: 48, borderRadius: "50%", flexShrink: 0 }} />
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
-        <div className="skeleton-box" style={{ width: "70%", height: 14 }} />
-        <div className="skeleton-box" style={{ width: "45%", height: 14 }} />
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /*  Button showcase                                                    */
 /* ------------------------------------------------------------------ */
 function DemoButtons() {
@@ -1144,10 +1129,10 @@ function PlaygroundContent() {
         </Section>
 
         {/* ---- Loading Animation ---- */}
-        <Section title="Loading Dots" description="Animated loading spinner in different sizes">
+        <Section title="Loading Animation" description="Lottie circle progress spinner in different sizes">
           <div style={{ display: "flex", gap: 32, alignItems: "center", flexWrap: "wrap" }}>
             <div style={{ textAlign: "center" }}>
-              <LoadingDots size={32} dotSize={7} />
+              <LoadingDots size={32} />
               <div style={{ color: "var(--secondary)", fontSize: 12, fontFamily: "One UI Sans", marginTop: 8 }}>Small</div>
             </div>
             <div style={{ textAlign: "center" }}>
@@ -1155,18 +1140,16 @@ function PlaygroundContent() {
               <div style={{ color: "var(--secondary)", fontSize: 12, fontFamily: "One UI Sans", marginTop: 8 }}>Default</div>
             </div>
             <div style={{ textAlign: "center" }}>
-              <LoadingDots size={80} dotSize={16} />
+              <LoadingDots size={80} />
               <div style={{ color: "var(--secondary)", fontSize: 12, fontFamily: "One UI Sans", marginTop: 8 }}>Large</div>
             </div>
           </div>
         </Section>
 
-        {/* ---- Skeleton Loading ---- */}
-        <Section title="Skeleton Loading" description="Shimmer placeholders for loading content">
-          <div style={{ display: "flex", flexDirection: "column", gap: 16, width: "100%" }}>
-            <DemoSkeleton />
-            <DemoSkeleton />
-            <DemoSkeleton />
+        {/* ---- Loading Animation (full-width demo) ---- */}
+        <Section title="Loading State" description="Lottie circle progress animation used as a page loading indicator">
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200, width: "100%" }}>
+            <LoadingDots />
           </div>
         </Section>
 

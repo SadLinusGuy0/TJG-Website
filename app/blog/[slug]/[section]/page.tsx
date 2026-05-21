@@ -7,11 +7,13 @@ import { notFound } from "next/navigation";
 import Navigation from "../../../components/Navigation";
 import Link from "next/link";
 import LightboxClient from "../../../components/LightboxClient";
+import { LoadingDots } from "../../../components/LoadingAnim";
 import TableOfContents from "../../TableOfContents";
 import BlogContent from "../../BlogContent";
 import { FMP_SLUG, extractH1Sections } from "../../../../lib/fmpSections";
 import { getWordpressSourceUrl } from "../../../../lib/getWordpressSourceUrlFlag";
 import { replaceTransitModelPlaceholder } from "../../../../lib/transitModelSketchfabEmbed";
+import { sanitizeBlogButtonHref } from "../../../../lib/sanitizeBlogButtonHref";
 
 export const revalidate = 300;
 
@@ -86,6 +88,18 @@ function processContentWithEmbeds(content: string): string {
 
   processedContent = replaceTransitModelPlaceholder(processedContent);
 
+  // Replace button syntax: (Label)[url]{IconName} or (Label)[url]
+  // WordPress wraps standalone lines in <p> tags, so match through them
+  processedContent = processedContent.replace(
+    /<p[^>]*>\s*\(([^)]+)\)\[([^\]]+)\](?:\{([^}]+)\})?\s*<\/p>/g,
+    (_match, label: string, href: string, icon?: string) => {
+      const safeHref = sanitizeBlogButtonHref(href);
+      return icon
+        ? `{{BUTTON:${label}|${safeHref}|${icon}}}`
+        : `{{BUTTON:${label}|${safeHref}}}`;
+    }
+  );
+
   return processedContent;
 }
 
@@ -120,7 +134,11 @@ export default async function SectionPage(props: PageProps) {
       <div className="page-body">
         <Navigation hideMobile={true} />
         <div className="main-content">
-          <Suspense fallback={<SectionSkeleton />}>
+          <Suspense fallback={
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+              <LoadingDots />
+            </div>
+          }>
             <SectionBody slug={slug} section={section} />
           </Suspense>
         </div>

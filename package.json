@@ -13,7 +13,7 @@
   "dependencies": {
     "@flags-sdk/hypertune": "^0.2.0",
     "@flags-sdk/vercel": "^1.0.1",
-    "@thatjoshguy/oneui-icons": "^1.0.0",
+    "@thatjoshguy/oneui-icons": "^1.1.0",
     "@vercel/analytics": "^1.5.0",
     "@vercel/edge-config": "^1.4.3",
     "@vercel/flags-core": "^1.0.1",
@@ -21,6 +21,7 @@
     "flags": "^4.0.1",
     "hypertune": "^2.7.2",
     "leaflet": "^1.9.4",
+    "lottie-react": "^2.4.1",
     "next": "^16.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
