@@ -9,14 +9,15 @@ import { LoadingDots } from "../../components/LoadingAnim";
 import Link from "next/link";
 import TableOfContents from "../TableOfContents";
 import BlogContent from "../BlogContent";
+import PortableTextContent from "../PortableTextContent";
 import PostSearchBar from "../PostSearchBar";
 import { FMP_SLUG } from "../../../lib/fmpSections";
 import FmpViewWrapper from "./FmpViewWrapper";
-import { replaceTransitModelPlaceholder } from "../../../lib/transitModelSketchfabEmbed";
 import { getInPostSearchBarEnabled } from "../../../lib/getInPostSearchBarFlag";
 import { getInPostSearchBarFmpEnabled } from "../../../lib/getInPostSearchBarFmpFlag";
 import ForceRefreshButton from "./ForceRefreshButton";
-import { sanitizeBlogButtonHref } from "../../../lib/sanitizeBlogButtonHref";
+import { countWords, processContentWithEmbeds } from "../../../lib/blogContentProcessing";
+import { portableTextToPlainText, stripHtmlAndDecode } from "../../../lib/portableText";
 
 export const revalidate = 300;
 
@@ -43,24 +44,6 @@ const getContentForSlug = cache(async (slug: string): Promise<BlogPost | null> =
   }
 });
 
-function stripHtmlAndDecode(value?: string): string {
-  if (!value) return "";
-  const withoutTags = value.replace(/<[^>]*>/g, " ");
-  const decoded = withoutTags
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&quot;/gi, '"')
-    .replace(/&apos;/gi, "'")
-    .replace(/&#39;/gi, "'")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
-    .replace(/&#(\d+);/g, (_, code: string) => String.fromCharCode(Number(code)))
-    .replace(/&#x([0-9a-f]+);/gi, (_, code: string) => String.fromCharCode(parseInt(code, 16)))
-    .replace(/\s+/g, " ")
-    .trim();
-  return decoded;
-}
-
 function truncate(value: string, maxLength = 160): string {
   if (value.length <= maxLength) return value;
   const sliceLength = Math.max(0, maxLength - 3);
@@ -71,107 +54,10 @@ function getFeaturedImageAltText(post: BlogPost): string | undefined {
   return post.featuredImageAlt;
 }
 
-function countWords(content: string): number {
-  const text = stripHtmlAndDecode(content);
-  if (!text) return 0;
-  const words = text.trim().split(/\s+/).filter(word => word.length > 0);
-  return words.length;
-}
-
-function countWordsAboveMarker(content: string, marker: string): number {
-  const idx = content.indexOf(marker);
-  if (idx === -1) return 0;
-  const contentAbove = content.substring(0, idx);
-  return countWords(contentAbove);
-}
-
-function processContentWithEmbeds(content: string): string {
-  // Define embed mappings - keyphrase to embed HTML
-  const embedMap: Record<string, string> = {
-    'story-mindmap': `
-      <div class="figma-wrapper">
-        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/JFh3pE1bu21Ad74KUibZug/Unit-4---Storytelling?node-id=0-1&embed-host=share" allowfullscreen></iframe>
-      </div>
-    `,
-    'gdd-results': `
-      <div class="figma-wrapper">
-        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://forms.office.com/Pages/AnalysisPage.aspx?AnalyzerToken=Svsr8OjeTHhXu0MsS6MiWcVyyd1M3BbD&id=0JsvSSEvbkyhotOQXlsYcw32xjNmmxRNrKwdPrtn9KRUM0s1OEFZWFZLOUNLNklZRThROFc3U1ZQOS4u" allowfullscreen></iframe>
-      </div>
-    `,
-    'story-results': `
-      <div class="figma-wrapper">
-        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://forms.office.com/Pages/AnalysisPage.aspx?AnalyzerToken=etTOj7nVjPy1Bt4CWPzEeAfutjr6345P&id=0JsvSSEvbkyhotOQXlsYcw32xjNmmxRNrKwdPrtn9KRUNlJPUklRRlRXSDVCUkRCVUZMT1RINTRJTS4u" allowfullscreen></iframe>
-      </div>
-    `,
-    'google-doc-name': `
-      <div class="figma-wrapper">
-        <iframe src="https://docs.google.com/document/d/e/2PACX-1vRZR3r5IoEGDi0okO7E-GHVfb9yPtadU3H8v6urWH_bvpmze1qFmm_OZL_63jmjGfiG7ML-ahpuoSPC/pub?embedded=true"></iframe>
-      </div>
-    `,
-    'figma-ux-workflow': `
-      <div class="figma-wrapper">
-        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/S8xl4FFql9Q6V4O3S0Zayw/UX-Workflow?node-id=0-1&embed-host=share" allowfullscreen></iframe>
-      </div>
-    `,
-    'maps-embed': `
-      <div class="figma-wrapper">
-        <iframe src="https://www.google.com/maps/embed?pb=!4v1770888651744!6m8!1m7!1sEwCt_D72XDwMDw9hPLITpA!2m2!1d50.75749897863136!2d-2.076732351682947!3f240.73163492541838!4f-6.098039408431191!5f0.7820865974627469" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-      </div>
-    `,
-    'figma-prototype': `
-      <div class="figma-wrapper">
-        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="800" src="https://embed.figma.com/proto/mCrLxeF17zSEftGhESIB9u/One-UI-Setup-Flow?page-id=1%3A2&node-id=14-772&p=f&viewport=-4%2C538%2C0.13&scaling=min-zoom&content-scaling=responsive&starting-point-node-id=14%3A772&embed-host=share" allowfullscreen></iframe>
-      </div>
-    `,
-    'figma-fmp-design': `
-      <div class="figma-wrapper">
-        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/3QmNHhQMlANCj511sSQuXr/Getaway-Driver---FMP?node-id=0-1&embed-host=share" allowfullscreen></iframe>
-      </div>
-    `,
-    'fmp-pitch-embed': `
-      <div class="figma-wrapper">
-        <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="600" src="https://embed.figma.com/deck/tovF81JJShr77717qeJ883/FMP-Proposal?node-id=1-28&p=f&viewport=493%2C302%2C0.3&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&embed-host=share" allowfullscreen></iframe>
-      </div>
-    `,
-    'fmp-mindmap': `
-      <div class="figma-wrapper">
-      <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/B9dwuVyhvqnIYIyi2NypXd/FMP-Moodboard?node-id=0-1&embed-host=share" allowfullscreen></iframe>
-      </div>
-    `,
-    // Add more embeds here as needed
-    // 'story-mindmap': '<div class="embed-wrapper">...</div>',
-  };
-
-  let processedContent = content;
-
-  // Replace each keyphrase with its corresponding embed
-  Object.entries(embedMap).forEach(([keyphrase, embedHtml]) => {
-    processedContent = processedContent.replace(keyphrase, embedHtml);
-  });
-
-  // Replace "word-count" with a placeholder for the WordCounter component (rendered in BlogContent)
-  const wordCountMarker = "word-count";
-  const wordCounterPlaceholder = "{{WORD_COUNTER}}";
-  if (processedContent.includes(wordCountMarker)) {
-    const wordsAbove = countWordsAboveMarker(processedContent, wordCountMarker);
-    processedContent = processedContent.replace(wordCountMarker, `${wordCounterPlaceholder}:${wordsAbove}`);
-  }
-
-  processedContent = replaceTransitModelPlaceholder(processedContent);
-
-  // Replace button syntax: (Label)[url]{IconName} or (Label)[url]
-  // WordPress wraps standalone lines in <p> tags, so match through them
-  processedContent = processedContent.replace(
-    /<p[^>]*>\s*\(([^)]+)\)\[([^\]]+)\](?:\{([^}]+)\})?\s*<\/p>/g,
-    (_match, label: string, href: string, icon?: string) => {
-      const safeHref = sanitizeBlogButtonHref(href);
-      return icon
-        ? `{{BUTTON:${label}|${safeHref}|${icon}}}`
-        : `{{BUTTON:${label}|${safeHref}}}`;
-    }
-  );
-
-  return processedContent;
+function getRenderableText(post: BlogPost): string {
+  return post.contentSource === 'portableText'
+    ? portableTextToPlainText(post.portableBody)
+    : stripHtmlAndDecode(post.content?.rendered);
 }
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
@@ -188,7 +74,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
     const titleText = stripHtmlAndDecode(content.title?.rendered) || "That Josh Guy";
     const excerptText = stripHtmlAndDecode(content.excerpt?.rendered);
-    const fallbackDescription = stripHtmlAndDecode(content.content?.rendered);
+    const fallbackDescription = getRenderableText(content);
     const description = truncate(excerptText || fallbackDescription || "Explore the latest stories from That Josh Guy.");
 
     let featuredImageUrl: string | null = content.featuredImageUrl;
@@ -225,7 +111,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
         images: featuredImageUrl ? [featuredImageUrl] : undefined,
       },
       alternates: {
-        canonical: content.link || undefined,
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://thatjoshguy.me'}/blog/${slug}`,
       },
     };
   } catch (error) {
@@ -327,6 +213,10 @@ async function BlogPostBody({ slug }: { slug: string }) {
     getInPostSearchBarFmpEnabled(),
   ]);
   const featuredImageUrl = resolvedFeaturedImage;
+  const legacyHtml = content.content?.rendered || '';
+  const portablePlainText = portableTextToPlainText(content.portableBody);
+  const tocContent = legacyHtml || portablePlainText;
+  const displayedWordCount = content.wordCount ?? countWords(legacyHtml || portablePlainText);
 
   return (
     <>
@@ -339,7 +229,7 @@ async function BlogPostBody({ slug }: { slug: string }) {
             </svg>
           </Link>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <TableOfContents content={content.content?.rendered || ''} />
+            <TableOfContents content={tocContent} />
             <ForceRefreshButton slug={slug} />
           </div>
         </div>
@@ -401,7 +291,7 @@ async function BlogPostBody({ slug }: { slug: string }) {
                 }}>
                   <span>{new Date(content.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                   <span style={{ opacity: 0.7 }}>•</span>
-                  <span>{countWords(content.content?.rendered || '').toLocaleString()} words</span>
+                  <span>{displayedWordCount.toLocaleString()} words</span>
                 </div>
               </div>
             </div>
@@ -453,7 +343,7 @@ async function BlogPostBody({ slug }: { slug: string }) {
                 }}>
                   <span>{new Date(content.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                   <span style={{ opacity: 0.5 }}>•</span>
-                  <span>{countWords(content.content?.rendered || '').toLocaleString()} words</span>
+                  <span>{displayedWordCount.toLocaleString()} words</span>
                 </div>
               </div>
             </div>
@@ -473,13 +363,17 @@ async function BlogPostBody({ slug }: { slug: string }) {
 
       {slug === FMP_SLUG ? (
         <FmpViewWrapper
-          rawContent={content.content?.rendered || ''}
-          processedContent={processContentWithEmbeds(content.content?.rendered || '')}
+          rawContent={legacyHtml}
+          processedContent={processContentWithEmbeds(legacyHtml)}
           slug={slug}
         />
+      ) : content.contentSource === 'portableText' ? (
+        <div className="panel settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
+          <PortableTextContent blocks={content.portableBody || []} />
+        </div>
       ) : (
         <div className="panel settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
-          <BlogContent content={processContentWithEmbeds(content.content?.rendered || '')} />
+          <BlogContent content={processContentWithEmbeds(legacyHtml)} />
         </div>
       )}
       {(searchBarEnabled || (searchBarFmpEnabled && slug === FMP_SLUG)) && (

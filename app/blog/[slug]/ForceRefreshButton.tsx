@@ -42,8 +42,8 @@ export default function ForceRefreshButton({ slug }: { slug: string }) {
       onClick={handleClick}
       disabled={loading}
       className="top-app-bar-icon"
-      aria-label="Force refresh from WordPress"
-      title="Force refresh from WordPress"
+      aria-label="Refresh blog post"
+      title="Refresh blog post"
       style={{
         border: "none",
         cursor: loading ? "wait" : "pointer",

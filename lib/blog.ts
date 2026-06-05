@@ -2,6 +2,7 @@ import { getBlogContentSource } from './getBlogContentSourceFlag';
 import { getWordpressSourceUrl } from './getWordpressSourceUrlFlag';
 import * as wp from './wordpress';
 import * as sanity from './sanity';
+import { stripHtmlAndDecode, type PortableTextBlock } from './portableText';
 
 export { getBlogContentSource };
 
@@ -17,6 +18,11 @@ export type BlogPost = {
   tags: string[];
   featuredImageUrl: string | null;
   featuredImageAlt?: string;
+  wordCount?: number;
+  contentSource: 'legacyHtml' | 'portableText';
+  portableBody?: PortableTextBlock[];
+  searchText: string;
+  legacySourceUrl?: string;
 };
 
 export type BlogCategory = { id: string; name: string; slug: string };
@@ -27,6 +33,12 @@ function wpPostToBlogPost(
   catSlugMap: Map<number, string>,
   tagSlugMap: Map<number, string>,
 ): BlogPost {
+  const searchText = [
+    stripHtmlAndDecode(post.title?.rendered),
+    stripHtmlAndDecode(post.excerpt?.rendered),
+    stripHtmlAndDecode(post.content?.rendered),
+  ].filter(Boolean).join(' ').toLowerCase();
+
   return {
     id: String(post.id),
     date: post.date,
@@ -39,7 +51,20 @@ function wpPostToBlogPost(
     tags: post.tags?.map(id => tagSlugMap.get(id) ?? String(id)) ?? [],
     featuredImageUrl: wp.getFeaturedImageUrl(post),
     featuredImageAlt: post._embedded?.['wp:featuredmedia']?.[0]?.alt_text?.trim() || undefined,
+    contentSource: 'legacyHtml',
+    searchText,
+    legacySourceUrl: post.link,
   };
+}
+
+export function dedupeBlogPostsBySlug(posts: BlogPost[]): BlogPost[] {
+  const seen = new Set<string>();
+  return posts.filter((post) => {
+    const key = post.slug.trim().toLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 async function wpSlugMaps(apiBaseUrl: string) {
@@ -58,7 +83,9 @@ export async function fetchAllBlogPosts(opts?: { tagSlug?: string }): Promise<Bl
   const source = await getBlogContentSource();
 
   if (source === 'sanity') {
-    return sanity.fetchAllPosts(opts);
+    if (!sanity.isSanityConfigured()) return [];
+    const posts = await sanity.fetchAllPosts(opts);
+    return dedupeBlogPostsBySlug(posts);
   }
 
   const apiBaseUrl = await getWordpressSourceUrl();
@@ -72,13 +99,14 @@ export async function fetchAllBlogPosts(opts?: { tagSlug?: string }): Promise<Bl
   }
 
   const posts = await wp.fetchAllPosts({ tagId, apiBaseUrl });
-  return posts.map(p => wpPostToBlogPost(p, catMap, tagMap));
+  return dedupeBlogPostsBySlug(posts.map(p => wpPostToBlogPost(p, catMap, tagMap)));
 }
 
 export async function fetchBlogPostBySlug(slug: string): Promise<BlogPost | null> {
   const source = await getBlogContentSource();
 
   if (source === 'sanity') {
+    if (!sanity.isSanityConfigured()) return null;
     return sanity.fetchPostBySlug(slug);
   }
 
@@ -96,6 +124,7 @@ export async function fetchBlogPostFeaturedImage(slug: string): Promise<string |
   const source = await getBlogContentSource();
 
   if (source === 'sanity') {
+    if (!sanity.isSanityConfigured()) return null;
     const post = await sanity.fetchPostBySlug(slug);
     return post?.featuredImageUrl ?? null;
   }
@@ -110,6 +139,7 @@ export async function fetchBlogCategories(): Promise<BlogCategory[]> {
   const source = await getBlogContentSource();
 
   if (source === 'sanity') {
+    if (!sanity.isSanityConfigured()) return [];
     return sanity.fetchCategories();
   }
 
@@ -122,6 +152,7 @@ export async function fetchBlogTags(): Promise<BlogTag[]> {
   const source = await getBlogContentSource();
 
   if (source === 'sanity') {
+    if (!sanity.isSanityConfigured()) return [];
     return sanity.fetchTags();
   }
 

@@ -169,12 +169,12 @@ export const wordpressSourceUrl = flag<string>({
 
 /**
  * Blog content source flag - controls which CMS backend provides blog content.
- * Defaults to WordPress. Set to "sanity" to use Sanity CMS instead.
+ * Defaults to Sanity. Set to "wordpress" only for fallback/debug usage.
  */
 export const blogContentSource = flag<string>({
   key: 'blog-content-source',
   adapter: vercelAdapter(),
-  defaultValue: 'wordpress',
+  defaultValue: 'sanity',
   description: 'Which CMS backend to use for blog content',
   options: [
     { value: 'wordpress', label: 'WordPress' },

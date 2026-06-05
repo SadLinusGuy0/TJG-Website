@@ -97,8 +97,8 @@ export default function FloatingSearchBar({ categories }: FloatingSearchBarProps
                 <button
                   key={cat.id}
                   className="floating-search-filter-item"
-                  data-selected={activeCategory === cat.id}
-                  onClick={() => handleCategorySelect(cat.id)}
+                  data-selected={activeCategory === cat.slug}
+                  onClick={() => handleCategorySelect(cat.slug)}
                 >
                   {cat.name}
                 </button>

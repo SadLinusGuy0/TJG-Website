@@ -6,8 +6,9 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "jest",
+    "audit:blog": "node scripts/audit-sanity-blog.mjs",
     "test:watch": "jest --watch"
   },
   "dependencies": {

@@ -11,6 +11,7 @@ import ProgressiveBlur from './components/ProgressiveBlur';
 import DiscordPopup from './components/DiscordPopup';
 
 export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://thatjoshguy.me'),
   title: 'That Josh Guy',
   description: 'Hi, I\'m Josh Skinner - a 17-year-old freelance UI/UX designer and writer. Explore my portfolio showcasing graphic design, web development, and creative projects.',
   keywords: 'Josh Skinner, That Josh Guy, UI/UX Designer, Graphic Designer, Web Developer, Writer, Portfolio, Freelance, Creative',

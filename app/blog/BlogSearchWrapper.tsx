@@ -3,19 +3,12 @@
 import { useState, useCallback, useMemo, createContext, useContext } from 'react';
 import type { BlogPost } from '../../lib/blog';
 
-type ActiveYear = 'year1' | 'year2';
-
 interface BlogSearchContextType {
-  year1Posts: BlogPost[];
-  year2Posts: BlogPost[];
-  activeYear: ActiveYear;
-  setActiveYear: (year: ActiveYear) => void;
   activeCategory: string | null;
   setActiveCategory: (categorySlug: string | null) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   filteredPosts: BlogPost[];
-  yearSliderEnabled: boolean;
 }
 
 const BlogSearchContext = createContext<BlogSearchContextType | null>(null);
@@ -29,21 +22,16 @@ export function useBlogSearch() {
 }
 
 interface BlogSearchProviderProps {
-  year1Posts: BlogPost[];
-  year2Posts: BlogPost[];
-  yearSliderEnabled: boolean;
+  posts: BlogPost[];
   children: React.ReactNode;
 }
 
-export function BlogSearchProvider({ year1Posts, year2Posts, yearSliderEnabled, children }: BlogSearchProviderProps) {
-  const [activeYear, setActiveYear] = useState<ActiveYear>('year1');
+export function BlogSearchProvider({ posts, children }: BlogSearchProviderProps) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredPosts = useMemo(() => {
-    const yearPosts = activeYear === 'year1' ? year1Posts : year2Posts;
-
-    let result = yearPosts;
+    let result = posts;
 
     if (activeCategory !== null) {
       result = result.filter(post =>
@@ -57,29 +45,22 @@ export function BlogSearchProvider({ year1Posts, year2Posts, yearSliderEnabled, 
         const titleMatch = post.title.rendered.toLowerCase().includes(query);
         const excerptText = post.excerpt.rendered.replace(/<[^>]*>/g, '').toLowerCase();
         const excerptMatch = excerptText.includes(query);
-        const contentText = post.content?.rendered
-          ? post.content.rendered.replace(/<[^>]*>/g, '').toLowerCase()
-          : '';
+        const contentText = post.searchText || '';
         const contentMatch = contentText.includes(query);
         return titleMatch || excerptMatch || contentMatch;
       });
     }
 
     return result;
-  }, [activeYear, year1Posts, year2Posts, activeCategory, searchQuery]);
+  }, [posts, activeCategory, searchQuery]);
 
   return (
     <BlogSearchContext.Provider value={{
-      year1Posts,
-      year2Posts,
-      activeYear,
-      setActiveYear,
       activeCategory,
       setActiveCategory,
       searchQuery,
       setSearchQuery,
       filteredPosts,
-      yearSliderEnabled,
     }}>
       {children}
     </BlogSearchContext.Provider>

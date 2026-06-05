@@ -1,15 +1,19 @@
 import { createClient, type SanityClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
-import { toHTML } from '@portabletext/to-html';
 import { sanityConfig } from './sanity.config';
+import { portableTextToPlainText, stripHtmlAndDecode, type PortableTextBlock } from './portableText';
 
 const REVALIDATE_SECONDS = 60;
 
 let _client: SanityClient | null = null;
 
+export function isSanityConfigured(): boolean {
+  return Boolean(sanityConfig.projectId);
+}
+
 function getClient(): SanityClient {
   if (!_client) {
-    if (!sanityConfig.projectId) {
+    if (!isSanityConfigured()) {
       throw new Error(
         'Sanity is not configured. Set NEXT_PUBLIC_SANITY_PROJECT_ID to use Sanity as the blog content source.',
       );
@@ -28,19 +32,20 @@ function fetchOptions() {
   } as Record<string, unknown>;
 }
 
-function imageUrl(source: SanityImageSource): string | null {
+export function getSanityImageUrl(source: SanityImageSource): string | null {
   if (!source?.asset) return null;
+  if (!isSanityConfigured()) return null;
   const builder = imageUrlBuilder(getClient());
   return builder.image(source).auto('format').url();
 }
 
-type SanityImageSource = {
+export type SanityImageSource = {
   asset?: { _ref?: string };
   hotspot?: { x: number; y: number };
   crop?: { top: number; bottom: number; left: number; right: number };
 } | null;
 
-type SanityPostDoc = {
+export type SanityPostDoc = {
   _id: string;
   title: string;
   slug: { current: string };
@@ -53,7 +58,7 @@ type SanityPostDoc = {
   legacyHtml: string | null;
   contentSource: 'legacyHtml' | 'portableText';
   wordCount: number | null;
-  body: unknown[] | null;
+  body: PortableTextBlock[] | null;
 };
 
 export type BlogPost = {
@@ -68,6 +73,9 @@ export type BlogPost = {
   featuredImageUrl: string | null;
   featuredImageAlt?: string;
   wordCount?: number;
+  contentSource: 'legacyHtml' | 'portableText';
+  portableBody?: PortableTextBlock[];
+  searchText: string;
 };
 
 export type BlogCategory = { id: string; name: string; slug: string };
@@ -80,22 +88,27 @@ const POST_FIELDS = `
   publishedAt,
   excerpt,
   featuredImage,
-  featuredImageAlt,
+  "featuredImageAlt": featuredImage.alt,
   contentSource,
   legacyHtml,
-  body,
   wordCount,
+  body,
   "categories": categories[]->{ _id, title, slug },
   "tags": tags[]->{ _id, title, slug }
 `;
 
 function mapPost(doc: SanityPostDoc): BlogPost {
+  const source = doc.contentSource || (doc.legacyHtml ? 'legacyHtml' : 'portableText');
   let contentHtml = '';
-  if (doc.contentSource === 'legacyHtml' && doc.legacyHtml) {
+  if (source === 'legacyHtml' && doc.legacyHtml) {
     contentHtml = doc.legacyHtml;
-  } else if (doc.body && Array.isArray(doc.body) && doc.body.length > 0) {
-    contentHtml = toHTML(doc.body as Parameters<typeof toHTML>[0]);
   }
+  const portableText = portableTextToPlainText(doc.body);
+  const plainLegacyText = stripHtmlAndDecode(contentHtml);
+  const searchText = [doc.title, doc.excerpt || '', plainLegacyText || portableText]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
 
   return {
     id: doc._id,
@@ -106,11 +119,16 @@ function mapPost(doc: SanityPostDoc): BlogPost {
     content: { rendered: contentHtml },
     categories: doc.categories?.map(c => c.slug.current) ?? [],
     tags: doc.tags?.map(t => t.slug.current) ?? [],
-    featuredImageUrl: imageUrl(doc.featuredImage),
+    featuredImageUrl: getSanityImageUrl(doc.featuredImage),
     featuredImageAlt: doc.featuredImageAlt ?? undefined,
     wordCount: doc.wordCount ?? undefined,
+    contentSource: source,
+    portableBody: source === 'portableText' ? doc.body ?? [] : undefined,
+    searchText,
   };
 }
+
+export const mapSanityPostForTest = mapPost;
 
 export async function fetchAllPosts(options?: { tagSlug?: string }): Promise<BlogPost[]> {
   const filter = options?.tagSlug
@@ -143,7 +161,7 @@ export async function fetchCategories(): Promise<BlogCategory[]> {
   );
 
   return docs.map(d => ({
-    id: d._id,
+    id: d.slug.current,
     name: d.title,
     slug: d.slug.current,
   }));
@@ -157,7 +175,7 @@ export async function fetchTags(): Promise<BlogTag[]> {
   );
 
   return docs.map(d => ({
-    id: d._id,
+    id: d.slug.current,
     name: d.title,
     slug: d.slug.current,
   }));

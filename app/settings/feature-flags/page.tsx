@@ -14,7 +14,14 @@ const FLAG_COOKIE_PREFIX = 'ff-';
 const FLAG_COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
 type BooleanFlag = { key: string; name: string; description: string; type?: 'boolean' };
-type StringFlag = { key: string; name: string; description: string; type: 'string'; defaultValue: string };
+type StringFlag = {
+  key: string;
+  name: string;
+  description: string;
+  type: 'string';
+  defaultValue: string;
+  options?: Array<{ value: string; label: string }>;
+};
 type FlagDef = BooleanFlag | StringFlag;
 
 const FLAGS: FlagDef[] = [
@@ -74,9 +81,20 @@ const FLAGS: FlagDef[] = [
     description: 'Show the FMP separated/combined view toggle in Settings',
   },
   {
+    key: 'blog-content-source',
+    name: 'Blog content source',
+    description: 'Choose the CMS used by the blog. Sanity is primary; WordPress is fallback only.',
+    type: 'string',
+    defaultValue: 'sanity',
+    options: [
+      { value: 'sanity', label: 'Sanity' },
+      { value: 'wordpress', label: 'WordPress fallback' },
+    ],
+  },
+  {
     key: 'wordpress-source-url',
     name: 'WordPress source URL',
-    description: 'The WordPress site URL used as the blog data source',
+    description: 'The WordPress site URL used when fallback mode is selected',
     type: 'string',
     defaultValue: 'https://tjg8.wordpress.com',
   },
@@ -207,12 +225,14 @@ function StringOverrideControl({
   flagKey,
   value,
   defaultValue,
+  options,
   onChange,
   onClear,
 }: {
   flagKey: string;
   value: string | null;
   defaultValue: string;
+  options?: Array<{ value: string; label: string }>;
   onChange: (value: string) => void;
   onClear: () => void;
 }) {
@@ -266,44 +286,69 @@ function StringOverrideControl({
         </svg>
       </button>
 
-      <input
-        ref={inputRef}
-        id={`flag-string-${flagKey}`}
-        type="text"
-        value={inputValue}
-        placeholder={defaultValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onBlur={commitValue}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            commitValue();
-            inputRef.current?.blur();
-          }
-        }}
-        style={{
-          fontFamily: "'One UI Sans', sans-serif",
-          fontSize: '0.85rem',
-          padding: '6px 10px',
-          borderRadius: 'var(--br-sm)',
-          border: '1px solid rgba(120,120,128,0.2)',
-          background: isOverriding ? 'var(--container-background)' : 'transparent',
-          color: 'var(--primary)',
-          opacity: isOverriding ? 1 : 0.5,
-          outline: 'none',
-          transition: 'opacity 0.15s ease-out, border-color 0.15s ease-out',
-          width: '100%',
-          minWidth: 0,
-        }}
-        onFocus={(e) => {
-          e.target.style.borderColor = 'var(--accent)';
-          e.target.style.opacity = '1';
-        }}
-        onBlurCapture={(e) => {
-          e.target.style.borderColor = 'rgba(120,120,128,0.2)';
-          if (!isOverriding) e.target.style.opacity = '0.5';
-        }}
-      />
+      {options ? (
+        <select
+          id={`flag-string-${flagKey}`}
+          value={value ?? defaultValue}
+          onChange={(e) => onChange(e.target.value)}
+          style={{
+            fontFamily: "'One UI Sans', sans-serif",
+            fontSize: '0.85rem',
+            padding: '6px 10px',
+            borderRadius: 'var(--br-sm)',
+            border: '1px solid rgba(120,120,128,0.2)',
+            background: isOverriding ? 'var(--container-background)' : 'transparent',
+            color: 'var(--primary)',
+            opacity: isOverriding ? 1 : 0.65,
+            outline: 'none',
+            width: '100%',
+            minWidth: 0,
+          }}
+        >
+          {options.map(option => (
+            <option key={option.value} value={option.value}>{option.label}</option>
+          ))}
+        </select>
+      ) : (
+        <input
+          ref={inputRef}
+          id={`flag-string-${flagKey}`}
+          type="text"
+          value={inputValue}
+          placeholder={defaultValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onBlur={commitValue}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              commitValue();
+              inputRef.current?.blur();
+            }
+          }}
+          style={{
+            fontFamily: "'One UI Sans', sans-serif",
+            fontSize: '0.85rem',
+            padding: '6px 10px',
+            borderRadius: 'var(--br-sm)',
+            border: '1px solid rgba(120,120,128,0.2)',
+            background: isOverriding ? 'var(--container-background)' : 'transparent',
+            color: 'var(--primary)',
+            opacity: isOverriding ? 1 : 0.5,
+            outline: 'none',
+            transition: 'opacity 0.15s ease-out, border-color 0.15s ease-out',
+            width: '100%',
+            minWidth: 0,
+          }}
+          onFocus={(e) => {
+            e.target.style.borderColor = 'var(--accent)';
+            e.target.style.opacity = '1';
+          }}
+          onBlurCapture={(e) => {
+            e.target.style.borderColor = 'rgba(120,120,128,0.2)';
+            if (!isOverriding) e.target.style.opacity = '0.5';
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -409,6 +454,7 @@ function FeatureFlagsContent() {
                       flagKey={flag.key}
                       value={value}
                       defaultValue={flag.defaultValue}
+                      options={flag.options}
                       onChange={(v) => handleStringChange(flag.key, v)}
                       onClear={() => handleStringClear(flag.key)}
                     />

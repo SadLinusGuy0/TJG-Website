@@ -73,7 +73,70 @@ export default defineType({
       type: 'array',
       of: [
         { type: 'block' },
-        { type: 'image', options: { hotspot: true } },
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({ name: 'alt', title: 'Alt Text', type: 'string' }),
+            defineField({ name: 'caption', title: 'Caption', type: 'string' }),
+          ],
+        },
+        defineField({
+          name: 'blogButton',
+          title: 'Blog Button',
+          type: 'object',
+          fields: [
+            defineField({ name: 'label', title: 'Label', type: 'string', validation: (rule) => rule.required() }),
+            defineField({ name: 'href', title: 'URL', type: 'url', validation: (rule) => rule.required() }),
+            defineField({ name: 'iconName', title: 'Icon Name', type: 'string' }),
+          ],
+          preview: {
+            select: { title: 'label', subtitle: 'href' },
+          },
+        }),
+        defineField({
+          name: 'embed',
+          title: 'Reusable Embed',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'embedKey',
+              title: 'Embed Key',
+              type: 'string',
+              options: {
+                list: [
+                  'story-mindmap',
+                  'gdd-results',
+                  'story-results',
+                  'google-doc-name',
+                  'figma-ux-workflow',
+                  'maps-embed',
+                  'figma-prototype',
+                  'figma-fmp-design',
+                  'fmp-pitch-embed',
+                  'fmp-mindmap',
+                ],
+              },
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {
+            select: { title: 'embedKey' },
+          },
+        }),
+        defineField({
+          name: 'legacyHtml',
+          title: 'Legacy HTML Snippet',
+          type: 'object',
+          fields: [
+            defineField({ name: 'html', title: 'HTML', type: 'text', rows: 6, validation: (rule) => rule.required() }),
+          ],
+          preview: {
+            prepare() {
+              return { title: 'Legacy HTML snippet' };
+            },
+          },
+        }),
       ],
       hidden: ({ parent }) => parent?.contentSource === 'legacyHtml',
     }),
