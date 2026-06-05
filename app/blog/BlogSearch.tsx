@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import { WPPost } from '../../lib/wordpress';
+import type { BlogPost } from '../../lib/blog';
 
 interface BlogSearchProps {
-  posts: WPPost[];
-  onFilteredPostsChange: (filteredPosts: WPPost[]) => void;
+  posts: BlogPost[];
+  onFilteredPostsChange: (filteredPosts: BlogPost[]) => void;
 }
 
 export default function BlogSearch({ posts, onFilteredPostsChange }: BlogSearchProps) {

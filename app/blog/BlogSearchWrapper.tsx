@@ -1,20 +1,20 @@
 'use client';
 
 import { useState, useCallback, useMemo, createContext, useContext } from 'react';
-import { WPPost } from '../../lib/wordpress';
+import type { BlogPost } from '../../lib/blog';
 
 type ActiveYear = 'year1' | 'year2';
 
 interface BlogSearchContextType {
-  year1Posts: WPPost[];
-  year2Posts: WPPost[];
+  year1Posts: BlogPost[];
+  year2Posts: BlogPost[];
   activeYear: ActiveYear;
   setActiveYear: (year: ActiveYear) => void;
-  activeCategory: number | null;
-  setActiveCategory: (categoryId: number | null) => void;
+  activeCategory: string | null;
+  setActiveCategory: (categorySlug: string | null) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
-  filteredPosts: WPPost[];
+  filteredPosts: BlogPost[];
   yearSliderEnabled: boolean;
 }
 
@@ -29,15 +29,15 @@ export function useBlogSearch() {
 }
 
 interface BlogSearchProviderProps {
-  year1Posts: WPPost[];
-  year2Posts: WPPost[];
+  year1Posts: BlogPost[];
+  year2Posts: BlogPost[];
   yearSliderEnabled: boolean;
   children: React.ReactNode;
 }
 
 export function BlogSearchProvider({ year1Posts, year2Posts, yearSliderEnabled, children }: BlogSearchProviderProps) {
   const [activeYear, setActiveYear] = useState<ActiveYear>('year1');
-  const [activeCategory, setActiveCategory] = useState<number | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredPosts = useMemo(() => {

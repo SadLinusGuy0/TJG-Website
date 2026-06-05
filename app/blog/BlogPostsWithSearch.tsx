@@ -3,18 +3,18 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { WPPost, getFeaturedImageUrl } from '../../lib/wordpress';
+import type { BlogPost } from '../../lib/blog';
 import { useBlogSearch } from './BlogSearchWrapper';
 
 interface BlogPostsWithSearchProps {
-  categoryMap: Record<number, string>;
+  categoryMap: Record<string, string>;
 }
 
 export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearchProps) {
   const { filteredPosts, activeYear } = useBlogSearch();
-  const [featuredImages, setFeaturedImages] = useState<Map<number, string | null>>(new Map());
+  const [featuredImages, setFeaturedImages] = useState<Map<string, string | null>>(new Map());
   const [slideState, setSlideState] = useState<'idle' | 'out' | 'in'>('idle');
-  const [displayedPosts, setDisplayedPosts] = useState<WPPost[]>(filteredPosts);
+  const [displayedPosts, setDisplayedPosts] = useState<BlogPost[]>(filteredPosts);
   const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('left');
   const prevYear = useRef(activeYear);
 
@@ -43,10 +43,10 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
 
   useEffect(() => {
     const allPosts = [...filteredPosts, ...displayedPosts];
-    const imageMap = new Map<number, string | null>();
+    const imageMap = new Map<string, string | null>();
     allPosts.forEach((post) => {
       if (!imageMap.has(post.id)) {
-        imageMap.set(post.id, getFeaturedImageUrl(post));
+        imageMap.set(post.id, post.featuredImageUrl);
       }
     });
     setFeaturedImages(imageMap);
@@ -136,7 +136,7 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
                                 color: 'var(--primary)',
                                 fontWeight: '500'
                               }}>
-                                {post.categories.map((catId: number) => categoryMap[catId]).filter(Boolean).join(', ')}
+                                {post.categories.map((catSlug: string) => categoryMap[catSlug]).filter(Boolean).join(', ')}
                               </div>
                             )}
                           </div>

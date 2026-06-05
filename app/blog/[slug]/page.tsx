@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { cache, Suspense } from "react";
 import Image from "next/image";
-import { fetchAllPosts, fetchPostBySlug, fetchPageBySlug, getFeaturedImageUrlAsync } from "../../../lib/wordpress";
-import type { WPPost } from "../../../lib/wordpress";
+import { fetchAllBlogPosts, fetchBlogPostBySlug, fetchBlogPostFeaturedImage, type BlogPost } from "../../../lib/blog";
 import { notFound } from "next/navigation";
 import Navigation from "../../components/Navigation";
 import LightboxClient from "../../components/LightboxClient";
@@ -16,7 +15,6 @@ import FmpViewWrapper from "./FmpViewWrapper";
 import { replaceTransitModelPlaceholder } from "../../../lib/transitModelSketchfabEmbed";
 import { getInPostSearchBarEnabled } from "../../../lib/getInPostSearchBarFlag";
 import { getInPostSearchBarFmpEnabled } from "../../../lib/getInPostSearchBarFmpFlag";
-import { getWordpressSourceUrl } from "../../../lib/getWordpressSourceUrlFlag";
 import ForceRefreshButton from "./ForceRefreshButton";
 import { sanitizeBlogButtonHref } from "../../../lib/sanitizeBlogButtonHref";
 
@@ -25,7 +23,7 @@ export const revalidate = 300;
 // Pre-build all known post slugs at deploy time; new posts fall back to SSR
 export async function generateStaticParams() {
   try {
-    const posts = await fetchAllPosts();
+    const posts = await fetchAllBlogPosts();
     return posts.map((post) => ({ slug: post.slug }));
   } catch {
     return [];
@@ -36,12 +34,9 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Cached so generateMetadata and BlogPostBody share one fetch per request
-const getContentForSlug = cache(async (slug: string, apiBaseUrl?: string): Promise<WPPost | null> => {
+const getContentForSlug = cache(async (slug: string): Promise<BlogPost | null> => {
   try {
-    const post = await fetchPostBySlug(slug, apiBaseUrl);
-    if (post) return post;
-    return await fetchPageBySlug(slug, apiBaseUrl);
+    return await fetchBlogPostBySlug(slug);
   } catch (error) {
     console.error(`Failed to fetch content for slug "${slug}":`, error);
     return null;
@@ -72,8 +67,8 @@ function truncate(value: string, maxLength = 160): string {
   return `${value.slice(0, sliceLength).trimEnd()}...`;
 }
 
-function getFeaturedImageAltText(post: WPPost): string | undefined {
-  return post._embedded?.['wp:featuredmedia']?.[0]?.alt_text?.trim() || undefined;
+function getFeaturedImageAltText(post: BlogPost): string | undefined {
+  return post.featuredImageAlt;
 }
 
 function countWords(content: string): number {
@@ -182,8 +177,7 @@ function processContentWithEmbeds(content: string): string {
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   try {
     const { slug } = await props.params;
-    const apiBaseUrl = await getWordpressSourceUrl();
-    const content = await getContentForSlug(slug, apiBaseUrl);
+    const content = await getContentForSlug(slug);
 
     if (!content) {
       return {
@@ -197,13 +191,15 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     const fallbackDescription = stripHtmlAndDecode(content.content?.rendered);
     const description = truncate(excerptText || fallbackDescription || "Explore the latest stories from That Josh Guy.");
 
-    let featuredImageUrl: string | null = null;
-    try {
-      featuredImageUrl = await getFeaturedImageUrlAsync(content, apiBaseUrl);
-    } catch (error) {
-      console.error('Error fetching featured image:', error);
+    let featuredImageUrl: string | null = content.featuredImageUrl;
+    if (!featuredImageUrl) {
+      try {
+        featuredImageUrl = await fetchBlogPostFeaturedImage(slug);
+      } catch (error) {
+        console.error('Error fetching featured image:', error);
+      }
     }
-    
+
     const imageAlt = getFeaturedImageAltText(content) || titleText;
 
     return {
@@ -322,15 +318,15 @@ function BlogPostBodySkeleton() {
 // Async component: fetches the post and renders the full content
 // ---------------------------------------------------------------------------
 async function BlogPostBody({ slug }: { slug: string }) {
-  const apiBaseUrl = await getWordpressSourceUrl();
-  const content = await getContentForSlug(slug, apiBaseUrl);
+  const content = await getContentForSlug(slug);
   if (!content) return notFound();
 
-  const [featuredImageUrl, searchBarEnabled, searchBarFmpEnabled] = await Promise.all([
-    getFeaturedImageUrlAsync(content, apiBaseUrl),
+  const [resolvedFeaturedImage, searchBarEnabled, searchBarFmpEnabled] = await Promise.all([
+    content.featuredImageUrl ? Promise.resolve(content.featuredImageUrl) : fetchBlogPostFeaturedImage(slug),
     getInPostSearchBarEnabled(),
     getInPostSearchBarFmpEnabled(),
   ]);
+  const featuredImageUrl = resolvedFeaturedImage;
 
   return (
     <>

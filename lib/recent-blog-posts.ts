@@ -1,20 +1,18 @@
-import { getWordpressSourceUrl } from './getWordpressSourceUrlFlag';
 import { getYearSliderEnabled } from './getYearSliderFlag';
-import { fetchPosts, fetchTags, getFeaturedImageUrlAsync, type WPPost } from './wordpress';
+import { fetchAllBlogPosts, fetchBlogTags, type BlogPost, type BlogTag } from './blog';
 
 export type RecentBlogPost = {
-  id: number;
+  id: string;
   title: string;
   slug: string;
   thumbnail: string | null;
   date: string;
 };
 
-/** Mirrors `BlogIndexContent` year pools: Year 2 posts only when the Year Slider flag is on. */
-async function resolveRecentPosts(apiBaseUrl: string, limit: number, yearSliderEnabled: boolean): Promise<WPPost[]> {
-  let tags: Awaited<ReturnType<typeof fetchTags>> = [];
+async function resolveRecentPosts(limit: number, yearSliderEnabled: boolean): Promise<BlogPost[]> {
+  let tags: BlogTag[] = [];
   try {
-    tags = await fetchTags(apiBaseUrl);
+    tags = await fetchBlogTags();
   } catch {
     tags = [];
   }
@@ -23,19 +21,21 @@ async function resolveRecentPosts(apiBaseUrl: string, limit: number, yearSliderE
   const year2Tag = tags.find((t) => t.slug === 'year-2' || t.name.toLowerCase() === 'year 2');
 
   if (!year1Tag && !year2Tag) {
-    return fetchPosts({ perPage: limit, apiBaseUrl });
+    const posts = await fetchAllBlogPosts();
+    return posts.slice(0, limit);
   }
 
   if (year1Tag && (!year2Tag || !yearSliderEnabled)) {
-    return fetchPosts({ perPage: limit, tagId: year1Tag.id, apiBaseUrl });
+    const posts = await fetchAllBlogPosts({ tagSlug: 'year-1' });
+    return posts.slice(0, limit);
   }
 
   if (year1Tag && year2Tag && yearSliderEnabled) {
     const [batch1, batch2] = await Promise.all([
-      fetchPosts({ perPage: limit, tagId: year1Tag.id, apiBaseUrl }),
-      fetchPosts({ perPage: limit, tagId: year2Tag.id, apiBaseUrl }),
+      fetchAllBlogPosts({ tagSlug: 'year-1' }),
+      fetchAllBlogPosts({ tagSlug: 'year-2' }),
     ]);
-    const byId = new Map<number, WPPost>();
+    const byId = new Map<string, BlogPost>();
     for (const p of [...batch1, ...batch2]) {
       if (!byId.has(p.id)) byId.set(p.id, p);
     }
@@ -45,37 +45,30 @@ async function resolveRecentPosts(apiBaseUrl: string, limit: number, yearSliderE
   }
 
   if (year2Tag && !year1Tag && yearSliderEnabled) {
-    return fetchPosts({ perPage: limit, tagId: year2Tag.id, apiBaseUrl });
+    const posts = await fetchAllBlogPosts({ tagSlug: 'year-2' });
+    return posts.slice(0, limit);
   }
 
   if (year2Tag && !year1Tag && !yearSliderEnabled) {
     return [];
   }
 
-  return fetchPosts({ perPage: limit, apiBaseUrl });
+  const posts = await fetchAllBlogPosts();
+  return posts.slice(0, limit);
 }
 
 export async function getRecentBlogPosts(limit = 6): Promise<RecentBlogPost[]> {
   try {
-    const [apiBaseUrl, yearSliderEnabled] = await Promise.all([
-      getWordpressSourceUrl(),
-      getYearSliderEnabled(),
-    ]);
-    const posts = await resolveRecentPosts(apiBaseUrl, limit, yearSliderEnabled);
-    const results: RecentBlogPost[] = [];
+    const yearSliderEnabled = await getYearSliderEnabled();
+    const posts = await resolveRecentPosts(limit, yearSliderEnabled);
 
-    for (const post of posts) {
-      const thumbnail = await getFeaturedImageUrlAsync(post, apiBaseUrl);
-      results.push({
-        id: post.id,
-        title: post.title.rendered,
-        slug: post.slug,
-        thumbnail,
-        date: post.date,
-      });
-    }
-
-    return results;
+    return posts.map(post => ({
+      id: post.id,
+      title: post.title.rendered,
+      slug: post.slug,
+      thumbnail: post.featuredImageUrl,
+      date: post.date,
+    }));
   } catch {
     return [];
   }

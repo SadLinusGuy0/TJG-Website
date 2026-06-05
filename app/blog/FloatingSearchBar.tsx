@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useBlogSearch } from './BlogSearchWrapper';
 
 interface FloatingSearchBarProps {
-  categories: Array<{ id: number; slug: string; name: string }>;
+  categories: Array<{ id: string; slug: string; name: string }>;
 }
 
 export default function FloatingSearchBar({ categories }: FloatingSearchBarProps) {
@@ -30,8 +30,8 @@ export default function FloatingSearchBar({ categories }: FloatingSearchBarProps
     inputRef.current?.focus();
   };
 
-  const handleCategorySelect = (catId: number | null) => {
-    setActiveCategory(catId);
+  const handleCategorySelect = (catSlug: string | null) => {
+    setActiveCategory(catSlug);
     setFilterOpen(false);
   };
 
