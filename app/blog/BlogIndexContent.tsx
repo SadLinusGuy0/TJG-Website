@@ -1,4 +1,4 @@
-import { fetchAllBlogPosts, fetchBlogCategories, fetchBlogTags, type BlogPost, type BlogCategory, type BlogTag } from "../../lib/blog";
+import { fetchAllBlogPosts, fetchBlogCategories, fetchBlogTags, getBlogContentSource, type BlogPost, type BlogCategory, type BlogTag } from "../../lib/blog";
 import { getYearSliderEnabled } from "../../lib/getYearSliderFlag";
 import { BlogSearchProvider } from "./BlogSearchWrapper";
 import BlogPostsWithSearch from "./BlogPostsWithSearch";
@@ -14,6 +14,7 @@ export default async function BlogIndexContent() {
   let yearSliderFlag = true;
 
   yearSliderFlag = await getYearSliderEnabled();
+  const contentSource = await getBlogContentSource();
 
   const [fetchedCategories, fetchedTags] = await Promise.allSettled([
     fetchBlogCategories(),
@@ -37,16 +38,25 @@ export default async function BlogIndexContent() {
   const year2Tag = tags.find(t => t.slug === 'year-2' || t.name.toLowerCase() === 'year 2');
 
   try {
-    if (year1Tag) {
-      year1Posts = await fetchAllBlogPosts({ tagSlug: 'year-1' });
-    }
+    const allPosts = await fetchAllBlogPosts();
 
-    if (yearSliderFlag && year2Tag) {
-      year2Posts = await fetchAllBlogPosts({ tagSlug: 'year-2' });
-    }
+    if (year1Tag || year2Tag) {
+      const year1Slugs = new Set<string>();
+      const year2Slugs = new Set<string>();
 
-    if (!year1Tag && !year2Tag) {
-      year1Posts = await fetchAllBlogPosts();
+      for (const post of allPosts) {
+        const hasYear1 = post.tags.includes('year-1');
+        const hasYear2 = post.tags.includes('year-2');
+
+        if (hasYear1) year1Slugs.add(post.slug);
+        if (yearSliderFlag && hasYear2) year2Slugs.add(post.slug);
+        if (!hasYear1 && !hasYear2) year1Slugs.add(post.slug);
+      }
+
+      year1Posts = allPosts.filter(p => year1Slugs.has(p.slug));
+      year2Posts = allPosts.filter(p => year2Slugs.has(p.slug));
+    } else {
+      year1Posts = allPosts;
     }
   } catch (error) {
     console.error('Failed to fetch posts:', error);
@@ -64,6 +74,23 @@ export default async function BlogIndexContent() {
       <div className="main-content">
         <BlogDynamicHeader />
 
+        <div style={{
+          position: 'fixed',
+          bottom: '8px',
+          left: '8px',
+          background: contentSource === 'sanity' ? '#f97316' : '#3b82f6',
+          color: '#fff',
+          fontSize: '11px',
+          padding: '2px 8px',
+          borderRadius: '4px',
+          zIndex: 9999,
+          opacity: 0.85,
+          pointerEvents: 'none',
+          fontFamily: 'monospace',
+        }}>
+          src: {contentSource}
+        </div>
+
         <YearSlider />
 
         {hasPosts ? (
@@ -75,8 +102,7 @@ export default async function BlogIndexContent() {
             </div>
             <div className="panel settings">
               <div className="body-text">
-                <p>Unable to load blog posts. Please check your WordPress API configuration.</p>
-                <p>Make sure to set the <code>WP_API_URL</code> environment variable with your WordPress site URL.</p>
+                <p>Unable to load blog posts. Please check your CMS configuration.</p>
               </div>
             </div>
           </div>
