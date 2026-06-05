@@ -1,5 +1,6 @@
 import { createClient, type SanityClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
+import { toHTML } from '@portabletext/to-html';
 import { sanityConfig } from './sanity.config';
 
 const REVALIDATE_SECONDS = 60;
@@ -82,6 +83,7 @@ const POST_FIELDS = `
   featuredImageAlt,
   contentSource,
   legacyHtml,
+  body,
   wordCount,
   "categories": categories[]->{ _id, title, slug },
   "tags": tags[]->{ _id, title, slug }
@@ -91,6 +93,8 @@ function mapPost(doc: SanityPostDoc): BlogPost {
   let contentHtml = '';
   if (doc.contentSource === 'legacyHtml' && doc.legacyHtml) {
     contentHtml = doc.legacyHtml;
+  } else if (doc.body && Array.isArray(doc.body) && doc.body.length > 0) {
+    contentHtml = toHTML(doc.body as Parameters<typeof toHTML>[0]);
   }
 
   return {

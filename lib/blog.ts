@@ -3,6 +3,8 @@ import { getWordpressSourceUrl } from './getWordpressSourceUrlFlag';
 import * as wp from './wordpress';
 import * as sanity from './sanity';
 
+export { getBlogContentSource };
+
 export type BlogPost = {
   id: string;
   date: string;
