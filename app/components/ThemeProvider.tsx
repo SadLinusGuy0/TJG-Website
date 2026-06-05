@@ -1,8 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useCallback, useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { getIconLiquidGlassFilter, supportsBackdropFilterUrl } from '../utils/liquidGlass';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark' | 'auto';
 export type AccentColor = 'blue' | 'coral' | 'mint' | 'lilac' | 'mono';
@@ -60,9 +58,6 @@ interface ThemeContextType {
   setCornerSmoothing: (enabled: boolean) => void;
   cornerSmoothingSupported: boolean;
   cornerSmoothingAvailable: boolean;
-  liquidGlass: boolean;
-  setLiquidGlass: (enabled: boolean) => void;
-  liquidGlassAvailable: boolean;
   fmpSeparatedViewAvailable: boolean;
   hydrated: boolean;
 }
@@ -78,9 +73,6 @@ const ThemeContext = createContext<ThemeContextType>({
   setCornerSmoothing: () => {},
   cornerSmoothingSupported: false,
   cornerSmoothingAvailable: false,
-  liquidGlass: false,
-  setLiquidGlass: () => {},
-  liquidGlassAvailable: false,
   fmpSeparatedViewAvailable: false,
   hydrated: false,
 });
@@ -118,14 +110,6 @@ const getInitialCornerSmoothing = (): boolean => {
   return true;
 };
 
-const getInitialLiquidGlass = (): boolean => {
-  if (typeof window !== 'undefined') {
-    const saved = localStorage.getItem('liquidGlass');
-    return saved === 'true';
-  }
-  return false;
-};
-
 const getInitialAccentColor = (): AccentColor => {
   if (typeof window !== 'undefined') {
     const saved = localStorage.getItem('accentColor') as AccentColor;
@@ -159,19 +143,16 @@ function updateThemeColorMeta(resolvedTheme: 'dark' | 'light', accent: AccentCol
 interface ThemeProviderProps {
   children: React.ReactNode;
   cornerSmoothingAvailable?: boolean;
-  liquidGlassAvailable?: boolean;
   fmpSeparatedViewAvailable?: boolean;
 }
 
-export function ThemeProvider({ children, cornerSmoothingAvailable = false, liquidGlassAvailable = false, fmpSeparatedViewAvailable = false }: ThemeProviderProps) {
+export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpSeparatedViewAvailable = false }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [accentColor, setAccentColorState] = useState<AccentColor>(getInitialAccentColor);
   const [blurEnabled, setBlurEnabledState] = useState<boolean>(getInitialBlurEnabled);
   const [cornerSmoothing, setCornerSmoothingState] = useState<boolean>(getInitialCornerSmoothing);
   const [cornerSmoothingSupported] = useState<boolean>(getCornerSmoothingSupported);
-  const [liquidGlass, setLiquidGlassState] = useState<boolean>(getInitialLiquidGlass);
   const [hydrated, setHydrated] = useState(false);
-  const pathname = usePathname();
 
   const applyAccentColor = (color: AccentColor) => {
     document.documentElement.style.setProperty('--accent', ACCENT_COLORS[color]);
@@ -255,29 +236,7 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, liqu
   useEffect(() => {
     setHydrated(true);
     document.documentElement.dataset.cornerSmoothing = (cornerSmoothingAvailable && cornerSmoothing).toString();
-    document.documentElement.dataset.liquidGlass = (liquidGlassAvailable && liquidGlass).toString();
-  }, []);
-
-  const applyIconLiquidGlass = useCallback(() => {
-    const isActive = liquidGlassAvailable && liquidGlass && supportsBackdropFilterUrl();
-    const icons = document.querySelectorAll<HTMLElement>('.top-app-bar-icon');
-    if (isActive) {
-      const value = getIconLiquidGlassFilter();
-      icons.forEach((el) => {
-        el.style.backdropFilter = value;
-        (el.style as unknown as Record<string, unknown>)['webkitBackdropFilter'] = value;
-      });
-    } else {
-      icons.forEach((el) => {
-        el.style.backdropFilter = '';
-        (el.style as unknown as Record<string, unknown>)['webkitBackdropFilter'] = '';
-      });
-    }
-  }, [liquidGlass, liquidGlassAvailable]);
-
-  useEffect(() => {
-    requestAnimationFrame(applyIconLiquidGlass);
-  }, [applyIconLiquidGlass, pathname]);
+  }, [cornerSmoothing, cornerSmoothingAvailable]);
 
   if (!hydrated) return null;
 
@@ -300,14 +259,8 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, liqu
     localStorage.setItem('cornerSmoothing', enabled.toString());
   };
 
-  const setLiquidGlass = (enabled: boolean) => {
-    setLiquidGlassState(enabled);
-    document.documentElement.dataset.liquidGlass = (liquidGlassAvailable && enabled).toString();
-    localStorage.setItem('liquidGlass', enabled.toString());
-  };
-
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable, fmpSeparatedViewAvailable, hydrated }}>
+    <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, fmpSeparatedViewAvailable, hydrated }}>
       {children}
     </ThemeContext.Provider>
   );
@@ -319,4 +272,4 @@ export const useTheme = () => {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
-}; 
+};

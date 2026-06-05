@@ -1,4 +1,4 @@
-import { processContentWithEmbeds } from '../lib/blogContentProcessing';
+import { getDisplayWordCount, processContentWithEmbeds } from '../lib/blogContentProcessing';
 import { dedupeBlogPostsBySlug, type BlogPost } from '../lib/blog';
 import { getBlogContentSource } from '../lib/getBlogContentSourceFlag';
 import { portableTextToPlainText, type PortableTextBlock } from '../lib/portableText';
@@ -82,5 +82,17 @@ describe('blog migration compatibility', () => {
     ];
 
     expect(portableTextToPlainText(blocks)).toBe('Portable future post\n\nDownload');
+  });
+
+  it('computes a display word count when the stored count is zero', () => {
+    const plainText = portableTextToPlainText([
+      {
+        _type: 'block',
+        children: [{ _type: 'span', text: 'Portable text has five words' }],
+      },
+    ]);
+
+    expect(getDisplayWordCount(0, plainText)).toBe(5);
+    expect(getDisplayWordCount(12, plainText)).toBe(12);
   });
 });

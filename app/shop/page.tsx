@@ -48,8 +48,8 @@ export default function Shop() {
           />
 
           <div className="section">
-            <div className="list-group">
-              <a href="https://shop.thatjoshguy.me/" className="list" role="button" aria-label="Gumroad">
+            <div className="list-group" style={{ marginBottom: '10px' }}>
+              <a href="https://shop.thatjoshguy.me/" className="list shop-gumroad-list" role="button" aria-label="Gumroad">
                 <div className="list-item-icon">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M7.6055 7.3612C7.6055 6.4541 8.3644 5.7176 9.3019 5.7176C10.2381 5.7176 10.997 6.4541 10.997 7.3612C10.997 8.2682 10.2381 9.0035 9.3019 9.0035C8.3644 9.0035 7.6055 8.2682 7.6055 7.3612ZM18.6786 19.1459C18.6786 19.7459 18.1103 20.2353 17.4133 20.2353H6.5867C6.458 20.2353 5.3214 20.2129 5.3214 19.44V15.5859L7.6079 13.3529C7.8496 13.1341 8.2394 13.1365 8.4749 13.36L10.2466 15.0341C10.4834 15.2588 10.8695 15.2576 11.1051 15.0341L15.5761 10.7882C15.8129 10.5647 16.1929 10.5682 16.4249 10.7965L18.6786 13.0953V19.1459ZM3.5 4.8553V19.44C3.5 21.0165 4.8819 22 6.5867 22H17.4133C19.1169 22 20.5 20.7224 20.5 19.1459V4.8553C20.5 3.2788 19.1169 2 17.4133 2H6.5867C4.8819 2 3.5 3.2788 3.5 4.8553Z" fill="var(--accent)"/>

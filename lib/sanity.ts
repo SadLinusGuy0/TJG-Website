@@ -121,7 +121,7 @@ function mapPost(doc: SanityPostDoc): BlogPost {
     tags: doc.tags?.map(t => t.slug.current) ?? [],
     featuredImageUrl: getSanityImageUrl(doc.featuredImage),
     featuredImageAlt: doc.featuredImageAlt ?? undefined,
-    wordCount: doc.wordCount ?? undefined,
+    wordCount: typeof doc.wordCount === 'number' && doc.wordCount > 0 ? doc.wordCount : undefined,
     contentSource: source,
     portableBody: source === 'portableText' ? doc.body ?? [] : undefined,
     searchText,

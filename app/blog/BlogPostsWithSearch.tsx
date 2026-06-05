@@ -19,10 +19,26 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
             <div className="list-group">
               {filteredPosts.map((post) => {
                 const featuredImageUrl = post.featuredImageUrl;
+                const categories = post.categories
+                  ?.map((catSlug: string) => categoryMap[catSlug] || catSlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()))
+                  .filter(Boolean) ?? [];
                 
                 return (
-                  <Link key={post.id} href={`/blog/${post.slug}`} className="list">
-                    <div className="blog-card-container">
+                  <Link key={post.id} href={`/blog/${post.slug}`} className="list blog-index-card">
+                    <div className={`blog-card-container${featuredImageUrl ? ' blog-card-container--image' : ' blog-card-container--fallback'}`}>
+                      {featuredImageUrl && (
+                        <div className="blog-card-background" aria-hidden="true">
+                          <Image
+                            src={featuredImageUrl}
+                            alt=""
+                            fill
+                            sizes="(max-width: 768px) calc(100vw - 40px), (max-width: 1200px) 80vw, 70vw"
+                            style={{ objectFit: 'cover' }}
+                            unoptimized={false}
+                          />
+                        </div>
+                      )}
+                      <div className="blog-card-gradient" aria-hidden="true" />
                       <div className="blog-card-text-content">
                         <div className="body-text-blog-title" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                         <div className="information-wrapper">
@@ -36,40 +52,14 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
                               })}
                             </div>
                             
-                            {post.categories && post.categories.length > 0 && (
+                            {categories.length > 0 && (
                               <div className="blog-card-pill blog-card-pill-muted">
-                                {post.categories.map((catSlug: string) => categoryMap[catSlug]).filter(Boolean).join(', ')}
+                                {categories.join(', ')}
                               </div>
                             )}
                           </div>
                         </div>
                       </div>
-                      
-                      {featuredImageUrl && (
-                        <>
-                          <div className="blog-card-desktop-thumbnail blog-card-thumbnail">
-                            <Image
-                              src={featuredImageUrl}
-                              alt={post.featuredImageAlt || `Featured image for ${post.title.rendered.replace(/<[^>]*>/g, '')}`}
-                              fill
-                              sizes="120px"
-                              style={{ objectFit: 'cover' }}
-                              unoptimized={false}
-                            />
-                          </div>
-
-                          <div className="blog-card-mobile-thumbnail">
-                            <Image
-                              src={featuredImageUrl}
-                              alt={post.featuredImageAlt || `Featured image for ${post.title.rendered.replace(/<[^>]*>/g, '')}`}
-                              fill
-                              sizes="100vw"
-                              style={{ objectFit: 'cover' }}
-                              unoptimized={false}
-                            />
-                          </div>
-                        </>
-                      )}
                     </div>
                   </Link>
                 );

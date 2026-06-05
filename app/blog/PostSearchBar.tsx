@@ -173,7 +173,13 @@ export default function PostSearchBar() {
     <>
       <div className="post-search-anchor">
         <div className="post-search-positioner">
-          <div className="post-search-bar">
+          <div
+            className="post-search-bar"
+            style={{
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
+            }}
+          >
             {/* Search icon */}
             <svg
               className="post-search-icon"

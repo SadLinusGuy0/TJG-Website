@@ -77,7 +77,7 @@ function ThemePreviewAuto({ accent }: { accent: AccentColor }) {
 }
 
 function SettingsContent() {
-  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, liquidGlass, setLiquidGlass, liquidGlassAvailable, fmpSeparatedViewAvailable } = useTheme();
+  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, fmpSeparatedViewAvailable } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [devOptionsEnabled, setDevOptionsEnabled] = useState(false);
   const [fmpSeparatedView, setFmpSeparatedView] = useState(true);
@@ -317,20 +317,6 @@ function SettingsContent() {
             </label>
           )}
 
-          {liquidGlassAvailable && (
-            <label htmlFor="liquid-glass-toggle" className="list" style={{ cursor: 'pointer' }}>
-              <div className="list-item-content">
-                <div className="body-text" style={{ display: 'flex', alignItems: 'center' }}>
-                  <span className="beta-chip">Beta</span>
-                  Liquid Glass
-                </div>
-                <div className="information-wrapper">
-                  <div className="information">Apply a glass refraction effect to UI elements. May impact performance on some devices.</div>
-                </div>
-              </div>
-              <Switch id="liquid-glass-toggle" checked={liquidGlass} onChange={setLiquidGlass} />
-            </label>
-          )}
         </div>
 
         {fmpSeparatedViewAvailable && (
@@ -423,4 +409,4 @@ export default function Settings() {
       </div>
     </div>
   );
-} 
+}

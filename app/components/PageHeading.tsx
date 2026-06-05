@@ -1,9 +1,14 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { Back } from '@thatjoshguy/oneui-icons';
 
 const SCROLL_RANGE = 530; // px of scroll over which the crossfade happens
+const PULL_EXPAND_DISTANCE = 130;
+const COLLAPSED_HERO_HEIGHT = 112;
+const EXPANDED_HERO_HEIGHT = 200;
+const COLLAPSED_HERO_PADDING_TOP = 54;
+const EXPANDED_HERO_PADDING_TOP = 90;
 
 interface PageHeadingProps {
   title: string;
@@ -15,6 +20,8 @@ interface PageHeadingProps {
   onBack?: () => void;
   /** Right-side content for the collapsed sticky bar (e.g. same settings icon). */
   barTrailingAction?: React.ReactNode;
+  /** Start with the sticky bar visible and reveal the expanded hero on a pull-down gesture. */
+  defaultCollapsed?: boolean;
 }
 
 export default function PageHeading({
@@ -23,19 +30,90 @@ export default function PageHeading({
   trailingAction,
   onBack,
   barTrailingAction,
+  defaultCollapsed = false,
 }: PageHeadingProps) {
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(defaultCollapsed ? 1 : 0);
   const [mounted, setMounted] = useState(false);
+  const [pullProgress, setPullProgress] = useState(0);
+  const [pullExpanded, setPullExpanded] = useState(false);
+  const touchStartY = useRef(0);
+  const pullProgressRef = useRef(0);
+  const isPullingRef = useRef(false);
 
   useEffect(() => {
     setMounted(true);
     function onScroll() {
-      setProgress(Math.min(1, Math.max(0, window.scrollY / SCROLL_RANGE)));
+      const scrollProgress = Math.min(1, Math.max(0, window.scrollY / SCROLL_RANGE));
+      setProgress(defaultCollapsed && !pullExpanded ? 1 : scrollProgress);
+
+      if (defaultCollapsed && window.scrollY > 8 && pullExpanded) {
+        setPullExpanded(false);
+      }
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [defaultCollapsed, pullExpanded]);
+
+  useEffect(() => {
+    if (!defaultCollapsed) {
+      return;
+    }
+
+    function onTouchStart(event: TouchEvent) {
+      if (window.scrollY > 0) {
+        return;
+      }
+
+      touchStartY.current = event.touches[0]?.clientY ?? 0;
+      pullProgressRef.current = 0;
+      isPullingRef.current = true;
+    }
+
+    function onTouchMove(event: TouchEvent) {
+      if (!isPullingRef.current || window.scrollY > 0) {
+        return;
+      }
+
+      const currentY = event.touches[0]?.clientY ?? touchStartY.current;
+      const deltaY = Math.max(0, currentY - touchStartY.current);
+
+      if (deltaY <= 0) {
+        return;
+      }
+
+      event.preventDefault();
+      const nextPullProgress = Math.min(1, deltaY / PULL_EXPAND_DISTANCE);
+      pullProgressRef.current = nextPullProgress;
+      setPullProgress(nextPullProgress);
+      setProgress(1 - nextPullProgress);
+    }
+
+    function onTouchEnd() {
+      if (!isPullingRef.current) {
+        return;
+      }
+
+      const shouldExpand = pullProgressRef.current >= 0.55;
+      setPullExpanded(shouldExpand);
+      setPullProgress(0);
+      setProgress(shouldExpand ? 0 : 1);
+      pullProgressRef.current = 0;
+      isPullingRef.current = false;
+    }
+
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
+    window.addEventListener('touchend', onTouchEnd);
+    window.addEventListener('touchcancel', onTouchEnd);
+
+    return () => {
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchcancel', onTouchEnd);
+    };
+  }, [defaultCollapsed]);
 
   // Hero title fades out over the first 70%.
   const heroOpacity = Math.max(0, 1 - progress / 0.7);
@@ -45,12 +123,20 @@ export default function PageHeading({
 
   // Floating hero actions fade out over the first 50%.
   const actionsOpacity = Math.max(0, 1 - progress / 0.5);
+  const expandProgress = 1 - progress;
+  const heroStyle: CSSProperties | undefined = defaultCollapsed
+    ? {
+        minHeight: COLLAPSED_HERO_HEIGHT + (EXPANDED_HERO_HEIGHT - COLLAPSED_HERO_HEIGHT) * expandProgress,
+        paddingTop: COLLAPSED_HERO_PADDING_TOP + (EXPANDED_HERO_PADDING_TOP - COLLAPSED_HERO_PADDING_TOP) * expandProgress,
+        transition: pullProgress > 0 ? 'none' : 'min-height 0.26s cubic-bezier(0.2, 0.9, 0.3, 1), padding-top 0.26s cubic-bezier(0.2, 0.9, 0.3, 1)',
+      }
+    : undefined;
 
   return (
     <>
       {/* ── Expanded hero ──────────────────────────────────────────────
           In document flow — takes real space so content sits below it. */}
-      <div className="page-heading-hero">
+      <div className="page-heading-hero" style={heroStyle}>
         {(leadingAction || trailingAction) && (
           <div
             className="page-heading-hero-actions"

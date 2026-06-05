@@ -50,4 +50,29 @@ describe('Sanity blog mapping', () => {
     expect(mapped.categories).toEqual(['unit-1']);
     expect(mapped.searchText).toContain('portable body text');
   });
+
+  it('treats zero Sanity word counts as missing so Portable Text can be counted', () => {
+    const mapped = mapSanityPostForTest({
+      _id: 'post-2',
+      title: 'Zero Count Post',
+      slug: { current: 'zero-count-post' },
+      publishedAt: '2026-06-05T00:00:00.000Z',
+      excerpt: null,
+      featuredImage: null,
+      featuredImageAlt: null,
+      categories: null,
+      tags: null,
+      legacyHtml: null,
+      contentSource: 'portableText',
+      wordCount: 0,
+      body: [
+        {
+          _type: 'block',
+          children: [{ _type: 'span', text: 'Portable body text' }],
+        },
+      ],
+    });
+
+    expect(mapped.wordCount).toBeUndefined();
+  });
 });

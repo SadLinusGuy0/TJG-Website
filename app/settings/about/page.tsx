@@ -86,6 +86,7 @@ function AboutContent() {
       >
         <PageHeading
           title="About this site"
+          defaultCollapsed
           leadingAction={
             <Link href={from} className="top-app-bar-icon" aria-label="Back" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
               <Back color="var(--primary)" />
@@ -119,7 +120,7 @@ function AboutContent() {
                 }}
                 onClick={handleVersionTap}
               >
-                <AnimatedText text="Version 3.2" />
+                Version 3.3
               </div>
             </div>
           </div>
@@ -284,9 +285,6 @@ function AboutContent() {
                 </svg>
               </div>
             </a>
-
-          <div className="section-header">
-          </div>
         </div>
       </div>
 
@@ -294,13 +292,15 @@ function AboutContent() {
         <div className="dialogue-overlay show" onClick={() => setShowDevDialog(false)}>
           <div className="dialogue-sheet" onClick={(e) => e.stopPropagation()}>
             <div className="dialogue-content">
-              <div className="dialogue-title">Developer options</div>
-              <div className="dialogue-body">Enable developer options? This will show additional settings.</div>
+              <div className="dialogue-title">Enable developer options?</div>
+              <div className="dialogue-body">
+                Enable experimental features and preview design options. These features may be unstable or change without warning.
+              </div>
             </div>
             <div className="dialogue-buttons">
               <button className="dialogue-btn cancel-btn" onClick={() => setShowDevDialog(false)}>Cancel</button>
               <div className="dialogue-btn-separator" />
-              <button className="dialogue-btn confirm-btn" onClick={handleDevOptionsAccept}>Accept</button>
+              <button className="dialogue-btn confirm-btn" onClick={handleDevOptionsAccept}>Enable</button>
             </div>
           </div>
         </div>

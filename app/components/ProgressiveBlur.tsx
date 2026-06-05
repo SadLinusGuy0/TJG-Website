@@ -36,9 +36,9 @@ export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurPro
   const [isDesktop, setIsDesktop] = useState(
     typeof window !== 'undefined' ? window.innerWidth > 900 : true
   );
-  const [topHomeOpacity, setTopHomeOpacity] = useState(1);
+  const [topOpacity, setTopOpacity] = useState(0);
 
-  const isTopHomeBlur = position === 'top' && pathname === '/';
+  const isTopBlur = position === 'top';
 
   useEffect(() => {
     if (position !== 'bottom') return;
@@ -51,21 +51,18 @@ export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurPro
   }, [position]);
 
   useEffect(() => {
-    if (!isTopHomeBlur) {
-      setTopHomeOpacity(1);
-      return;
-    }
+    if (!isTopBlur) return;
 
     const FADE_DISTANCE = 4;
     const updateOpacity = () => {
       const progress = Math.min(1, Math.max(0, window.scrollY / FADE_DISTANCE));
-      setTopHomeOpacity(progress);
+      setTopOpacity(progress);
     };
 
     updateOpacity();
     window.addEventListener('scroll', updateOpacity, { passive: true });
     return () => window.removeEventListener('scroll', updateOpacity);
-  }, [isTopHomeBlur]);
+  }, [isTopBlur]);
 
   if (!hydrated) return null;
   if (!blurEnabled) return null;
@@ -78,8 +75,8 @@ export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurPro
       className={`progressive-blur-overlay progressive-blur-overlay--${position}`}
       aria-hidden="true"
       style={{
-        opacity: isTopHomeBlur ? topHomeOpacity : 1,
-        transition: isTopHomeBlur ? 'opacity 180ms ease-out' : undefined,
+        opacity: isTopBlur ? topOpacity : 1,
+        transition: isTopBlur ? 'opacity 180ms ease-out' : undefined,
       }}
     >
       {BLUR_LAYERS.map((layer, i) => {

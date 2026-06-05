@@ -263,49 +263,70 @@ function DemoSearchInput() {
   const [query, setQuery] = useState("");
 
   return (
-    <div style={{ position: "relative", width: "100%" }}>
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        backgroundColor: "var(--background)",
+        borderRadius: 999,
+        padding: "12px 20px",
+        boxSizing: "border-box",
+      }}
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        style={{ flexShrink: 0, color: "var(--secondary)" }}
+      >
+        <path
+          d="M10.4131 3.4541C14.2501 3.4541 17.3711 6.57421 17.3711 10.4111C17.3711 12.0663 16.7893 13.5876 15.8213 14.7842L15.7275 14.9014L15.833 15.0068L20.375 19.5498C20.6025 19.7766 20.603 20.146 20.375 20.374V20.375C20.2618 20.4889 20.1126 20.5459 19.9629 20.5459C19.8134 20.5458 19.6649 20.4887 19.5518 20.375L15.0078 15.8311L14.9014 15.7256L14.7852 15.8193C13.5895 16.7874 12.0673 17.3701 10.4131 17.3701C6.57617 17.3701 3.45509 14.2481 3.45508 10.4111C3.45508 6.57421 6.5761 3.4541 10.4131 3.4541ZM10.4131 4.62012C7.21908 4.62012 4.62109 7.21705 4.62109 10.4111C4.62111 13.6051 7.21901 16.2041 10.4131 16.2041C13.6072 16.2041 16.2051 13.6051 16.2051 10.4111C16.2051 7.21705 13.6071 4.62012 10.4131 4.62012Z"
+          fill="currentColor"
+          stroke="currentColor"
+          strokeWidth="0.333333"
+        />
+      </svg>
       <input
         type="text"
-        placeholder="Search..."
+        placeholder="Search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         style={{
-          width: "100%",
-          padding: "12px 40px 12px 16px",
-          borderRadius: "var(--br-9xl)",
-          border: "1px solid color-mix(in srgb, var(--secondary) 30%, transparent)",
-          backgroundColor: "var(--background)",
-          color: "var(--primary)",
-          fontSize: "var(--body-size)",
-          fontFamily: "One UI Sans",
+          flex: 1,
+          minWidth: 0,
+          background: "transparent",
+          border: "none",
           outline: "none",
-          boxSizing: "border-box",
-          transition: "border-color 0.2s ease",
+          color: "var(--primary)",
+          fontSize: "1rem",
+          fontFamily: "One UI Sans",
+          fontWeight: 400,
+          padding: "2px 0",
+          margin: 0,
         }}
-        onFocus={(e) => (e.target.style.borderColor = "var(--accent)")}
-        onBlur={(e) => (e.target.style.borderColor = "color-mix(in srgb, var(--secondary) 30%, transparent)")}
       />
       {query && (
         <button
           onClick={() => setQuery("")}
           style={{
-            position: "absolute",
-            right: 12,
-            top: "50%",
-            transform: "translateY(-50%)",
-            background: "color-mix(in srgb, var(--secondary) 30%, transparent)",
+            background: "color-mix(in srgb, var(--secondary) 20%, transparent)",
             border: "none",
             borderRadius: "50%",
-            width: 20,
-            height: 20,
+            width: 26,
+            height: 26,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             cursor: "pointer",
             padding: 0,
             color: "var(--primary)",
-            fontSize: 12,
-            lineHeight: 1,
+            opacity: 0.7,
+            flexShrink: 0,
+            transition: "opacity 0.15s ease",
           }}
           aria-label="Clear search"
         >

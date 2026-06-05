@@ -65,6 +65,13 @@ export function countWords(content: string): number {
   return text.split(/\s+/).filter(word => word.length > 0).length;
 }
 
+export function getDisplayWordCount(storedWordCount: number | null | undefined, content: string): number {
+  if (typeof storedWordCount === 'number' && Number.isFinite(storedWordCount) && storedWordCount > 0) {
+    return storedWordCount;
+  }
+  return countWords(content);
+}
+
 function countWordsAboveMarker(content: string, marker: string): number {
   const idx = content.indexOf(marker);
   if (idx === -1) return 0;

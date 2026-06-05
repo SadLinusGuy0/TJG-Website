@@ -1085,36 +1085,10 @@ button.media-card:hover {
   border-color: color-mix(in srgb, var(--primary) 30%, transparent 70%);
 }
 
-/* Liquid glass variant for top-app-bar icons */
-html[data-liquid-glass="true"] .top-app-bar-icon {
-  background: color-mix(in srgb, var(--container-background) 55%, rgba(255,255,255,0.3)) !important;
-  border: 1px solid rgba(255,255,255,0.45) !important;
-  box-shadow:
-    inset 0 1px 2px rgba(255,255,255,0.5),
-    inset 0 -1px 1px rgba(0,0,0,0.04),
-    0 2px 8px rgba(0,0,0,0.08) !important;
-}
-
-html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon {
-  background: color-mix(in srgb, var(--container-background) 50%, rgba(255,255,255,0.06)) !important;
-  border-color: rgba(255,255,255,0.18) !important;
-  box-shadow:
-    inset 0 1px 2px rgba(255,255,255,0.1),
-    inset 0 -1px 1px rgba(0,0,0,0.15),
-    0 2px 8px rgba(0,0,0,0.25) !important;
-}
-
-html[data-liquid-glass="true"] .top-app-bar-icon:hover {
-  background: color-mix(in srgb, var(--container-background) 65%, rgba(255,255,255,0.35)) !important;
-}
-
-html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
-  background: color-mix(in srgb, var(--container-background) 60%, rgba(255,255,255,0.1)) !important;
-}
-
 .title-container {
   display: flex;
   align-items: center;
+  padding-left: 10px;
 }
 
 .title-container .title {
@@ -1717,6 +1691,7 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
     gap: 4px;
     padding: 6px 0;
     border-radius: var(--br-9xl);
+    border: 1px solid transparent;
     color: var(--secondary);
     background: transparent;
     text-decoration: none;
@@ -1727,7 +1702,8 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
 
   .mobile-nav-tab--active {
     color: var(--primary);
-    background: color-mix(in srgb, var(--container-background-active) 80%, transparent);
+    background: var(--container-background);
+    border-color: color-mix(in srgb, var(--primary) 10%, transparent);
   }
 
   .mobile-nav-tab:hover:not(.mobile-nav-tab--active) {
@@ -1750,21 +1726,6 @@ html[data-theme="dark"][data-liquid-glass="true"] .top-app-bar-icon:hover {
     font-weight: 500;
   }
 
-  /* Liquid glass variant */
-  .mobile-nav-bar--liquid-glass {
-    background: color-mix(in srgb, var(--container-background) 50%, transparent);
-    border-color: rgba(255,255,255,0.25);
-    box-shadow:
-      0 4px 24px rgba(0,0,0,0.15),
-      inset 0 0 4px rgba(255,255,255,0.3);
-  }
-
-  html[data-theme="dark"] .mobile-nav-bar--liquid-glass {
-    border-color: rgba(255,255,255,0.15);
-    box-shadow:
-      0 4px 24px rgba(0,0,0,0.3),
-      inset 0 0 4px rgba(255,255,255,0.1);
-  }
 }
 
 /* Version number tap to enable blog */
@@ -1918,7 +1879,12 @@ position: relative;
   outline: none;
   background: none;
   border: none;
-  transition: background 0.2s;
+  transition: none;
+}
+
+.sidebar-toggle svg {
+  transform-origin: center;
+  transition: transform 0.2s ease;
 }
 
 .sidebar-toggle-collapsed {
@@ -1943,12 +1909,21 @@ position: relative;
 }
 
 .sidebar-toggle:hover {
-background: rgba(0,0,0,0.08);
-animation: bounce 0.8s ease;
+background: none;
+}
+
+.desktop-nav .sidebar-toggle.nav-icon-container:hover svg {
+animation: sidebarToggleIconWiggle 0.45s cubic-bezier(0.2, 0.9, 0.3, 1) !important;
 }
 
 html[data-theme="dark"] .sidebar-toggle:hover {
-background: rgba(255,255,255,0.08);
+background: none;
+}
+
+@keyframes sidebarToggleIconWiggle {
+0%, 100% { transform: translateX(0); }
+35% { transform: translateX(-2px); }
+70% { transform: translateX(2px); }
 }
 
 @keyframes bounce {
@@ -4025,6 +4000,10 @@ body.nav-collapsed .design-projects-scroll-wrapper {
   transform: scale(0.98);
 }
 
+.shop-gumroad-list {
+  margin-bottom: 10px;
+}
+
 .footer-socials {
   display: flex;
   flex-direction: row;
@@ -4907,11 +4886,10 @@ html[data-theme="light"] .toast {
 /* Modal Dialogue Overlay */
 .dialogue-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.42);
     z-index: 10000;
     opacity: 0;
     visibility: hidden;
@@ -4919,7 +4897,8 @@ html[data-theme="light"] .toast {
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    padding: 20px;
+    padding: 22px;
+    box-sizing: border-box;
 }
 
 .dialogue-overlay.show {
@@ -4928,25 +4907,32 @@ html[data-theme="light"] .toast {
 }
 
 .dialogue-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     text-align: left;
+    min-height: 180px;
 }
 
 .dialogue-sheet {
     width: 100%;
-    max-width: 440px;
-    background: rgba(23, 23, 26, 0.75);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-radius: 28px;
-    padding: 24px;
+    max-width: 560px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    background: var(--container-background);
+    color: var(--primary);
+    border-radius: 34px;
+    padding: 30px 32px 22px;
+    box-sizing: border-box;
     box-shadow:
-        0 -2px 6px rgba(0, 0, 0, 0.05),
-        inset 0 0 3px rgba(0, 0, 0, 0.1),
-        0 12px 32px rgba(0, 0, 0, 0.4);
+        0 1px 0 rgba(255, 255, 255, 0.15) inset,
+        0 18px 48px rgba(0, 0, 0, 0.22);
     margin-bottom: env(safe-area-inset-bottom);
     will-change: transform, opacity;
     transform: translateY(40px) translateZ(0);
     transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    overflow: hidden;
 }
 
 .dialogue-overlay.show .dialogue-sheet {
@@ -4955,7 +4941,9 @@ html[data-theme="light"] .toast {
 
 @media (prefers-color-scheme: light) {
     .dialogue-sheet {
-        background: rgba(252, 252, 255, 0.9);
+        box-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.8) inset,
+            0 18px 48px rgba(0, 0, 0, 0.16);
     }
 
     .dialogue-btn-separator {
@@ -4963,28 +4951,54 @@ html[data-theme="light"] .toast {
     }
 }
 
-html[data-theme="light"] .dialogue-sheet {
-    background: rgba(252, 252, 255, 0.9);
-}
-
 html[data-theme="light"] .dialogue-btn-separator {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
 .dialogue-title {
-    margin: 0 0 12px 0;
-    font-size: 22px;
-    font-weight: 600;
-    color: white;
+    margin: 0;
+    font-size: 27px;
+    font-weight: 700;
+    color: var(--primary);
     text-align: left;
+    line-height: 1.18;
 }
 
 .dialogue-body {
-    margin: 0 0 32px 0;
-    font-size: 15px;
-    color: rgba(255, 255, 255, 0.7);
+    margin: 28px 0 0;
+    max-width: 92%;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--secondary);
     text-align: left;
-    line-height: 1.4;
+    line-height: 1.35;
+}
+
+.dialogue-app-row {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    min-height: 132px;
+}
+
+.dialogue-app-icon {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--primary) 4%, transparent);
+}
+
+.dialogue-app-name {
+    min-width: 0;
+    color: var(--primary);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
 }
 
 @media (prefers-color-scheme: light) {
@@ -5010,22 +5024,24 @@ html[data-theme="light"] .dialogue-body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    gap: 12px;
-    height: 48px;
+    gap: 0;
+    height: 68px;
     margin: 0 auto;
 }
 
 .dialogue-btn {
-    flex: 0 1 auto;
-    width: auto;
-    min-width: 105px;
+    flex: 1 1 0;
+    width: 50%;
+    min-width: 0;
     padding: 0 22px;
     height: 100%;
     margin: 0;
     border: none;
     background: transparent;
-    font-size: 18px;
-    font-weight: 600;
+    color: var(--primary);
+    font-family: 'One UI Sans', var(--body), sans-serif;
+    font-size: 24px;
+    font-weight: 700;
     cursor: pointer;
     border-radius: 24px;
     white-space: nowrap;
@@ -5040,11 +5056,11 @@ html[data-theme="light"] .dialogue-body {
 }
 
 .cancel-btn {
-    color: white;
+    color: var(--primary);
 }
 
 .confirm-btn {
-    color: #FF4B4B;
+    color: var(--primary);
 }
 
 @media (prefers-color-scheme: light) {
@@ -5063,8 +5079,8 @@ html[data-theme="light"] .cancel-btn {
 
 .dialogue-btn-separator {
     width: 1.2px;
-    height: 24px;
-    background-color: rgba(255, 255, 255, 0.12);
+    height: 38px;
+    background-color: color-mix(in srgb, var(--primary) 10%, transparent);
     border-radius: 2px;
     flex-shrink: 0;
 }
@@ -5077,6 +5093,53 @@ html[data-theme="light"] .cancel-btn {
 
 html[data-theme="light"] .dialogue-btn-separator {
     background-color: rgba(0, 0, 0, 0.06);
+}
+
+@media screen and (max-width: 700px) {
+    .dialogue-overlay {
+        padding: 14px;
+    }
+
+    .dialogue-sheet {
+        min-height: 244px;
+        border-radius: 28px;
+        padding: 24px 24px 16px;
+    }
+
+    .dialogue-content {
+        min-height: 148px;
+    }
+
+    .dialogue-title {
+        font-size: 22px;
+    }
+
+    .dialogue-body {
+        margin-top: 22px;
+        font-size: 16px;
+    }
+
+    .dialogue-app-row {
+        min-height: 108px;
+        gap: 16px;
+    }
+
+    .dialogue-app-icon {
+        width: 46px;
+        height: 46px;
+    }
+
+    .dialogue-app-name {
+        font-size: 20px;
+    }
+
+    .dialogue-buttons {
+        height: 58px;
+    }
+
+    .dialogue-btn {
+        font-size: 19px;
+    }
 }
 
 /* About Section Layout */

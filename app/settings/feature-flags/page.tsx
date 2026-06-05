@@ -71,11 +71,6 @@ const FLAGS: FlagDef[] = [
     description: 'Show the corner smoothing toggle in Settings',
   },
   {
-    key: 'liquid-glass-enabled',
-    name: 'Liquid Glass toggle',
-    description: 'Show the Liquid Glass toggle in Settings',
-  },
-  {
     key: 'fmp-separated-view-enabled',
     name: 'FMP view toggle',
     description: 'Show the FMP separated/combined view toggle in Settings',
@@ -97,13 +92,6 @@ const FLAGS: FlagDef[] = [
     description: 'The WordPress site URL used when fallback mode is selected',
     type: 'string',
     defaultValue: 'https://tjg8.wordpress.com',
-  },
-  {
-    key: 'blog-content-source',
-    name: 'Blog content source',
-    description: 'Which CMS backend to use for blog content (wordpress or sanity)',
-    type: 'string',
-    defaultValue: 'wordpress',
   },
 ];
 

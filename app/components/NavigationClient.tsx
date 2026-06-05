@@ -1,13 +1,11 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
-import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import { useBlogEnabled } from './BlogFlagProvider';
-import { useTheme } from './ThemeProvider';
 import { useCursorFollow } from './useCursorFollow';
 import { HomeIcon, ShopIcon, BlogIcon, ContactIcon } from './NavIcons';
 import { Drawer, Settings } from '@thatjoshguy/oneui-icons';
-import { getDisplacementFilter, supportsBackdropFilterUrl } from '../utils/liquidGlass';
 
 // Context to share collapsed state
 export const NavCollapseContext = createContext({ collapsed: false, setCollapsed: (_: boolean) => {} });
@@ -74,41 +72,6 @@ function DesktopNavButton({ href, isSelected, children }: { href: string; isSele
 export default function NavigationClient({ hideMobile = false, showBlog: propShowBlog = false }: NavigationClientProps) {
   const pathname = usePathname();
   const serverBlogEnabled = useBlogEnabled();
-  const { liquidGlass, liquidGlassAvailable } = useTheme();
-  const mobileNavRef = useRef<HTMLElement>(null);
-
-  const updateLiquidGlassFilter = useCallback((el: HTMLElement) => {
-    const isActive = liquidGlassAvailable && liquidGlass && supportsBackdropFilterUrl();
-    if (!isActive) {
-      el.style.backdropFilter = 'blur(24px)';
-      (el.style as unknown as Record<string, unknown>)['webkitBackdropFilter'] = 'blur(24px)';
-      return;
-    }
-    const rect = el.getBoundingClientRect();
-    const width = Math.round(rect.width);
-    const height = Math.round(rect.height);
-    const radius = 20;
-    const filterUrl = getDisplacementFilter({
-      width,
-      height,
-      radius,
-      depth: 20,
-      strength: 60,
-      chromaticAberration: 2,
-    });
-    const value = `blur(3px) url('${filterUrl}') blur(1px) brightness(1.1) saturate(1.3)`;
-    el.style.backdropFilter = value;
-    (el.style as unknown as Record<string, unknown>)['webkitBackdropFilter'] = value;
-  }, [liquidGlass, liquidGlassAvailable]);
-
-  useEffect(() => {
-    const el = mobileNavRef.current;
-    if (!el) return;
-    updateLiquidGlassFilter(el);
-    const observer = new ResizeObserver(() => updateLiquidGlassFilter(el));
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [updateLiquidGlassFilter]);
   
   // Use Vercel Flags value from context (layout), fall back to static config
   const defaultEnabled = serverBlogEnabled ?? true;
@@ -241,8 +204,7 @@ export default function NavigationClient({ hideMobile = false, showBlog: propSho
 
       {!hideMobile && (
         <nav
-          ref={mobileNavRef}
-          className={`mobile-nav-bar${liquidGlassAvailable && liquidGlass ? ' mobile-nav-bar--liquid-glass' : ''}`}
+          className="mobile-nav-bar"
           style={{ backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)' }}
         >
           <div className="mobile-nav-tabs">
