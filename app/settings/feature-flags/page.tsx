@@ -80,6 +80,13 @@ const FLAGS: FlagDef[] = [
     type: 'string',
     defaultValue: 'https://tjg8.wordpress.com',
   },
+  {
+    key: 'blog-content-source',
+    name: 'Blog content source',
+    description: 'Which CMS backend to use for blog content (wordpress or sanity)',
+    type: 'string',
+    defaultValue: 'wordpress',
+  },
 ];
 
 type OverrideState = 'cloud' | 'on' | 'off';
