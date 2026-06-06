@@ -1,5 +1,19 @@
 const path = require('path');
 
+function getOptionalFlagsDefinitionsAlias() {
+  try {
+    require.resolve('@vercel/flags-definitions');
+    return null;
+  } catch {
+    return path.join(__dirname, 'lib/vercelFlagsDefinitionsStub.mjs');
+  }
+}
+
+const flagsDefinitionsAlias = getOptionalFlagsDefinitionsAlias();
+const turbopackFlagsDefinitionsAlias = flagsDefinitionsAlias
+  ? './lib/vercelFlagsDefinitionsStub.mjs'
+  : null;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -16,6 +30,10 @@ const nextConfig = {
       { protocol: 'https', hostname: 'static.gumroad.com' },
       { protocol: 'https', hostname: 'public-files.gumroad.com' },
       { protocol: 'https', hostname: 'cdn.sanity.io' },
+      { protocol: 'https', hostname: 'sammyguru.com' },
+      { protocol: 'https', hostname: 'www.sammobile.com' },
+      { protocol: 'https', hostname: 'm-cdn.phonearena.com' },
+      { protocol: 'https', hostname: 'www.androidheadlines.com' },
     ],
   },
   headers: async () => [
@@ -42,7 +60,7 @@ const nextConfig = {
           key: 'Content-Security-Policy',
           value: [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://vercel.live",
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: blob: https:",
             "font-src 'self'",
@@ -54,6 +72,21 @@ const nextConfig = {
       ],
     },
   ],
+  ...(turbopackFlagsDefinitionsAlias
+    ? {
+        turbopack: {
+          resolveAlias: {
+            '@vercel/flags-definitions': turbopackFlagsDefinitionsAlias,
+          },
+        },
+      }
+    : {}),
+  webpack(config) {
+    if (flagsDefinitionsAlias) {
+      config.resolve.alias['@vercel/flags-definitions'] = flagsDefinitionsAlias;
+    }
+    return config;
+  },
 };
 
 nextConfig.allowedDevOrigins = ['192.168.1.110'];

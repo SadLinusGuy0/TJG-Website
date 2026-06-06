@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useRef, useCallback, useEffect } from 'react';
 
 export interface SlideData {
@@ -123,13 +124,17 @@ export default function NativeSlideshow({ slides }: NativeSlideshowProps) {
               aria-label={`Slide ${i + 1} of ${total}`}
               style={{ flex: '0 0 100%', minWidth: 0 }}
             >
-              <img
+              <Image
                 src={slide.src}
                 alt={slide.alt}
+                width={1200}
+                height={800}
+                unoptimized
                 draggable={false}
                 className="native-slideshow__img"
                 style={{
                   width: '100%',
+                  height: 'auto',
                   maxHeight: '40vh',
                   objectFit: 'contain',
                   display: 'block',

@@ -1625,6 +1625,7 @@ button.media-card:hover {
   font-family: 'One UI Sans';
   src: url('/fonts/oneuisans.ttf') format('truetype-variations');
   font-weight: 100 900;
+  font-display: swap;
 }
 
 @font-face {
@@ -3433,7 +3434,7 @@ body.nav-collapsed .featured-stories-scroll-wrapper {
   font-family: 'One UI Sans', sans-serif;
   font-size: 13px;
   font-weight: 500;
-  color: var(--secondary);
+  color: color-mix(in srgb, var(--secondary) 60%, var(--primary) 40%);
   line-height: 1.3;
 }
 
@@ -3906,7 +3907,7 @@ body.nav-collapsed .design-projects-scroll-wrapper {
   font-family: 'One UI Sans', sans-serif;
   font-size: 16px;
   font-weight: 400;
-  color: var(--secondary);
+  color: color-mix(in srgb, var(--secondary) 60%, var(--primary) 40%);
   line-height: 1.7;
   margin: 0 0 12px 0;
 }

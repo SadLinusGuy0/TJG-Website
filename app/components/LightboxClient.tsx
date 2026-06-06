@@ -38,7 +38,7 @@ export default function LightboxClient(): JSX.Element | null {
     if (typeof document !== "undefined") {
       document.documentElement.style.overflow = "hidden";
     }
-  }, [sources.length]);
+  }, [sources.length, captions]);
 
   const close = useCallback(() => {
     // Play closing transition before unmounting
@@ -121,6 +121,7 @@ export default function LightboxClient(): JSX.Element | null {
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 6L9 12L15 18" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </button>
         <div className="lightbox-stage">
+          {/* eslint-disable-next-line @next/next/no-img-element -- Lightbox displays arbitrary post images at their original source and size. */}
           <img className={`lightbox-img ${isSliding ? 'incoming' : 'current'}`} style={{ ['--incomingStart' as any]: direction === 'next' ? '8%' : direction === 'prev' ? '-8%' : '0' }} alt="Expanded image" src={src} />
         </div>
         <button className="lightbox-arrow lightbox-next" aria-label="Next image" onClick={next}>
@@ -136,5 +137,4 @@ export default function LightboxClient(): JSX.Element | null {
     </div>
   );
 }
-
 

@@ -29,10 +29,6 @@ function StackIcon({ tool }: { tool: StackTool }) {
   );
 }
 
-function isExternalUrl(src: string) {
-  return src.startsWith('http://') || src.startsWith('https://');
-}
-
 function StoryCard({ story }: { story: FeaturedStory }) {
   return (
     <a href={story.url} target="_blank" rel="noopener noreferrer" className="story-card">
@@ -43,7 +39,6 @@ function StoryCard({ story }: { story: FeaturedStory }) {
           width={320}
           height={180}
           className="story-card-image"
-          unoptimized={isExternalUrl(story.thumbnail)}
         />
       </div>
       <div className="story-card-info">
@@ -122,6 +117,7 @@ export default function HomeClient({
                   height={500}
                   className="hero-avatar-image"
                   priority
+                  fetchPriority="high"
                 />
               </div>
               <div className="hero-intro">
@@ -497,7 +493,6 @@ export default function HomeClient({
                               width={400}
                               height={225}
                               className="design-project-image"
-                              unoptimized
                             />
                           )}
                         </div>
@@ -520,7 +515,7 @@ export default function HomeClient({
               </div>
 
               <div className="list-group">
-                <a href="https://legacy.thatjoshguy.me" className="list" role="button" aria-label="View legacy website">
+                <a href="https://legacy.thatjoshguy.me" className="list" role="button" aria-label="My old site">
                   <div className="list-item-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <mask id="mask0_misc_home" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">

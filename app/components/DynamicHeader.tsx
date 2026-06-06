@@ -1,4 +1,5 @@
 "use client";
+import Image from 'next/image';
 import { useEffect, useRef, useState, useCallback, RefObject } from 'react';
 
 /* ------------------------------------------------------------------ */
@@ -117,7 +118,7 @@ export default function DynamicHeader({
               {/* Frosted glass disc — opacity driven by CSS (.has-bg .back-button-bg) */}
               <div className="back-button-bg" />
               {backIconSrc ? (
-                <img className="back-icon" src={backIconSrc} alt="" aria-hidden />
+                <Image className="back-icon" src={backIconSrc} alt="" width={24} height={24} aria-hidden />
               ) : (
                 /* Inline chevron so no extra asset file is needed */
                 <svg

@@ -32,9 +32,8 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
                             src={featuredImageUrl}
                             alt=""
                             fill
-                            sizes="(max-width: 768px) calc(100vw - 40px), (max-width: 1200px) 80vw, 70vw"
+                            sizes="(max-width: 699px) calc(100vw - 56px), (max-width: 1200px) calc((100vw - 220px) / 2), 520px"
                             style={{ objectFit: 'cover' }}
-                            unoptimized={false}
                           />
                         </div>
                       )}

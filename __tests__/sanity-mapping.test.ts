@@ -16,7 +16,11 @@ jest.mock('../lib/sanity.config', () => ({
 jest.mock('@sanity/image-url', () => () => ({
   image: () => ({
     auto: () => ({
-      url: () => 'https://cdn.sanity.io/images/project/dataset/image.jpg',
+      width: () => ({
+        quality: () => ({
+          url: () => 'https://cdn.sanity.io/images/project/dataset/image.jpg?w=1200&q=75&auto=format',
+        }),
+      }),
     }),
   }),
 }));
@@ -45,6 +49,8 @@ describe('Sanity blog mapping', () => {
     });
 
     expect(mapped.featuredImageAlt).toBe('A useful alt description');
+    expect(mapped.featuredImageUrl).toContain('w=1200');
+    expect(mapped.featuredImageUrl).toContain('q=75');
     expect(mapped.contentSource).toBe('portableText');
     expect(mapped.portableBody).toHaveLength(1);
     expect(mapped.categories).toEqual(['unit-1']);

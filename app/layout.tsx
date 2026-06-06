@@ -52,7 +52,7 @@ export default async function RootLayout({
   const fmpSeparatedViewEnabledValue = await getFmpSeparatedViewEnabled();
   
   return (
-    <html suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <meta name="theme-color" content="#000" />

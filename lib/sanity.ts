@@ -36,7 +36,7 @@ export function getSanityImageUrl(source: SanityImageSource): string | null {
   if (!source?.asset) return null;
   if (!isSanityConfigured()) return null;
   const builder = imageUrlBuilder(getClient());
-  return builder.image(source).auto('format').url();
+  return builder.image(source).auto('format').width(1200).quality(75).url();
 }
 
 export type SanityImageSource = {
