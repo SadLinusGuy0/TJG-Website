@@ -3,5 +3,8 @@ node_modules
 .vercel
 .env*.local
 
+# TypeScript build artifacts
+*.tsbuildinfo
+
 # Claude Code local worktree sandboxes (not for sharing)
 .claude/worktrees/
