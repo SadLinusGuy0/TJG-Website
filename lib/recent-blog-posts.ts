@@ -1,4 +1,3 @@
-import { getYearSliderEnabled } from './getYearSliderFlag';
 import { fetchAllBlogPosts, fetchBlogTags, type BlogPost, type BlogTag } from './blog';
 
 export type RecentBlogPost = {
@@ -9,7 +8,7 @@ export type RecentBlogPost = {
   date: string;
 };
 
-async function resolveRecentPosts(limit: number, yearSliderEnabled: boolean): Promise<BlogPost[]> {
+async function resolveRecentPosts(limit: number): Promise<BlogPost[]> {
   let tags: BlogTag[] = [];
   try {
     tags = await fetchBlogTags();
@@ -20,17 +19,7 @@ async function resolveRecentPosts(limit: number, yearSliderEnabled: boolean): Pr
   const year1Tag = tags.find((t) => t.slug === 'year-1' || t.name.toLowerCase() === 'year 1');
   const year2Tag = tags.find((t) => t.slug === 'year-2' || t.name.toLowerCase() === 'year 2');
 
-  if (!year1Tag && !year2Tag) {
-    const posts = await fetchAllBlogPosts();
-    return posts.slice(0, limit);
-  }
-
-  if (year1Tag && (!year2Tag || !yearSliderEnabled)) {
-    const posts = await fetchAllBlogPosts({ tagSlug: 'year-1' });
-    return posts.slice(0, limit);
-  }
-
-  if (year1Tag && year2Tag && yearSliderEnabled) {
+  if (year1Tag && year2Tag) {
     const [batch1, batch2] = await Promise.all([
       fetchAllBlogPosts({ tagSlug: 'year-1' }),
       fetchAllBlogPosts({ tagSlug: 'year-2' }),
@@ -44,13 +33,14 @@ async function resolveRecentPosts(limit: number, yearSliderEnabled: boolean): Pr
       .slice(0, limit);
   }
 
-  if (year2Tag && !year1Tag && yearSliderEnabled) {
-    const posts = await fetchAllBlogPosts({ tagSlug: 'year-2' });
+  if (year1Tag) {
+    const posts = await fetchAllBlogPosts({ tagSlug: 'year-1' });
     return posts.slice(0, limit);
   }
 
-  if (year2Tag && !year1Tag && !yearSliderEnabled) {
-    return [];
+  if (year2Tag) {
+    const posts = await fetchAllBlogPosts({ tagSlug: 'year-2' });
+    return posts.slice(0, limit);
   }
 
   const posts = await fetchAllBlogPosts();
@@ -59,8 +49,7 @@ async function resolveRecentPosts(limit: number, yearSliderEnabled: boolean): Pr
 
 export async function getRecentBlogPosts(limit = 6): Promise<RecentBlogPost[]> {
   try {
-    const yearSliderEnabled = await getYearSliderEnabled();
-    const posts = await resolveRecentPosts(limit, yearSliderEnabled);
+    const posts = await resolveRecentPosts(limit);
 
     return posts.map(post => ({
       id: post.id,

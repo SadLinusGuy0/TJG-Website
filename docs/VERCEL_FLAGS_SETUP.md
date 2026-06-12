@@ -30,10 +30,35 @@ This project uses [Vercel Flags](https://vercel.com/docs/flags) for feature flag
 
 ## Current Flags
 
-| Flag | Key | Description |
-|------|-----|-------------|
-| Blog | `blog-enabled` | Shows/hides the blog in navigation and controls access to blog pages |
-| Popular Stories | `popular-stories-enabled` | Shows/hides the Popular Stories section on the home page |
+All definitions live in `flags.ts`; each has a getter in `lib/get*Flag.ts` that resolves cookie override → Vercel value → default.
+
+| Flag | Key | Type | Default | Description |
+|------|-----|------|---------|-------------|
+| Blog | `blog-enabled` | Boolean | on | Shows/hides the blog in navigation and controls access to blog pages |
+| Popular Stories | `popular-stories-enabled` | Boolean | on | Shows/hides the Popular Stories section on the home page |
+| Merged Work carousel | `merged-work-carousel-enabled` | Boolean | on | Show all 4 design projects on the Home carousel |
+| Misc section | `misc-section-enabled` | Boolean | on | Show the Misc section on the Home page |
+| Recent Blog Posts | `recent-blog-posts-enabled` | Boolean | on | Show the Recent Blog Posts carousel on the Home page |
+| In-post search bar | `in-post-search-bar-enabled` | Boolean | off | Show the search bar on every blog post |
+| In-post search bar (FMP) | `in-post-search-bar-fmp-enabled` | Boolean | on | Show the search bar on the FMP post only |
+| Corner smoothing | `corner-smoothing-enabled` | Boolean | off | Show the corner smoothing (squircle) toggle in Settings |
+| FMP view toggle | `fmp-separated-view-enabled` | Boolean | off | Show the FMP separated/combined view toggle in Settings |
+| Blog content source | `blog-content-source` | String | `sanity` | Which CMS backend serves the blog: `sanity` or `wordpress` |
+| WordPress source URL | `wordpress-source-url` | String | `https://tjg8.wordpress.com` | WordPress site used when the source is `wordpress` |
+
+Removed flags — delete these from the Vercel Dashboard if they still exist there:
+
+- `liquid-glass-enabled` (feature removed)
+- `year-slider-enabled` (YearSlider UI removed; recent posts always merge year-1/year-2)
+
+## Serving the College site from this branch
+
+The College variant does not need its own branch — it is configuration only. Deploy the same code (e.g. a second Vercel project or environment) with:
+
+- `blog-content-source` = `wordpress`
+- `wordpress-source-url` = `https://joshskinnertjg.wordpress.com`
+
+Set these as per-environment flag values in the Vercel Dashboard, or as cookie overrides via `/settings/feature-flags` for local testing. Everything else (theme, pages, shop) is shared.
 
 ## Behavior
 

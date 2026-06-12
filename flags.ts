@@ -93,21 +93,6 @@ export const inPostSearchBarFmpEnabled = flag({
 });
 
 /**
- * Year Slider feature flag - controls the Year 1/Year 2 toggle on the blog page.
- * When disabled, only Year 1 posts are shown without the toggle.
- */
-export const yearSliderEnabled = flag({
-  key: 'year-slider-enabled',
-  adapter: vercelAdapter(),
-  defaultValue: true,
-  description: 'Show the Year 1/Year 2 slider toggle on the blog page',
-  options: [
-    { value: true, label: 'Enabled' },
-    { value: false, label: 'Disabled' },
-  ],
-});
-
-/**
  * Corner Smoothing feature flag - enables the squircle corner smoothing toggle in Settings.
  * When enabled, users with a supported browser can opt in to squircle-shaped corners.
  */

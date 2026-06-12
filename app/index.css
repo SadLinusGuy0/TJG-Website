@@ -1228,7 +1228,6 @@ button.media-card:hover {
   .list,
   .media-card,
   .list-group,
-  .button-container,
   .theme-container {
       width: 100%;
   }
@@ -1265,8 +1264,7 @@ button.media-card:hover {
   .media-card,
   .list-group,
   .panel,
-  .theme-container,
-  .button-container {
+  .theme-container {
       width: 100%;
       max-width: 100%;
       margin-left: auto;
@@ -3809,47 +3807,6 @@ body.nav-collapsed .design-projects-scroll-wrapper {
   flex-shrink: 0;
 }
 
-.design-projects-cta-button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 16px 32px;
-  border-radius: var(--br-9xl);
-  background-color: var(--container-background);
-  color: var(--primary);
-  text-decoration: none;
-  font-family: 'One UI Sans';
-  font-weight: 600;
-  font-size: var(--subheading-size);
-  transition: transform 0.2s ease-out, background-color 0.2s ease-out, box-shadow 0.2s ease-out;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-  margin: 0 auto;
-  width: fit-content;
-}
-
-.design-projects-cta-button svg path {
-  fill: var(--primary);
-}
-
-.design-projects-cta-button:hover {
-  transform: scale(1.02);
-  background-color: var(--accent);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.design-projects-cta-button:hover svg path {
-  fill: #fff;
-}
-
-.design-projects-cta-button:active {
-  transform: scale(0.98);
-}
-
 /* =============================================
    Stack Section (enhanced from section)
    ============================================= */
@@ -4108,11 +4065,6 @@ body.nav-collapsed .design-projects-scroll-wrapper {
   .design-projects-scroll-inner {
     gap: 12px;
     padding: 16px 20px 32px var(--design-projects-card-start-inset);
-  }
-
-  .design-projects-cta-button {
-    padding: 14px 24px;
-    font-size: 16px;
   }
 
   .stack-section {

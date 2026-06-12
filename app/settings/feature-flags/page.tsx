@@ -51,11 +51,6 @@ const FLAGS: FlagDef[] = [
     description: 'Show the Recent Blog Posts carousel on the Home page',
   },
   {
-    key: 'year-slider-enabled',
-    name: 'Year slider',
-    description: 'Show the Year 1/Year 2 slider on the blog page',
-  },
-  {
     key: 'in-post-search-bar-enabled',
     name: 'In-post search bar',
     description: 'Show the search bar on every blog post',
