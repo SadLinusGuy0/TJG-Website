@@ -6,8 +6,9 @@ name: Docs impact review
 # there's no docs impact). The actual wiki edit happens after merge via
 # update-docs.yml; this is the early-warning half of the system.
 #
-# Requires the ANTHROPIC_API_KEY repository secret (no Notion access needed —
-# this workflow only reads the repo and comments on the PR).
+# Requires the CLAUDE_CODE_OAUTH_TOKEN repository secret (from
+# `claude setup-token`, billed to your Claude subscription). No Notion access
+# needed — this workflow only reads the repo and comments on the PR.
 
 on:
   pull_request:
@@ -35,7 +36,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           claude_args: |
             --allowedTools "Bash(git log:*),Bash(git diff:*),Bash(git show:*),Bash(gh pr comment:*),Read,Grep,Glob"
           prompt: |

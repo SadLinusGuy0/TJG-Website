@@ -7,7 +7,8 @@ name: Claude
 # and it will edit the TJG Site Docs wiki directly (page map lives in
 # docs/NOTION_DOCS.md).
 #
-# Requires repository secrets: ANTHROPIC_API_KEY, NOTION_TOKEN.
+# Requires repository secrets: CLAUDE_CODE_OAUTH_TOKEN (from
+# `claude setup-token`, billed to your Claude subscription), NOTION_TOKEN.
 # Installing the Claude GitHub App (https://github.com/apps/claude) gives the
 # bot a nicer identity, but the default GITHUB_TOKEN works.
 
@@ -43,7 +44,7 @@ jobs:
       - name: Run Claude
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           claude_args: |
             --mcp-config '{"mcpServers":{"notion":{"command":"npx","args":["-y","@notionhq/notion-mcp-server"],"env":{"NOTION_TOKEN":"${{ secrets.NOTION_TOKEN }}"}}}}'
             --allowedTools "Bash(git:*),Bash(gh:*),Bash(npm run lint),Bash(npm test:*),Read,Grep,Glob,Edit,Write,mcp__notion__*"

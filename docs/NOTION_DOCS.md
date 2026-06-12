@@ -37,8 +37,13 @@ Three workflows keep the wiki in sync:
 
 ### One-time setup
 
-1. **Anthropic API key**: create one at https://console.anthropic.com and add it
-   as the `ANTHROPIC_API_KEY` repository secret.
+1. **Claude auth**: run `claude setup-token` locally while logged in to Claude
+   Code with your Claude Pro/Max account, and add the resulting token as the
+   `CLAUDE_CODE_OAUTH_TOKEN` repository secret. CI runs are then covered by the
+   subscription (they share its rate limits). Alternative: use API billing by
+   adding an `ANTHROPIC_API_KEY` secret and switching the
+   `claude_code_oauth_token` input back to `anthropic_api_key` in the three
+   workflow files.
 2. **Notion integration**: at https://www.notion.so/profile/integrations create an
    internal integration with read + update + insert content capabilities, then in
    Notion open the TJG Site Docs wiki → ••• → Connections → add the integration.

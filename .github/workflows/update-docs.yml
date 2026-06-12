@@ -3,9 +3,13 @@ name: Update Notion docs
 # Keeps the "TJG Site Docs" Notion wiki in sync with the codebase.
 # Runs after a PR merges into main or beta (or manually via workflow_dispatch).
 # Requires two repository secrets:
-#   ANTHROPIC_API_KEY - https://console.anthropic.com
-#   NOTION_TOKEN      - internal Notion integration token; the integration must
-#                       be given access to the "TJG Site Docs" wiki page.
+#   CLAUDE_CODE_OAUTH_TOKEN - run `claude setup-token` locally while logged in
+#                             with your Claude Pro/Max account and paste the
+#                             result (uses your subscription, not API billing).
+#                             To use API billing instead, swap the input below
+#                             for: anthropic_api_key: secrets.ANTHROPIC_API_KEY
+#   NOTION_TOKEN            - internal Notion integration token; the integration
+#                             must be given access to the "TJG Site Docs" wiki.
 # See docs/NOTION_DOCS.md for full setup instructions and the wiki page map.
 
 on:
@@ -32,7 +36,7 @@ jobs:
       - name: Update wiki from merged changes
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           claude_args: |
             --allowedTools "Bash(git log:*),Bash(git diff:*),Bash(git show:*),Read,Grep,Glob,mcp__notion__*"
             --mcp-config '{"mcpServers":{"notion":{"command":"npx","args":["-y","@notionhq/notion-mcp-server"],"env":{"NOTION_TOKEN":"${{ secrets.NOTION_TOKEN }}"}}}}'
