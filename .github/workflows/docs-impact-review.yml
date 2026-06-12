@@ -1,0 +1,65 @@
+name: Docs impact review
+
+# Inline PR bot: when a PR is opened or updated against main or beta, Claude
+# reviews the diff and posts a single "Docs impact" comment on the PR listing
+# which Notion wiki pages will need updating once the PR merges (or saying
+# there's no docs impact). The actual wiki edit happens after merge via
+# update-docs.yml; this is the early-warning half of the system.
+#
+# Requires the ANTHROPIC_API_KEY repository secret (no Notion access needed —
+# this workflow only reads the repo and comments on the PR).
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+    branches: [main, beta]
+
+concurrency:
+  group: docs-impact-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  docs-impact:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Review docs impact
+        uses: anthropics/claude-code-action@v1
+        env:
+          GH_TOKEN: ${{ github.token }}
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: |
+            --allowedTools "Bash(git log:*),Bash(git diff:*),Bash(git show:*),Bash(gh pr comment:*),Read,Grep,Glob"
+          prompt: |
+            You are the documentation-impact reviewer for this repository. The
+            developer docs live in a Notion wiki; the list of wiki pages and what
+            each covers is in docs/NOTION_DOCS.md — read it first.
+
+            This is PR #${{ github.event.pull_request.number }} targeting
+            ${{ github.base_ref }}. Review the PR diff:
+              git diff origin/${{ github.base_ref }}...HEAD
+
+            Decide which wiki pages (if any) the change makes stale. Things that
+            almost always have docs impact: feature flags, env vars, routes,
+            dependencies, localStorage/cookie keys, CMS/data-source changes,
+            removed features, CSS class renames, third-party service setup.
+            Pure refactors, lockfile churn, and content tweaks usually have none.
+
+            Then post exactly one comment on the PR using:
+              gh pr comment ${{ github.event.pull_request.number }} --edit-last --create-if-none --body "..."
+
+            Comment format:
+            - Title line: "📚 **Docs impact**"
+            - If impact: a short bullet list — affected wiki page name → one line
+              on what needs updating there. End with: "These will be applied to
+              the Notion wiki automatically after merge."
+            - If none: a single line saying no documentation impact.
+            Keep it tight; this is a heads-up, not a review.

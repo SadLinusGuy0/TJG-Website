@@ -23,10 +23,17 @@ callout recording the last commit each branch was documented at.
 
 ## Automated updates
 
-`.github/workflows/update-docs.yml` runs Claude Code after every PR merged into
-`main` or `beta` (and on manual dispatch). It diffs the repo against the last
-documented commit recorded on the wiki home page, updates the stale wiki
-sections via the Notion MCP server, then bumps the recorded commit.
+Three workflows keep the wiki in sync:
+
+- `.github/workflows/docs-impact-review.yml` — **inline PR bot**: posts a
+  "Docs impact" comment on every PR into `main`/`beta`, listing which wiki
+  pages the change will make stale (or confirming there's no impact).
+- `.github/workflows/update-docs.yml` — **after merge**: diffs the repo against
+  the last documented commit recorded on the wiki home page, updates the stale
+  wiki sections via the Notion MCP server, then bumps the recorded commit.
+- `.github/workflows/claude.yml` — **on demand**: mention `@claude` in any PR
+  or issue comment (e.g. "@claude update the Notion docs for this PR now");
+  the bot has Notion access and this page map.
 
 ### One-time setup
 
