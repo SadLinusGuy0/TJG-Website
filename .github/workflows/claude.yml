@@ -9,9 +9,9 @@ name: Claude
 #
 # Requires repository secrets: CLAUDE_CODE_OAUTH_TOKEN (from
 # `claude setup-token`, billed to your Claude subscription), NOTION_TOKEN.
-# Comments are posted as github-actions[bot]. If you install the Claude
-# GitHub App (https://github.com/apps/claude), remove the github_token input
-# below to get a proper Claude identity via the OIDC exchange instead.
+# Auth uses the Claude GitHub App (https://github.com/apps/claude) via OIDC,
+# so replies are posted under the Claude bot identity. If you ever uninstall
+# the app, add `github_token: secrets.GITHUB_TOKEN` back to the action inputs.
 
 on:
   issue_comment:
@@ -46,7 +46,6 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           claude_args: |
             --mcp-config '{"mcpServers":{"notion":{"command":"npx","args":["-y","@notionhq/notion-mcp-server"],"env":{"NOTION_TOKEN":"${{ secrets.NOTION_TOKEN }}"}}}}'
             --allowedTools "Bash(git:*),Bash(gh:*),Bash(npm run lint),Bash(npm test:*),Read,Grep,Glob,Edit,Write,mcp__notion__*"
