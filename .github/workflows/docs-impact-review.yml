@@ -37,6 +37,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Use the workflow's own token instead of the OIDC exchange, which
+          # requires the Claude GitHub App to be installed.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           claude_args: |
             --allowedTools "Bash(git log:*),Bash(git diff:*),Bash(git show:*),Bash(gh pr comment:*),Read,Grep,Glob"
           prompt: |
