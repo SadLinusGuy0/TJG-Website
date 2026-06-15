@@ -35,7 +35,7 @@ export default function WorkPage() {
   return (
     <div className="page">
       <div className="page-body">
-        <Navigation />
+        <Navigation hideMobile />
 
         <div className="main-content">
           <PageHeading title="Work" trailingAction={settingsBtn} barTrailingAction={settingsBtn} />

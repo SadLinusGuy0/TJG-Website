@@ -44,6 +44,27 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'object',
+      fields: [
+        defineField({ name: 'title', title: 'SEO Title', type: 'string' }),
+        defineField({ name: 'description', title: 'SEO Description', type: 'text', rows: 3 }),
+        defineField({ name: 'canonicalUrl', title: 'Canonical URL', type: 'url' }),
+        defineField({
+          name: 'openGraphImage',
+          title: 'Open Graph Image',
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({ name: 'alt', title: 'Alt Text', type: 'string' }),
+          ],
+        }),
+        defineField({ name: 'openGraphImageAlt', title: 'Open Graph Image Alt', type: 'string' }),
+        defineField({ name: 'noIndex', title: 'No Index', type: 'boolean', initialValue: false }),
+      ],
+    }),
+    defineField({
       name: 'categories',
       title: 'Categories',
       type: 'array',

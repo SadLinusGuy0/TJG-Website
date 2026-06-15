@@ -12,7 +12,7 @@ export default function Contact() {
   return (
     <div className="page">
       <div className="page-body">
-        <Navigation />
+        <Navigation hideMobile />
         <div className="main-content" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0 }}>
           <PageHeading
             title="Contact"

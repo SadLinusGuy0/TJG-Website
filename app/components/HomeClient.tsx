@@ -103,7 +103,7 @@ export default function HomeClient({
       </div>
       
       <div className="page-body">
-        <Navigation />
+        <Navigation hideMobile />
         <div className="main-content">
           {/* Hero + Role Cards Layout */}
           <div className="hero-role-wrapper">

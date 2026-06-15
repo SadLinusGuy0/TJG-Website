@@ -5,3 +5,4 @@ node_modules
 
 # Claude Code local worktree sandboxes (not for sharing)
 .claude/worktrees/
+.env*

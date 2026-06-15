@@ -8,7 +8,7 @@ export default function BlogIndex() {
   return (
     <div className="page blog-page">
       <div className="page-body">
-        <Navigation />
+        <Navigation hideMobile />
 
         <Suspense fallback={
           <div className="main-content">

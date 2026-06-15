@@ -8,6 +8,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import ProgressiveBlur from './components/ProgressiveBlur';
 import DiscordPopup from './components/DiscordPopup';
+import Navigation from './components/Navigation';
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://thatjoshguy.me'),
@@ -106,6 +107,7 @@ export default async function RootLayout({
           <BlogFlagProvider blogEnabled={blogEnabledValue}>
             <ProgressiveBlur />
             <ProgressiveBlur position="bottom" />
+            <Navigation hideDesktop />
             {children}
             <DiscordPopup />
           </BlogFlagProvider>

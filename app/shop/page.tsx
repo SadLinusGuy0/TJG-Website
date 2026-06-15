@@ -31,7 +31,7 @@ export default function Shop() {
   return (
     <div className="page">
       <div className="page-body">
-        <Navigation />
+        <Navigation hideMobile />
         <div className="main-content">
           <PageHeading
             title="Shop"

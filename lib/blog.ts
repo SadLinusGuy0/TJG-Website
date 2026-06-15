@@ -23,6 +23,7 @@ export type BlogPost = {
   portableBody?: PortableTextBlock[];
   searchText: string;
   legacySourceUrl?: string;
+  seo?: sanity.BlogSeo;
 };
 
 export type BlogCategory = { id: string; name: string; slug: string };

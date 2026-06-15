@@ -45,6 +45,16 @@ export type SanityImageSource = {
   crop?: { top: number; bottom: number; left: number; right: number };
 } | null;
 
+export type BlogSeo = {
+  title?: string;
+  description?: string;
+  canonicalUrl?: string;
+  openGraphImage?: SanityImageSource;
+  openGraphImageAlt?: string;
+  openGraphImageUrl?: string | null;
+  noIndex?: boolean;
+};
+
 export type SanityPostDoc = {
   _id: string;
   title: string;
@@ -59,6 +69,7 @@ export type SanityPostDoc = {
   contentSource: 'legacyHtml' | 'portableText';
   wordCount: number | null;
   body: PortableTextBlock[] | null;
+  seo?: BlogSeo | null;
 };
 
 export type BlogPost = {
@@ -76,6 +87,7 @@ export type BlogPost = {
   contentSource: 'legacyHtml' | 'portableText';
   portableBody?: PortableTextBlock[];
   searchText: string;
+  seo?: BlogSeo;
 };
 
 export type BlogCategory = { id: string; name: string; slug: string };
@@ -93,6 +105,7 @@ const POST_FIELDS = `
   legacyHtml,
   wordCount,
   body,
+  seo,
   "categories": categories[]->{ _id, title, slug },
   "tags": tags[]->{ _id, title, slug }
 `;
@@ -125,6 +138,10 @@ function mapPost(doc: SanityPostDoc): BlogPost {
     contentSource: source,
     portableBody: source === 'portableText' ? doc.body ?? [] : undefined,
     searchText,
+    seo: doc.seo ? {
+      ...doc.seo,
+      openGraphImageUrl: getSanityImageUrl(doc.seo.openGraphImage),
+    } : undefined,
   };
 }
 

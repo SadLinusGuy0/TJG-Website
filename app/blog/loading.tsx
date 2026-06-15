@@ -15,7 +15,7 @@ export default function BlogLoading() {
       </div>
 
       <div className="page-body">
-        <Navigation />
+        <Navigation hideMobile />
         <div className="main-content">
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
             <LoadingDots />

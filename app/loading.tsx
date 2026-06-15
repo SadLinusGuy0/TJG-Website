@@ -20,7 +20,7 @@ export default function HomeLoading() {
       </div>
 
       <div className="page-body">
-        <Navigation />
+        <Navigation hideMobile />
         <div className="main-content">
           {/* Hero skeleton */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, paddingTop: 32, paddingBottom: 24 }}>

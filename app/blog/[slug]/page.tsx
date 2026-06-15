@@ -72,11 +72,14 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     }
 
     const titleText = stripHtmlAndDecode(content.title?.rendered) || "That Josh Guy";
+    const seoTitle = stripHtmlAndDecode(content.seo?.title) || titleText;
     const excerptText = stripHtmlAndDecode(content.excerpt?.rendered);
     const fallbackDescription = getRenderableText(content);
-    const description = truncate(excerptText || fallbackDescription || "Explore the latest stories from That Josh Guy.");
+    const description = truncate(
+      stripHtmlAndDecode(content.seo?.description) || excerptText || fallbackDescription || "Explore the latest stories from That Josh Guy.",
+    );
 
-    let featuredImageUrl: string | null = content.featuredImageUrl;
+    let featuredImageUrl: string | null = content.seo?.openGraphImageUrl || content.featuredImageUrl;
     if (!featuredImageUrl) {
       try {
         featuredImageUrl = await fetchBlogPostFeaturedImage(slug);
@@ -85,13 +88,14 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
       }
     }
 
-    const imageAlt = getFeaturedImageAltText(content) || titleText;
+    const imageAlt = content.seo?.openGraphImageAlt || getFeaturedImageAltText(content) || seoTitle;
 
     return {
-      title: `${titleText} | That Josh Guy`,
+      title: `${seoTitle} | That Josh Guy`,
       description,
+      robots: content.seo?.noIndex ? { index: false, follow: false } : undefined,
       openGraph: {
-        title: `${titleText} | That Josh Guy`,
+        title: `${seoTitle} | That Josh Guy`,
         description,
         type: "article",
         images: featuredImageUrl
@@ -105,12 +109,12 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
       },
       twitter: {
         card: "summary_large_image",
-        title: `${titleText} | That Josh Guy`,
+        title: `${seoTitle} | That Josh Guy`,
         description,
         images: featuredImageUrl ? [featuredImageUrl] : undefined,
       },
       alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://thatjoshguy.me'}/blog/${slug}`,
+        canonical: content.seo?.canonicalUrl || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://thatjoshguy.me'}/blog/${slug}`,
       },
     };
   } catch (error) {
