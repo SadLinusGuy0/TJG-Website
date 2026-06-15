@@ -3,18 +3,11 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useTheme } from '../../components/ThemeProvider';
-import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
 import Navigation from '../../components/Navigation';
 import PageHeading from '../../components/PageHeading';
 import { Back } from '@thatjoshguy/oneui-icons';
 
 export default function OneUIDesignKitPage() {
-  const { theme } = useTheme();
-  const router = useRouter();
-  const pathname = usePathname();
-
   useEffect(() => {
     // Prevent scroll restoration
     if ('scrollRestoration' in history) {
@@ -37,7 +30,7 @@ export default function OneUIDesignKitPage() {
                 <Back color="var(--primary)" />
               </Link>
             }
-            onBack={() => router.push('/#design-work')}
+            onBack={() => window.location.assign('/#design-work')}
           />
           <div className="panel settings">
             <div className="body-text">

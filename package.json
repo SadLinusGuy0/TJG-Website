@@ -12,9 +12,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@flags-sdk/hypertune": "^0.2.0",
     "@flags-sdk/vercel": "^1.0.1",
-    "@portabletext/to-html": "^5.0.2",
     "@sanity/client": "^7.22.1",
     "@sanity/image-url": "^2.1.1",
     "@sanity/webhook": "^4.0.4",
@@ -24,8 +22,6 @@
     "@vercel/flags-core": "^1.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "flags": "^4.0.1",
-    "hypertune": "^2.7.2",
-    "leaflet": "^1.9.4",
     "lottie-react": "^2.4.1",
     "next": "^16.1.1",
     "react": "^18.2.0",
@@ -38,7 +34,6 @@
     "@testing-library/react": "^14.2.1",
     "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^29.5.12",
-    "@types/leaflet": "^1.9.21",
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
