@@ -140,7 +140,7 @@ function mapPost(doc: SanityPostDoc): BlogPost {
     searchText,
     seo: doc.seo ? {
       ...doc.seo,
-      openGraphImageUrl: getSanityImageUrl(doc.seo.openGraphImage),
+      openGraphImageUrl: getSanityImageUrl(doc.seo.openGraphImage ?? null),
     } : undefined,
   };
 }
