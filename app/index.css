@@ -1683,15 +1683,21 @@ button.media-card:hover {
     box-sizing: border-box;
     overflow: hidden;
     border-radius: var(--br-xl);
-    border: 1px solid rgba(0,0,0,0.1);
-    background: color-mix(in srgb, var(--container-background) 85%, transparent);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.08);
+    background: rgba(232, 234, 237, 0.82);
+    box-shadow:
+      0 4px 24px rgba(0,0,0,0.14),
+      inset 0 1px 0 rgba(255,255,255,0.42);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
   }
 
   html[data-theme="dark"] .mobile-nav-tabs {
     border-color: rgba(255,255,255,0.1);
+    background: rgba(37, 39, 43, 0.82);
+    box-shadow:
+      0 4px 24px rgba(0,0,0,0.34),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
   .mobile-nav-indicator {
@@ -1748,7 +1754,7 @@ button.media-card:hover {
     color: var(--secondary);
     background: transparent;
     text-decoration: none;
-    transition: none;
+    transition: opacity 180ms ease, transform 180ms ease;
     box-sizing: border-box;
     min-width: 0;
     position: relative;
@@ -1768,14 +1774,21 @@ button.media-card:hover {
     background: transparent;
   }
 
-  .mobile-nav-tab:hover:not(.mobile-nav-tab--active) {
+  a.mobile-nav-tab:hover:not(.mobile-nav-tab--active),
+  a.mobile-nav-tab:focus-visible:not(.mobile-nav-tab--active) {
     background: transparent;
-    color: var(--primary);
+    color: var(--secondary);
+    opacity: 0.78;
+    transform: translateY(-1px);
   }
 
-  .mobile-nav-tab:focus,
-  .mobile-nav-tab:focus-visible {
+  .mobile-nav-tab:focus {
     outline: none;
+  }
+
+  .mobile-nav-tab:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--primary) 32%, transparent);
+    outline-offset: -6px;
   }
 
   .mobile-nav-tab svg { width: 24px; height: 24px; flex-shrink: 0; }
@@ -1819,11 +1832,11 @@ button.media-card:hover {
       box-shadow: 0 1px 8px color-mix(in srgb, var(--primary) 8%, transparent);
     }
     36% {
-      transform: scaleX(1.42) scaleY(0.99);
+      transform: scaleX(1.16) scaleY(0.99);
       box-shadow: 0 2px 14px color-mix(in srgb, var(--primary) 12%, transparent);
     }
     58% {
-      transform: scaleX(1.5) scaleY(0.985);
+      transform: scaleX(1.2) scaleY(0.985);
       box-shadow: 0 2px 14px color-mix(in srgb, var(--primary) 12%, transparent);
     }
     82% {
