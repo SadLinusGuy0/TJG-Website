@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { usePathname } from "next/navigation";
 import PageHeading from "../components/PageHeading";
@@ -12,7 +11,6 @@ export default function Contact() {
   return (
     <div className="page">
       <div className="page-body">
-        <Navigation hideMobile />
         <div className="main-content" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0 }}>
           <PageHeading
             title="Contact"

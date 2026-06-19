@@ -3,7 +3,6 @@
 import { useState, useCallback, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import Navigation from "../components/Navigation";
 import AnimatedText from "../components/AnimatedText";
 import { LoadingDots } from "../components/LoadingAnim";
 import Toast from "../components/Toast";
@@ -1221,7 +1220,6 @@ export default function Playground() {
   return (
     <div className="page settings-page">
       <div className="page-body">
-        <Navigation hideMobile={true} />
         <Suspense
           fallback={
             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "400px" }}>

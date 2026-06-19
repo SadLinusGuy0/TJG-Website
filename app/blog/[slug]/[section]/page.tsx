@@ -3,7 +3,6 @@ import { cache, Suspense } from "react";
 import Image from "next/image";
 import { fetchBlogPostBySlug, fetchBlogPostFeaturedImage, type BlogPost } from "../../../../lib/blog";
 import { notFound } from "next/navigation";
-import Navigation from "../../../components/Navigation";
 import Link from "next/link";
 import LightboxClient from "../../../components/LightboxClient";
 import { LoadingDots } from "../../../components/LoadingAnim";
@@ -56,7 +55,6 @@ export default async function SectionPage(props: PageProps) {
   return (
     <div className="page">
       <div className="page-body">
-        <Navigation hideMobile={true} />
         <div className="main-content">
           <Suspense fallback={
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>

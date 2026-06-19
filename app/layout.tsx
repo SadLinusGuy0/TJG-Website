@@ -107,7 +107,7 @@ export default async function RootLayout({
           <BlogFlagProvider blogEnabled={blogEnabledValue}>
             <ProgressiveBlur />
             <ProgressiveBlur position="bottom" />
-            <Navigation hideDesktop />
+            <Navigation />
             {children}
             <DiscordPopup />
           </BlogFlagProvider>

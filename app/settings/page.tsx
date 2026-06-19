@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import Navigation from '../components/Navigation';
 import { LoadingDots } from '../components/LoadingAnim';
 import PageHeading from '../components/PageHeading';
 import { Back } from '@thatjoshguy/oneui-icons';
@@ -398,7 +397,6 @@ export default function Settings() {
   return (
     <div className="page settings-page">
       <div className="page-body">
-        <Navigation hideMobile={true} />
         <Suspense fallback={
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
             <LoadingDots />

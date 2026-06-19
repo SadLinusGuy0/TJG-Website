@@ -4,7 +4,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, createContext, useContext, useLayoutEffect, useMemo, useRef } from 'react';
 import type { CSSProperties, MouseEvent, ReactNode, Ref } from 'react';
 import { useBlogEnabled } from './BlogFlagProvider';
-import { useCursorFollow } from './useCursorFollow';
 import { HomeIcon, ShopIcon, BlogIcon, ContactIcon } from './NavIcons';
 import { Drawer, Settings } from '@thatjoshguy/oneui-icons';
 
@@ -64,19 +63,32 @@ function MobileNavTab({
   );
 }
 
-function DesktopNavButton({ href, isSelected, children }: { href: string; isSelected: boolean; children: ReactNode; }) {
+function DesktopNavButton({
+  href,
+  isSelected,
+  indicatorManaged = false,
+  onClick,
+  tabRef,
+  children
+}: {
+  href: string;
+  isSelected: boolean;
+  indicatorManaged?: boolean;
+  onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
+  tabRef?: (element: HTMLAnchorElement | null) => void;
+  children: ReactNode;
+}) {
   const { collapsed } = useNavCollapse();
-  const { ref, style, handlers } = useCursorFollow<HTMLAnchorElement>();
 
   return (
     <Link
-      ref={ref}
+      ref={tabRef}
       href={href}
-      className={isSelected ? 'nav-icon-container-selected' : 'nav-icon-container'}
-      {...handlers}
+      prefetch
+      className={`${isSelected ? 'nav-icon-container-selected' : 'nav-icon-container'}${indicatorManaged ? ' desktop-nav-core-tab' : ''}`}
+      onClick={onClick}
     >
       <div style={{
-        ...style,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -98,6 +110,11 @@ export default function NavigationClient({
   const pathname = usePathname();
   const router = useRouter();
   const serverBlogEnabled = useBlogEnabled();
+  const desktopNavRef = useRef<HTMLElement | null>(null);
+  const desktopNavItemRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+  const previousDesktopNavIndexRef = useRef<number | null>(null);
+  const previousDesktopNavCountRef = useRef<number | null>(null);
+  const previousDesktopIndicatorLayoutRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null);
   const mobileNavRailRef = useRef<HTMLDivElement | null>(null);
   const mobileNavTabRefs = useRef<Array<HTMLAnchorElement | null>>([]);
   const previousMobileNavIndexRef = useRef<number | null>(null);
@@ -114,6 +131,20 @@ export default function NavigationClient({
   const [mobileIndicatorLayout, setMobileIndicatorLayout] = useState({
     left: 0,
     width: 0,
+  });
+  const [desktopIndicatorState, setDesktopIndicatorState] = useState({
+    animationKey: 0,
+    direction: 1,
+    hasMounted: false,
+    instant: true,
+  });
+  const [desktopNavIsResizing, setDesktopNavIsResizing] = useState(false);
+  const [optimisticDesktopNavIndex, setOptimisticDesktopNavIndex] = useState<number | null>(null);
+  const [desktopIndicatorLayout, setDesktopIndicatorLayout] = useState({
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0,
   });
   
   // Use Vercel Flags value from context (layout), fall back to static config
@@ -214,8 +245,174 @@ export default function NavigationClient({
   }, []);
 
   useEffect(() => {
+    setOptimisticDesktopNavIndex(null);
     setOptimisticMobileNavIndex(null);
   }, [pathname]);
+
+  const desktopNavItems = useMemo(() => [
+    {
+      href: '/',
+      label: 'Home',
+      matchesPath: pathname === '/',
+      icon: (selected: boolean) => <HomeIcon selected={selected} />,
+    },
+    {
+      href: '/shop',
+      label: 'Shop',
+      matchesPath: pathname === '/shop',
+      icon: (selected: boolean) => <ShopIcon selected={selected} />,
+    },
+    ...(showBlog ? [{
+      href: '/blog',
+      label: 'Blog',
+      matchesPath: pathname === '/blog' || pathname?.startsWith('/blog/'),
+      icon: (selected: boolean) => <BlogIcon selected={selected} />,
+    }] : []),
+    {
+      href: '/contact',
+      label: 'Contact',
+      matchesPath: pathname === '/contact',
+      icon: (selected: boolean) => <ContactIcon selected={selected} />,
+    },
+  ], [pathname, showBlog]);
+  const activeDesktopNavIndex = desktopNavItems.findIndex((item) => item.matchesPath);
+  const displayedDesktopNavIndex = optimisticDesktopNavIndex ?? activeDesktopNavIndex;
+  const desktopNavCount = desktopNavItems.length;
+  desktopNavItemRefs.current.length = desktopNavCount;
+
+  useEffect(() => {
+    if (!hideDesktop && displayedDesktopNavIndex >= 0) {
+      return;
+    }
+
+    previousDesktopNavIndexRef.current = null;
+    previousDesktopNavCountRef.current = null;
+    previousDesktopIndicatorLayoutRef.current = null;
+    desktopNavItemRefs.current = [];
+    setOptimisticDesktopNavIndex(null);
+    setDesktopIndicatorState((state) => ({
+      ...state,
+      hasMounted: false,
+      instant: true,
+    }));
+  }, [displayedDesktopNavIndex, hideDesktop]);
+
+  useLayoutEffect(() => {
+    if (hideDesktop || displayedDesktopNavIndex < 0) {
+      return;
+    }
+
+    const measureTabAtIndex = (index: number) => {
+      const nav = desktopNavRef.current;
+      const activeTab = desktopNavItemRefs.current[index];
+
+      if (!nav || !activeTab || nav.offsetWidth === 0 || activeTab.offsetWidth === 0) {
+        return null;
+      }
+
+      let left = activeTab.offsetLeft;
+      let top = activeTab.offsetTop;
+      let offsetParent = activeTab.offsetParent as HTMLElement | null;
+
+      while (offsetParent && offsetParent !== nav) {
+        left += offsetParent.offsetLeft;
+        top += offsetParent.offsetTop;
+        offsetParent = offsetParent.offsetParent as HTMLElement | null;
+      }
+
+      return {
+        left,
+        top,
+        width: activeTab.offsetWidth,
+        height: activeTab.offsetHeight,
+      };
+    };
+
+    const updateDesktopIndicatorLayout = () => {
+      const nextLayout = measureTabAtIndex(displayedDesktopNavIndex);
+
+      if (!nextLayout) {
+        return;
+      }
+
+      setDesktopIndicatorLayout((layout) => {
+        if (
+          layout.left === nextLayout.left &&
+          layout.top === nextLayout.top &&
+          layout.width === nextLayout.width &&
+          layout.height === nextLayout.height
+        ) {
+          return layout;
+        }
+        return nextLayout;
+      });
+      previousDesktopIndicatorLayoutRef.current = nextLayout;
+    };
+
+    const nextLayout = measureTabAtIndex(displayedDesktopNavIndex);
+
+    if (!nextLayout) {
+      return;
+    }
+
+    const previousIndex = previousDesktopNavIndexRef.current;
+    const previousCount = previousDesktopNavCountRef.current;
+    const previousLayout = previousDesktopIndicatorLayoutRef.current;
+    const countChanged = previousCount !== null && previousCount !== desktopNavCount;
+    const canAnimate = Boolean(
+      previousLayout &&
+      previousIndex !== null &&
+      previousIndex >= 0 &&
+      previousIndex !== displayedDesktopNavIndex &&
+      !countChanged
+    );
+
+    setDesktopIndicatorLayout(nextLayout);
+
+    if (canAnimate && previousIndex !== null) {
+      const direction = displayedDesktopNavIndex > previousIndex ? 1 : -1;
+      setDesktopIndicatorState((state) => ({
+        animationKey: state.animationKey + 1,
+        direction,
+        hasMounted: true,
+        instant: false,
+      }));
+    } else {
+      const sameMeasuredTarget = Boolean(
+        previousLayout &&
+        previousIndex === displayedDesktopNavIndex &&
+        previousLayout.left === nextLayout.left &&
+        previousLayout.top === nextLayout.top &&
+        previousLayout.width === nextLayout.width &&
+        previousLayout.height === nextLayout.height
+      );
+
+      setDesktopIndicatorState((state) => ({
+        ...state,
+        hasMounted: true,
+        instant: state.hasMounted && sameMeasuredTarget ? state.instant : true,
+      }));
+    }
+
+    previousDesktopNavIndexRef.current = displayedDesktopNavIndex;
+    previousDesktopNavCountRef.current = desktopNavCount;
+    previousDesktopIndicatorLayoutRef.current = nextLayout;
+
+    const resizeObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(updateDesktopIndicatorLayout)
+      : null;
+
+    if (resizeObserver && desktopNavRef.current) {
+      resizeObserver.observe(desktopNavRef.current);
+    }
+
+    window.addEventListener('resize', updateDesktopIndicatorLayout);
+
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', updateDesktopIndicatorLayout);
+    };
+  }, [desktopNavCount, desktopNavItems, displayedDesktopNavIndex, hideDesktop]);
 
   const mobileNavItems = useMemo(() => [
     {
@@ -459,6 +656,26 @@ export default function NavigationClient({
     };
   }, [activeMobileNavIndex, displayedMobileNavIndex, mobileNavCount, mobileNavItems, shouldHideMobileNav]);
 
+  const handleDesktopNavClick = (event: MouseEvent<HTMLAnchorElement>, index: number) => {
+    if (
+      (typeof event.button === 'number' && event.button !== 0) ||
+      event.metaKey ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      index === displayedDesktopNavIndex
+    ) {
+      return;
+    }
+
+    setOptimisticDesktopNavIndex(index);
+  };
+
+  const toggleDesktopNav = () => {
+    setDesktopNavIsResizing(true);
+    setCollapsed((current) => !current);
+  };
+
   const handleMobileNavClick = (event: MouseEvent<HTMLAnchorElement>, index: number, href: string) => {
     if (
       (typeof event.button === 'number' && event.button !== 0) ||
@@ -505,46 +722,81 @@ export default function NavigationClient({
     '--mobile-nav-direction': mobileIndicatorState.direction,
   } as CSSProperties;
 
+  const desktopNavIndicatorStyle = {
+    transform: `translate3d(${desktopIndicatorLayout.left}px, ${desktopIndicatorLayout.top}px, 0)`,
+    width: desktopIndicatorLayout.width,
+    height: desktopIndicatorLayout.height,
+    '--desktop-nav-direction': desktopIndicatorState.direction,
+  } as CSSProperties;
+
   return (
     <NavCollapseContext.Provider value={{ collapsed, setCollapsed }}>
       {!hideDesktop && (
-        <nav className={`tab-container desktop-nav${collapsed ? ' collapsed' : ''}`}
+        <nav
+          ref={desktopNavRef}
+          className={`tab-container desktop-nav${collapsed ? ' collapsed' : ''}${desktopNavIsResizing ? ' desktop-nav--resizing' : ''}`}
           style={{
             width: collapsed ? 72 : '32%',
             minWidth: collapsed ? 72 : 200,
             maxWidth: collapsed ? 72 : 360,
-            transition: 'width 0.2s cubic-bezier(0.4,0,0.2,1)'
-          }}>
+          }}
+          onTransitionEnd={(event) => {
+            if (event.currentTarget === event.target && event.propertyName === 'width') {
+              setDesktopNavIsResizing(false);
+            }
+          }}
+          onTransitionCancel={(event) => {
+            if (event.currentTarget === event.target && event.propertyName === 'width') {
+              setDesktopNavIsResizing(false);
+            }
+          }}
+        >
+          <div
+            className={`desktop-nav-indicator${displayedDesktopNavIndex < 0 ? ' desktop-nav-indicator--hidden' : ''}${displayedDesktopNavIndex < 0 || desktopIndicatorState.instant || !desktopIndicatorState.hasMounted ? ' desktop-nav-indicator--instant' : ' desktop-nav-indicator--animate'}`}
+            data-direction={desktopIndicatorState.direction}
+            style={desktopNavIndicatorStyle}
+            aria-hidden="true"
+          >
+            <div
+              key={desktopIndicatorState.animationKey}
+              className={`desktop-nav-indicator-pill${!desktopIndicatorState.instant && desktopIndicatorState.animationKey > 0 ? ' desktop-nav-indicator-pill--animate' : ''}`}
+            />
+          </div>
           <div className="icon-container">
             <div
               className={`sidebar-toggle nav-icon-container ${collapsed ? 'sidebar-toggle-collapsed' : 'sidebar-toggle-expanded'}`}
               tabIndex={0}
               role="button"
               aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'}
-              onClick={() => setCollapsed((c) => !c)}
-              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setCollapsed(c => !c); }}
+              onClick={toggleDesktopNav}
+              onKeyDown={event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  toggleDesktopNav();
+                }
+              }}
             >
               <Drawer size={24} color="var(--primary)" />
             </div>
-            
-            <DesktopNavButton href="/" isSelected={pathname === '/'}>
-              <HomeIcon selected={pathname === '/'} />
-              <div className={pathname === '/' ? 'nav-label-selected' : 'nav-label'}>Home</div>
-            </DesktopNavButton>
-            <DesktopNavButton href="/shop" isSelected={pathname === '/shop'}>
-              <ShopIcon selected={pathname === '/shop'} />
-              <div className={pathname === '/shop' ? 'nav-label-selected' : 'nav-label'}>Shop</div>
-            </DesktopNavButton>
-            {showBlog && (
-              <DesktopNavButton href="/blog" isSelected={pathname === '/blog' || pathname?.startsWith('/blog/')}>
-                <BlogIcon selected={pathname === '/blog' || pathname?.startsWith('/blog/')} />
-                <div className={pathname === '/blog' ? 'nav-label-selected' : 'nav-label'}>Blog</div>
-              </DesktopNavButton>
-            )}
-            <DesktopNavButton href="/contact" isSelected={pathname === '/contact'}>
-              <ContactIcon selected={pathname === '/contact'} />
-              <div className={pathname === '/contact' ? 'nav-label-selected' : 'nav-label'}>Contact</div>
-            </DesktopNavButton>
+
+            {desktopNavItems.map((item, index) => {
+              const isSelected = index === displayedDesktopNavIndex;
+              return (
+                <DesktopNavButton
+                  key={item.href}
+                  href={item.href}
+                  isSelected={isSelected}
+                  indicatorManaged
+                  tabRef={(element) => {
+                    desktopNavItemRefs.current[index] = element;
+                  }}
+                  onClick={(event) => handleDesktopNavClick(event, index)}
+                >
+                  {item.icon(isSelected)}
+                  <div className={isSelected ? 'nav-label-selected' : 'nav-label'}>{item.label}</div>
+                </DesktopNavButton>
+              );
+            })}
           </div>
           <div className="nav-footer">
             <DesktopNavButton href="/settings" isSelected={pathname === '/settings' || pathname?.startsWith('/settings/')}>

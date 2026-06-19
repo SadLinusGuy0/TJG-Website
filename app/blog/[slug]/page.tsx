@@ -3,7 +3,6 @@ import { cache, Suspense } from "react";
 import Image from "next/image";
 import { fetchAllBlogPosts, fetchBlogPostBySlug, fetchBlogPostFeaturedImage, type BlogPost } from "../../../lib/blog";
 import { notFound } from "next/navigation";
-import Navigation from "../../components/Navigation";
 import LightboxClient from "../../components/LightboxClient";
 import { LoadingDots } from "../../components/LoadingAnim";
 import Link from "next/link";
@@ -132,8 +131,6 @@ export default async function BlogPost(props: PageProps) {
   return (
     <div className="page">
       <div className="page-body">
-        {/* Navigation renders immediately — client component, no server data */}
-        <Navigation hideMobile={true} />
         <div className="main-content">
           <Suspense fallback={
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>

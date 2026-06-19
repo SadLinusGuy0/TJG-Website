@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import { useRouter } from "next/navigation";
-import Navigation from "../../components/Navigation";
 import { LoadingDots } from "../../components/LoadingAnim";
 import PageHeading from "../../components/PageHeading";
 import { Back } from "@thatjoshguy/oneui-icons";
@@ -497,7 +496,6 @@ export default function FeatureFlagsPage() {
   return (
     <div className="page settings-page">
       <div className="page-body">
-        <Navigation hideMobile={true} />
         <Suspense fallback={
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
             <LoadingDots />

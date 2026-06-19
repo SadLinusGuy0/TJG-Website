@@ -1990,6 +1990,105 @@ transition: none;
 .desktop-nav .nav-icon-container,
 .desktop-nav .nav-icon-container-selected {
 position: relative;
+z-index: 1;
+}
+
+.desktop-nav {
+--desktop-nav-animation-duration: 520ms;
+isolation: isolate;
+}
+
+.desktop-nav .icon-container,
+.desktop-nav .nav-footer {
+position: relative;
+z-index: 1;
+}
+
+.desktop-nav-core-tab.nav-icon-container-selected {
+background: transparent;
+}
+
+.desktop-nav-indicator {
+position: absolute;
+top: 0;
+left: 0;
+width: 0;
+height: 0;
+opacity: 1;
+pointer-events: none;
+z-index: 0;
+transition:
+  transform var(--desktop-nav-animation-duration) cubic-bezier(0.4, 0, 0.2, 1),
+  width var(--desktop-nav-animation-duration) cubic-bezier(0.4, 0, 0.2, 1),
+  height var(--desktop-nav-animation-duration) cubic-bezier(0.4, 0, 0.2, 1),
+  opacity 160ms ease;
+will-change: transform, width, height;
+}
+
+.desktop-nav-indicator--instant {
+transition-duration: 0ms;
+}
+
+.desktop-nav-indicator--hidden {
+opacity: 0;
+}
+
+.desktop-nav--resizing .desktop-nav-indicator {
+transition: none;
+}
+
+.desktop-nav--resizing .desktop-nav-indicator-pill {
+animation: none !important;
+}
+
+.desktop-nav-indicator-pill {
+width: 100%;
+height: 100%;
+border-radius: var(--br-sm);
+background: var(--selected);
+box-sizing: border-box;
+}
+
+.desktop-nav-indicator[data-direction="1"] .desktop-nav-indicator-pill {
+transform-origin: center top;
+}
+
+.desktop-nav-indicator[data-direction="-1"] .desktop-nav-indicator-pill {
+transform-origin: center bottom;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .desktop-nav-indicator-pill--animate {
+    animation: desktop-nav-pill-glide-stretch var(--desktop-nav-animation-duration) cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desktop-nav-indicator {
+    transition: none;
+  }
+
+  .desktop-nav-indicator-pill--animate {
+    animation: none;
+  }
+}
+
+@keyframes desktop-nav-pill-glide-stretch {
+  0% {
+    transform: scaleY(1);
+  }
+  36% {
+    transform: scaleY(1.14);
+  }
+  58% {
+    transform: scaleY(1.2);
+  }
+  82% {
+    transform: scaleY(1.05);
+  }
+  100% {
+    transform: scaleY(1);
+  }
 }
 
 

@@ -1,5 +1,4 @@
 "use client";
-import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,7 +30,6 @@ export default function Shop() {
   return (
     <div className="page">
       <div className="page-body">
-        <Navigation hideMobile />
         <div className="main-content">
           <PageHeading
             title="Shop"

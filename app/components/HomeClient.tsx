@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import Navigation from "./Navigation";
 import AnimatedText from "./AnimatedText";
 import TopAppBarIcon from "./TopAppBarIcon";
 import { Settings } from '@thatjoshguy/oneui-icons';
@@ -103,7 +102,6 @@ export default function HomeClient({
       </div>
       
       <div className="page-body">
-        <Navigation hideMobile />
         <div className="main-content">
           {/* Hero + Role Cards Layout */}
           <div className="hero-role-wrapper">

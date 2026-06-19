@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { useTheme } from '../components/ThemeProvider';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
-import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import PageHeading from '../components/PageHeading';
 import { Settings } from '@thatjoshguy/oneui-icons';
@@ -35,7 +34,6 @@ export default function WorkPage() {
   return (
     <div className="page">
       <div className="page-body">
-        <Navigation hideMobile />
 
         <div className="main-content">
           <PageHeading title="Work" trailingAction={settingsBtn} barTrailingAction={settingsBtn} />

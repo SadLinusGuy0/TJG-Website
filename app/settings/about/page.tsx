@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import "../../globals.css";
-import Navigation from "../../components/Navigation";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter } from "next/navigation";
@@ -313,7 +312,6 @@ export default function Home() {
   return (
     <div className="page settings-page">
       <div className="page-body">
-        <Navigation hideMobile={true} />
         <Suspense fallback={
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
             <LoadingDots />

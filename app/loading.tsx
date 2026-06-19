@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Navigation from "./components/Navigation";
 import { LoadingDots } from "./components/LoadingAnim";
 
 export default function HomeLoading() {
@@ -20,7 +19,6 @@ export default function HomeLoading() {
       </div>
 
       <div className="page-body">
-        <Navigation hideMobile />
         <div className="main-content">
           {/* Hero skeleton */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, paddingTop: 32, paddingBottom: 24 }}>
