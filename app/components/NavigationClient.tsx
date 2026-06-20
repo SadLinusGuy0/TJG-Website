@@ -673,6 +673,10 @@ export default function NavigationClient({
 
   const toggleDesktopNav = () => {
     setDesktopNavIsResizing(true);
+    setDesktopIndicatorState((state) => ({
+      ...state,
+      instant: true,
+    }));
     setCollapsed((current) => !current);
   };
 
