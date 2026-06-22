@@ -2202,7 +2202,7 @@ top: 0;
 bottom: 0;
 }
 
-@media (min-width: 901px) {
+@media (min-width: 700px) {
   .progressive-blur-overlay--bottom {
     height: 48px;
   }
@@ -2214,7 +2214,7 @@ position: absolute;
 inset: 0;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 699px) {
 .progressive-blur-overlay {
   height: 68px;
 }

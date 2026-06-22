@@ -34,7 +34,7 @@ export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurPro
   const { blurEnabled, hydrated } = useTheme();
   const pathname = usePathname();
   const [isDesktop, setIsDesktop] = useState(
-    typeof window !== 'undefined' ? window.innerWidth > 900 : true
+    typeof window !== 'undefined' ? window.innerWidth >= 700 : true
   );
   const [topOpacity, setTopOpacity] = useState(0);
 
@@ -43,7 +43,7 @@ export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurPro
   useEffect(() => {
     if (position !== 'bottom') return;
     function handleResize() {
-      setIsDesktop(window.innerWidth > 900);
+      setIsDesktop(window.innerWidth >= 700);
     }
     window.addEventListener('resize', handleResize);
     handleResize();
