@@ -2,7 +2,14 @@
 import Link from "next/link";
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, createContext, useContext, useLayoutEffect, useMemo, useRef } from 'react';
-import type { CSSProperties, MouseEvent, ReactNode, Ref } from 'react';
+import type {
+  CSSProperties,
+  KeyboardEvent,
+  MouseEvent,
+  PointerEvent as ReactPointerEvent,
+  ReactNode,
+  Ref,
+} from 'react';
 import { useBlogEnabled } from './BlogFlagProvider';
 import { HomeIcon, ShopIcon, BlogIcon, ContactIcon } from './NavIcons';
 import { Drawer, Settings } from '@thatjoshguy/oneui-icons';
@@ -23,6 +30,10 @@ interface NavigationClientProps {
 const MOBILE_NAV_TRANSITION_KEY = 'mobile-nav-transition';
 const MOBILE_NAV_ANIMATION_MS = 560;
 const MOBILE_NAV_TRANSITION_TTL = 1500;
+const SIDEBAR_WIDTH_STORAGE_KEY = 'tjg-website-sidebar-expanded-width';
+const SIDEBAR_MIN_EXPANDED_WIDTH = 160;
+const SIDEBAR_MAX_EXPANDED_WIDTH = 360;
+const SIDEBAR_CONTENT_GUTTER = 18;
 
 type PendingMobileNavTransition = {
   fromHref: string;
@@ -78,8 +89,6 @@ function DesktopNavButton({
   tabRef?: (element: HTMLAnchorElement | null) => void;
   children: ReactNode;
 }) {
-  const { collapsed } = useNavCollapse();
-
   return (
     <Link
       ref={tabRef}
@@ -88,14 +97,7 @@ function DesktopNavButton({
       className={`${isSelected ? 'nav-icon-container-selected' : 'nav-icon-container'}${indicatorManaged ? ' desktop-nav-core-tab' : ''}`}
       onClick={onClick}
     >
-      <div style={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: collapsed ? 'center' : 'flex-start',
-        gap: collapsed ? '0' : '12px',
-        width: collapsed ? 'auto' : '100%'
-      }}>
+      <div className="desktop-nav-content">
         {children}
       </div>
     </Link>
@@ -115,6 +117,11 @@ export default function NavigationClient({
   const previousDesktopNavIndexRef = useRef<number | null>(null);
   const previousDesktopNavCountRef = useRef<number | null>(null);
   const previousDesktopIndicatorLayoutRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null);
+  const sidebarResizePointerIdRef = useRef<number | null>(null);
+  const sidebarResizeBoundsRef = useRef({
+    min: SIDEBAR_MIN_EXPANDED_WIDTH,
+    max: SIDEBAR_MAX_EXPANDED_WIDTH,
+  });
   const mobileNavRailRef = useRef<HTMLDivElement | null>(null);
   const mobileNavTabRefs = useRef<Array<HTMLAnchorElement | null>>([]);
   const previousMobileNavIndexRef = useRef<number | null>(null);
@@ -139,6 +146,7 @@ export default function NavigationClient({
     instant: true,
   });
   const [desktopNavIsResizing, setDesktopNavIsResizing] = useState(false);
+  const [desktopNavIsDragging, setDesktopNavIsDragging] = useState(false);
   const [optimisticDesktopNavIndex, setOptimisticDesktopNavIndex] = useState<number | null>(null);
   const [desktopIndicatorLayout, setDesktopIndicatorLayout] = useState({
     left: 0,
@@ -155,6 +163,14 @@ export default function NavigationClient({
       return localStorage.getItem('sidebar-collapsed') === 'true';
     }
     return false;
+  });
+  const [expandedSidebarWidth, setExpandedSidebarWidth] = useState<number | null>(() => {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+
+    const storedWidth = Number.parseFloat(localStorage.getItem(SIDEBAR_WIDTH_STORAGE_KEY) ?? '');
+    return Number.isFinite(storedWidth) ? storedWidth : null;
   });
   const [showBlog, setShowBlog] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -212,7 +228,7 @@ export default function NavigationClient({
     };
   }, [propShowBlog, defaultEnabled]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (hideDesktop) {
       return;
     }
@@ -227,20 +243,43 @@ export default function NavigationClient({
       return;
     }
 
-    if (typeof document !== 'undefined') {
-      if (collapsed) {
-        document.body.classList.add('nav-collapsed');
-      } else {
-        document.body.classList.remove('nav-collapsed');
-      }
-    }
+    document.body.classList.toggle('nav-collapsed', collapsed);
+
+    return () => document.body.classList.remove('nav-collapsed');
   }, [collapsed, hideDesktop]);
+
+  useLayoutEffect(() => {
+    if (hideDesktop) {
+      return;
+    }
+
+    if (expandedSidebarWidth === null) {
+      document.body.style.removeProperty('--sidebar-width');
+      document.body.style.removeProperty('--sidebar-content-offset');
+      document.body.classList.remove('sidebar-custom-width');
+    } else {
+      document.body.style.setProperty('--sidebar-width', `${expandedSidebarWidth}px`);
+      document.body.style.setProperty(
+        '--sidebar-content-offset',
+        `${expandedSidebarWidth + SIDEBAR_CONTENT_GUTTER}px`,
+      );
+      document.body.classList.add('sidebar-custom-width');
+    }
+
+    return () => {
+      document.body.style.removeProperty('--sidebar-width');
+      document.body.style.removeProperty('--sidebar-content-offset');
+      document.body.classList.remove('sidebar-custom-width');
+    };
+  }, [expandedSidebarWidth, hideDesktop]);
 
   useEffect(() => {
     return () => {
       if (mobileNavigationFrameRef.current !== null) {
         cancelAnimationFrame(mobileNavigationFrameRef.current);
       }
+      document.body.style.removeProperty('cursor');
+      document.body.style.removeProperty('user-select');
     };
   }, []);
 
@@ -443,13 +482,12 @@ export default function NavigationClient({
   const activeMobileNavIndex = mobileNavItems.findIndex((item) => item.matchesPath);
   const displayedMobileNavIndex = optimisticMobileNavIndex ?? activeMobileNavIndex;
   const mobileNavCount = mobileNavItems.length;
-  const shouldHideMobileNav = hideMobile || Boolean(
+  const shouldHideMobileNav = hideMobile || pathname?.startsWith('/blog/') || Boolean(
     hideDesktop && (
       pathname?.startsWith('/settings') ||
       pathname === '/playground' ||
       pathname?.startsWith('/playground/') ||
-      pathname?.startsWith('/work/') ||
-      pathname?.startsWith('/blog/')
+      pathname?.startsWith('/work/')
     )
   );
   mobileNavTabRefs.current.length = mobileNavCount;
@@ -680,6 +718,119 @@ export default function NavigationClient({
     setCollapsed((current) => !current);
   };
 
+  const getSidebarResizeBounds = () => {
+    const nav = desktopNavRef.current;
+    if (!nav) {
+      return sidebarResizeBoundsRef.current;
+    }
+
+    const requiredWidths = Array.from(nav.querySelectorAll<HTMLElement>('.desktop-nav-content'))
+      .map((content) => {
+        const label = content.querySelector<HTMLElement>('.nav-label, .nav-label-selected');
+        const icon = content.querySelector<SVGElement>('svg');
+        const control = content.closest<HTMLElement>('a, button, [role="button"]');
+        const section = content.closest<HTMLElement>('.icon-container, .nav-footer');
+        if (!label || !icon || !control || !section) {
+          return 0;
+        }
+
+        const contentStyles = getComputedStyle(content);
+        const controlStyles = getComputedStyle(control);
+        const sectionStyles = getComputedStyle(section);
+        const gap = Number.parseFloat(contentStyles.columnGap || contentStyles.gap) || 0;
+        const horizontalPadding = [
+          controlStyles.paddingLeft,
+          controlStyles.paddingRight,
+          sectionStyles.paddingLeft,
+          sectionStyles.paddingRight,
+        ].reduce((total, value) => total + (Number.parseFloat(value) || 0), 0);
+
+        return icon.getBoundingClientRect().width + gap + label.scrollWidth + horizontalPadding;
+      });
+    const measuredMinimum = Math.ceil(Math.max(0, ...requiredWidths) + 4);
+    const min = Math.min(
+      SIDEBAR_MAX_EXPANDED_WIDTH,
+      Math.max(SIDEBAR_MIN_EXPANDED_WIDTH, measuredMinimum),
+    );
+    const bounds = { min, max: Math.max(min, SIDEBAR_MAX_EXPANDED_WIDTH) };
+    sidebarResizeBoundsRef.current = bounds;
+    return bounds;
+  };
+
+  const resizeSidebarTo = (requestedWidth: number) => {
+    const { min, max } = sidebarResizeBoundsRef.current;
+    const nextWidth = Math.min(max, Math.max(min, Math.round(requestedWidth)));
+    setExpandedSidebarWidth(nextWidth);
+    localStorage.setItem(SIDEBAR_WIDTH_STORAGE_KEY, String(nextWidth));
+  };
+
+  const handleSidebarResizePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (collapsed || event.button !== 0) {
+      return;
+    }
+
+    getSidebarResizeBounds();
+    sidebarResizePointerIdRef.current = event.pointerId;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    setDesktopNavIsResizing(true);
+    setDesktopNavIsDragging(true);
+    event.preventDefault();
+  };
+
+  const handleSidebarResizePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (sidebarResizePointerIdRef.current !== event.pointerId) {
+      return;
+    }
+
+    const nav = desktopNavRef.current;
+    if (!nav) {
+      return;
+    }
+
+    resizeSidebarTo(event.clientX - nav.getBoundingClientRect().left);
+  };
+
+  const finishSidebarResize = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (sidebarResizePointerIdRef.current !== event.pointerId) {
+      return;
+    }
+
+    sidebarResizePointerIdRef.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    document.body.style.removeProperty('cursor');
+    document.body.style.removeProperty('user-select');
+    setDesktopNavIsResizing(false);
+    setDesktopNavIsDragging(false);
+  };
+
+  const handleSidebarResizeKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (collapsed || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
+      return;
+    }
+
+    const bounds = getSidebarResizeBounds();
+    const currentWidth = expandedSidebarWidth
+      ?? desktopNavRef.current?.getBoundingClientRect().width
+      ?? bounds.max;
+    const nextWidth = event.key === 'Home'
+      ? bounds.min
+      : event.key === 'End'
+        ? bounds.max
+        : currentWidth + (event.key === 'ArrowLeft' ? -8 : 8);
+
+    resizeSidebarTo(nextWidth);
+    event.preventDefault();
+  };
+
+  const resetSidebarWidth = () => {
+    setExpandedSidebarWidth(null);
+    localStorage.removeItem(SIDEBAR_WIDTH_STORAGE_KEY);
+  };
+
   const handleMobileNavClick = (event: MouseEvent<HTMLAnchorElement>, index: number, href: string) => {
     if (
       (typeof event.button === 'number' && event.button !== 0) ||
@@ -738,12 +889,7 @@ export default function NavigationClient({
       {!hideDesktop && (
         <nav
           ref={desktopNavRef}
-          className={`tab-container desktop-nav${collapsed ? ' collapsed' : ''}${desktopNavIsResizing ? ' desktop-nav--resizing' : ''}`}
-          style={{
-            width: collapsed ? 72 : '32%',
-            minWidth: collapsed ? 72 : 200,
-            maxWidth: collapsed ? 72 : 360,
-          }}
+          className={`tab-container desktop-nav${collapsed ? ' collapsed' : ''}${desktopNavIsResizing ? ' desktop-nav--resizing' : ''}${desktopNavIsDragging ? ' desktop-nav--dragging' : ''}`}
           onTransitionEnd={(event) => {
             if (event.currentTarget === event.target && event.propertyName === 'width') {
               setDesktopNavIsResizing(false);
@@ -808,6 +954,25 @@ export default function NavigationClient({
               <div className={pathname === '/settings' || pathname?.startsWith('/settings/') ? 'nav-label-selected' : 'nav-label'} style={{ color: 'var(--primary)' }}>Settings</div>
             </DesktopNavButton>
           </div>
+          {!collapsed && (
+            <div
+              className="desktop-nav-resize-handle"
+              role="separator"
+              aria-label="Resize navigation"
+              aria-orientation="vertical"
+              aria-valuemin={SIDEBAR_MIN_EXPANDED_WIDTH}
+              aria-valuemax={SIDEBAR_MAX_EXPANDED_WIDTH}
+              aria-valuenow={Math.round(expandedSidebarWidth ?? SIDEBAR_MAX_EXPANDED_WIDTH)}
+              tabIndex={0}
+              title="Drag to resize navigation. Double-click to reset."
+              onPointerDown={handleSidebarResizePointerDown}
+              onPointerMove={handleSidebarResizePointerMove}
+              onPointerUp={finishSidebarResize}
+              onPointerCancel={finishSidebarResize}
+              onKeyDown={handleSidebarResizeKeyDown}
+              onDoubleClick={resetSidebarWidth}
+            />
+          )}
         </nav>
       )}
 

@@ -216,6 +216,7 @@ const ENHANCED_ATTR = 'data-custom-player';
 
 export function enhanceAudioPlayer(scope: ParentNode = document): (() => void) {
   const cleanups: PlayerCleanup[] = [];
+  const pending: Array<{ audio: HTMLAudioElement; title: string | null }> = [];
 
   const figures = scope.querySelectorAll<HTMLElement>('figure.wp-block-audio');
   figures.forEach((figure) => {
@@ -229,7 +230,7 @@ export function enhanceAudioPlayer(scope: ParentNode = document): (() => void) {
     const title = figcaption?.textContent?.trim() || null;
     if (figcaption) figcaption.style.display = 'none';
 
-    cleanups.push(buildPlayer(audio, title));
+    pending.push({ audio, title });
   });
 
   const standaloneAudios = scope.querySelectorAll<HTMLAudioElement>(
@@ -240,10 +241,34 @@ export function enhanceAudioPlayer(scope: ParentNode = document): (() => void) {
     const wrapper = audio.parentElement;
     if (wrapper) wrapper.setAttribute(ENHANCED_ATTR, 'true');
 
-    cleanups.push(buildPlayer(audio, null));
+    pending.push({ audio, title: null });
   });
 
+  const activate = ({ audio, title }: (typeof pending)[number]) => {
+    if (audio.isConnected) cleanups.push(buildPlayer(audio, title));
+  };
+
+  let observer: IntersectionObserver | null = null;
+  if ('IntersectionObserver' in window) {
+    const entriesByAudio = new Map(pending.map((entry) => [entry.audio, entry]));
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          observer?.unobserve(entry.target);
+          const pendingEntry = entriesByAudio.get(entry.target as HTMLAudioElement);
+          if (pendingEntry) activate(pendingEntry);
+        });
+      },
+      { rootMargin: '800px 0px' }
+    );
+    pending.forEach(({ audio }) => observer?.observe(audio));
+  } else {
+    pending.forEach(activate);
+  }
+
   return () => {
+    observer?.disconnect();
     cleanups.forEach((c) => c.pause());
   };
 }

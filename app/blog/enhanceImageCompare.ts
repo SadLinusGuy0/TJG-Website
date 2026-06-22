@@ -3,10 +3,12 @@
     (Before/After slider)
  ====================== */
 
-export function enhanceImageCompare(scope: ParentNode = document) {
+export function enhanceImageCompare(scope: ParentNode = document): () => void {
   const figures = scope.querySelectorAll<HTMLElement>("figure.wp-block-jetpack-image-compare");
+  const pending = Array.from(figures).filter((figure) => !figure.closest('.ko-compare'));
+  const pointerCleanups: Array<() => void> = [];
 
-  figures.forEach((figure, index) => {
+  const enhance = (figure: HTMLElement, index: number) => {
     // If Jetpack already enhanced this block (or we've already replaced it), skip.
     if (figure.closest(".ko-compare")) return;
 
@@ -63,6 +65,7 @@ export function enhanceImageCompare(scope: ParentNode = document) {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
     };
+    pointerCleanups.push(onPointerUp);
 
     viewport.addEventListener("pointerdown", (e) => {
       // Don't block link clicks inside content (rare, but safe)
@@ -102,6 +105,29 @@ export function enhanceImageCompare(scope: ParentNode = document) {
     if (caption) wrapper.appendChild(caption);
 
     figure.replaceWith(wrapper);
-  });
-}
+  };
 
+  if (!('IntersectionObserver' in window)) {
+    pending.forEach(enhance);
+    return () => pointerCleanups.forEach((cleanup) => cleanup());
+  }
+
+  const indexes = new Map(pending.map((figure, index) => [figure, index]));
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const figure = entry.target as HTMLElement;
+        observer.unobserve(figure);
+        enhance(figure, indexes.get(figure) || 0);
+      });
+    },
+    { rootMargin: '800px 0px' }
+  );
+
+  pending.forEach((figure) => observer.observe(figure));
+  return () => {
+    observer.disconnect();
+    pointerCleanups.forEach((cleanup) => cleanup());
+  };
+}

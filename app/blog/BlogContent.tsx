@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useMemo } from 'react';
-import { enhanceImageCompare } from './enhanceImageCompare';
-import { enhanceAudioPlayer } from './enhanceAudioPlayer';
-import { enhanceWpBlockEmbeds } from './enhanceWpBlockEmbeds';
+import dynamic from 'next/dynamic';
+import { enhanceBlogMedia } from './enhanceBlogMedia';
 import WordCounter from './WordCounter';
-import NativeSlideshow, { type SlideData } from './NativeSlideshow';
+import type { SlideData } from './NativeSlideshow';
 import BlogButton from './BlogButton';
+
+const NativeSlideshow = dynamic(() => import('./NativeSlideshow'));
 
 const WORD_COUNTER_REGEX = /\{\{WORD_COUNTER\}\}:(\d+)/;
 const BUTTON_REGEX = /\{\{BUTTON:([^|]+)\|([^|}]+)(?:\|([^}]+))?\}\}/;
@@ -52,6 +53,14 @@ function extractSlides(galleryHtml: string): SlideData[] {
 }
 
 function splitContentIntoSegments(html: string): ContentSegment[] {
+  if (
+    !html.includes('is-style-slideshow') &&
+    !html.includes('is-slideshow') &&
+    !html.includes('wp-block-jetpack-slideshow')
+  ) {
+    return [{ type: 'html', html }];
+  }
+
   const combined = new RegExp(
     `(${SLIDESHOW_GALLERY_RE.source})|(${JETPACK_SLIDESHOW_RE.source})`,
     'gi'
@@ -91,27 +100,66 @@ export default function BlogContent({ content }: BlogContentProps) {
   const segments = useMemo(() => splitContentIntoSegments(content || ''), [content]);
 
   useEffect(() => {
-    if (!contentRef.current) return;
+    const scope = contentRef.current;
+    if (!scope) return;
 
-    const headings = contentRef.current.querySelectorAll('h1, h2, h3, h4, h5, h6');
-    headings.forEach((heading, index) => {
-      if (!heading.id) {
-        const text = heading.textContent?.trim() || '';
-        const slug = text
-          .toLowerCase()
-          .replace(/[^\w\s-]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
-          .trim();
-        heading.id = slug || `heading-${index}`;
+    const features = enhanceBlogMedia(scope);
+    const cleanups: Array<() => void> = [];
+    let cancelled = false;
+
+    const loadEnhancers = async () => {
+      const tasks: Array<Promise<() => void>> = [];
+
+      if (features.hasImageComparisons) {
+        tasks.push(
+          import('./enhanceImageCompare').then(({ enhanceImageCompare }) =>
+            enhanceImageCompare(scope)
+          )
+        );
       }
+      if (features.hasEmbedPlaceholders) {
+        tasks.push(
+          import('./enhanceWpBlockEmbeds').then(({ enhanceWpBlockEmbeds }) =>
+            enhanceWpBlockEmbeds(scope)
+          )
+        );
+      }
+      if (features.hasAudio) {
+        tasks.push(
+          import('./enhanceAudioPlayer').then(({ enhanceAudioPlayer }) =>
+            enhanceAudioPlayer(scope)
+          )
+        );
+      }
+
+      const loadedCleanups = await Promise.all(tasks);
+      if (cancelled) {
+        loadedCleanups.forEach((cleanup) => cleanup());
+      } else {
+        cleanups.push(...loadedCleanups);
+      }
+    };
+
+    const idleWindow = window as typeof window & {
+      cancelIdleCallback?: (handle: number) => void;
+      requestIdleCallback?: (
+        callback: IdleRequestCallback,
+        options?: IdleRequestOptions
+      ) => number;
+    };
+    const idleHandle = idleWindow.requestIdleCallback?.(() => loadEnhancers(), {
+      timeout: 600,
     });
+    const timeoutHandle = idleHandle === undefined
+      ? window.setTimeout(loadEnhancers, 0)
+      : undefined;
 
-    enhanceImageCompare(contentRef.current);
-    enhanceWpBlockEmbeds(contentRef.current);
-    const cleanupAudio = enhanceAudioPlayer(contentRef.current);
-
-    return () => { cleanupAudio(); };
+    return () => {
+      cancelled = true;
+      if (idleHandle !== undefined) idleWindow.cancelIdleCallback?.(idleHandle);
+      if (timeoutHandle !== undefined) window.clearTimeout(timeoutHandle);
+      cleanups.forEach((cleanup) => cleanup());
+    };
   }, [content]);
 
   const bodyTextStyle: React.CSSProperties = {
@@ -182,4 +230,3 @@ export default function BlogContent({ content }: BlogContentProps) {
     />
   );
 }
-

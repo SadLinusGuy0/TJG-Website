@@ -4,10 +4,11 @@
  * swaps in an iframe. React does not execute those inline scripts, so we
  * perform the same swap on the client after mount.
  */
-export function enhanceWpBlockEmbeds(scope: ParentNode = document) {
+export function enhanceWpBlockEmbeds(scope: ParentNode = document): () => void {
   const wrappers = scope.querySelectorAll<HTMLElement>(
     '.wp-block-embed .wp-block-embed__wrapper'
   );
+  const placeholders: HTMLAnchorElement[] = [];
 
   wrappers.forEach((wrap) => {
     if (wrap.querySelector('iframe')) return;
@@ -16,6 +17,12 @@ export function enhanceWpBlockEmbeds(scope: ParentNode = document) {
       'a[data-src], a[data-iframe-src]'
     );
     if (!placeholder) return;
+
+    placeholders.push(placeholder);
+  });
+
+  const activate = (placeholder: HTMLAnchorElement) => {
+    if (!placeholder.isConnected) return;
 
     const src =
       placeholder.getAttribute('data-iframe-src') ||
@@ -37,5 +44,24 @@ export function enhanceWpBlockEmbeds(scope: ParentNode = document) {
     if (title) iframe.setAttribute('title', title);
 
     placeholder.replaceWith(iframe);
-  });
+  };
+
+  if (!('IntersectionObserver' in window)) {
+    placeholders.forEach(activate);
+    return () => {};
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        observer.unobserve(entry.target);
+        activate(entry.target as HTMLAnchorElement);
+      });
+    },
+    { rootMargin: '800px 0px' }
+  );
+
+  placeholders.forEach((placeholder) => observer.observe(placeholder));
+  return () => observer.disconnect();
 }

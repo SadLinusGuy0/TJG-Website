@@ -92,7 +92,7 @@ export default function HomeClient({
   ];
 
   return (
-    <div className="page">
+    <div className="page home-page">
       <div className="top-app-bar">
         <div className="top-app-bar-container settings-only">
           <TopAppBarIcon href="/settings" ariaLabel="Settings">
@@ -153,6 +153,36 @@ export default function HomeClient({
             
             <div className="role-card role-card-journalist">
               <div className="role-card-icon">
+              </div>
+              <div className="role-card-type-stream" aria-hidden="true">
+                <div className="role-card-type-track">
+                  <span>Writing about <strong>Samsung</strong>, <strong>Android</strong> and the future of mobile technology.</span>
+                  <span>Writing about <strong>Samsung</strong>, <strong>Android</strong> and the future of mobile technology.</span>
+                </div>
+                <div className="role-card-type-track">
+                  <span>Reporting the latest news, leaks, updates and hands-on impressions. </span>
+                  <span>Reporting the latest news, leaks, updates and hands-on impressions. </span>
+                </div>
+                <div className="role-card-type-track">
+                  <span>Making complicated technology feel clear, useful and worth caring about. </span>
+                  <span>Making complicated technology feel clear, useful and worth caring about. </span>
+                </div>
+                <div className="role-card-type-track">
+                  <span>Covering <strong>One UI</strong>, <strong>Galaxy</strong> devices, apps and everything around them.</span>
+                  <span>Covering <strong>One UI</strong>, <strong>Galaxy</strong> devices, apps and everything around them.</span>
+                </div>
+                <div className="role-card-type-track">
+                  <span>Tech journalist based in the UK, writing for people who love <strong>Android</strong>.</span>
+                  <span>Tech journalist based in the UK, writing for people who love <strong>Android</strong>.</span>
+                </div>
+                <div className="role-card-type-track">
+                  <span>From the first leaks to the final review, following every <strong>Galaxy</strong> launch.</span>
+                  <span>From the first leaks to the final review, following every <strong>Galaxy</strong> launch.</span>
+                </div>
+                <div className="role-card-type-track">
+                  <span>Finding the useful details hidden inside every <strong>One UI</strong> software update.</span>
+                  <span>Finding the useful details hidden inside every <strong>One UI</strong> software update.</span>
+                </div>
               </div>
               <div className="role-card-content">
                 <AnimatedText text="Tech Journalist" inverse />
