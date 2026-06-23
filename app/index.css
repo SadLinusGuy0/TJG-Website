@@ -3996,7 +3996,8 @@ body.nav-collapsed .featured-stories-scroll-wrapper {
 
   .featured-stories-scroll-inner {
     gap: 12px;
-    padding: 16px 20px 32px var(--featured-stories-card-start-inset);
+    padding: 16px var(--featured-stories-peek) 32px
+      var(--featured-stories-card-start-inset);
   }
 
   .story-card {
@@ -4715,7 +4716,8 @@ a.shop-gumroad-button:any-link {
 
   .design-projects-scroll-inner {
     gap: 12px;
-    padding: 16px 20px 32px var(--design-projects-card-start-inset);
+    padding: 16px var(--design-projects-peek) 32px
+      var(--design-projects-card-start-inset);
   }
 
   .stack-section {
