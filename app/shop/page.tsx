@@ -100,7 +100,7 @@ export default function Shop() {
                     className="shop-gumroad-button"
                     aria-label="View all on Gumroad"
                   >
-                    <Shopping size={20} color="var(--primary)" />
+                    <Shopping size={20} color="#fff" />
                     <span>View all on Gumroad</span>
                   </a>
                 </>

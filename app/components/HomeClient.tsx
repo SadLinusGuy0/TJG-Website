@@ -212,8 +212,8 @@ export default function HomeClient({
 
           {/* Journalist Section */}
           <div className="journalist-section">
-            <h2 className="journalist-headline">I cover the latest news and leaks in the Android and Samsung scene.</h2>
-            <p className="journalist-subtitle" style={{ textAlign: 'center' }}>Featured in</p>
+            <h2 className="journalist-headline">Featured In</h2>
+            <p className="journalist-subtitle">I cover the latest news and leaks in the Android and Samsung scene.</p>
             <div className="publications-marquee-wrapper">
               <div className="publications-marquee">
                 {[0, 1].map((copy) => (
