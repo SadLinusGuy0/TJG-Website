@@ -7,6 +7,7 @@ import { Settings } from '@thatjoshguy/oneui-icons';
 import Footer from "./Footer";
 import { ReactNode } from "react";
 import type { FeaturedStory } from "../../lib/featured-stories";
+import type { Project } from "../../lib/projects";
 import type { RecentBlogPost } from "../../lib/recent-blog-posts";
 
 interface StackTool {
@@ -48,6 +49,46 @@ function StoryCard({ story }: { story: FeaturedStory }) {
   );
 }
 
+function ProjectCard({ project }: { project: Project }) {
+  const isInternal = project.url.startsWith("/");
+  const content = (
+    <>
+      <div className="design-project-thumbnail">
+        <Image
+          src={project.thumbnail}
+          alt={project.title}
+          width={400}
+          height={225}
+          className="design-project-image"
+        />
+      </div>
+      <div className="design-project-info">
+        <span className="design-project-title">{project.title}</span>
+        <span className="design-project-tag">{project.tag}</span>
+      </div>
+    </>
+  );
+
+  if (isInternal) {
+    return (
+      <Link href={project.url} className="design-project-card">
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <a
+      href={project.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="design-project-card"
+    >
+      {content}
+    </a>
+  );
+}
+
 // Publication logo component that handles both string paths and SVG elements
 function PublicationLogo({ logo, alt }: { logo: string | ReactNode; alt: string }) {
   if (typeof logo === 'string') {
@@ -66,15 +107,17 @@ function PublicationLogo({ logo, alt }: { logo: string | ReactNode; alt: string 
 
 export default function HomeClient({
   featuredStories,
+  projects = [],
   popularStoriesEnabled = true,
-  mergedWorkCarouselEnabled = true,
+  projectsEnabled = true,
   miscSectionEnabled = true,
   recentBlogPostsEnabled = true,
   recentBlogPosts = [],
 }: {
   featuredStories: FeaturedStory[];
+  projects?: Project[];
   popularStoriesEnabled?: boolean;
-  mergedWorkCarouselEnabled?: boolean;
+  projectsEnabled?: boolean;
   miscSectionEnabled?: boolean;
   recentBlogPostsEnabled?: boolean;
   recentBlogPosts?: RecentBlogPost[];
@@ -329,154 +372,22 @@ export default function HomeClient({
             </div>
           )}
 
-          {/* Design Projects Preview */}
-          <div className="design-projects-section" id="design-work">
-            <h2 className="design-projects-headline">Design Work</h2>
-            <p className="design-projects-subtitle">A selection of UI/UX projects across Samsung, Android, and beyond.</p>
-            <div className="design-projects-scroll-wrapper">
-              <div className="design-projects-scroll">
-                <div className="design-projects-scroll-inner">
-              {mergedWorkCarouselEnabled ? (
-                <>
-                  <Link href="/work/oneui-design-kit" className="design-project-card">
-                    <div className="design-project-thumbnail">
-                      <Image
-                        src="/images/projects/oneuialt.png"
-                        alt="One UI Design Kit"
-                        width={400}
-                        height={225}
-                        className="design-project-image"
-                      />
-                    </div>
-                    <div className="design-project-info">
-                      <span className="design-project-title">One UI Design Kit</span>
-                      <span className="design-project-tag">UI Kit</span>
-                    </div>
-                  </Link>
-                  <a
-                    href="https://youtu.be/RCb5AaginpM"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="design-project-card"
-                  >
-                    <div className="design-project-thumbnail">
-                      <Image
-                        src="/images/projects/whatsapp.png"
-                        alt="WhatsApp You"
-                        width={400}
-                        height={225}
-                        className="design-project-image"
-                      />
-                    </div>
-                    <div className="design-project-info">
-                      <span className="design-project-title">WhatsApp You</span>
-                      <span className="design-project-tag">Concept</span>
-                    </div>
-                  </a>
-                  <a
-                    href="https://youtu.be/s3JQj6HCIwk"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="design-project-card"
-                  >
-                    <div className="design-project-thumbnail">
-                      <Image
-                        src="/images/projects/youtube-music.png"
-                        alt="YouTube Music Redesign"
-                        width={400}
-                        height={225}
-                        className="design-project-image"
-                      />
-                    </div>
-                    <div className="design-project-info">
-                      <span className="design-project-title">YouTube Music Redesign</span>
-                      <span className="design-project-tag">Concept</span>
-                    </div>
-                  </a>
-                  <a
-                    href="https://youtu.be/4QKPQKkJf3k"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="design-project-card"
-                  >
-                    <div className="design-project-thumbnail">
-                      <Image
-                        src="/images/projects/twitter-remake.png"
-                        alt="Better Twitter"
-                        width={400}
-                        height={225}
-                        className="design-project-image"
-                      />
-                    </div>
-                    <div className="design-project-info">
-                      <span className="design-project-title">Better Twitter</span>
-                      <span className="design-project-tag">Concept</span>
-                    </div>
-                  </a>
-                </>
-              ) : (
-                <>
-                  <Link href="/work/oneui-design-kit" className="design-project-card">
-                    <div className="design-project-thumbnail">
-                      <Image
-                        src="/images/projects/oneui-design-kit-cover-light.png"
-                        alt="One UI Design Kit"
-                        width={400}
-                        height={225}
-                        className="design-project-image"
-                      />
-                    </div>
-                    <div className="design-project-info">
-                      <span className="design-project-title">One UI Design Kit</span>
-                      <span className="design-project-tag">UI Kit</span>
-                    </div>
-                  </Link>
-                  <a
-                    href="https://youtu.be/s3JQj6HCIwk"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="design-project-card"
-                  >
-                    <div className="design-project-thumbnail">
-                      <Image
-                        src="/images/projects/youtube-music.png"
-                        alt="YouTube Music Redesign"
-                        width={400}
-                        height={225}
-                        className="design-project-image"
-                      />
-                    </div>
-                    <div className="design-project-info">
-                      <span className="design-project-title">YouTube Music Redesign</span>
-                      <span className="design-project-tag">Concept</span>
-                    </div>
-                  </a>
-                  <a
-                    href="https://youtu.be/4QKPQKkJf3k"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="design-project-card"
-                  >
-                    <div className="design-project-thumbnail">
-                      <Image
-                        src="/images/projects/twitter-remake.png"
-                        alt="Twitter Remake"
-                        width={400}
-                        height={225}
-                        className="design-project-image"
-                      />
-                    </div>
-                    <div className="design-project-info">
-                      <span className="design-project-title">Twitter Remake</span>
-                      <span className="design-project-tag">Concept</span>
-                    </div>
-                  </a>
-                </>
-              )}
+          {/* Projects Preview */}
+          {projectsEnabled && projects.length > 0 && (
+            <div className="design-projects-section" id="design-work">
+              <h2 className="design-projects-headline">Projects</h2>
+              <p className="design-projects-subtitle">A selection of UI/UX projects across Samsung, Android, and beyond.</p>
+              <div className="design-projects-scroll-wrapper">
+                <div className="design-projects-scroll">
+                  <div className="design-projects-scroll-inner">
+                    {projects.map((project, index) => (
+                      <ProjectCard key={index} project={project} />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* My Stack */}
           <div className="stack-section">

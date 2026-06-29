@@ -35,9 +35,9 @@ const FLAGS: FlagDef[] = [
     description: 'Show the Popular Stories section on the home page',
   },
   {
-    key: 'merged-work-carousel-enabled',
-    name: 'Merged Work carousel',
-    description: 'Show all 4 design projects on the Home carousel (merged from /work)',
+    key: 'projects-enabled',
+    name: 'Projects',
+    description: 'Show the Edge Config-driven Projects section on the home page',
   },
   {
     key: 'misc-section-enabled',
