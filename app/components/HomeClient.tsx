@@ -109,6 +109,7 @@ export default function HomeClient({
   featuredStories,
   projects = [],
   popularStoriesEnabled = true,
+  projectsEnabled = true,
   miscSectionEnabled = true,
   recentBlogPostsEnabled = true,
   recentBlogPosts = [],
@@ -116,6 +117,7 @@ export default function HomeClient({
   featuredStories: FeaturedStory[];
   projects?: Project[];
   popularStoriesEnabled?: boolean;
+  projectsEnabled?: boolean;
   miscSectionEnabled?: boolean;
   recentBlogPostsEnabled?: boolean;
   recentBlogPosts?: RecentBlogPost[];
@@ -371,7 +373,7 @@ export default function HomeClient({
           )}
 
           {/* Projects Preview */}
-          {projects.length > 0 && (
+          {projectsEnabled && projects.length > 0 && (
             <div className="design-projects-section" id="design-work">
               <h2 className="design-projects-headline">Projects</h2>
               <p className="design-projects-subtitle">A selection of UI/UX projects across Samsung, Android, and beyond.</p>

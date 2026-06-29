@@ -35,6 +35,11 @@ const FLAGS: FlagDef[] = [
     description: 'Show the Popular Stories section on the home page',
   },
   {
+    key: 'projects-enabled',
+    name: 'Projects',
+    description: 'Show the Edge Config-driven Projects section on the home page',
+  },
+  {
     key: 'misc-section-enabled',
     name: 'Misc section',
     description: 'Show the Misc section on the Home page',

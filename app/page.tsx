@@ -1,6 +1,7 @@
 import { getFeaturedStories } from "../lib/featured-stories";
 import { getProjects } from "../lib/projects";
 import { getPopularStoriesEnabled } from "../lib/getPopularStoriesFlag";
+import { getProjectsEnabled } from "../lib/getProjectsEnabledFlag";
 import { getMiscSectionEnabled } from "../lib/getMiscSectionFlag";
 import { getRecentBlogPostsEnabled } from "../lib/getRecentBlogPostsFlag";
 import { getRecentBlogPosts } from "../lib/recent-blog-posts";
@@ -14,12 +15,14 @@ export default async function Home() {
     featuredStories,
     projects,
     popularStoriesEnabled,
+    projectsEnabled,
     miscSectionEnabled,
     recentBlogPostsEnabled,
   ] = await Promise.all([
     getFeaturedStories(),
     getProjects(),
     getPopularStoriesEnabled(),
+    getProjectsEnabled(),
     getMiscSectionEnabled(),
     getRecentBlogPostsEnabled(),
   ]);
@@ -29,6 +32,7 @@ export default async function Home() {
       featuredStories={featuredStories}
       projects={projects}
       popularStoriesEnabled={popularStoriesEnabled}
+      projectsEnabled={projectsEnabled}
       miscSectionEnabled={miscSectionEnabled}
       recentBlogPostsEnabled={recentBlogPostsEnabled}
       recentBlogPosts={recentBlogPosts}

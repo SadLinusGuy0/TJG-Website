@@ -17,6 +17,20 @@ export const blogEnabled = flag({
 });
 
 /**
+ * Projects feature flag - controls visibility of the Edge Config-driven Projects section on the home page.
+ */
+export const projectsEnabled = flag({
+  key: 'projects-enabled',
+  adapter: vercelAdapter(),
+  defaultValue: true,
+  description: 'Show the Projects section on the home page',
+  options: [
+    { value: true, label: 'Enabled' },
+    { value: false, label: 'Disabled' },
+  ],
+});
+
+/**
  * Popular Stories feature flag - controls visibility of the Popular Stories section on the home page.
  */
 export const popularStoriesEnabled = flag({
