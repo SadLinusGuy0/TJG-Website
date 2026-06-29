@@ -30,17 +30,6 @@ export const popularStoriesEnabled = flag({
   ],
 });
 
-export const mergedWorkCarouselEnabled = flag({
-  key: 'merged-work-carousel-enabled',
-  adapter: vercelAdapter(),
-  defaultValue: true,
-  description: 'Show all 4 design projects on the Home carousel (merged from /work)',
-  options: [
-    { value: true, label: 'Enabled' },
-    { value: false, label: 'Disabled' },
-  ],
-});
-
 export const miscSectionEnabled = flag({
   key: 'misc-section-enabled',
   adapter: vercelAdapter(),

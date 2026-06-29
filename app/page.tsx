@@ -1,6 +1,6 @@
 import { getFeaturedStories } from "../lib/featured-stories";
+import { getProjects } from "../lib/projects";
 import { getPopularStoriesEnabled } from "../lib/getPopularStoriesFlag";
-import { getMergedWorkCarouselEnabled } from "../lib/getMergedWorkCarouselFlag";
 import { getMiscSectionEnabled } from "../lib/getMiscSectionFlag";
 import { getRecentBlogPostsEnabled } from "../lib/getRecentBlogPostsFlag";
 import { getRecentBlogPosts } from "../lib/recent-blog-posts";
@@ -12,14 +12,14 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const [
     featuredStories,
+    projects,
     popularStoriesEnabled,
-    mergedWorkCarouselEnabled,
     miscSectionEnabled,
     recentBlogPostsEnabled,
   ] = await Promise.all([
     getFeaturedStories(),
+    getProjects(),
     getPopularStoriesEnabled(),
-    getMergedWorkCarouselEnabled(),
     getMiscSectionEnabled(),
     getRecentBlogPostsEnabled(),
   ]);
@@ -27,8 +27,8 @@ export default async function Home() {
   return (
     <HomeClient
       featuredStories={featuredStories}
+      projects={projects}
       popularStoriesEnabled={popularStoriesEnabled}
-      mergedWorkCarouselEnabled={mergedWorkCarouselEnabled}
       miscSectionEnabled={miscSectionEnabled}
       recentBlogPostsEnabled={recentBlogPostsEnabled}
       recentBlogPosts={recentBlogPosts}
