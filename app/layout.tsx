@@ -10,6 +10,15 @@ import ProgressiveBlur from './components/ProgressiveBlur';
 import DiscordPopup from './components/DiscordPopup';
 import Navigation from './components/Navigation';
 
+// Blue favicon in production, purple on preview deploys, green in local dev.
+// VERCEL_ENV is 'production' | 'preview' | 'development' on Vercel; local
+// `next dev` has no VERCEL_ENV, so fall back to NODE_ENV.
+const deploymentEnv =
+  process.env.VERCEL_ENV ??
+  (process.env.NODE_ENV === 'production' ? 'production' : 'development');
+const favicon =
+  deploymentEnv === 'production' ? '/favicon.ico' : `/favicon-${deploymentEnv}.ico`;
+
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://thatjoshguy.me'),
   title: 'That Josh Guy',
@@ -39,7 +48,7 @@ export const metadata = {
     images: ['/images/preview.png']
   },
   icons: {
-    icon: '/favicon.ico'
+    icon: favicon
   }
 }
 
