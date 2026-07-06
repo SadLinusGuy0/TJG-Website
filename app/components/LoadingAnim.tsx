@@ -2,7 +2,7 @@
 
 import React from "react";
 import Lottie from "lottie-react";
-import circleProgressData from "../../public/animations/sesl-circle-progress.json";
+import circleProgressData from "../../public/animations/oneui-spinner.json";
 
 type LoadingDotsProps = {
   size?: number;
