@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { LoadingDots } from "./components/LoadingAnim";
 
 export default function HomeLoading() {
   return (

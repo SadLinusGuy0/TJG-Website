@@ -119,7 +119,7 @@ function AboutContent() {
                 }}
                 onClick={handleVersionTap}
               >
-                Version 3.3
+                Version 3.4
               </div>
             </div>
           </div>

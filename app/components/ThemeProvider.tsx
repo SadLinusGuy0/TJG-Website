@@ -1,6 +1,13 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { supportsLisseSmoothCorners } from '../utils/cornerSmoothingSupport';
+
+const CornerSmoothingManager = dynamic(
+  () => import('./CornerSmoothingManager').then((module) => module.CornerSmoothingManager),
+  { ssr: false },
+);
 
 type Theme = 'light' | 'dark' | 'auto';
 export type AccentColor = 'blue' | 'coral' | 'mint' | 'lilac' | 'mono';
@@ -94,10 +101,7 @@ const getInitialBlurEnabled = (): boolean => {
 };
 
 const getCornerSmoothingSupported = (): boolean => {
-  if (typeof window !== 'undefined' && typeof CSS !== 'undefined' && CSS.supports) {
-    return CSS.supports('corner-shape', 'squircle');
-  }
-  return false;
+  return supportsLisseSmoothCorners();
 };
 
 const getInitialCornerSmoothing = (): boolean => {
@@ -262,6 +266,9 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpS
   return (
     <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, fmpSeparatedViewAvailable, hydrated }}>
       {children}
+      {cornerSmoothingAvailable && cornerSmoothing
+        ? <CornerSmoothingManager enabled />
+        : null}
     </ThemeContext.Provider>
   );
 }

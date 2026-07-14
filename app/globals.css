@@ -1,5 +1,6 @@
-/* === Merged from legacy global.css === */
-@import url('./index.css');
+@import url('./styles/shared.css');
+@import url('./styles/home.css');
+@import url('./styles/ui-components.css');
 
 html {
     scroll-behavior: smooth;
@@ -67,28 +68,6 @@ html[data-theme="light"] {
     --divider: #E8E8EA;
     --button-divider: #E8E8EA;
     --press-highlight: rgba(0, 0, 0, 0.12);
-}
-
-/* Experimental UI Theme Variables */
-html[data-experimental="true"] {
-    --experimental-border-radius: 28px;
-    --experimental-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --experimental-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --experimental-gradient: linear-gradient(90deg, #17171A 0%, #FCFCFF 100%);
-}
-
-html[data-experimental="true"][data-theme="dark"] {
-    --experimental-background: linear-gradient(180deg, #081525 0%, #000 100%);
-    --experimental-container: rgba(23, 23, 26, 0.6);
-    --experimental-border: rgba(255, 255, 255, 0.1);
-    --secondary: rgba(255, 255, 255, 0.6);
-}
-
-html[data-experimental="true"][data-theme="light"] {
-    --experimental-background: linear-gradient(180deg, #dff2ff 0%, #f1f1f1 100%);
-    --experimental-container: rgba(252, 252, 255, 0.3);
-    --experimental-border: rgba(0, 0, 0, 0.08);
-    --secondary: rgba(0, 0, 0, 0.3);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -200,87 +179,3 @@ a:not(:any-link) {
 }
 
 /* === index.css is imported above and contains all component/utility styles === */
-
-.settings-container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-
-.settings-content {
-    width: 100%;
-    max-width: 420px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
-}
-
-@media screen and (min-width: 900px) {
-    .settings-content {
-        max-width: 600px;
-    }
-}
-
-.main-content.settings {
-    padding-left: 0;
-}
-
-@media screen and (min-width: 900px) {
-    .main-content.settings {
-        width: 600px;
-        max-width: 100%;
-    }
-}
-
-@supports (corner-shape: squircle) {
-    html[data-corner-smoothing="true"] {
-        --br-xs: 10px;
-        --br-sm: 16px;
-        --br-md: 20px;
-        --br-lg: 24px;
-        --br-2lg: 28px;
-        --br-xl: 42px;
-        --br-9xl: 48px;
-        --br-10xl: 48px;
-        --br-11xs: 4px;
-    }
-    html[data-corner-smoothing="true"] * {
-        corner-shape: squircle;
-    }
-    html[data-corner-smoothing="true"] .switch,
-    html[data-corner-smoothing="true"] .switch *,
-    html[data-corner-smoothing="true"] .slider,
-    html[data-corner-smoothing="true"] .slider *,
-    html[data-corner-smoothing="true"] .theme-card-radio,
-    html[data-corner-smoothing="true"] .theme-card-radio::before,
-    html[data-corner-smoothing="true"] .accent-color-swatch,
-    html[data-corner-smoothing="true"] .top-app-bar-icon,
-    html[data-corner-smoothing="true"] .top-app-bar-icon *,
-    html[data-corner-smoothing="true"] .floating-search-bar,
-    html[data-corner-smoothing="true"] .floating-search-bar *,
-    html[data-corner-smoothing="true"] .post-search-bar,
-    html[data-corner-smoothing="true"] .post-search-bar *,
-    html[data-corner-smoothing="true"] .loading-dots,
-    html[data-corner-smoothing="true"] .loading-dots *,
-    html[data-corner-smoothing="true"] .mobile-nav-bar,
-    html[data-corner-smoothing="true"] .mobile-nav-bar * {
-        corner-shape: round;
-    }
-}
-
-html[data-experimental="true"],
-html[data-experimental="true"] body {
-    background: transparent !important;
-    background-color: transparent !important;
-}
-
-html[data-experimental="true"] body::after {
-    background: var(--experimental-background) !important;
-    background-color: transparent !important;
-}

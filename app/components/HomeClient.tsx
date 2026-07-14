@@ -5,7 +5,9 @@ import AnimatedText from "./AnimatedText";
 import TopAppBarIcon from "./TopAppBarIcon";
 import { Settings } from '@thatjoshguy/oneui-icons';
 import Footer from "./Footer";
-import { ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
+import { SmoothCorners } from '@lisse/react';
+import { useTheme } from './ThemeProvider';
 import type { FeaturedStory } from "../../lib/featured-stories";
 import type { Project } from "../../lib/projects";
 import type { RecentBlogPost } from "../../lib/recent-blog-posts";
@@ -13,6 +15,41 @@ import type { RecentBlogPost } from "../../lib/recent-blog-posts";
 interface StackTool {
   name: string;
   icon: string;
+}
+
+const CARD_CORNERS = {
+  radius: 20,
+  curve: 'squircle' as const,
+  smoothing: 0.6,
+  preserveSmoothing: true,
+};
+
+const CARD_SHADOW = {
+  offsetX: 0,
+  offsetY: 8,
+  blur: 12,
+  spread: 0,
+  color: '#000000',
+};
+
+function SmoothHoverCard({ children }: { children: ReactElement }) {
+  const { cornerSmoothing, cornerSmoothingAvailable, cornerSmoothingSupported, hydrated } = useTheme();
+
+  if (!hydrated || !cornerSmoothingAvailable || !cornerSmoothingSupported || !cornerSmoothing) {
+    return children;
+  }
+
+  return (
+    <SmoothCorners
+      asChild
+      autoEffects={false}
+      corners={CARD_CORNERS}
+      shadow={{ ...CARD_SHADOW, opacity: 0.12 }}
+      data-no-smooth-corners=""
+    >
+      {children}
+    </SmoothCorners>
+  );
 }
 
 function StackIcon({ tool }: { tool: StackTool }) {
@@ -31,21 +68,23 @@ function StackIcon({ tool }: { tool: StackTool }) {
 
 function StoryCard({ story }: { story: FeaturedStory }) {
   return (
-    <a href={story.url} target="_blank" rel="noopener noreferrer" className="story-card">
-      <div className="story-card-thumbnail">
-        <Image
-          src={story.thumbnail}
-          alt={story.title}
-          width={320}
-          height={180}
-          className="story-card-image"
-        />
-      </div>
-      <div className="story-card-info">
-        <span className="story-card-title">{story.title}</span>
-        <span className="story-card-site">{story.site}</span>
-      </div>
-    </a>
+    <SmoothHoverCard>
+      <a href={story.url} target="_blank" rel="noopener noreferrer" className="story-card">
+        <div className="story-card-thumbnail">
+          <Image
+            src={story.thumbnail}
+            alt={story.title}
+            width={320}
+            height={180}
+            className="story-card-image"
+          />
+        </div>
+        <div className="story-card-info">
+          <span className="story-card-title">{story.title}</span>
+          <span className="story-card-site">{story.site}</span>
+        </div>
+      </a>
+    </SmoothHoverCard>
   );
 }
 
@@ -71,21 +110,25 @@ function ProjectCard({ project }: { project: Project }) {
 
   if (isInternal) {
     return (
-      <Link href={project.url} className="design-project-card">
-        {content}
-      </Link>
+      <SmoothHoverCard>
+        <Link href={project.url} className="design-project-card">
+          {content}
+        </Link>
+      </SmoothHoverCard>
     );
   }
 
   return (
-    <a
-      href={project.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="design-project-card"
-    >
-      {content}
-    </a>
+    <SmoothHoverCard>
+      <a
+        href={project.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="design-project-card"
+      >
+        {content}
+      </a>
+    </SmoothHoverCard>
   );
 }
 
@@ -164,7 +207,7 @@ export default function HomeClient({
               <div className="hero-intro">
                 <span className="hero-subtitle">Hey, I&apos;m</span>
                 <h1 className="hero-name">
-              <AnimatedText text="Josh Skinner" inverse />
+                  <AnimatedText text="Josh Skinner" className="hero-name-entrance" inverse />
                 </h1>
                 <div className="hero-description" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: "row", gap: 8 }}>
                   Aka
@@ -425,23 +468,25 @@ export default function HomeClient({
                 <div className="design-projects-scroll">
                   <div className="design-projects-scroll-inner">
                     {recentBlogPosts.map((post) => (
-                      <Link key={post.id} href={`/blog/${post.slug}`} className="design-project-card">
-                        <div className="design-project-thumbnail">
-                          {post.thumbnail && (
-                            <Image
-                              src={post.thumbnail}
-                              alt={post.title.replace(/<[^>]*>/g, '')}
-                              width={400}
-                              height={225}
-                              className="design-project-image"
-                            />
-                          )}
-                        </div>
-                        <div className="design-project-info">
-                          <span className="design-project-title" dangerouslySetInnerHTML={{ __html: post.title }}></span>
-                          <span className="design-project-tag">Blog</span>
-                        </div>
-                      </Link>
+                      <SmoothHoverCard key={post.id}>
+                        <Link href={`/blog/${post.slug}`} className="design-project-card">
+                          <div className="design-project-thumbnail">
+                            {post.thumbnail && (
+                              <Image
+                                src={post.thumbnail}
+                                alt={post.title.replace(/<[^>]*>/g, '')}
+                                width={400}
+                                height={225}
+                                className="design-project-image"
+                              />
+                            )}
+                          </div>
+                          <div className="design-project-info">
+                            <span className="design-project-title" dangerouslySetInnerHTML={{ __html: post.title }}></span>
+                            <span className="design-project-tag">Blog</span>
+                          </div>
+                        </Link>
+                      </SmoothHoverCard>
                     ))}
                   </div>
                 </div>

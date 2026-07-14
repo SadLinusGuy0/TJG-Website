@@ -15,7 +15,7 @@ export const DEFAULT_PROJECTS: Project[] = [
     title: "One UI Design Kit",
     thumbnail: "/images/projects/oneuialt.png",
     tag: "UI Kit",
-    url: "/work/oneui-design-kit",
+    url: "/blog/oneui-design-kit",
   },
   {
     title: "WhatsApp You",

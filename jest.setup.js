@@ -1,6 +1,3 @@
-// Learn more: https://github.com/testing-library/jest-dom
-require('@testing-library/jest-dom');
-
 // Mock next/router
 jest.mock('next/router', () => ({
   useRouter() {
@@ -30,4 +27,4 @@ jest.mock('next/navigation', () => ({
   useSearchParams() {
     return new URLSearchParams();
   },
-})); 
+}));

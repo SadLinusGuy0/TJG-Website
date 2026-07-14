@@ -13,6 +13,8 @@ import type {
 import { useBlogEnabled } from './BlogFlagProvider';
 import { HomeIcon, ShopIcon, BlogIcon, ContactIcon } from './NavIcons';
 import { Drawer, Settings } from '@thatjoshguy/oneui-icons';
+import { SmoothCorners } from '@lisse/react';
+import { useTheme } from './ThemeProvider';
 
 // Context to share collapsed state
 export const NavCollapseContext = createContext({ collapsed: false, setCollapsed: (_: boolean) => {} });
@@ -34,6 +36,13 @@ const SIDEBAR_WIDTH_STORAGE_KEY = 'tjg-website-sidebar-expanded-width';
 const SIDEBAR_MIN_EXPANDED_WIDTH = 160;
 const SIDEBAR_MAX_EXPANDED_WIDTH = 360;
 const SIDEBAR_CONTENT_GUTTER = 18;
+
+const DESKTOP_NAV_CORNERS = {
+  radius: 12,
+  curve: 'squircle' as const,
+  smoothing: 0.6,
+  preserveSmoothing: true,
+};
 
 type PendingMobileNavTransition = {
   fromHref: string;
@@ -89,18 +98,34 @@ function DesktopNavButton({
   tabRef?: (element: HTMLAnchorElement | null) => void;
   children: ReactNode;
 }) {
-  return (
+  const { cornerSmoothing, cornerSmoothingAvailable, cornerSmoothingSupported, hydrated } = useTheme();
+  const link = (
     <Link
       ref={tabRef}
       href={href}
       prefetch
       className={`${isSelected ? 'nav-icon-container-selected' : 'nav-icon-container'}${indicatorManaged ? ' desktop-nav-core-tab' : ''}`}
       onClick={onClick}
+      data-no-smooth-corners=""
     >
       <div className="desktop-nav-content">
         {children}
       </div>
     </Link>
+  );
+
+  if (!hydrated || !cornerSmoothingAvailable || !cornerSmoothingSupported || !cornerSmoothing) {
+    return link;
+  }
+
+  return (
+    <SmoothCorners
+      asChild
+      autoEffects={false}
+      corners={DESKTOP_NAV_CORNERS}
+    >
+      {link}
+    </SmoothCorners>
   );
 }
 

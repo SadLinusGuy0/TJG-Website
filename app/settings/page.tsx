@@ -2,7 +2,6 @@
 
 import { useTheme, ACCENT_COLORS, ACCENT_LIGHT_BACKGROUNDS, ACCENT_LIGHT_CONTAINER_BACKGROUNDS, ACCENT_DARK_BACKGROUNDS, ACCENT_DARK_CONTAINER_BACKGROUNDS, AccentColor } from '../components/ThemeProvider';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
@@ -307,7 +306,7 @@ function SettingsContent() {
                 <div className="information-wrapper">
                   <div className="information">
                     {cornerSmoothingSupported
-                      ? 'Use squircle-shaped corners for a smoother look'
+                      ? 'Use smooth, squircle-shaped corners across browsers'
                       : 'Not supported on this browser'}
                   </div>
                 </div>

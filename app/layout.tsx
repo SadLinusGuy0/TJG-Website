@@ -101,9 +101,9 @@ export default async function RootLayout({
                   };
                   document.documentElement.style.setProperty('--accent', accentColors[accentColor] || accentColors.blue);
                   var csAvailable = ${cornerSmoothingEnabledValue ? 'true' : 'false'};
-                  var csSupported = window.CSS && CSS.supports && CSS.supports('corner-shape', 'squircle');
+                  var csLisseSupported = 'ResizeObserver' in window && window.CSS && CSS.supports && CSS.supports('clip-path', 'path("M 0 0 L 1 0 L 1 1 Z")');
                   var csSaved = localStorage.getItem('cornerSmoothing');
-                  var csEnabled = csAvailable && csSupported && (csSaved === null ? true : csSaved === 'true');
+                  var csEnabled = csAvailable && csLisseSupported && (csSaved === null ? true : csSaved === 'true');
                   document.documentElement.dataset.cornerSmoothing = csEnabled ? 'true' : 'false';
                 } catch (e) {}
               })();

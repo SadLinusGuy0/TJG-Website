@@ -162,7 +162,8 @@ export default function AnimatedText({ text, className, style, inverse = false }
             fontFamily: 'One UI Sans',
             fontWeight: inverse ? 700 : 400,
             transition: 'font-weight 0.1s ease-out',
-          }}
+            '--animated-text-character-index': index,
+          } as React.CSSProperties & { '--animated-text-character-index': number }}
         >
           {char === ' ' ? '\u00A0' : char}
         </span>
@@ -170,4 +171,3 @@ export default function AnimatedText({ text, className, style, inverse = false }
     </div>
   );
 }
-

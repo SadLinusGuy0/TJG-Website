@@ -97,7 +97,7 @@ export const inPostSearchBarFmpEnabled = flag({
 
 /**
  * Corner Smoothing feature flag - enables the squircle corner smoothing toggle in Settings.
- * When enabled, users with a supported browser can opt in to squircle-shaped corners.
+ * When enabled, users can opt in to Lisse's Figma/iOS-style squircle corners.
  */
 export const cornerSmoothingEnabled = flag({
   key: 'corner-smoothing-enabled',

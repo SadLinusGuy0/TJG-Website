@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import Footer from '../components/Footer';
 import { usePathname } from "next/navigation";
 import PageHeading from "../components/PageHeading";
@@ -169,4 +168,4 @@ export default function Contact() {
       </div>
     </div>
   );
-} 
+}

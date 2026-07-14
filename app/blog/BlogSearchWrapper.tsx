@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo, createContext, useContext } from 'react';
+import { useState, useMemo, createContext, useContext } from 'react';
 import type { BlogPost } from '../../lib/blog';
 
 interface BlogSearchContextType {

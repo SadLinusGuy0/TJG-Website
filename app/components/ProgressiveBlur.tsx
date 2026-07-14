@@ -1,7 +1,6 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTheme } from './ThemeProvider';
-import { usePathname } from 'next/navigation';
 
 interface ProgressiveBlurProps {
   position?: 'top' | 'bottom';
@@ -32,7 +31,6 @@ function buildMask(stops: number[], position: 'top' | 'bottom'): string {
 
 export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurProps) {
   const { blurEnabled, hydrated } = useTheme();
-  const pathname = usePathname();
   const [isDesktop, setIsDesktop] = useState(
     typeof window !== 'undefined' ? window.innerWidth >= 700 : true
   );

@@ -18,9 +18,6 @@ const turbopackFlagsDefinitionsAlias = flagsDefinitionsAlias
 const nextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: path.join(__dirname),
-  async redirects() {
-    return [{ source: '/work', destination: '/', permanent: true }];
-  },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '*.wordpress.com' },
@@ -34,8 +31,16 @@ const nextConfig = {
       { protocol: 'https', hostname: 'www.sammobile.com' },
       { protocol: 'https', hostname: 'm-cdn.phonearena.com' },
       { protocol: 'https', hostname: 'www.androidheadlines.com' },
+      { protocol: 'https', hostname: 'pbs.twimg.com', pathname: '/media/**' },
     ],
   },
+  redirects: async () => [
+    {
+      source: '/work/oneui-design-kit',
+      destination: '/blog/oneui-design-kit',
+      permanent: true,
+    },
+  ],
   headers: async () => [
     {
       source: '/(.*)',

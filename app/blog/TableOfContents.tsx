@@ -131,7 +131,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
         }}
       >
         <div className="toc-dashes">
-          {headings.slice(0, 5).map((heading, index) => (
+          {headings.slice(0, 5).map((heading) => (
             <div 
               key={heading.id} 
               className={`toc-dash level-${heading.level}`}
@@ -166,4 +166,3 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
     </>
   );
 }
-
