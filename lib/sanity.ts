@@ -153,7 +153,7 @@ export async function fetchAllPosts(options?: { tagSlug?: string }): Promise<Blo
     : `*[_type == "post"]`;
 
   const docs = await getClient().fetch<SanityPostDoc[]>(
-    `${filter} | order(publishedAt desc) { ${POST_FIELDS} }`,
+    `${filter} | order(_updatedAt desc, publishedAt desc) { ${POST_FIELDS} }`,
     options?.tagSlug ? { tagSlug: options.tagSlug } : {},
     fetchOptions(),
   );
