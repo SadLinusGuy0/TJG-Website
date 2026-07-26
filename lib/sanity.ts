@@ -1,5 +1,5 @@
 import { createClient, type SanityClient } from '@sanity/client';
-import imageUrlBuilder from '@sanity/image-url';
+import { createImageUrlBuilder } from '@sanity/image-url';
 import { sanityConfig } from './sanity.config';
 import { portableTextToPlainText, stripHtmlAndDecode, type PortableTextBlock } from './portableText';
 
@@ -35,7 +35,7 @@ function fetchOptions() {
 export function getSanityImageUrl(source: SanityImageSource): string | null {
   if (!source?.asset) return null;
   if (!isSanityConfigured()) return null;
-  const builder = imageUrlBuilder(getClient());
+  const builder = createImageUrlBuilder(getClient());
   return builder.image(source).auto('format').width(1200).quality(75).url();
 }
 
@@ -63,8 +63,8 @@ export type SanityPostDoc = {
   excerpt: string | null;
   featuredImage: SanityImageSource;
   featuredImageAlt: string | null;
-  categories: Array<{ _id: string; title: string; slug: { current: string } }> | null;
-  tags: Array<{ _id: string; title: string; slug: { current: string } }> | null;
+  categories: Array<{ _id: string; title: string; slug: { current: string } } | null> | null;
+  tags: Array<{ _id: string; title: string; slug: { current: string } } | null> | null;
   legacyHtml: string | null;
   contentSource: 'legacyHtml' | 'portableText';
   wordCount: number | null;
@@ -130,8 +130,10 @@ function mapPost(doc: SanityPostDoc): BlogPost {
     title: { rendered: doc.title },
     excerpt: { rendered: doc.excerpt || '' },
     content: { rendered: contentHtml },
-    categories: doc.categories?.map(c => c.slug.current) ?? [],
-    tags: doc.tags?.map(t => t.slug.current) ?? [],
+    categories: doc.categories
+      ?.flatMap((category) => category?.slug?.current ? [category.slug.current] : []) ?? [],
+    tags: doc.tags
+      ?.flatMap((tag) => tag?.slug?.current ? [tag.slug.current] : []) ?? [],
     featuredImageUrl: getSanityImageUrl(doc.featuredImage),
     featuredImageAlt: doc.featuredImageAlt ?? undefined,
     wordCount: typeof doc.wordCount === 'number' && doc.wordCount > 0 ? doc.wordCount : undefined,

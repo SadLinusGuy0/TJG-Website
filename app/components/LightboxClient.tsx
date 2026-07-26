@@ -7,7 +7,7 @@ interface LightboxItem {
   caption: string;
 }
 
-export default function LightboxClient(): JSX.Element | null {
+export default function LightboxClient(): React.JSX.Element | null {
   const [isOpen, setIsOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [isOpening, setIsOpening] = useState(false);

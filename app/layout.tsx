@@ -9,6 +9,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import ProgressiveBlur from './components/ProgressiveBlur';
 import DiscordPopup from './components/DiscordPopup';
 import Navigation from './components/Navigation';
+import type { Metadata } from 'next';
+import { getSiteEdition, getSiteUrl } from '../lib/siteEdition';
 
 // Blue favicon in production, purple on preview deploys, green in local dev.
 // VERCEL_ENV is 'production' | 'preview' | 'development' on Vercel; local
@@ -19,37 +21,47 @@ const deploymentEnv =
 const favicon =
   deploymentEnv === 'production' ? '/favicon.ico' : `/favicon-${deploymentEnv}.ico`;
 
-export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://thatjoshguy.me'),
-  title: 'That Josh Guy',
-  description: 'Hi, I\'m Josh Skinner - a 17-year-old freelance UI/UX designer and writer. Explore my portfolio showcasing graphic design, web development, and creative projects.',
-  keywords: 'Josh Skinner, That Josh Guy, UI/UX Designer, Graphic Designer, Web Developer, Writer, Portfolio, Freelance, Creative',
-  author: 'Josh Skinner',
-  openGraph: {
-    type: 'website',
-    url: 'https://thatjoshguy.me',
-    title: 'That Josh Guy',
-    description: 'Designer, tech journalist, and Samsung/Android creator — explore my work, articles, and design projects.',
-    images: [
-      {
-        url: '/images/preview.png',
-        width: 1200,
-        height: 630,
-        alt: 'That Josh Guy Portfolio Preview'
-      }
-    ]
-  },
-  twitter: {
-    card: 'summary_large_image',
-    site: '@thatjoshguy69',
-    creator: '@thatjoshguy69',
-    title: 'That Josh Guy',
-    description: 'Designer, tech journalist, and Samsung/Android creator — explore my work, articles, and design projects.',
-    images: ['/images/preview.png']
-  },
-  icons: {
-    icon: favicon
-  }
+export async function generateMetadata(): Promise<Metadata> {
+  const edition = await getSiteEdition();
+  const siteUrl = getSiteUrl(edition);
+  const isCollege = edition === 'college';
+  const title = isCollege ? 'College Portfolio | That Josh Guy' : 'That Josh Guy';
+  const description = isCollege
+    ? 'Josh Skinner’s college portfolio, featuring game development projects, process work, and development blogs.'
+    : 'Designer, tech journalist, and Samsung/Android creator — explore my work, articles, and design projects.';
+
+  return {
+    metadataBase: new URL(siteUrl),
+    title,
+    description,
+    keywords: 'Josh Skinner, That Josh Guy, UI/UX Designer, Graphic Designer, Web Developer, Writer, Portfolio, Freelance, Creative',
+    authors: [{ name: 'Josh Skinner' }],
+    openGraph: {
+      type: 'website',
+      url: siteUrl,
+      title,
+      description,
+      images: [
+        {
+          url: '/images/preview.png',
+          width: 1200,
+          height: 630,
+          alt: 'That Josh Guy Portfolio Preview'
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      site: '@thatjoshguy69',
+      creator: '@thatjoshguy69',
+      title,
+      description,
+      images: ['/images/preview.png']
+    },
+    icons: {
+      icon: favicon
+    }
+  };
 }
 
 export default async function RootLayout({
@@ -60,9 +72,10 @@ export default async function RootLayout({
   const blogEnabledValue = await getBlogEnabled();
   const cornerSmoothingEnabledValue = await getCornerSmoothingEnabled();
   const fmpSeparatedViewEnabledValue = await getFmpSeparatedViewEnabled();
+  const siteEdition = await getSiteEdition();
   
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-site-edition={siteEdition} suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <meta name="theme-color" content="#000" />

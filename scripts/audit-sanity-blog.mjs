@@ -12,6 +12,7 @@ const client = createClient({
   projectId,
   dataset,
   apiVersion: '2024-01-01',
+  perspective: 'published',
   useCdn: false,
   token: process.env.SANITY_API_TOKEN,
 });
@@ -31,6 +32,7 @@ const posts = await client.fetch(`*[_type == "post"] | order(publishedAt desc) {
 }`);
 
 const issues = [];
+const warnings = [];
 const slugMap = new Map();
 
 for (const post of posts) {
@@ -45,7 +47,7 @@ for (const post of posts) {
   }
 
   if (!post.featuredImage?.asset?._ref) {
-    issues.push(`[image] Missing featured image: ${label}`);
+    warnings.push(`[image] No featured image; the site fallback will be used: ${label}`);
   } else if (!post.featuredImageAlt) {
     issues.push(`[image] Missing featured image alt text: ${label}`);
   }
@@ -81,6 +83,13 @@ for (const [slug, labels] of slugMap.entries()) {
 }
 
 console.log(`Audited ${posts.length} Sanity blog posts.`);
+
+if (warnings.length > 0) {
+  console.log(`Found ${warnings.length} warning(s):`);
+  for (const warning of warnings) {
+    console.log(`- ${warning}`);
+  }
+}
 
 if (issues.length === 0) {
   console.log('No migration issues found.');

@@ -36,6 +36,11 @@ const nextConfig = {
   },
   redirects: async () => [
     {
+      source: '/work',
+      destination: '/#design-work',
+      permanent: true,
+    },
+    {
       source: '/work/oneui-design-kit',
       destination: '/blog/oneui-design-kit',
       permanent: true,

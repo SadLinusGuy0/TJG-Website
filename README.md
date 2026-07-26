@@ -13,11 +13,25 @@ The abstraction layer in `lib/blog.ts` normalizes both into one `BlogPost` shape
 
 ## Getting Started
 
+### Site editions
+
+The request hostname selects the site edition while every edition uses the same
+codebase and Sanity dataset:
+
+- `thatjoshguy.me` → `main`
+- `college.thatjoshguy.me` → `college`
+- `beta.thatjoshguy.me` → `beta`
+
+Posts tagged `college` are visible only on the college edition. All other posts
+are visible only on main and beta. For local development or Vercel-generated
+URLs, set the server-side `SITE_EDITION` environment variable to `main`,
+`college`, or `beta`; local development defaults to `beta`.
+
 ```bash
 npm install
 npm run dev        # standard dev server
 npx vercel dev     # use instead for Vercel Toolbar flag overrides
-npm run build      # next build --webpack
+npm run build      # next build
 npm test           # jest
 npm run audit:blog # validate migrated Sanity blog data
 ```

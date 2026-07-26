@@ -1515,6 +1515,171 @@ a.shop-gumroad-button:any-link {
   margin-bottom: 10px;
 }
 
+.shop-products-section {
+  margin-top: 0;
+}
+
+.shop-product-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  width: 100%;
+}
+
+a.shop-product-card:any-link {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  min-height: clamp(250px, 30vw, 420px);
+  padding: clamp(20px, 4vw, 36px);
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: var(--br-9xl);
+  color: #fff;
+  background: var(--container-background);
+  transform: scale(1);
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+a.shop-product-card:hover {
+  transform: scale(1.015);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
+}
+
+a.shop-product-card:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.shop-product-card-background,
+.shop-product-card-gradient {
+  position: absolute;
+  inset: 0;
+}
+
+.shop-product-card-background {
+  z-index: 0;
+}
+
+.shop-product-card-background img {
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.shop-product-card:hover .shop-product-card-background img {
+  transform: scale(1.025);
+}
+
+.shop-product-card-gradient {
+  z-index: 1;
+  background:
+    linear-gradient(to top, rgba(0, 0, 0, 0.76) 0%, rgba(0, 0, 0, 0.4) 38%, rgba(0, 0, 0, 0.08) 72%, transparent 100%),
+    linear-gradient(to right, rgba(0, 0, 0, 0.22), transparent 68%);
+  pointer-events: none;
+}
+
+.shop-product-card-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(100%, 820px);
+}
+
+.shop-product-card-content h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.45rem, 3.2vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.38);
+  text-wrap: balance;
+}
+
+.shop-product-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.shop-product-pill,
+.shop-product-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 28px;
+  padding: 5px 13px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.shop-product-price {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.26);
+}
+
+.shop-product-stars {
+  display: inline-flex;
+  letter-spacing: -1px;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.shop-product-stars .is-filled {
+  color: #ffd45a;
+}
+
+.shop-product-grid .shop-gumroad-button {
+  justify-self: center;
+}
+
+@media (min-width: 1024px) {
+  .shop-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  a.shop-product-card:any-link {
+    min-height: clamp(320px, 24vw, 390px);
+    padding: 24px;
+  }
+
+  .shop-product-grid .shop-gumroad-button {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 767px) {
+  a.shop-product-card:any-link {
+    min-height: clamp(210px, calc((100vw - 40px) * 9 / 16), 280px);
+    padding: 24px;
+  }
+
+  .shop-product-card-content {
+    gap: 10px;
+  }
+
+  .shop-product-card-content h2 {
+    font-size: clamp(1.45rem, 7vw, 2rem);
+  }
+
+  .shop-product-pill,
+  .shop-product-rating {
+    min-height: 26px;
+    padding: 5px 11px;
+    font-size: 0.75rem;
+  }
+}
+
 .footer-socials {
   display: flex;
   flex-direction: row;

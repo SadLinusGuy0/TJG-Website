@@ -15,6 +15,7 @@ import { getInPostSearchBarFmpEnabled } from "../../../lib/getInPostSearchBarFmp
 import PostHeroTopAppBar from "./PostHeroTopAppBar";
 import { getDisplayWordCount, processContentWithEmbeds } from "../../../lib/blogContentProcessing";
 import { portableTextToPlainText, stripHtmlAndDecode } from "../../../lib/portableText";
+import { getSiteEdition, getSiteUrl } from "../../../lib/siteEdition";
 
 export const revalidate = 300;
 
@@ -87,6 +88,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     }
 
     const imageAlt = content.seo?.openGraphImageAlt || getFeaturedImageAltText(content) || seoTitle;
+    const siteUrl = getSiteUrl(await getSiteEdition());
 
     return {
       title: `${seoTitle} | That Josh Guy`,
@@ -112,7 +114,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
         images: featuredImageUrl ? [featuredImageUrl] : undefined,
       },
       alternates: {
-        canonical: content.seo?.canonicalUrl || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://thatjoshguy.me'}/blog/${slug}`,
+        canonical: content.seo?.canonicalUrl || `${siteUrl}/blog/${slug}`,
       },
     };
   } catch (error) {

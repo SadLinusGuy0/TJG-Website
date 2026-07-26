@@ -4,6 +4,12 @@ export interface GumroadProduct {
   url: string;
   imageUrl: string;
   description?: string;
+  formattedPrice?: string;
+  salesCount?: number;
+  rating?: {
+    average: number;
+    count?: number;
+  };
 }
 
 export async function getGumroadProducts(): Promise<GumroadProduct[]> {

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "test": "jest",
@@ -13,32 +13,34 @@
   },
   "dependencies": {
     "@flags-sdk/vercel": "^1.4.5",
-    "@lisse/react": "^0.5.2",
-    "@sanity/client": "^7.23.1",
+    "@lisse/react": "^0.6.0",
+    "@sanity/client": "^7.25.0",
     "@sanity/image-url": "^2.1.1",
     "@sanity/webhook": "^4.0.4",
-    "@thatjoshguy/oneui-icons": "^1.1.0",
+    "@thatjoshguy/oneui-icons": "^1.1.1",
     "@vercel/analytics": "^2.0.1",
     "@vercel/edge-config": "^1.4.3",
     "@vercel/speed-insights": "^2.0.0",
-    "flags": "^4.2.0",
+    "flags": "^4.2.3",
     "lottie-react": "^2.4.1",
-    "next": "^16.2.10",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "next": "^16.2.12",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^26.1.1",
-    "@types/react": "^18.3.31",
-    "@types/react-dom": "^18.3.7",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.5",
-    "eslint-config-next": "^16.2.10",
+    "eslint-config-next": "^16.2.12",
     "jest": "^30.4.2",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "overrides": {
     "postcss": "8.5.19",
+    "sharp": "$sharp",
     "ws": "8.21.0"
   }
 }

@@ -9,6 +9,18 @@ interface GumroadApiProduct {
   thumbnail_url: string | null;
   published: boolean;
   description?: string;
+  price?: number;
+  currency?: string;
+  formatted_price?: string;
+  sales_count?: number;
+  average_rating?: number;
+  rating?: number;
+  review_count?: number;
+  reviews_count?: number;
+  ratings?: {
+    average?: number;
+    count?: number;
+  };
 }
 
 interface GumroadApiResponse {
@@ -17,6 +29,38 @@ interface GumroadApiResponse {
 }
 
 export const revalidate = 3600;
+
+function formatPrice(product: GumroadApiProduct): string | undefined {
+  if (product.formatted_price?.trim()) return product.formatted_price.trim();
+  if (typeof product.price !== "number" || !Number.isFinite(product.price)) return undefined;
+
+  try {
+    return new Intl.NumberFormat("en-GB", {
+      style: "currency",
+      currency: product.currency?.toUpperCase() || "USD",
+    }).format(product.price / 100);
+  } catch {
+    return `$${(product.price / 100).toFixed(2)}`;
+  }
+}
+
+function getRating(product: GumroadApiProduct): GumroadProduct["rating"] {
+  const average =
+    product.ratings?.average ??
+    product.average_rating ??
+    product.rating;
+  const count =
+    product.ratings?.count ??
+    product.review_count ??
+    product.reviews_count;
+
+  if (typeof average !== "number" || !Number.isFinite(average)) return undefined;
+
+  return {
+    average: Math.min(5, Math.max(0, average)),
+    count: typeof count === "number" && Number.isFinite(count) ? count : undefined,
+  };
+}
 
 export async function GET() {
   const token = process.env.GUMROAD_ACCESS_TOKEN;
@@ -49,6 +93,12 @@ export async function GET() {
         url: p.short_url,
         imageUrl: p.preview_url || p.thumbnail_url || "",
         description: p.description,
+        formattedPrice: formatPrice(p),
+        salesCount:
+          typeof p.sales_count === "number" && Number.isFinite(p.sales_count)
+            ? p.sales_count
+            : undefined,
+        rating: getRating(p),
       }))
       .filter((p) => p.imageUrl);
 

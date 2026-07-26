@@ -10,16 +10,19 @@ jest.mock('../lib/sanity.config', () => ({
     projectId: 'project',
     dataset: 'production',
     apiVersion: '2024-01-01',
+    perspective: 'published',
     useCdn: true,
   },
 }));
 
-jest.mock('@sanity/image-url', () => () => ({
-  image: () => ({
-    auto: () => ({
-      width: () => ({
-        quality: () => ({
-          url: () => 'https://cdn.sanity.io/images/project/dataset/image.jpg?w=1200&q=75&auto=format',
+jest.mock('@sanity/image-url', () => ({
+  createImageUrlBuilder: () => ({
+    image: () => ({
+      auto: () => ({
+        width: () => ({
+          quality: () => ({
+            url: () => 'https://cdn.sanity.io/images/project/dataset/image.jpg?w=1200&q=75&auto=format',
+          }),
         }),
       }),
     }),
@@ -99,5 +102,26 @@ describe('Sanity blog mapping', () => {
     });
 
     expect(mapped.wordCount).toBeUndefined();
+  });
+
+  it('ignores stale category and tag references returned as null', () => {
+    const mapped = mapSanityPostForTest({
+      _id: 'post-3',
+      title: 'Post with a stale reference',
+      slug: { current: 'stale-reference' },
+      publishedAt: '2026-07-26T00:00:00.000Z',
+      excerpt: null,
+      featuredImage: null,
+      featuredImageAlt: null,
+      categories: [null, { _id: 'cat-1', title: 'Games', slug: { current: 'games' } }],
+      tags: [null, { _id: 'tag-1', title: 'College', slug: { current: 'college' } }],
+      legacyHtml: null,
+      contentSource: 'portableText',
+      wordCount: null,
+      body: [],
+    });
+
+    expect(mapped.categories).toEqual(['games']);
+    expect(mapped.tags).toEqual(['college']);
   });
 });

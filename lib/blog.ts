@@ -3,6 +3,7 @@ import { getWordpressSourceUrl } from './getWordpressSourceUrlFlag';
 import * as wp from './wordpress';
 import * as sanity from './sanity';
 import { stripHtmlAndDecode, type PortableTextBlock } from './portableText';
+import { getSiteEdition, isPostVisibleOnEdition } from './siteEdition';
 
 export { getBlogContentSource };
 
@@ -81,12 +82,17 @@ async function wpSlugMaps(apiBaseUrl: string) {
 }
 
 export async function fetchAllBlogPosts(opts?: { tagSlug?: string }): Promise<BlogPost[]> {
-  const source = await getBlogContentSource();
+  const [source, edition] = await Promise.all([
+    getBlogContentSource(),
+    getSiteEdition(),
+  ]);
 
   if (source === 'sanity') {
     if (!sanity.isSanityConfigured()) return [];
     const posts = await sanity.fetchAllPosts(opts);
-    return dedupeBlogPostsBySlug(posts);
+    return dedupeBlogPostsBySlug(posts).filter((post) =>
+      isPostVisibleOnEdition(post.tags, edition)
+    );
   }
 
   const apiBaseUrl = await getWordpressSourceUrl();
@@ -100,23 +106,34 @@ export async function fetchAllBlogPosts(opts?: { tagSlug?: string }): Promise<Bl
   }
 
   const posts = await wp.fetchAllPosts({ tagId, apiBaseUrl });
-  return dedupeBlogPostsBySlug(posts.map(p => wpPostToBlogPost(p, catMap, tagMap)));
+  return dedupeBlogPostsBySlug(posts.map(p => wpPostToBlogPost(p, catMap, tagMap)))
+    .filter((post) => isPostVisibleOnEdition(post.tags, edition));
 }
 
 export async function fetchBlogPostBySlug(slug: string): Promise<BlogPost | null> {
-  const source = await getBlogContentSource();
+  const [source, edition] = await Promise.all([
+    getBlogContentSource(),
+    getSiteEdition(),
+  ]);
 
   if (source === 'sanity') {
     if (!sanity.isSanityConfigured()) return null;
-    return sanity.fetchPostBySlug(slug);
+    const post = await sanity.fetchPostBySlug(slug);
+    return post && isPostVisibleOnEdition(post.tags, edition) ? post : null;
   }
 
   const apiBaseUrl = await getWordpressSourceUrl();
   const post = await wp.fetchPostBySlug(slug, apiBaseUrl);
-  if (post) return wpPostToBlogPost(post, new Map(), new Map());
+  if (post) {
+    const mappedPost = wpPostToBlogPost(post, new Map(), new Map());
+    return isPostVisibleOnEdition(mappedPost.tags, edition) ? mappedPost : null;
+  }
 
   const page = await wp.fetchPageBySlug(slug, apiBaseUrl);
-  if (page) return wpPostToBlogPost(page, new Map(), new Map());
+  if (page) {
+    const mappedPage = wpPostToBlogPost(page, new Map(), new Map());
+    return isPostVisibleOnEdition(mappedPage.tags, edition) ? mappedPage : null;
+  }
 
   return null;
 }
