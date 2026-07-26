@@ -1,7 +1,8 @@
-import { mapSanityPostForTest } from '../lib/sanity';
+import { fetchAllPosts, fetchPostBySlug, mapSanityPostForTest } from '../lib/sanity';
 
+const mockFetch = jest.fn();
 jest.mock('@sanity/client', () => ({
-  createClient: () => ({}),
+  createClient: () => ({ fetch: mockFetch }),
 }));
 
 jest.mock('../lib/sanity.config', () => ({
@@ -26,6 +27,24 @@ jest.mock('@sanity/image-url', () => () => ({
 }));
 
 describe('Sanity blog mapping', () => {
+  beforeEach(() => {
+    mockFetch.mockReset();
+  });
+
+  it('excludes hidden posts from lists while keeping direct slug lookups available', async () => {
+    mockFetch.mockResolvedValue([]);
+
+    await fetchAllPosts();
+    expect(mockFetch.mock.calls[0][0]).toContain('coalesce(hideFromBlogLists, false) == false');
+
+    await fetchAllPosts({ tagSlug: 'year-2' });
+    expect(mockFetch.mock.calls[1][0]).toContain('coalesce(hideFromBlogLists, false) == false');
+
+    mockFetch.mockResolvedValue(null);
+    await fetchPostBySlug('private-policy');
+    expect(mockFetch.mock.calls[2][0]).not.toContain('hideFromBlogLists');
+  });
+
   it('maps nested featured image alt text and Portable Text body', () => {
     const mapped = mapSanityPostForTest({
       _id: 'post-1',

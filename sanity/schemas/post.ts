@@ -25,6 +25,13 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'hideFromBlogLists',
+      title: 'Hide from blog lists',
+      type: 'boolean',
+      description: 'Keep the direct post URL available, but exclude this post from the blog index, search, and recent-post lists.',
+      initialValue: false,
+    }),
+    defineField({
       name: 'excerpt',
       title: 'Excerpt',
       type: 'text',
