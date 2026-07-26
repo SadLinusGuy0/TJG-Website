@@ -149,8 +149,8 @@ export const mapSanityPostForTest = mapPost;
 
 export async function fetchAllPosts(options?: { tagSlug?: string }): Promise<BlogPost[]> {
   const filter = options?.tagSlug
-    ? `*[_type == "post" && references(*[_type == "tag" && slug.current == $tagSlug]._id)]`
-    : `*[_type == "post"]`;
+    ? `*[_type == "post" && coalesce(hideFromBlogLists, false) == false && references(*[_type == "tag" && slug.current == $tagSlug]._id)]`
+    : `*[_type == "post" && coalesce(hideFromBlogLists, false) == false]`;
 
   const docs = await getClient().fetch<SanityPostDoc[]>(
     `${filter} | order(_updatedAt desc, publishedAt desc) { ${POST_FIELDS} }`,
