@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { getGumroadProducts, GumroadProduct } from "../../lib/gumroad";
 import { LoadingDots } from "../components/LoadingAnim";
 import PageHeading from "../components/PageHeading";
-import { Settings, Shopping } from "@thatjoshguy/oneui-icons";
+import { Download, Settings, Shopping } from "@thatjoshguy/oneui-icons";
 
 function ProductRating({ average, count }: { average: number; count?: number }) {
   const roundedRating = Math.round(average);
@@ -101,8 +101,16 @@ export default function Shop() {
                             </span>
                           )}
                           {product.salesCount !== undefined && (
-                            <span className="shop-product-pill">
-                              {product.salesCount.toLocaleString()} downloads
+                            <span
+                              className="shop-product-pill"
+                              aria-label={`${product.salesCount.toLocaleString()} downloads`}
+                            >
+                              <span aria-hidden="true">
+                                <Download size={14} color="currentColor" />
+                              </span>
+                              <span aria-hidden="true">
+                                {product.salesCount.toLocaleString()}
+                              </span>
                             </span>
                           )}
                           {product.rating && (
