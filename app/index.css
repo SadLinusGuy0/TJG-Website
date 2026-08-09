@@ -3067,10 +3067,9 @@ justify-content: center;
   .hero-avatar {
     width: 100%;
     max-width: 100%;
-    aspect-ratio: 3/4;
+    aspect-ratio: 4/5;
     min-height: unset;
-    max-height: calc(100vh - 120px);
-    max-height: calc(100dvh - 120px);
+    max-height: none;
     margin: 0;
     border-radius: var(--br-9xl);
   }
