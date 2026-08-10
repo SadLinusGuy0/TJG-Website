@@ -1572,6 +1572,8 @@ button.media-card:hover {
     grid-auto-columns: 1fr;
     gap: 0;
     width: 100%;
+    min-height: 70px;
+    margin: 0 auto;
     position: relative;
     isolation: isolate;
     padding: var(--mobile-nav-rail-padding);
@@ -1585,6 +1587,14 @@ button.media-card:hover {
       inset 0 1px 0 rgba(255,255,255,0.42);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
+  }
+
+  .mobile-nav-tabs[data-item-count="3"] {
+    max-width: 264px;
+  }
+
+  .mobile-nav-tabs[data-item-count="4"] {
+    max-width: 348px;
   }
 
   html[data-theme="dark"] .mobile-nav-tabs {
@@ -1644,7 +1654,7 @@ button.media-card:hover {
     align-items: center;
     justify-content: center;
     gap: 4px;
-    padding: 6px 0;
+    padding: 3px 0;
     border: 0;
     color: var(--secondary);
     background: transparent;
@@ -1686,7 +1696,7 @@ button.media-card:hover {
     outline-offset: -6px;
   }
 
-  .mobile-nav-tab svg { width: 24px; height: 24px; flex-shrink: 0; }
+  .mobile-nav-tab svg { width: 25px; height: 25px; flex-shrink: 0; }
   .mobile-nav-tab--active svg { transform: none; }
   .mobile-nav-tab svg,
   .mobile-nav-tab svg path {
@@ -1694,7 +1704,7 @@ button.media-card:hover {
   }
 
   .mobile-nav-label {
-    font-size: 12px;
+    font-size: 12.5px;
     font-family: 'One UI Sans';
     line-height: 1.2;
     text-align: center;

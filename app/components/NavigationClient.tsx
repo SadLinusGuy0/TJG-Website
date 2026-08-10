@@ -507,13 +507,12 @@ export default function NavigationClient({
   const activeMobileNavIndex = mobileNavItems.findIndex((item) => item.matchesPath);
   const displayedMobileNavIndex = optimisticMobileNavIndex ?? activeMobileNavIndex;
   const mobileNavCount = mobileNavItems.length;
-  const shouldHideMobileNav = hideMobile || pathname?.startsWith('/blog/') || Boolean(
-    hideDesktop && (
-      pathname?.startsWith('/settings') ||
-      pathname === '/playground' ||
-      pathname?.startsWith('/playground/') ||
-      pathname?.startsWith('/work/')
-    )
+  const shouldHideMobileNav = hideMobile || Boolean(
+    pathname?.startsWith('/blog/') ||
+    pathname?.startsWith('/settings') ||
+    pathname === '/playground' ||
+    pathname?.startsWith('/playground/') ||
+    pathname?.startsWith('/work/')
   );
   mobileNavTabRefs.current.length = mobileNavCount;
 
@@ -1006,6 +1005,7 @@ export default function NavigationClient({
           <div
             ref={mobileNavRailRef}
             className="mobile-nav-tabs"
+            data-item-count={mobileNavCount}
             style={{ backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)' }}
           >
             <div
