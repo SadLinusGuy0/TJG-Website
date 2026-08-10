@@ -10,6 +10,11 @@
       "source": "/discord",
       "destination": "https://discord.gg/dRhJ78YH6M",
       "permanent": false
+    },
+    {
+      "source": "/oneui",
+      "destination": "https://www.figma.com/community/file/1456035621603784201/one-ui-design-kit",
+      "permanent": false
     }
   ]
 }
