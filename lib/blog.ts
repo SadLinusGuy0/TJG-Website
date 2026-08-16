@@ -89,7 +89,7 @@ export async function fetchAllBlogPosts(opts?: { tagSlug?: string }): Promise<Bl
 
   if (source === 'sanity') {
     if (!sanity.isSanityConfigured()) return [];
-    const posts = await sanity.fetchAllPosts(opts);
+    const posts = await sanity.fetchAllPosts({ ...opts, edition });
     return dedupeBlogPostsBySlug(posts).filter((post) =>
       isPostVisibleOnEdition(post.tags, edition)
     );
@@ -118,20 +118,23 @@ export async function fetchBlogPostBySlug(slug: string): Promise<BlogPost | null
 
   if (source === 'sanity') {
     if (!sanity.isSanityConfigured()) return null;
-    const post = await sanity.fetchPostBySlug(slug);
+    const post = await sanity.fetchPostBySlug(slug, edition);
     return post && isPostVisibleOnEdition(post.tags, edition) ? post : null;
   }
 
   const apiBaseUrl = await getWordpressSourceUrl();
-  const post = await wp.fetchPostBySlug(slug, apiBaseUrl);
+  const [post, { catMap, tagMap }] = await Promise.all([
+    wp.fetchPostBySlug(slug, apiBaseUrl),
+    wpSlugMaps(apiBaseUrl),
+  ]);
   if (post) {
-    const mappedPost = wpPostToBlogPost(post, new Map(), new Map());
+    const mappedPost = wpPostToBlogPost(post, catMap, tagMap);
     return isPostVisibleOnEdition(mappedPost.tags, edition) ? mappedPost : null;
   }
 
   const page = await wp.fetchPageBySlug(slug, apiBaseUrl);
   if (page) {
-    const mappedPage = wpPostToBlogPost(page, new Map(), new Map());
+    const mappedPage = wpPostToBlogPost(page, catMap, tagMap);
     return isPostVisibleOnEdition(mappedPage.tags, edition) ? mappedPage : null;
   }
 
@@ -139,18 +142,27 @@ export async function fetchBlogPostBySlug(slug: string): Promise<BlogPost | null
 }
 
 export async function fetchBlogPostFeaturedImage(slug: string): Promise<string | null> {
-  const source = await getBlogContentSource();
+  const [source, edition] = await Promise.all([
+    getBlogContentSource(),
+    getSiteEdition(),
+  ]);
 
   if (source === 'sanity') {
     if (!sanity.isSanityConfigured()) return null;
-    const post = await sanity.fetchPostBySlug(slug);
+    const post = await sanity.fetchPostBySlug(slug, edition);
     return post?.featuredImageUrl ?? null;
   }
 
   const apiBaseUrl = await getWordpressSourceUrl();
-  const post = await wp.fetchPostBySlug(slug, apiBaseUrl);
+  const [post, { catMap, tagMap }] = await Promise.all([
+    wp.fetchPostBySlug(slug, apiBaseUrl),
+    wpSlugMaps(apiBaseUrl),
+  ]);
   if (!post) return null;
-  return wp.getFeaturedImageUrlAsync(post, apiBaseUrl);
+  const mappedPost = wpPostToBlogPost(post, catMap, tagMap);
+  return isPostVisibleOnEdition(mappedPost.tags, edition)
+    ? wp.getFeaturedImageUrlAsync(post, apiBaseUrl)
+    : null;
 }
 
 export async function fetchBlogCategories(): Promise<BlogCategory[]> {

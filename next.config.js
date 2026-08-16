@@ -19,6 +19,7 @@ const nextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: path.join(__dirname),
   images: {
+    qualities: [75, 90],
     remotePatterns: [
       { protocol: 'https', hostname: '*.wordpress.com' },
       { protocol: 'https', hostname: '*.wp.com' },
@@ -86,6 +87,6 @@ const nextConfig = {
   },
 };
 
-nextConfig.allowedDevOrigins = ['192.168.1.110'];
+nextConfig.allowedDevOrigins = ['192.168.1.110', '192.168.1.242'];
 
 module.exports = nextConfig;

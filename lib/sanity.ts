@@ -2,6 +2,7 @@ import { createClient, type SanityClient } from '@sanity/client';
 import { createImageUrlBuilder } from '@sanity/image-url';
 import { sanityConfig } from './sanity.config';
 import { portableTextToPlainText, stripHtmlAndDecode, type PortableTextBlock } from './portableText';
+import type { SiteEdition } from './siteEdition';
 
 const REVALIDATE_SECONDS = 60;
 
@@ -149,23 +150,40 @@ function mapPost(doc: SanityPostDoc): BlogPost {
 
 export const mapSanityPostForTest = mapPost;
 
-export async function fetchAllPosts(options?: { tagSlug?: string }): Promise<BlogPost[]> {
-  const filter = options?.tagSlug
-    ? `*[_type == "post" && coalesce(hideFromBlogLists, false) == false && references(*[_type == "tag" && slug.current == $tagSlug]._id)]`
-    : `*[_type == "post" && coalesce(hideFromBlogLists, false) == false]`;
+function editionFilter(edition: SiteEdition): string {
+  const referencesCollegeTag =
+    `references(*[_type == "tag" && slug.current == "college"]._id)`;
+  return edition === 'college' ? referencesCollegeTag : `!${referencesCollegeTag}`;
+}
+
+export async function fetchAllPosts(options: {
+  edition: SiteEdition;
+  tagSlug?: string;
+}): Promise<BlogPost[]> {
+  const filters = [
+    `_type == "post"`,
+    `coalesce(hideFromBlogLists, false) == false`,
+    editionFilter(options.edition),
+  ];
+  if (options.tagSlug) {
+    filters.push(`references(*[_type == "tag" && slug.current == $tagSlug]._id)`);
+  }
 
   const docs = await getClient().fetch<SanityPostDoc[]>(
-    `${filter} | order(_updatedAt desc, publishedAt desc) { ${POST_FIELDS} }`,
-    options?.tagSlug ? { tagSlug: options.tagSlug } : {},
+    `*[${filters.join(' && ')}] | order(_updatedAt desc, publishedAt desc) { ${POST_FIELDS} }`,
+    options.tagSlug ? { tagSlug: options.tagSlug } : {},
     fetchOptions(),
   );
 
   return docs.map(mapPost);
 }
 
-export async function fetchPostBySlug(slug: string): Promise<BlogPost | null> {
+export async function fetchPostBySlug(
+  slug: string,
+  edition: SiteEdition,
+): Promise<BlogPost | null> {
   const doc = await getClient().fetch<SanityPostDoc | null>(
-    `*[_type == "post" && slug.current == $slug][0] { ${POST_FIELDS} }`,
+    `*[_type == "post" && slug.current == $slug && ${editionFilter(edition)}][0] { ${POST_FIELDS} }`,
     { slug },
     fetchOptions(),
   );

@@ -195,10 +195,12 @@ export default function HomeClient({
             <div className="hero-section">
               <div className="hero-avatar">
                 <Image 
-                  src="/images/home/pfp.jpg" 
+                  src="/images/home/pfp-london.jpg"
                   alt="Josh Skinner" 
-                  width={400} 
-                  height={500}
+                  width={2174}
+                  height={2312}
+                  sizes="(max-width: 699px) calc(100vw - 40px), 66vw"
+                  quality={90}
                   className="hero-avatar-image"
                   priority
                   fetchPriority="high"

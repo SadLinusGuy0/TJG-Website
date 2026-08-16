@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cache, Suspense } from "react";
 import Image from "next/image";
-import { fetchAllBlogPosts, fetchBlogPostBySlug, fetchBlogPostFeaturedImage, type BlogPost } from "../../../lib/blog";
+import { fetchBlogPostBySlug, fetchBlogPostFeaturedImage, type BlogPost } from "../../../lib/blog";
 import { notFound } from "next/navigation";
 import LightboxClient from "../../components/LightboxClient";
 import { LoadingDots } from "../../components/LoadingAnim";
@@ -17,17 +17,9 @@ import { getDisplayWordCount, processContentWithEmbeds } from "../../../lib/blog
 import { portableTextToPlainText, stripHtmlAndDecode } from "../../../lib/portableText";
 import { getSiteEdition, getSiteUrl } from "../../../lib/siteEdition";
 
-export const revalidate = 300;
-
-// Pre-build all known post slugs at deploy time; new posts fall back to SSR
-export async function generateStaticParams() {
-  try {
-    const posts = await fetchAllBlogPosts();
-    return posts.map((post) => ({ slug: post.slug }));
-  } catch {
-    return [];
-  }
-}
+// Access is hostname-dependent, so direct post requests must never reuse static
+// output generated for a different site edition.
+export const dynamic = 'force-dynamic';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -59,17 +51,11 @@ function getRenderableText(post: BlogPost): string {
 }
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const { slug } = await props.params;
+  const content = await getContentForSlug(slug);
+  if (!content) notFound();
+
   try {
-    const { slug } = await props.params;
-    const content = await getContentForSlug(slug);
-
-    if (!content) {
-      return {
-        title: "Blog Post | That Josh Guy",
-        description: "Explore the latest stories from That Josh Guy.",
-      };
-    }
-
     const titleText = stripHtmlAndDecode(content.title?.rendered) || "That Josh Guy";
     const seoTitle = stripHtmlAndDecode(content.seo?.title) || titleText;
     const excerptText = stripHtmlAndDecode(content.excerpt?.rendered);
@@ -128,6 +114,8 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
 export default async function BlogPost(props: PageProps) {
   const { slug } = await props.params;
+  const content = await getContentForSlug(slug);
+  if (!content) notFound();
 
   return (
     <div className="page">

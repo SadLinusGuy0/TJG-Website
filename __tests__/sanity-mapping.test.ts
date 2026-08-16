@@ -37,15 +37,35 @@ describe('Sanity blog mapping', () => {
   it('excludes hidden posts from lists while keeping direct slug lookups available', async () => {
     mockFetch.mockResolvedValue([]);
 
-    await fetchAllPosts();
+    await fetchAllPosts({ edition: 'main' });
     expect(mockFetch.mock.calls[0][0]).toContain('coalesce(hideFromBlogLists, false) == false');
+    expect(mockFetch.mock.calls[0][0]).toContain('!references(*[_type == "tag" && slug.current == "college"]._id)');
 
-    await fetchAllPosts({ tagSlug: 'year-2' });
+    await fetchAllPosts({ edition: 'college', tagSlug: 'year-2' });
     expect(mockFetch.mock.calls[1][0]).toContain('coalesce(hideFromBlogLists, false) == false');
+    expect(mockFetch.mock.calls[1][0]).toContain('references(*[_type == "tag" && slug.current == "college"]._id)');
 
     mockFetch.mockResolvedValue(null);
-    await fetchPostBySlug('private-policy');
+    await fetchPostBySlug('private-policy', 'main');
     expect(mockFetch.mock.calls[2][0]).not.toContain('hideFromBlogLists');
+    expect(mockFetch.mock.calls[2][0]).toContain('!references(*[_type == "tag" && slug.current == "college"]._id)');
+  });
+
+  it('allows college-tagged direct slugs only on the college edition', async () => {
+    mockFetch.mockResolvedValue(null);
+
+    await fetchPostBySlug('final-major-project', 'college');
+    expect(mockFetch.mock.calls[0][0]).toContain(
+      'references(*[_type == "tag" && slug.current == "college"]._id)',
+    );
+    expect(mockFetch.mock.calls[0][0]).not.toContain(
+      '!references(*[_type == "tag" && slug.current == "college"]._id)',
+    );
+
+    await fetchPostBySlug('final-major-project', 'beta');
+    expect(mockFetch.mock.calls[1][0]).toContain(
+      '!references(*[_type == "tag" && slug.current == "college"]._id)',
+    );
   });
 
   it('maps nested featured image alt text and Portable Text body', () => {

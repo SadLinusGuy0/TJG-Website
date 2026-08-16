@@ -27,13 +27,11 @@ const getContentForSlug = cache(async (slug: string): Promise<BlogPost | null> =
 });
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
-  try {
-    const { slug, section } = await props.params;
-    const content = await getContentForSlug(slug);
-    if (!content) {
-      return { title: "Section | That Josh Guy" };
-    }
+  const { slug, section } = await props.params;
+  const content = await getContentForSlug(slug);
+  if (!content) notFound();
 
+  try {
     const sections = extractH1Sections(content.content?.rendered || '');
     const matched = sections.find(s => s.slug === section);
     const sectionTitle = matched?.title || section;
@@ -50,6 +48,8 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
 export default async function SectionPage(props: PageProps) {
   const { slug, section } = await props.params;
+  const content = await getContentForSlug(slug);
+  if (!content) notFound();
 
   return (
     <div className="page">
