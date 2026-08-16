@@ -1,0 +1,51 @@
+name: Claude
+
+# Interactive @claude bot: mention @claude in any PR/issue comment or review
+# to get an agent with full repo context. Because the Notion MCP server is
+# configured here, you can also say things like
+#   "@claude update the Notion docs for this PR now"
+# and it will edit the TJG Site Docs wiki directly (page map lives in
+# docs/NOTION_DOCS.md).
+#
+# Requires repository secrets: CLAUDE_CODE_OAUTH_TOKEN (from
+# `claude setup-token`, billed to your Claude subscription), NOTION_TOKEN.
+# Auth uses the Claude GitHub App (https://github.com/apps/claude) via OIDC,
+# so replies are posted under the Claude bot identity. If you ever uninstall
+# the app, add `github_token: secrets.GITHUB_TOKEN` back to the action inputs.
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+  issues:
+    types: [opened, assigned]
+
+jobs:
+  claude:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: |
+            --mcp-config '{"mcpServers":{"notion":{"command":"npx","args":["-y","@notionhq/notion-mcp-server"],"env":{"NOTION_TOKEN":"${{ secrets.NOTION_TOKEN }}"}}}}'
+            --allowedTools "Bash(git:*),Bash(gh:*),Bash(npm run lint),Bash(npm test:*),Read,Grep,Glob,Edit,Write,mcp__notion__*"
