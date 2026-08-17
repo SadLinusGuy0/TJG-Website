@@ -379,7 +379,11 @@ export default function NavigationClient({
   }, [displayedDesktopNavIndex, hideDesktop]);
 
   useLayoutEffect(() => {
-    if (hideDesktop || displayedDesktopNavIndex < 0) {
+    // The sidebar's width transition fires ResizeObserver on every animation
+    // frame. Measuring the active tab during that transition forces repeated
+    // layouts and React renders, even though the indicator is intentionally
+    // frozen until the resize has finished.
+    if (hideDesktop || displayedDesktopNavIndex < 0 || desktopNavIsResizing) {
       return;
     }
 
@@ -493,7 +497,7 @@ export default function NavigationClient({
       resizeObserver?.disconnect();
       window.removeEventListener('resize', updateDesktopIndicatorLayout);
     };
-  }, [desktopNavCount, desktopNavItems, displayedDesktopNavIndex, hideDesktop]);
+  }, [desktopNavCount, desktopNavIsResizing, desktopNavItems, displayedDesktopNavIndex, hideDesktop]);
 
   const mobileNavItems = useMemo(() => [
     {
@@ -746,6 +750,36 @@ export default function NavigationClient({
     }));
     setCollapsed((current) => !current);
   };
+
+  useEffect(() => {
+    if (hideDesktop || collapsed) {
+      return;
+    }
+
+    const handlePointerDownOutside = (event: PointerEvent) => {
+      const nav = desktopNavRef.current;
+      const target = event.target;
+
+      if (
+        !window.matchMedia('(min-width: 700px)').matches ||
+        !nav ||
+        !(target instanceof Node) ||
+        nav.contains(target)
+      ) {
+        return;
+      }
+
+      setDesktopNavIsResizing(true);
+      setDesktopIndicatorState((state) => ({
+        ...state,
+        instant: true,
+      }));
+      setCollapsed(true);
+    };
+
+    document.addEventListener('pointerdown', handlePointerDownOutside, true);
+    return () => document.removeEventListener('pointerdown', handlePointerDownOutside, true);
+  }, [collapsed, hideDesktop]);
 
   const getSidebarResizeBounds = () => {
     const nav = desktopNavRef.current;

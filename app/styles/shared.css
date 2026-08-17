@@ -1657,7 +1657,7 @@ button.media-card:hover {
 /* Navigation visibility */
 .desktop-nav {
   display: flex;
-  transition: width 0.3s cubic-bezier(0.4,0,0.2,1), min-width 0.3s cubic-bezier(0.4,0,0.2,1), max-width 0.3s cubic-bezier(0.4,0,0.2,1);
+  transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
 .desktop-nav-shadow {
@@ -1674,9 +1674,8 @@ button.media-card:hover {
   opacity: 1;
   pointer-events: none;
   z-index: 999;
-  transition:
-    width 0.3s cubic-bezier(0.4,0,0.2,1),
-    opacity 0.18s ease;
+  contain: layout paint;
+  transition: opacity 0.18s ease;
 }
 
 body.nav-collapsed .desktop-nav-shadow {
@@ -2078,6 +2077,7 @@ opacity: 0;
 
 .desktop-nav--resizing .desktop-nav-indicator {
 transition: none;
+width: calc(100% - 24px) !important;
 }
 
 .desktop-nav--resizing .desktop-nav-indicator-pill {
@@ -2411,9 +2411,10 @@ transform: translateY(-1px) scale(1.025) !important;
 }
 .tab-container.desktop-nav {
 width: var(--sidebar-width, 360px);
-min-width: var(--sidebar-width, 360px);
-max-width: var(--sidebar-width, 360px);
+min-width: 0;
+max-width: none;
 overflow: hidden;
+contain: layout paint;
 border: 0;
 outline: 0;
 background: rgba(252, 252, 255, 0.68);
@@ -2422,8 +2423,6 @@ box-shadow: none;
 backdrop-filter: blur(24px);
 transition:
   width 0.3s cubic-bezier(0.4,0,0.2,1),
-  min-width 0.3s cubic-bezier(0.4,0,0.2,1),
-  max-width 0.3s cubic-bezier(0.4,0,0.2,1),
   background-color 0.2s ease,
   border-color 0.2s ease,
   box-shadow 0.2s ease,
@@ -2435,9 +2434,7 @@ border: 0;
 background: rgba(37, 39, 43, 0.68);
 }
 body.nav-collapsed .tab-container.desktop-nav {
-width: 8%;
-min-width: 72px;
-max-width: 72px;
+width: 72px;
 border: 0;
 outline: 0;
 background: transparent;
