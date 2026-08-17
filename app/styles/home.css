@@ -966,6 +966,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   --featured-stories-peek: min(72px, 10vw);
   /* Align first card with main column (peek bleed + .main-content horizontal padding); mandatory snap otherwise scrolls past padding-left */
   --featured-stories-card-start-inset: calc(var(--featured-stories-peek) + 20px);
+  --featured-stories-snap-start-inset: var(--featured-stories-card-start-inset);
   width: calc(100% + 2 * var(--featured-stories-peek));
   margin-left: calc(-1 * var(--featured-stories-peek));
   margin-right: calc(-1 * var(--featured-stories-peek));
@@ -978,7 +979,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   overflow-x: auto;
   overflow-y: visible;
   scroll-snap-type: x mandatory;
-  scroll-padding-left: var(--featured-stories-card-start-inset);
+  scroll-padding-left: var(--featured-stories-snap-start-inset);
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   padding: 0;
@@ -1361,6 +1362,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   position: relative;
   --design-projects-peek: min(72px, 10vw);
   --design-projects-card-start-inset: calc(var(--design-projects-peek) + 20px);
+  --design-projects-snap-start-inset: var(--design-projects-card-start-inset);
   width: calc(100% + 2 * var(--design-projects-peek));
   margin-left: calc(-1 * var(--design-projects-peek));
   margin-right: calc(-1 * var(--design-projects-peek));
@@ -1373,7 +1375,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   overflow-x: auto;
   overflow-y: visible;
   scroll-snap-type: x mandatory;
-  scroll-padding-left: var(--design-projects-card-start-inset);
+  scroll-padding-left: var(--design-projects-snap-start-inset);
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   padding: 0;
@@ -1484,6 +1486,9 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
   .home-page .featured-stories-scroll-wrapper {
     --featured-stories-card-start-inset: calc(var(--featured-stories-peek) + 37px);
+    --featured-stories-snap-start-inset: calc(
+      var(--home-carousel-curtain-boundary) + var(--home-carousel-curtain-fade)
+    );
     width: calc(100% + var(--home-carousel-left-bleed) + var(--featured-stories-peek));
     margin-left: calc(-1 * var(--home-carousel-left-bleed));
     margin-right: calc(-1 * var(--featured-stories-peek));
@@ -1495,6 +1500,9 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
   .home-page .design-projects-scroll-wrapper {
     --design-projects-card-start-inset: calc(var(--design-projects-peek) + 37px);
+    --design-projects-snap-start-inset: calc(
+      var(--home-carousel-curtain-boundary) + var(--home-carousel-curtain-fade)
+    );
     width: calc(100% + var(--home-carousel-left-bleed) + var(--design-projects-peek));
     margin-left: calc(-1 * var(--home-carousel-left-bleed));
     margin-right: calc(-1 * var(--design-projects-peek));
