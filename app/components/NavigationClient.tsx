@@ -269,7 +269,7 @@ export default function NavigationClient({
     }
   }, [collapsePreferenceReady, collapsed, hideDesktop]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (hideDesktop) {
       return;
     }

@@ -124,7 +124,24 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var storedNavState = sessionStorage.getItem('sidebar-collapsed');
+                  document.body.classList.toggle(
+                    'nav-collapsed',
+                    storedNavState === null ? true : storedNavState === 'true'
+                  );
+                } catch (e) {
+                  document.body.classList.add('nav-collapsed');
+                }
+              })();
+            `,
+          }}
+        />
         <ThemeProvider cornerSmoothingAvailable={cornerSmoothingEnabledValue} fmpSeparatedViewAvailable={fmpSeparatedViewEnabledValue}>
           <BlogFlagProvider blogEnabled={blogEnabledValue}>
             <ProgressiveBlur />

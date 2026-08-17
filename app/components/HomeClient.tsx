@@ -6,7 +6,7 @@ import DiscordActivityCard from "./DiscordActivityCard";
 import TopAppBarIcon from "./TopAppBarIcon";
 import { Location, Settings } from '@thatjoshguy/oneui-icons';
 import Footer from "./Footer";
-import { CSSProperties, ReactElement, ReactNode, RefObject, useEffect, useRef, useState } from "react";
+import { CSSProperties, ReactElement, ReactNode, RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { SmoothCorners } from '@lisse/react';
 import { useTheme } from './ThemeProvider';
 import type { FeaturedStory } from "../../lib/featured-stories";
@@ -546,10 +546,63 @@ export default function HomeClient({
     { name: 'Termius', icon: '/images/stack/termius.png' },
   ];
   const stackRows = [stackTools.slice(0, 8), stackTools.slice(8)];
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [heroLaunchReady, setHeroLaunchReady] = useState(false);
   const publicationMarqueeRef = useRef<HTMLDivElement>(null);
   const stackMarqueeRef = useRef<HTMLDivElement>(null);
   useAdaptiveMarqueeMotion(publicationMarqueeRef, ".publications-marquee", ".publication-item");
   useAdaptiveMarqueeMotion(stackMarqueeRef, ".stack-marquee", ".stack-icon");
+
+  useLayoutEffect(() => {
+    const navigationEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    if (navigationEntry?.type === "reload" && window.scrollY > 0) {
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+
+    let cancelled = false;
+    let firstFrame = 0;
+    let secondFrame = 0;
+    const images = Array.from(hero.querySelectorAll<HTMLImageElement>(".hero-mesh img"));
+    const decoded = images.map(async (image) => {
+      if (!image.complete) {
+        await new Promise<void>((resolve) => {
+          image.addEventListener("load", () => resolve(), { once: true });
+          image.addEventListener("error", () => resolve(), { once: true });
+        });
+      }
+
+      if (typeof image.decode === "function") {
+        await image.decode().catch(() => undefined);
+      }
+    });
+
+    const timeout = window.setTimeout(() => {
+      if (!cancelled) setHeroLaunchReady(true);
+    }, 900);
+
+    void Promise.all(decoded).then(() => {
+      if (cancelled) return;
+      window.clearTimeout(timeout);
+
+      firstFrame = requestAnimationFrame(() => {
+        secondFrame = requestAnimationFrame(() => {
+          if (!cancelled) setHeroLaunchReady(true);
+        });
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeout);
+      cancelAnimationFrame(firstFrame);
+      cancelAnimationFrame(secondFrame);
+    };
+  }, []);
 
   return (
     <div className="page home-page">
@@ -564,12 +617,15 @@ export default function HomeClient({
       <div className="page-body">
         <div className="main-content">
           {/* Hero + Role Cards Layout */}
-          <div className="hero-role-wrapper">
+          <div
+            ref={heroRef}
+            className={`hero-role-wrapper${heroLaunchReady ? " hero-launch-ready" : ""}`}
+          >
+            {environmentLabel && (
+              <span className="beta-chip hero-environment-chip">{environmentLabel}</span>
+            )}
             {/* Hero Section */}
             <div className="hero-section">
-              {environmentLabel && (
-                <span className="beta-chip hero-environment-chip">{environmentLabel}</span>
-              )}
               <div className="hero-mesh" aria-hidden="true">
                 <Image src="/images/home/hero/mesh-light-left.svg" alt="" width={1637} height={1603} className="hero-mesh-layer hero-mesh-light hero-mesh-light-left" priority />
                 <Image src="/images/home/hero/mesh-light-center.svg" alt="" width={1637} height={1603} className="hero-mesh-layer hero-mesh-light hero-mesh-light-center" priority />
