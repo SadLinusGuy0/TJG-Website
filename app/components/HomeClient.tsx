@@ -153,6 +153,28 @@ function StackIcon({ tool }: { tool: StackTool }) {
   );
 }
 
+function EdgeMaskedCarousel({
+  className,
+  children,
+}: {
+  className: string;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className={className}
+      onScroll={(event) => {
+        event.currentTarget.classList.toggle(
+          "has-left-overflow",
+          event.currentTarget.scrollLeft > 4,
+        );
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 function StoryCard({ story }: { story: FeaturedStory }) {
   return (
     <SmoothHoverCard>
@@ -569,13 +591,13 @@ export default function HomeClient({
             <div className="featured-stories-section">
               <h2 className="featured-stories-headline">Popular articles</h2>
               <div className="featured-stories-scroll-wrapper">
-                <div className="featured-stories-scroll">
+                <EdgeMaskedCarousel className="featured-stories-scroll">
                   <div className="featured-stories-scroll-inner">
                     {featuredStories.map((story, index) => (
                       <StoryCard key={index} story={story} />
                     ))}
                   </div>
-                </div>
+                </EdgeMaskedCarousel>
               </div>
             </div>
           )}
@@ -585,13 +607,13 @@ export default function HomeClient({
             <section className="design-projects-section projects-showcase-section" id="design-work">
               <h2 className="design-projects-headline">Projects</h2>
               <div className="design-projects-scroll-wrapper">
-                <div className="design-projects-scroll">
+                <EdgeMaskedCarousel className="design-projects-scroll">
                   <div className="design-projects-scroll-inner">
                     {projects.map((project, index) => (
                       <ProjectCard key={index} project={project} />
                     ))}
                   </div>
-                </div>
+                </EdgeMaskedCarousel>
               </div>
             </section>
           )}
@@ -629,7 +651,7 @@ export default function HomeClient({
               <h2 className="design-projects-headline">Recent Blog Posts</h2>
               <p className="design-projects-subtitle">Fresh off the press.</p>
               <div className="design-projects-scroll-wrapper">
-                <div className="design-projects-scroll">
+                <EdgeMaskedCarousel className="design-projects-scroll">
                   <div className="design-projects-scroll-inner">
                     {recentBlogPosts.map((post) => (
                       <SmoothHoverCard key={post.id}>
@@ -653,7 +675,7 @@ export default function HomeClient({
                       </SmoothHoverCard>
                     ))}
                   </div>
-                </div>
+                </EdgeMaskedCarousel>
               </div>
             </div>
           )}

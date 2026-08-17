@@ -1401,6 +1401,80 @@ html[data-theme="dark"] .hero-theme-asset-dark {
     --home-carousel-start-gap: 0px;
   }
 
+  .home-page .featured-stories-section .featured-stories-scroll-wrapper,
+  .home-page .projects-showcase-section .design-projects-scroll-wrapper,
+  .home-page
+    .design-projects-section:not(.projects-showcase-section)
+    .design-projects-scroll-wrapper {
+    --home-carousel-curtain-boundary: calc(var(--home-carousel-left-bleed) + 11px);
+    --home-carousel-curtain-fade: clamp(96px, 10vw, 160px);
+    isolation: isolate;
+  }
+
+  .home-page .featured-stories-section .featured-stories-scroll-wrapper::before,
+  .home-page .featured-stories-section .featured-stories-scroll-wrapper::after,
+  .home-page .projects-showcase-section .design-projects-scroll-wrapper::before,
+  .home-page .projects-showcase-section .design-projects-scroll-wrapper::after,
+  .home-page
+    .design-projects-section:not(.projects-showcase-section)
+    .design-projects-scroll-wrapper::before,
+  .home-page
+    .design-projects-section:not(.projects-showcase-section)
+    .design-projects-scroll-wrapper::after {
+    content: "";
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+  }
+
+  .home-page .featured-stories-section .featured-stories-scroll-wrapper::before,
+  .home-page .projects-showcase-section .design-projects-scroll-wrapper::before,
+  .home-page
+    .design-projects-section:not(.projects-showcase-section)
+    .design-projects-scroll-wrapper::before {
+    left: 0;
+    width: calc(var(--home-carousel-curtain-boundary) + var(--home-carousel-curtain-fade));
+    background: linear-gradient(
+      90deg,
+      var(--background) 0,
+      var(--background) var(--home-carousel-curtain-boundary),
+      transparent calc(
+        var(--home-carousel-curtain-boundary) + var(--home-carousel-curtain-fade)
+      )
+    );
+    opacity: 0;
+    transition: opacity 160ms ease-out;
+    will-change: opacity;
+  }
+
+  .home-page
+    .featured-stories-section
+    .featured-stories-scroll-wrapper:has(.featured-stories-scroll.has-left-overflow)::before,
+  .home-page
+    .projects-showcase-section
+    .design-projects-scroll-wrapper:has(.design-projects-scroll.has-left-overflow)::before,
+  .home-page
+    .design-projects-section:not(.projects-showcase-section)
+    .design-projects-scroll-wrapper:has(.design-projects-scroll.has-left-overflow)::before {
+    opacity: 1;
+  }
+
+  .home-page .featured-stories-section .featured-stories-scroll-wrapper::after,
+  .home-page .projects-showcase-section .design-projects-scroll-wrapper::after,
+  .home-page
+    .design-projects-section:not(.projects-showcase-section)
+    .design-projects-scroll-wrapper::after {
+    right: 0;
+    width: var(--home-carousel-curtain-fade);
+    background: linear-gradient(
+      90deg,
+      transparent 0,
+      var(--background) 100%
+    );
+  }
+
   body.nav-collapsed .home-page {
     --home-carousel-left-bleed: calc(
       var(--home-carousel-page-gutter) + clamp(88px, 8vw, 128px) + 10px
@@ -1409,7 +1483,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   }
 
   .home-page .featured-stories-scroll-wrapper {
-    --featured-stories-card-start-inset: calc(var(--featured-stories-peek) + 36px);
+    --featured-stories-card-start-inset: calc(var(--featured-stories-peek) + 37px);
     width: calc(100% + var(--home-carousel-left-bleed) + var(--featured-stories-peek));
     margin-left: calc(-1 * var(--home-carousel-left-bleed));
     margin-right: calc(-1 * var(--featured-stories-peek));
@@ -1420,7 +1494,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   }
 
   .home-page .design-projects-scroll-wrapper {
-    --design-projects-card-start-inset: calc(var(--design-projects-peek) + 36px);
+    --design-projects-card-start-inset: calc(var(--design-projects-peek) + 37px);
     width: calc(100% + var(--home-carousel-left-bleed) + var(--design-projects-peek));
     margin-left: calc(-1 * var(--home-carousel-left-bleed));
     margin-right: calc(-1 * var(--design-projects-peek));
@@ -1810,13 +1884,13 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 .about-section {
   width: 100%;
-  max-width: 1372px;
+  max-width: none;
   margin: 0 auto 96px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 414px;
   align-items: start;
   gap: 30px;
-  padding: 60px;
+  padding: 60px 11px;
   box-sizing: border-box;
   color: var(--primary);
   background: transparent;
@@ -2116,8 +2190,8 @@ a.discord-activity-card:hover {
   .about-section {
     grid-template-columns: minmax(0, 1fr);
     gap: 32px;
-    max-width: 900px;
-    padding: 48px;
+    max-width: none;
+    padding: 48px 11px;
   }
 
   .about-headline {
