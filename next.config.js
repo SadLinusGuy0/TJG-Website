@@ -18,6 +18,9 @@ const turbopackFlagsDefinitionsAlias = flagsDefinitionsAlias
 const nextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: path.join(__dirname),
+  experimental: {
+    inlineCss: true,
+  },
   images: {
     qualities: [75, 90],
     remotePatterns: [

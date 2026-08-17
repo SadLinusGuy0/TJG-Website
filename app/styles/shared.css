@@ -1642,7 +1642,7 @@ button.media-card:hover {
 
 @font-face {
   font-family: 'One UI Sans';
-  src: url('/fonts/oneuisans.ttf') format('truetype-variations');
+  src: url('/fonts/oneuisans-subset.woff2') format('woff2');
   font-weight: 100 900;
   font-display: swap;
 }

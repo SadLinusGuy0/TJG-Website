@@ -1,8 +1,5 @@
 "use client";
 
-import Lottie from "lottie-react";
-import circleProgressData from "../../public/animations/oneui-spinner.json";
-
 type LoadingDotsProps = {
   size?: number;
   className?: string;
@@ -27,12 +24,7 @@ export function LoadingDots({
       aria-label="Loading"
       role="status"
     >
-      <Lottie
-        animationData={circleProgressData}
-        loop
-        autoplay
-        style={{ width: size, height: size }}
-      />
+      <span className="loading-anim-spinner" aria-hidden="true" />
     </div>
   );
 }

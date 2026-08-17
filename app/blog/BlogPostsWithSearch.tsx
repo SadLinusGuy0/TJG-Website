@@ -10,6 +10,12 @@ interface BlogPostsWithSearchProps {
 
 export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearchProps) {
   const { filteredPosts } = useBlogSearch();
+  const initialImageIds = new Set(
+    filteredPosts
+      .filter((post) => Boolean(post.featuredImageUrl))
+      .slice(0, 2)
+      .map((post) => post.id)
+  );
 
   return (
     <>
@@ -33,6 +39,7 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
                             alt=""
                             fill
                             sizes="(max-width: 699px) calc(100vw - 56px), (max-width: 1200px) calc((100vw - 220px) / 2), 520px"
+                            preload={initialImageIds.has(post.id)}
                             style={{ objectFit: 'cover' }}
                           />
                         </div>

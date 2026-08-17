@@ -6,8 +6,7 @@ import DiscordActivityCard from "./DiscordActivityCard";
 import TopAppBarIcon from "./TopAppBarIcon";
 import { Location, Settings } from '@thatjoshguy/oneui-icons';
 import Footer from "./Footer";
-import { CSSProperties, ReactElement, ReactNode, RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { SmoothCorners } from '@lisse/react';
+import { CSSProperties, ReactElement, ReactNode, RefObject, Suspense, lazy, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTheme } from './ThemeProvider';
 import type { FeaturedStory } from "../../lib/featured-stories";
 import type { Project } from "../../lib/projects";
@@ -84,6 +83,10 @@ const CARD_SHADOW = {
   color: '#000000',
 };
 
+const LazySmoothCorners = lazy(() => import('@lisse/react').then((module) => ({
+  default: module.SmoothCorners,
+})));
+
 function FoldIcon({ size = 24, color = "currentColor" }: { size?: number; color?: string }) {
   return (
     <svg
@@ -127,15 +130,17 @@ function SmoothHoverCard({
   }
 
   return (
-    <SmoothCorners
-      asChild
-      autoEffects={false}
-      corners={corners}
-      shadow={{ ...CARD_SHADOW, opacity: 0.12 }}
-      data-no-smooth-corners=""
-    >
-      {children}
-    </SmoothCorners>
+    <Suspense fallback={children}>
+      <LazySmoothCorners
+        asChild
+        autoEffects={false}
+        corners={corners}
+        shadow={{ ...CARD_SHADOW, opacity: 0.12 }}
+        data-no-smooth-corners=""
+      >
+        {children}
+      </LazySmoothCorners>
+    </Suspense>
   );
 }
 
@@ -688,8 +693,6 @@ export default function HomeClient({
                   fill
                   sizes="(max-width: 699px) calc(100vw - 40px), 414px"
                   className="about-portrait-image"
-                  priority
-                  unoptimized
                 />
                 <figcaption className="about-location">
                   <Location size={28} color="currentColor" />

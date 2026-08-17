@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from 'next/navigation';
-import { useState, useEffect, createContext, useContext, useLayoutEffect, useMemo, useRef } from 'react';
+import { Suspense, createContext, lazy, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   CSSProperties,
   KeyboardEvent,
@@ -13,8 +13,11 @@ import type {
 import { useBlogEnabled } from './BlogFlagProvider';
 import { HomeIcon, ShopIcon, BlogIcon, ContactIcon } from './NavIcons';
 import { Drawer, Settings } from '@thatjoshguy/oneui-icons';
-import { SmoothCorners } from '@lisse/react';
 import { useTheme } from './ThemeProvider';
+
+const LazySmoothCorners = lazy(() => import('@lisse/react').then((module) => ({
+  default: module.SmoothCorners,
+})));
 
 // Context to share collapsed state
 export const NavCollapseContext = createContext({ collapsed: true, setCollapsed: (_: boolean) => {} });
@@ -69,7 +72,7 @@ function MobileNavTab({
     <Link
       ref={tabRef}
       href={href}
-      prefetch
+      prefetch={false}
       className={`mobile-nav-tab${isSelected ? ' mobile-nav-tab--active' : ''}`}
       onClick={onClick}
       onFocus={onNavigateIntent}
@@ -88,6 +91,7 @@ function DesktopNavButton({
   isSelected,
   indicatorManaged = false,
   onClick,
+  onNavigateIntent,
   tabRef,
   children
 }: {
@@ -95,6 +99,7 @@ function DesktopNavButton({
   isSelected: boolean;
   indicatorManaged?: boolean;
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
+  onNavigateIntent?: () => void;
   tabRef?: (element: HTMLAnchorElement | null) => void;
   children: ReactNode;
 }) {
@@ -103,9 +108,12 @@ function DesktopNavButton({
     <Link
       ref={tabRef}
       href={href}
-      prefetch
+      prefetch={false}
       className={`${isSelected ? 'nav-icon-container-selected' : 'nav-icon-container'}${indicatorManaged ? ' desktop-nav-core-tab' : ''}`}
       onClick={onClick}
+      onFocus={onNavigateIntent}
+      onMouseEnter={onNavigateIntent}
+      onPointerDown={onNavigateIntent}
       data-no-smooth-corners=""
     >
       <div className="desktop-nav-content">
@@ -119,13 +127,15 @@ function DesktopNavButton({
   }
 
   return (
-    <SmoothCorners
-      asChild
-      autoEffects={false}
-      corners={DESKTOP_NAV_CORNERS}
-    >
-      {link}
-    </SmoothCorners>
+    <Suspense fallback={link}>
+      <LazySmoothCorners
+        asChild
+        autoEffects={false}
+        corners={DESKTOP_NAV_CORNERS}
+      >
+        {link}
+      </LazySmoothCorners>
+    </Suspense>
   );
 }
 
@@ -539,18 +549,6 @@ export default function NavigationClient({
       instant: true,
     }));
   }, [shouldHideMobileNav]);
-
-  useEffect(() => {
-    if (shouldHideMobileNav) {
-      return;
-    }
-
-    mobileNavItems.forEach((item) => {
-      if (item.href !== pathname) {
-        router.prefetch(item.href);
-      }
-    });
-  }, [shouldHideMobileNav, mobileNavItems, pathname, router]);
 
   useLayoutEffect(() => {
     if (shouldHideMobileNav || displayedMobileNavIndex < 0) {
@@ -979,6 +977,7 @@ export default function NavigationClient({
                     desktopNavItemRefs.current[index] = element;
                   }}
                   onClick={(event) => handleDesktopNavClick(event, index)}
+                  onNavigateIntent={() => router.prefetch(item.href)}
                 >
                   {item.icon(isSelected)}
                   <div className={isSelected ? 'nav-label-selected' : 'nav-label'}>{item.label}</div>
@@ -987,7 +986,11 @@ export default function NavigationClient({
             })}
           </div>
           <div className="nav-footer">
-            <DesktopNavButton href="/settings" isSelected={pathname === '/settings' || pathname?.startsWith('/settings/')}>
+            <DesktopNavButton
+              href="/settings"
+              isSelected={pathname === '/settings' || pathname?.startsWith('/settings/')}
+              onNavigateIntent={() => router.prefetch('/settings')}
+            >
               <Settings size={24} color="var(--primary)" />
               <div className={pathname === '/settings' || pathname?.startsWith('/settings/') ? 'nav-label-selected' : 'nav-label'} style={{ color: 'var(--primary)' }}>Settings</div>
             </DesktopNavButton>

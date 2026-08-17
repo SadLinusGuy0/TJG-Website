@@ -1,12 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
+import React, { Suspense, createContext, lazy, useContext, useEffect, useState } from 'react';
 import { supportsLisseSmoothCorners } from '../utils/cornerSmoothingSupport';
 
-const CornerSmoothingManager = dynamic(
-  () => import('./CornerSmoothingManager').then((module) => module.CornerSmoothingManager),
-  { ssr: false },
+const LazyCornerSmoothingManager = lazy(
+  () => import('./CornerSmoothingManager').then((module) => ({
+    default: module.CornerSmoothingManager,
+  })),
 );
 
 type Theme = 'light' | 'dark' | 'auto';
@@ -243,8 +243,6 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpS
     document.documentElement.dataset.cornerSmoothing = (cornerSmoothingAvailable && cornerSmoothing).toString();
   }, [cornerSmoothing, cornerSmoothingAvailable]);
 
-  if (!hydrated) return null;
-
   const setAccentColor = (color: AccentColor) => {
     setAccentColorState(color);
     applyAccentColor(color);
@@ -268,7 +266,11 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpS
     <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, fmpSeparatedViewAvailable, hydrated }}>
       {children}
       {cornerSmoothingAvailable && cornerSmoothing
-        ? <CornerSmoothingManager enabled />
+        ? (
+          <Suspense fallback={null}>
+            <LazyCornerSmoothingManager enabled />
+          </Suspense>
+        )
         : null}
     </ThemeContext.Provider>
   );

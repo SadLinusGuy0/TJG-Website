@@ -3,7 +3,9 @@ import { useEffect, useState, useCallback } from "react";
 
 const STORAGE_KEY = "discordPopupDismissed";
 const DISCORD_URL = "https://discord.gg/dRhJ78YH6M";
-const SHOW_DELAY = 3000;
+// Keep this secondary prompt outside the critical first-load window. Showing it
+// while the page is settling creates a late visual update and interrupts readers.
+const SHOW_DELAY = 10000;
 
 export default function DiscordPopup() {
   const [visible, setVisible] = useState(false);

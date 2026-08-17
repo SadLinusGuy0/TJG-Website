@@ -130,7 +130,15 @@ export default function Shop() {
                   </a>
                 </div>
               ) : (
-                <div className="panel" style={{ padding: 'var(--padding-xll)' }}>
+                <div
+                  className="panel"
+                  style={{
+                    padding: 'var(--padding-xll)',
+                    minHeight: '200px',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
                   <div className="body-text">No products available at the moment.</div>
                 </div>
               )}
