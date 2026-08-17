@@ -5,6 +5,7 @@ import { getProjectsEnabled } from "../lib/getProjectsEnabledFlag";
 import { getMiscSectionEnabled } from "../lib/getMiscSectionFlag";
 import { getRecentBlogPostsEnabled } from "../lib/getRecentBlogPostsFlag";
 import { getRecentBlogPosts } from "../lib/recent-blog-posts";
+import { getHomeProfileFacts } from "../lib/home-profile";
 import HomeClient from "./components/HomeClient";
 
 // Ensure flags are evaluated per-request (needed for toolbar overrides)
@@ -18,6 +19,7 @@ export default async function Home() {
     projectsEnabled,
     miscSectionEnabled,
     recentBlogPostsEnabled,
+    profileFacts,
   ] = await Promise.all([
     getFeaturedStories(),
     getProjects(),
@@ -25,6 +27,7 @@ export default async function Home() {
     getProjectsEnabled(),
     getMiscSectionEnabled(),
     getRecentBlogPostsEnabled(),
+    getHomeProfileFacts(),
   ]);
   const recentBlogPosts = recentBlogPostsEnabled ? await getRecentBlogPosts(6) : [];
   return (
@@ -36,6 +39,7 @@ export default async function Home() {
       miscSectionEnabled={miscSectionEnabled}
       recentBlogPostsEnabled={recentBlogPostsEnabled}
       recentBlogPosts={recentBlogPosts}
+      profileFacts={profileFacts}
     />
   );
 }

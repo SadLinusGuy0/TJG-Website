@@ -1937,13 +1937,25 @@ animation: none !important;
 width: 100%;
 height: 100%;
 border-radius: var(--br-sm);
-background: var(--selected);
-border: 1px solid rgba(174, 179, 188, 0.14);
+background: rgba(255, 255, 255, 0.6);
+border: 1px solid rgba(0, 0, 0, 0.1);
 box-sizing: border-box;
 }
 
 html[data-theme="dark"] .desktop-nav-indicator-pill {
-border-color: rgba(255, 255, 255, 0.16);
+background: #2e2e30;
+border-color: rgba(255, 255, 255, 0.1);
+}
+
+.desktop-nav .nav-footer .nav-icon-container-selected {
+background: rgba(255, 255, 255, 0.6);
+border: 1px solid rgba(0, 0, 0, 0.1);
+box-sizing: border-box;
+}
+
+html[data-theme="dark"] .desktop-nav .nav-footer .nav-icon-container-selected {
+background: #2e2e30;
+border-color: rgba(255, 255, 255, 0.1);
 }
 
 .desktop-nav-indicator[data-direction="1"] .desktop-nav-indicator-pill {
@@ -2238,29 +2250,80 @@ transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
 transform: translateY(-1px) scale(1.025) !important;
 }
 .tab-container.desktop-nav {
-width: var(--sidebar-width, 32%);
-min-width: var(--sidebar-width, 200px);
+width: var(--sidebar-width, 360px);
+min-width: var(--sidebar-width, 360px);
 max-width: var(--sidebar-width, 360px);
 overflow: hidden;
-border: 1px solid rgba(255, 255, 255, 0.68);
-background: rgba(250, 251, 252, 0.74);
-box-shadow: none;
--webkit-backdrop-filter: blur(24px) brightness(1.14) saturate(1.12);
-backdrop-filter: blur(24px) brightness(1.14) saturate(1.12);
+border: 1px solid rgba(255, 255, 255, 0.58);
+background: rgba(252, 252, 255, 0.6);
+box-shadow: 0 4px 10.7px rgba(0, 0, 0, 0.25);
+-webkit-backdrop-filter: blur(24px);
+backdrop-filter: blur(24px);
 transition:
   width 0.3s cubic-bezier(0.4,0,0.2,1),
   min-width 0.3s cubic-bezier(0.4,0,0.2,1),
-  max-width 0.3s cubic-bezier(0.4,0,0.2,1);
+  max-width 0.3s cubic-bezier(0.4,0,0.2,1),
+  background-color 0.2s ease,
+  border-color 0.2s ease,
+  box-shadow 0.2s ease,
+  backdrop-filter 0.2s ease;
 }
 
 html[data-theme="dark"] .tab-container.desktop-nav {
 border-color: rgba(255, 255, 255, 0.1);
-background: rgba(37, 39, 43, 0.82);
+background: rgba(37, 39, 43, 0.68);
 }
 body.nav-collapsed .tab-container.desktop-nav {
 width: 8%;
 min-width: 72px;
 max-width: 72px;
+border-color: transparent;
+background: transparent;
+box-shadow: none;
+-webkit-backdrop-filter: none;
+backdrop-filter: none;
+}
+
+@media screen and (min-width: 700px) {
+  body.nav-collapsed .tab-container.desktop-nav {
+    overflow: visible;
+  }
+
+  body.nav-collapsed .tab-container.desktop-nav::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    top: -16px;
+    bottom: -16px;
+    left: -24px;
+    width: 134px;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--background) 62%, transparent) 0%,
+      color-mix(in srgb, var(--background) 48%, transparent) 66%,
+      color-mix(in srgb, var(--background) 18%, transparent) 84%,
+      transparent 100%
+    );
+    -webkit-backdrop-filter: blur(18px) saturate(108%);
+    backdrop-filter: blur(18px) saturate(108%);
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      #000 0%,
+      #000 66%,
+      rgba(0, 0, 0, 0.72) 78%,
+      rgba(0, 0, 0, 0.28) 90%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      #000 0%,
+      #000 66%,
+      rgba(0, 0, 0, 0.72) 78%,
+      rgba(0, 0, 0, 0.28) 90%,
+      transparent 100%
+    );
+  }
 }
 
 .desktop-nav--dragging {
@@ -2332,13 +2395,27 @@ justify-content: flex-start;
 }
 
 @media screen and (min-width: 700px) {
-  body.sidebar-custom-width:not(.nav-collapsed) .main-content {
-    margin-left: var(--sidebar-content-offset) !important;
-    width: calc(100% - var(--sidebar-content-offset)) !important;
+  .main-content,
+  body.nav-collapsed .main-content {
+    margin-left: max(8%, 88px) !important;
+    width: calc(100% - max(8%, 88px)) !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
   }
 
-  body.sidebar-custom-width:not(.nav-collapsed) .top-app-bar-container {
-    padding-left: calc(var(--sidebar-content-offset) + 18px) !important;
+  .top-app-bar-container,
+  body.nav-collapsed .top-app-bar-container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .top-app-bar,
+  body.nav-collapsed .top-app-bar {
+    left: max(15.5%, 88px) !important;
+    right: 7% !important;
+    width: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
 

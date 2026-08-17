@@ -7,7 +7,7 @@ html {
     color-scheme: var(--color-scheme);
     height: 100%;
     background-color: var(--background);
-    overflow-x: hidden;
+    overflow-x: clip;
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
@@ -109,7 +109,7 @@ body {
     display: flex;
     flex-direction: column;
     transition: none;
-    overflow-x: hidden;
+    overflow-x: clip;
     position: relative;
 }
 

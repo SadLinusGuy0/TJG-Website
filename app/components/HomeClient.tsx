@@ -2,20 +2,61 @@
 import Image from "next/image";
 import Link from "next/link";
 import AnimatedText from "./AnimatedText";
+import DiscordActivityCard from "./DiscordActivityCard";
 import TopAppBarIcon from "./TopAppBarIcon";
-import { Settings } from '@thatjoshguy/oneui-icons';
+import { Location, Settings } from '@thatjoshguy/oneui-icons';
 import Footer from "./Footer";
-import { ReactElement, ReactNode } from "react";
+import { CSSProperties, ReactElement, ReactNode, useState } from "react";
 import { SmoothCorners } from '@lisse/react';
 import { useTheme } from './ThemeProvider';
 import type { FeaturedStory } from "../../lib/featured-stories";
 import type { Project } from "../../lib/projects";
 import type { RecentBlogPost } from "../../lib/recent-blog-posts";
+import type { ProfileFact } from "../../lib/home-profile";
 
 interface StackTool {
   name: string;
   icon: string;
 }
+
+interface Publication {
+  name: string;
+  logo: string | ReactNode;
+}
+
+const PUBLICATION_URLS: Record<string, string> = {
+  "9to5Google": "https://9to5google.com/",
+  "The Verge": "https://www.theverge.com/",
+  SammyGuru: "https://sammyguru.com/",
+  "Android Authority": "https://www.androidauthority.com/",
+  "XDA Developers": "https://www.xda-developers.com/",
+  "Android Police": "https://www.androidpolice.com/",
+  "Android Headlines": "https://www.androidheadlines.com/",
+  SamMobile: "https://www.sammobile.com/",
+  "Android Central": "https://www.androidcentral.com/",
+  "Tom's Guide": "https://www.tomsguide.com/",
+};
+
+const PUBLICATION_SIZES: Record<string, { width: number; height: number }> = {
+  "9to5Google": { width: 250, height: 50 },
+  "The Verge": { width: 214, height: 50 },
+  SammyGuru: { width: 245, height: 50 },
+  "Android Authority": { width: 316, height: 40 },
+  "XDA Developers": { width: 169, height: 50 },
+  "Android Police": { width: 236, height: 50 },
+  "Android Headlines": { width: 193, height: 50 },
+  SamMobile: { width: 304, height: 50 },
+  "Android Central": { width: 378, height: 40 },
+  "Tom's Guide": { width: 283, height: 50 },
+};
+
+const SECONDARY_PUBLICATIONS: Publication[] = [
+  { name: "Android Police", logo: "/images/home/svg/android_police.svg" },
+  { name: "Android Headlines", logo: "/images/home/svg/android_headlines.svg" },
+  { name: "SamMobile", logo: "/images/home/svg/sammobile.svg" },
+  { name: "Android Central", logo: "/images/home/svg/android_central.svg" },
+  { name: "Tom's Guide", logo: "/images/home/svg/toms_guide-figma.svg" },
+];
 
 const CARD_CORNERS = {
   radius: 20,
@@ -23,6 +64,17 @@ const CARD_CORNERS = {
   smoothing: 0.6,
   preserveSmoothing: true,
 };
+
+const PROJECT_CARD_CORNERS = {
+  ...CARD_CORNERS,
+  radius: 28,
+};
+
+const PROJECT_ACTION_ICONS = {
+  download: "/images/home/projects/action-download.svg",
+  open: "/images/home/projects/action-open.svg",
+  link: "/images/home/projects/action-link.svg",
+} as const;
 
 const CARD_SHADOW = {
   offsetX: 0,
@@ -32,7 +84,42 @@ const CARD_SHADOW = {
   color: '#000000',
 };
 
-function SmoothHoverCard({ children }: { children: ReactElement }) {
+function FoldIcon({ size = 24, color = "currentColor" }: { size?: number; color?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M20.2252 6.37178C20.2252 5.26693 19.3295 4.37207 18.2255 4.37207H7.22576C6.1209 4.37207 5.22519 5.26693 5.22519 6.37178V12.4729C5.22519 12.6829 5.19262 12.8912 5.12747 13.0909L3.87262 16.9541C3.80747 17.1538 3.7749 17.3629 3.7749 17.5721C3.7749 18.6769 4.66976 19.5726 5.77462 19.5726H16.8446C17.7455 19.5726 18.5358 18.9692 18.7732 18.1001L20.1549 13.0489C20.2012 12.8766 20.2252 12.6992 20.2252 12.5209V6.37178ZM8.92976 8.97236C8.92976 9.52436 8.48233 9.97178 7.93033 9.97178C7.37747 9.97178 6.93005 9.52436 6.93005 8.97236C6.93005 8.4195 7.37747 7.97207 7.93033 7.97207C8.48233 7.97207 8.92976 8.4195 8.92976 8.97236Z"
+        fill={color}
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M7.2531 4.39941H18.2528C19.3577 4.39941 20.2534 5.29513 20.2534 6.39913V12.5491C20.2534 12.7274 20.2294 12.9048 20.1822 13.0763L18.8014 18.1274C18.5631 18.9974 17.7737 19.6 16.872 19.6H5.80282C4.69796 19.6 3.80225 18.7043 3.80225 17.6003C3.80225 17.3903 3.83567 17.182 3.89996 16.9823L5.15482 13.1183C5.21996 12.9194 5.25339 12.7103 5.25339 12.5011V6.39913C5.25339 5.29513 6.14825 4.39941 7.2531 4.39941Z"
+        stroke={color}
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function SmoothHoverCard({
+  children,
+  corners = CARD_CORNERS,
+}: {
+  children: ReactElement;
+  corners?: typeof CARD_CORNERS;
+}) {
   const { cornerSmoothing, cornerSmoothingAvailable, cornerSmoothingSupported, hydrated } = useTheme();
 
   if (!hydrated || !cornerSmoothingAvailable || !cornerSmoothingSupported || !cornerSmoothing) {
@@ -43,7 +130,7 @@ function SmoothHoverCard({ children }: { children: ReactElement }) {
     <SmoothCorners
       asChild
       autoEffects={false}
-      corners={CARD_CORNERS}
+      corners={corners}
       shadow={{ ...CARD_SHADOW, opacity: 0.12 }}
       data-no-smooth-corners=""
     >
@@ -89,63 +176,121 @@ function StoryCard({ story }: { story: FeaturedStory }) {
 }
 
 function ProjectCard({ project }: { project: Project }) {
-  const isInternal = project.url.startsWith("/");
-  const content = (
-    <>
-      <div className="design-project-thumbnail">
-        <Image
-          src={project.thumbnail}
-          alt={project.title}
-          width={400}
-          height={225}
-          className="design-project-image"
-        />
-      </div>
-      <div className="design-project-info">
-        <span className="design-project-title">{project.title}</span>
-        <span className="design-project-tag">{project.tag}</span>
-      </div>
-    </>
+  const [copied, setCopied] = useState(false);
+  const actionLabel =
+    project.action === "copy-current-url"
+      ? copied
+        ? "Page link copied"
+        : "Copy this page link"
+      : `Open ${project.title}`;
+  const actionIcon = (
+    <Image
+      src={PROJECT_ACTION_ICONS[project.actionIcon]}
+      alt=""
+      width={24}
+      height={24}
+      className="project-app-card-action-icon"
+    />
   );
 
-  if (isInternal) {
-    return (
-      <SmoothHoverCard>
-        <Link href={project.url} className="design-project-card">
-          {content}
-        </Link>
-      </SmoothHoverCard>
-    );
-  }
+  const action = project.action === "copy-current-url" ? (
+    <button
+      type="button"
+      className={`project-app-card-action${copied ? " is-copied" : ""}`}
+      aria-label={actionLabel}
+      title={actionLabel}
+      onClick={async () => {
+        await navigator.clipboard.writeText(window.location.href);
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 1600);
+      }}
+    >
+      {actionIcon}
+    </button>
+  ) : project.url?.startsWith("/") ? (
+    <Link
+      href={project.url}
+      className="project-app-card-action"
+      aria-label={actionLabel}
+      title={actionLabel}
+    >
+      {actionIcon}
+    </Link>
+  ) : (
+    <a
+      href={project.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="project-app-card-action"
+      aria-label={actionLabel}
+      title={actionLabel}
+    >
+      {actionIcon}
+    </a>
+  );
 
   return (
-    <SmoothHoverCard>
-      <a
-        href={project.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="design-project-card"
+    <SmoothHoverCard corners={PROJECT_CARD_CORNERS}>
+      <article
+        className={`design-project-card project-app-card project-app-card--${project.tone}`}
       >
-        {content}
-      </a>
+        <div className="design-project-thumbnail">
+          <Image
+            src={project.thumbnail}
+            alt=""
+            width={852}
+            height={604}
+            sizes="(max-width: 699px) calc(100vw - 64px), 426px"
+            className="design-project-image"
+          />
+        </div>
+        <div className="project-app-card-panel">
+          <span className="project-app-card-progressive-blur" aria-hidden="true" />
+          {project.icon && (
+            <Image
+              src={project.icon}
+              alt=""
+              width={80}
+              height={80}
+              className="project-app-card-icon"
+            />
+          )}
+          <div className="project-app-card-copy">
+            <h3 className="project-app-card-title">{project.title}</h3>
+            <p className="project-app-card-description">{project.description}</p>
+          </div>
+          {action}
+        </div>
+      </article>
     </SmoothHoverCard>
   );
 }
 
 // Publication logo component that handles both string paths and SVG elements
 function PublicationLogo({ logo, alt }: { logo: string | ReactNode; alt: string }) {
-  if (typeof logo === 'string') {
+  const size = PUBLICATION_SIZES[alt] ?? { width: 200, height: 50 };
+  const resolvedLogo = alt === "SammyGuru"
+    ? "/images/home/svg/sammyguru-2026.svg"
+    : logo;
+  const style = {
+    "--publication-width": `${size.width}px`,
+    "--publication-height": `${size.height}px`,
+  } as CSSProperties;
+
+  if (typeof resolvedLogo === 'string') {
     return (
-      <Image 
-        src={logo} 
-        alt={alt}
-        width={200}
-        height={80}
-        className="publication-logo-image"
+      <span
+        role="img"
+        aria-label={alt}
+        className="publication-logo-image publication-logo-mask"
+        style={{
+          ...style,
+          "--publication-mask": `url("${resolvedLogo}")`,
+        } as CSSProperties}
       />
     );
   }
-  return <div className="publication-logo-image publication-logo-svg-wrapper">{logo}</div>;
+  return <span className="publication-logo-image publication-logo-svg-wrapper" style={style}>{resolvedLogo}</span>;
 }
 
 export default function HomeClient({
@@ -156,6 +301,7 @@ export default function HomeClient({
   miscSectionEnabled = true,
   recentBlogPostsEnabled = true,
   recentBlogPosts = [],
+  profileFacts,
 }: {
   featuredStories: FeaturedStory[];
   projects?: Project[];
@@ -164,6 +310,7 @@ export default function HomeClient({
   miscSectionEnabled?: boolean;
   recentBlogPostsEnabled?: boolean;
   recentBlogPosts?: RecentBlogPost[];
+  profileFacts: ProfileFact[];
 }) {
   const stackTools: StackTool[] = [
     { name: 'Notion', icon: '/images/stack/notion.png' },
@@ -193,117 +340,106 @@ export default function HomeClient({
           <div className="hero-role-wrapper">
             {/* Hero Section */}
             <div className="hero-section">
-              <div className="hero-avatar">
-                <Image 
-                  src="/images/home/pfp-london.jpg"
-                  alt="Josh Skinner" 
-                  width={2174}
-                  height={2312}
-                  sizes="(max-width: 699px) calc(100vw - 40px), 66vw"
-                  quality={90}
-                  className="hero-avatar-image"
-                  priority
-                  fetchPriority="high"
-                />
+              <div className="hero-mesh" aria-hidden="true">
+                <Image src="/images/home/hero/mesh-light-left.svg" alt="" width={1637} height={1603} className="hero-mesh-layer hero-mesh-light hero-mesh-light-left" priority />
+                <Image src="/images/home/hero/mesh-light-center.svg" alt="" width={1637} height={1603} className="hero-mesh-layer hero-mesh-light hero-mesh-light-center" priority />
+                <Image src="/images/home/hero/mesh-light-right.svg" alt="" width={1624} height={1716} className="hero-mesh-layer hero-mesh-light hero-mesh-light-right" priority />
+                <Image src="/images/home/hero/mesh-dark-left.svg" alt="" width={1777} height={1743} className="hero-mesh-layer hero-mesh-dark hero-mesh-dark-left" priority />
+                <Image src="/images/home/hero/mesh-dark-center.svg" alt="" width={1777} height={1743} className="hero-mesh-layer hero-mesh-dark hero-mesh-dark-center" priority />
+                <Image src="/images/home/hero/mesh-dark-right.svg" alt="" width={1764} height={1856} className="hero-mesh-layer hero-mesh-dark hero-mesh-dark-right" priority />
               </div>
               <div className="hero-intro">
                 <span className="hero-subtitle">Hey, I&apos;m</span>
                 <h1 className="hero-name">
                   <AnimatedText text="Josh Skinner" className="hero-name-entrance" inverse />
                 </h1>
-                <div className="hero-description" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: "row", gap: 8 }}>
-                  Aka
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M5.13519 6.77392V20.1163H8.1369C7.7373 20.0255 7.36267 19.895 7.01298 19.7249C6.27837 19.3448 5.66618 18.8355 5.17644 18.197L7.28847 16.1904C7.56395 16.5856 7.89299 16.8897 8.27561 17.1025C8.27571 17.1025 8.27581 17.1026 8.27591 17.1026V13.9755C8.37381 14.4025 8.50578 14.817 8.67182 15.219C9.01602 16.0103 9.46611 16.7268 10.0221 17.3684C10.3176 17.3253 10.5848 17.2367 10.8238 17.1025C11.1911 16.9049 11.4666 16.616 11.6503 16.236C11.8284 15.8957 11.9268 15.4885 11.9454 15.0142C11.9017 14.943 11.8594 14.8703 11.8184 14.796C11.3988 13.9947 11.1891 13.0747 11.1891 12.0358C11.1891 10.997 11.4063 10.0918 11.8408 9.32011C11.8859 9.23859 11.9327 9.15898 11.9813 9.08129L12.01 4H0V6.77392H5.13519ZM15.0596 4.08712L15.0689 6.95299C15.4625 6.869 15.8774 6.82701 16.3134 6.82701C17.1974 6.82701 18.0065 6.99767 18.7408 7.33898C19.475 7.6803 20.0893 8.17001 20.5837 8.80814L22.6515 6.76023C21.9323 5.88468 21.0258 5.20945 19.932 4.73458C18.8381 4.24486 17.6395 4 16.3359 4C15.899 4 15.4735 4.02904 15.0596 4.08712ZM14.6488 17.1101C14.5764 17.2876 14.4952 17.4599 14.4051 17.627C14.0116 18.3682 13.4678 18.9661 12.7736 19.4206C12.8441 19.453 12.9153 19.4845 12.9871 19.5151C13.976 19.9158 15.0323 20.1162 16.1561 20.1162C17.6844 20.1162 19.0329 19.8045 20.2017 19.1812C21.3854 18.5431 22.3143 17.6008 22.9886 16.3542C23.6629 15.0928 24 13.5272 24 11.6574V11.2345H15.9538V13.8611L20.73 13.9074C20.6367 14.3737 20.4906 14.7961 20.2916 15.1745C19.9169 15.8719 19.3775 16.4061 18.6733 16.7772C17.9692 17.1333 17.1225 17.3114 16.1336 17.3114C15.607 17.3114 15.1121 17.2443 14.6488 17.1101ZM8.27591 6.77392V10.163C8.37818 9.72525 8.51764 9.30332 8.69429 8.89718C9.03259 8.10741 9.47806 7.39966 10.0307 6.77392H8.27591Z" fill="white" />
-                  </svg>
-                  <AnimatedText text="That Josh Guy" inverse />
+                <div className="hero-description">
+                  <span>aka</span>
+                  <span className="hero-brand-mark" aria-hidden="true">
+                    <Image src="/images/home/hero/brand-light.svg" alt="" width={37} height={25} className="hero-theme-asset hero-theme-asset-light" />
+                    <Image src="/images/home/hero/brand-dark.svg" alt="" width={37} height={25} className="hero-theme-asset hero-theme-asset-dark" />
+                  </span>
+                  <span className="hero-alias">That Josh Guy</span>
                 </div>
               </div>
+              <a href="#about" className="hero-scroll-indicator" aria-label="Scroll to About">
+                <Image src="/images/home/hero/arrow-light.svg" alt="" width={76} height={40} className="hero-scroll-arrow hero-theme-asset hero-theme-asset-light" />
+                <Image src="/images/home/hero/arrow-dark.svg" alt="" width={76} height={40} className="hero-scroll-arrow hero-theme-asset hero-theme-asset-dark" />
+              </a>
             </div>
 
-            {/* Role Cards */}
-            <div className="role-cards">
-            <div className="quote-block">
-              <div className="quote-mark quote-mark-top">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 3C4.34315 3 3 4.34315 3 6V10C3 11.6569 4.34315 13 6 13H8V11H6C5.44772 11 5 10.5523 5 10V6C5 5.44772 5.44772 5 6 5H8V3H6Z" fill="var(--accent)"/>
-                  <path d="M18 3C16.3431 3 15 4.34315 15 6V10C15 11.6569 16.3431 13 18 13H20V11H18C17.4477 11 17 10.5523 17 10V6C17 5.44772 17.4477 5 18 5H20V3H18Z" fill="var(--accent)"/>
-                </svg>
-              </div>
-              <p className="quote-text">I'm a designer, tech journalist, and creator focused on Samsung & Android.</p>
-              <div className="quote-mark quote-mark-bottom">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(180deg)' }}>
-                  <path d="M6 3C4.34315 3 3 4.34315 3 6V10C3 11.6569 4.34315 13 6 13H8V11H6C5.44772 11 5 10.5523 5 10V6C5 5.44772 5.44772 5 6 5H8V3H6Z" fill="var(--accent)"/>
-                  <path d="M18 3C16.3431 3 15 4.34315 15 6V10C15 11.6569 16.3431 13 18 13H20V11H18C17.4477 11 17 10.5523 17 10V6C17 5.44772 17.4477 5 18 5H20V3H18Z" fill="var(--accent)"/>
-                </svg>
-              </div>
-            </div>
-            
-            <div className="role-card role-card-journalist">
-              <div className="role-card-icon">
-              </div>
-              <div className="role-card-type-stream" aria-hidden="true">
-                <div className="role-card-type-track">
-                  <span>Writing about <strong>Samsung</strong>, <strong>Android</strong> and the future of mobile technology.</span>
-                  <span>Writing about <strong>Samsung</strong>, <strong>Android</strong> and the future of mobile technology.</span>
-                </div>
-                <div className="role-card-type-track">
-                  <span>Reporting the latest news, leaks, updates and hands-on impressions. </span>
-                  <span>Reporting the latest news, leaks, updates and hands-on impressions. </span>
-                </div>
-                <div className="role-card-type-track">
-                  <span>Making complicated technology feel clear, useful and worth caring about. </span>
-                  <span>Making complicated technology feel clear, useful and worth caring about. </span>
-                </div>
-                <div className="role-card-type-track">
-                  <span>Covering <strong>One UI</strong>, <strong>Galaxy</strong> devices, apps and everything around them.</span>
-                  <span>Covering <strong>One UI</strong>, <strong>Galaxy</strong> devices, apps and everything around them.</span>
-                </div>
-                <div className="role-card-type-track">
-                  <span>Tech journalist based in the UK, writing for people who love <strong>Android</strong>.</span>
-                  <span>Tech journalist based in the UK, writing for people who love <strong>Android</strong>.</span>
-                </div>
-                <div className="role-card-type-track">
-                  <span>From the first leaks to the final review, following every <strong>Galaxy</strong> launch.</span>
-                  <span>From the first leaks to the final review, following every <strong>Galaxy</strong> launch.</span>
-                </div>
-                <div className="role-card-type-track">
-                  <span>Finding the useful details hidden inside every <strong>One UI</strong> software update.</span>
-                  <span>Finding the useful details hidden inside every <strong>One UI</strong> software update.</span>
-                </div>
-              </div>
-              <div className="role-card-content">
-                <AnimatedText text="Tech Journalist" inverse />
-              </div>
-            </div>
-
-            <div className="role-card role-card-designer">
-              <div className="role-card-icon">
-              </div>
-              <div className="role-card-content">
-                <AnimatedText text="UX Designer" inverse />
-              </div>
-            </div>    
-            </div>            
           </div>
 
           {/* About Section */}
-          <div className="about-section">
-            <h2 className="about-headline">About Me</h2>
-            <p className="about-text">
-              I&apos;m Josh Skinner, a freelance UI/UX designer and tech journalist from the UK. I cover the latest in the Android and Samsung world for SammyGuru, as well as contributing towards other publications like Android Authority and SamMobile. 
-            </p>
-            <p className="about-text">
-              When I&apos;m not writing, I&apos;m designing interfaces and creating resources for the design community.
-            </p>
-          </div>
+          <section className="about-section" id="about">
+            <div className="about-copy">
+              <h2 className="about-headline">Hey,</h2>
+              <p className="about-text">
+                I&apos;m Josh, a designer, journalist and lifelong Samsung enthusiast based in the south of the UK. I follow everything Samsung, from their software updates, UX design, to even hardware leaks.
+              </p>
+              <p className="about-text">
+                I work with <a href="https://sammyguru.com/author/josh_skinner/" target="_blank" rel="noopener noreferrer">SammyGuru</a>, and contribute to publications like <a href="https://9to5google.com/" target="_blank" rel="noopener noreferrer">9to5Google</a>, <a href="https://www.sammobile.com/" target="_blank" rel="noopener noreferrer">SamMobile</a> and <a href="https://www.androidauthority.com/" target="_blank" rel="noopener noreferrer">Android Authority</a>.
+              </p>
+              <p className="about-text">
+                I&apos;ve recreated One UI&apos;s design system in Figma with the <Link href="/blog/oneui-design-kit">One UI Design Kit</Link>, letting enthusiasts and developers create native looking interfaces.
+              </p>
+              <p className="about-text">
+                In early 2026, I leaked animations on how the <a href="https://sammyguru.com/galaxy-s26-ultra-privacy-display-animation/" target="_blank" rel="noopener noreferrer">Galaxy S26 Ultra&apos;s Privacy Display</a> worked, showed off <a href="https://sammyguru.com/exclusive-samsung-internet-gets-massive-redesign-in-one-ui-8-0/" target="_blank" rel="noopener noreferrer">Samsung Internet&apos;s redesign</a> in Nov 2025, and was first to share the update artwork for <a href="https://x.com/thatjoshguy69" target="_blank" rel="noopener noreferrer">One UI 9.5</a>.
+              </p>
+              <p className="about-text">
+                I also review the latest and greatest Samsung tech for <a href="https://sammyguru.com/author/josh_skinner/" target="_blank" rel="noopener noreferrer">SammyGuru</a>, and dig through Samsung&apos;s applications for signs of unreleased hardware and new features.
+              </p>
+              <p className="about-text">
+                I also overhauled <a href="https://sammyguru.com/" target="_blank" rel="noopener noreferrer">SammyGuru&apos;s brand identity</a>, bringing a cohesive colour system with a new logo and social media branding.
+              </p>
+            </div>
+
+            <aside className="about-aside" aria-label="Profile details">
+              <figure className="about-portrait">
+                <Image
+                  src="/images/home/about/london.jpg"
+                  alt="Josh Skinner beside the River Thames in London, with Tower Bridge behind him"
+                  fill
+                  sizes="(max-width: 699px) calc(100vw - 40px), 414px"
+                  className="about-portrait-image"
+                  priority
+                  unoptimized
+                />
+                <figcaption className="about-location">
+                  <Location size={28} color="currentColor" />
+                  <span>London</span>
+                </figcaption>
+              </figure>
+
+              <ul className="list-group home-facts-list" aria-label="A few facts about Josh">
+                {profileFacts.map((fact) => (
+                  <li className="list home-fact-item" key={fact.icon}>
+                    <span className={`home-fact-icon home-fact-icon-${fact.icon}`} aria-hidden="true">
+                      {fact.icon === "phone" && <FoldIcon size={24} color="currentColor" />}
+                      {fact.icon === "game" && (
+                        <Image src="/images/home/about/persona-3-reload.png" alt="" width={24} height={29} />
+                      )}
+                      {fact.icon === "f1" && (
+                        <Image src="/images/home/about/lewis-hamilton.svg" alt="" width={28} height={16} />
+                      )}
+                    </span>
+                    <span className="home-fact-copy">
+                      <span className="home-fact-label">{fact.label}</span>
+                      <span className="home-fact-value">{fact.value}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <DiscordActivityCard />
+            </aside>
+          </section>
 
           {/* Journalist Section */}
           <div className="journalist-section">
             <h2 className="journalist-headline">Featured In</h2>
-            <p className="journalist-subtitle">I cover the latest news and leaks in the Android and Samsung scene.</p>
             <div className="publications-marquee-wrapper">
-              <div className="publications-marquee">
+              <div className="publications-marquee publications-marquee-forward">
                 {[0, 1].map((copy) => (
                 <div className="publications-marquee-content" key={copy} aria-hidden={copy === 1 ? true : undefined}>
                   {[
@@ -392,11 +528,38 @@ export default function HomeClient({
                     )},
                     
                   ].map((pub, index) => (
-                    <div key={`${copy}-${index}`} className="publication-item" title={pub.name}>
+                    <a
+                      key={`${copy}-${index}`}
+                      className="publication-item"
+                      href={PUBLICATION_URLS[pub.name]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={pub.name}
+                      data-publication={pub.name}
+                    >
                       <PublicationLogo logo={pub.logo} alt={pub.name} />
-                    </div>
+                    </a>
                   ))}
                 </div>
+                ))}
+              </div>
+              <div className="publications-marquee publications-marquee-reverse">
+                {[0, 1].map((copy) => (
+                  <div className="publications-marquee-content" key={copy} aria-hidden={copy === 1 ? true : undefined}>
+                    {SECONDARY_PUBLICATIONS.map((pub, index) => (
+                      <a
+                        key={`${copy}-${index}`}
+                        className="publication-item"
+                        href={PUBLICATION_URLS[pub.name]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={pub.name}
+                        data-publication={pub.name}
+                      >
+                        <PublicationLogo logo={pub.logo} alt={pub.name} />
+                      </a>
+                    ))}
+                  </div>
                 ))}
               </div>
             </div>
@@ -404,7 +567,7 @@ export default function HomeClient({
 
           {popularStoriesEnabled && featuredStories.length > 0 && (
             <div className="featured-stories-section">
-              <h2 className="featured-stories-headline">Popular Stories</h2>
+              <h2 className="featured-stories-headline">Popular articles</h2>
               <div className="featured-stories-scroll-wrapper">
                 <div className="featured-stories-scroll">
                   <div className="featured-stories-scroll-inner">
@@ -419,9 +582,8 @@ export default function HomeClient({
 
           {/* Projects Preview */}
           {projectsEnabled && projects.length > 0 && (
-            <div className="design-projects-section" id="design-work">
+            <section className="design-projects-section projects-showcase-section" id="design-work">
               <h2 className="design-projects-headline">Projects</h2>
-              <p className="design-projects-subtitle">A selection of UI/UX projects across Samsung, Android, and beyond.</p>
               <div className="design-projects-scroll-wrapper">
                 <div className="design-projects-scroll">
                   <div className="design-projects-scroll-inner">
@@ -431,7 +593,7 @@ export default function HomeClient({
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
           )}
 
           {/* My Stack */}

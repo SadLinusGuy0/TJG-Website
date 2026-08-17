@@ -1,67 +1,61 @@
-import { createClient } from "@vercel/edge-config";
+export type ProjectTone = "light" | "dark";
+export type ProjectAction = "link" | "copy-current-url";
+export type ProjectActionIcon = "download" | "open" | "link";
 
 export interface Project {
   title: string;
   thumbnail: string;
-  tag: string;
-  url: string;
+  description: string;
+  url?: string;
+  icon?: string;
+  tone: ProjectTone;
+  action: ProjectAction;
+  actionIcon: ProjectActionIcon;
 }
 
-// Current Home carousel cards. Used as a safety fallback when Edge Config
-// has no `projects` key yet (or EDGE_CONFIG is unset). Edit live contents
-// from TJG-Admin → Stories → Projects.
+// Current Home carousel cards. This stays local while the new visual treatment
+// is refined; `icon` and `url` are intentionally optional.
 export const DEFAULT_PROJECTS: Project[] = [
   {
+    title: "Twidget",
+    thumbnail: "/images/home/projects/twidget-card.png",
+    icon: "/images/home/projects/twidget-icon.png",
+    description:
+      "Twitter/X analytics app with pretty widgets and a clean One UI design.",
+    url: "https://github.com/thatjoshguy67/twidget",
+    tone: "light",
+    action: "link",
+    actionIcon: "download",
+  },
+  {
+    title: "Blur widget demo",
+    thumbnail: "/images/home/projects/blur-widget-card.png",
+    icon: "/images/home/projects/blur-widget-icon.png",
+    description: "POC of One UI Home’s widget blur capabilities.",
+    url: "https://github.com/thatjoshguy67/blur-widget-demo",
+    tone: "dark",
+    action: "link",
+    actionIcon: "download",
+  },
+  {
     title: "One UI Design Kit",
-    thumbnail: "/images/projects/oneuialt.png",
-    tag: "UI Kit",
-    url: "/blog/oneui-design-kit",
+    thumbnail: "/images/home/projects/one-ui-design-kit-card.png",
+    description: "Library of One UI components, icons, assets and more.",
+    url: "https://www.figma.com/community/file/1456035621603784201/one-ui-design-kit",
+    tone: "dark",
+    action: "link",
+    actionIcon: "open",
   },
   {
-    title: "WhatsApp You",
-    thumbnail: "/images/projects/whatsapp.png",
-    tag: "Concept",
-    url: "https://youtu.be/RCb5AaginpM",
-  },
-  {
-    title: "YouTube Music Redesign",
-    thumbnail: "/images/projects/youtube-music.png",
-    tag: "Concept",
-    url: "https://youtu.be/s3JQj6HCIwk",
-  },
-  {
-    title: "Better Twitter",
-    thumbnail: "/images/projects/twitter-remake.png",
-    tag: "Concept",
-    url: "https://youtu.be/4QKPQKkJf3k",
+    title: "This website",
+    thumbnail: "/images/home/projects/twidget-card.png",
+    description: "The very thing you’re looking at right now.",
+    tone: "light",
+    action: "copy-current-url",
+    actionIcon: "link",
   },
 ];
 
-function isValidProject(obj: unknown): obj is Project {
-  return (
-    typeof obj === "object" &&
-    obj !== null &&
-    typeof (obj as Project).title === "string" &&
-    typeof (obj as Project).thumbnail === "string" &&
-    typeof (obj as Project).tag === "string" &&
-    typeof (obj as Project).url === "string"
-  );
-}
-
 export async function getProjects(): Promise<Project[]> {
-  const connectionString = process.env.EDGE_CONFIG;
-  if (!connectionString) return DEFAULT_PROJECTS;
-
-  try {
-    const client = createClient(connectionString);
-    const value = await client.get("projects");
-
-    if (Array.isArray(value)) {
-      return (value as unknown[]).filter(isValidProject);
-    }
-
-    return DEFAULT_PROJECTS;
-  } catch {
-    return DEFAULT_PROJECTS;
-  }
+  return DEFAULT_PROJECTS;
 }

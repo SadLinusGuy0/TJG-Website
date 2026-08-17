@@ -17,7 +17,7 @@ import { SmoothCorners } from '@lisse/react';
 import { useTheme } from './ThemeProvider';
 
 // Context to share collapsed state
-export const NavCollapseContext = createContext({ collapsed: false, setCollapsed: (_: boolean) => {} });
+export const NavCollapseContext = createContext({ collapsed: true, setCollapsed: (_: boolean) => {} });
 
 export function useNavCollapse() {
   return useContext(NavCollapseContext);
@@ -183,12 +183,8 @@ export default function NavigationClient({
   // Use Vercel Flags value from context (layout), fall back to static config
   const defaultEnabled = serverBlogEnabled ?? true;
   
-  const [collapsed, setCollapsed] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('sidebar-collapsed') === 'true';
-    }
-    return false;
-  });
+  const [collapsed, setCollapsed] = useState(true);
+  const [collapsePreferenceReady, setCollapsePreferenceReady] = useState(false);
   const [expandedSidebarWidth, setExpandedSidebarWidth] = useState<number | null>(() => {
     if (typeof window === 'undefined') {
       return null;
@@ -258,10 +254,20 @@ export default function NavigationClient({
       return;
     }
 
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('sidebar-collapsed', collapsed ? 'true' : 'false');
+    const storedPreference = sessionStorage.getItem('sidebar-collapsed');
+    setCollapsed(storedPreference === null ? true : storedPreference === 'true');
+    setCollapsePreferenceReady(true);
+  }, [hideDesktop]);
+
+  useLayoutEffect(() => {
+    if (hideDesktop) {
+      return;
     }
-  }, [collapsed, hideDesktop]);
+
+    if (collapsePreferenceReady) {
+      sessionStorage.setItem('sidebar-collapsed', collapsed ? 'true' : 'false');
+    }
+  }, [collapsePreferenceReady, collapsed, hideDesktop]);
 
   useEffect(() => {
     if (hideDesktop) {
@@ -311,6 +317,7 @@ export default function NavigationClient({
   useEffect(() => {
     setOptimisticDesktopNavIndex(null);
     setOptimisticMobileNavIndex(null);
+    setCollapsed(true);
   }, [pathname]);
 
   const desktopNavItems = useMemo(() => [
