@@ -598,13 +598,16 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   }
 
   .hero-section {
-    height: 888px;
+    --mobile-hero-top-offset: calc(28px + 2vw);
+    --mobile-nav-clearance: calc(98px + env(safe-area-inset-bottom, 0px));
+    height: calc(100vh - var(--mobile-hero-top-offset));
+    height: calc(100dvh - var(--mobile-hero-top-offset));
     min-height: 0;
     margin-bottom: 0;
   }
 
   .hero-intro {
-    top: calc(50% - 80px);
+    top: 57%;
     gap: 10px;
   }
 
@@ -629,7 +632,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   }
 
   .hero-scroll-indicator:any-link {
-    bottom: 119px;
+    bottom: var(--mobile-nav-clearance);
     width: 50px;
     height: 50px;
   }
