@@ -85,9 +85,7 @@ function SettingsContent() {
 
   useEffect(() => {
     setMounted(true);
-    localStorage.setItem('progressiveBlur', blurEnabled.toString());
-    document.documentElement.dataset.progressiveBlur = blurEnabled.toString();
-  }, [blurEnabled]);
+  }, []);
 
   useEffect(() => {
     const checkDevOptions = () => {

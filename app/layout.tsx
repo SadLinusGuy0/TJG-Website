@@ -153,7 +153,7 @@ export default async function RootLayout({
         />
         <ThemeProvider cornerSmoothingAvailable={cornerSmoothingEnabledValue} fmpSeparatedViewAvailable={fmpSeparatedViewEnabledValue}>
           <BlogFlagProvider blogEnabled={blogEnabledValue}>
-            <a className="skip-link" href="#main-content">Skip to main content</a>
+            <a className="skip-link" href="#main-content" data-no-smooth-corners="">Skip to main content</a>
             <ProgressiveBlur />
             <ProgressiveBlur position="bottom" />
             <Navigation />

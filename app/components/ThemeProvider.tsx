@@ -84,34 +84,8 @@ const ThemeContext = createContext<ThemeContextType>({
   hydrated: false,
 });
 
-const getInitialTheme = (): Theme => {
-  if (typeof window !== 'undefined') {
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    if (savedTheme) return savedTheme;
-  }
-  return 'auto';
-};
-
-const getInitialBlurEnabled = (): boolean => {
-  if (typeof window !== 'undefined') {
-    const saved = localStorage.getItem('progressiveBlur');
-    return saved === null ? true : saved === 'true';
-  }
-  return true;
-};
-
 const getCornerSmoothingSupported = (): boolean => {
   return supportsLisseSmoothCorners();
-};
-
-const getInitialCornerSmoothing = (): boolean => {
-  const supported = getCornerSmoothingSupported();
-  if (!supported) return false;
-  if (typeof window !== 'undefined') {
-    const saved = localStorage.getItem('cornerSmoothing');
-    return saved === null ? true : saved === 'true';
-  }
-  return true;
 };
 
 const getInitialAccentColor = (): AccentColor => {
@@ -151,11 +125,14 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpSeparatedViewAvailable = false }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
-  const [accentColor, setAccentColorState] = useState<AccentColor>(getInitialAccentColor);
-  const [blurEnabled, setBlurEnabledState] = useState<boolean>(getInitialBlurEnabled);
-  const [cornerSmoothing, setCornerSmoothingState] = useState<boolean>(getInitialCornerSmoothing);
-  const [cornerSmoothingSupported] = useState<boolean>(getCornerSmoothingSupported);
+  // Keep the server render and the first client render identical. Stored
+  // preferences are applied after hydration; the head script handles the
+  // pre-hydration visual theme without changing React's element tree.
+  const [theme, setTheme] = useState<Theme>('auto');
+  const [accentColor, setAccentColorState] = useState<AccentColor>('blue');
+  const [blurEnabled, setBlurEnabledState] = useState(true);
+  const [cornerSmoothing, setCornerSmoothingState] = useState(false);
+  const [cornerSmoothingSupported, setCornerSmoothingSupported] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
   const applyAccentColor = (color: AccentColor) => {
@@ -176,31 +153,34 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpS
   };
 
   useEffect(() => {
-    // Load theme from localStorage on mount
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    if (savedTheme) {
-      setTheme(savedTheme);
-      if (savedTheme === 'auto') {
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        document.documentElement.dataset.theme = systemTheme;
-        const ac = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
-        updateThemeColorMeta(systemTheme, ac);
-      } else {
-        document.documentElement.dataset.theme = savedTheme;
-        const ac = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
-        updateThemeColorMeta(savedTheme as 'dark' | 'light', ac);
-      }
-    } else {
-      // If no saved theme, use system preference
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.documentElement.dataset.theme = systemTheme;
-      updateThemeColorMeta(systemTheme, 'blue');
-    }
+    const storedTheme = localStorage.getItem('theme');
+    const initialTheme: Theme = storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'auto'
+      ? storedTheme
+      : 'auto';
+    const initialAccent = getInitialAccentColor();
+    const storedBlur = localStorage.getItem('progressiveBlur');
+    const initialBlur = storedBlur === null ? true : storedBlur === 'true';
+    const smoothingSupported = getCornerSmoothingSupported();
+    const storedSmoothing = localStorage.getItem('cornerSmoothing');
+    const initialSmoothing = cornerSmoothingAvailable
+      && smoothingSupported
+      && (storedSmoothing === null ? true : storedSmoothing === 'true');
+    const resolvedTheme = initialTheme === 'auto'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : initialTheme;
 
-    // Initialize accent color
-    const savedAccentColor = localStorage.getItem('accentColor') as AccentColor;
-    const accentValue = savedAccentColor && ACCENT_COLORS[savedAccentColor] ? savedAccentColor : 'blue';
-    applyAccentColor(accentValue);
+    setTheme(initialTheme);
+    setAccentColorState(initialAccent);
+    setBlurEnabledState(initialBlur);
+    setCornerSmoothingSupported(smoothingSupported);
+    setCornerSmoothingState(initialSmoothing);
+
+    document.documentElement.dataset.theme = resolvedTheme;
+    document.documentElement.dataset.progressiveBlur = initialBlur.toString();
+    document.documentElement.dataset.cornerSmoothing = initialSmoothing.toString();
+    applyAccentColor(initialAccent);
+    updateThemeColorMeta(resolvedTheme, initialAccent);
+    setHydrated(true);
 
     // Listen for system theme changes if theme is auto
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -216,9 +196,11 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpS
     };
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
+  }, [cornerSmoothingAvailable]);
 
   useEffect(() => {
+    if (!hydrated) return;
+
     localStorage.setItem('theme', theme);
     let currentTheme: 'dark' | 'light';
     if (theme === 'auto') {
@@ -231,17 +213,20 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpS
     updateThemeColorMeta(currentTheme, accentColor);
     // Reapply accent color backgrounds for new theme
     applyAccentColor(accentColor);
-  }, [theme, accentColor]);
+  }, [accentColor, hydrated, theme]);
 
   useEffect(() => {
-    localStorage.setItem('accentColor', accentColor);
-    applyAccentColor(accentColor);
-  }, [accentColor]);
+    if (!hydrated) return;
+
+    localStorage.setItem('progressiveBlur', blurEnabled.toString());
+    document.documentElement.dataset.progressiveBlur = blurEnabled.toString();
+  }, [blurEnabled, hydrated]);
 
   useEffect(() => {
-    setHydrated(true);
+    if (!hydrated) return;
+
     document.documentElement.dataset.cornerSmoothing = (cornerSmoothingAvailable && cornerSmoothing).toString();
-  }, [cornerSmoothing, cornerSmoothingAvailable]);
+  }, [cornerSmoothing, cornerSmoothingAvailable, hydrated]);
 
   const setAccentColor = (color: AccentColor) => {
     setAccentColorState(color);
@@ -265,7 +250,7 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpS
   return (
     <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, fmpSeparatedViewAvailable, hydrated }}>
       {children}
-      {cornerSmoothingAvailable && cornerSmoothing
+      {hydrated && cornerSmoothingAvailable && cornerSmoothing
         ? (
           <Suspense fallback={null}>
             <LazyCornerSmoothingManager enabled />
