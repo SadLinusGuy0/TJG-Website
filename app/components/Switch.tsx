@@ -13,11 +13,23 @@ interface SwitchProps {
   disabled?: boolean;
   style?: React.CSSProperties;
   className?: string;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
   /** Render as <label htmlFor={id}> instead of <div>. Use when there is no parent <label>. */
   asLabel?: boolean;
 }
 
-export default function Switch({ id, checked, onChange, disabled, style, className, asLabel }: SwitchProps) {
+export default function Switch({
+  id,
+  checked,
+  onChange,
+  disabled,
+  style,
+  className,
+  ariaLabel,
+  ariaLabelledBy,
+  asLabel,
+}: SwitchProps) {
   const containerRef = useRef<HTMLElement>(null);
   const startXRef = useRef(0);
   const knobStartPosRef = useRef(0);
@@ -125,6 +137,8 @@ export default function Switch({ id, checked, onChange, disabled, style, classNa
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
         disabled={disabled}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
       />
       <span className="slider" />
     </Tag>

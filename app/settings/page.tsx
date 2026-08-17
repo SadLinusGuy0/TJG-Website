@@ -113,7 +113,7 @@ function SettingsContent() {
           onBack={() => router.push(from)}
         />
         <div className="section-header">
-          <div className="title">Theme</div>
+          <h2 className="title">Theme</h2>
         </div>
         <div className="panel" style={{ padding: 'var(--padding-xll)' }}>
           {mounted && (
@@ -165,7 +165,7 @@ function SettingsContent() {
         </div>
         
         <div className="section-header">
-          <div className="title">Accent color</div>
+          <h2 className="title">Accent color</h2>
         </div>
         <div
           className="panel accent-color-scroll"
@@ -320,7 +320,7 @@ function SettingsContent() {
         {fmpSeparatedViewAvailable && (
           <>
             <div className="section-header">
-              <div className="title">Blog</div>
+              <h2 className="title">Blog</h2>
             </div>
             <div className="list-group">
               <label htmlFor="fmp-combined-view-toggle" className="list" style={{ cursor: 'pointer' }}>
@@ -342,10 +342,10 @@ function SettingsContent() {
         {devOptionsEnabled && (
           <>
             <div className="section-header">
-              <div className="title">Developer options</div>
+              <h2 className="title">Developer options</h2>
             </div>
             <div className="list-group">
-              <a href="/settings/feature-flags" className="list" role="button" aria-label="Feature Flags">
+              <a href="/settings/feature-flags" className="list">
                 <div className="list-item-content">
                   <div className="body-text">Feature Flags</div>
                   <div className="information-wrapper">
@@ -357,7 +357,7 @@ function SettingsContent() {
                   <path d="M1 1L7 7L1 13" stroke="var(--secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </a>
-              <a href="/playground" className="list" role="button" aria-label="Component Playground">
+              <a href="/playground" className="list">
                 <div className="list-item-content">
                   <div className="body-text">Component Playground</div>
                   <div className="information-wrapper">
@@ -377,7 +377,7 @@ function SettingsContent() {
         </div>
 
         <div className="list-group">
-          <a href="/settings/about" className="list" role="button" aria-label="About this site">
+          <a href="/settings/about" className="list">
             <div className="list-item-content">
               <div className="body-text">About this site</div>
             </div>

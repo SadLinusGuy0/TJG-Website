@@ -21,7 +21,7 @@ function Section({ title, description, bare, children }: { title: string; descri
   return (
     <>
       <div className="section-header">
-        <div className="title" style={{ fontSize: 'var(--subheading-size)' }}>{title}</div>
+        <h2 className="title" style={{ fontSize: 'var(--subheading-size)' }}>{title}</h2>
         {description && (
           <div style={{ color: 'var(--secondary)', fontSize: 'var(--body-size)', fontFamily: 'One UI Sans' }}>
             {description}
@@ -103,7 +103,7 @@ function DemoChips() {
               backgroundColor: isSelected
                 ? "var(--accent)"
                 : "color-mix(in srgb, var(--container-background) 50%, transparent)",
-              color: isSelected ? "#fff" : "var(--secondary)",
+              color: isSelected ? "var(--on-accent)" : "var(--secondary)",
               fontSize: 16,
               fontFamily: "One UI Sans",
               fontWeight: 500,
@@ -139,7 +139,7 @@ function DemoButtons() {
           borderRadius: "var(--br-9xl)",
           border: "none",
           backgroundColor: "var(--accent)",
-          color: "#fff",
+          color: "var(--on-accent)",
           fontSize: "var(--body-size)",
           fontFamily: "One UI Sans",
           fontWeight: 600,
@@ -655,7 +655,7 @@ function DemoBadges() {
           padding: "4px 12px",
           borderRadius: 999,
           backgroundColor: "var(--accent)",
-          color: "#fff",
+          color: "var(--on-accent)",
           fontSize: 12,
           fontFamily: "One UI Sans",
           fontWeight: 600,
@@ -668,7 +668,7 @@ function DemoBadges() {
           padding: "4px 12px",
           borderRadius: 999,
           backgroundColor: "color-mix(in srgb, var(--accent) 15%, transparent)",
-          color: "var(--accent)",
+          color: "#1B5FCC",
           fontSize: 12,
           fontFamily: "One UI Sans",
           fontWeight: 600,
@@ -681,7 +681,7 @@ function DemoBadges() {
           padding: "4px 12px",
           borderRadius: 999,
           backgroundColor: "color-mix(in srgb, #34C759 15%, transparent)",
-          color: "#34C759",
+          color: "#1E6B35",
           fontSize: 12,
           fontFamily: "One UI Sans",
           fontWeight: 600,
@@ -694,7 +694,7 @@ function DemoBadges() {
           padding: "4px 12px",
           borderRadius: 999,
           backgroundColor: "color-mix(in srgb, #FF3B30 15%, transparent)",
-          color: "#FF3B30",
+          color: "#B3261E",
           fontSize: 12,
           fontFamily: "One UI Sans",
           fontWeight: 600,
@@ -707,7 +707,7 @@ function DemoBadges() {
           padding: "4px 12px",
           borderRadius: 999,
           backgroundColor: "color-mix(in srgb, #FF9500 15%, transparent)",
-          color: "#FF9500",
+          color: "#8A4B00",
           fontSize: 12,
           fontFamily: "One UI Sans",
           fontWeight: 600,
@@ -1117,7 +1117,7 @@ function PlaygroundContent() {
               borderRadius: "var(--br-9xl)",
               border: "none",
               backgroundColor: "var(--accent)",
-              color: "#fff",
+              color: "var(--on-accent)",
               fontSize: "var(--body-size)",
               fontFamily: "One UI Sans",
               fontWeight: 600,
@@ -1137,7 +1137,7 @@ function PlaygroundContent() {
               borderRadius: "var(--br-9xl)",
               border: "none",
               backgroundColor: "var(--accent)",
-              color: "#fff",
+              color: "var(--on-accent)",
               fontSize: "var(--body-size)",
               fontFamily: "One UI Sans",
               fontWeight: 600,

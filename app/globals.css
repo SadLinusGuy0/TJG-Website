@@ -12,6 +12,12 @@ html {
     -ms-overflow-style: none;
 }
 
+.site-main {
+    width: 100%;
+    min-width: 0;
+    min-height: 100vh;
+}
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
     width: 0;
@@ -148,11 +154,12 @@ a:not(:any-link) {
     --dark-primary: #fff;
     --dark-selected: #3A3A3A;
     --light-background: #f1f1f3;
-    --light-secondary: #99999d;
+    --light-secondary: #444851;
     --light-container-background: #fff;
     --light-primary: #000;
     --light-selected: #EFEFEF;
     --accent: #387aff;
+    --on-accent: #000;
     --gap-xl: 10px;
     --gap-xll: 20px;
     --gap-11xs: 2px;
@@ -176,6 +183,21 @@ a:not(:any-link) {
     --header-expanded: 38vh;
     --header-collapsed: 72px;
     --header-top-padding: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
 /* === index.css is imported above and contains all component/utility styles === */

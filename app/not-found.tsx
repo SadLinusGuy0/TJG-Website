@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <main className={`page ${styles.page}`}>
+    <div className={`page ${styles.page}`}>
       <div className="page-body">
         <div className={`main-content ${styles.mainContent}`}>
           <section className={styles.card}>
@@ -53,6 +53,6 @@ export default function NotFound() {
           </p>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

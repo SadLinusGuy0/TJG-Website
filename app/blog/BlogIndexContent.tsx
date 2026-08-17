@@ -44,7 +44,7 @@ export default async function BlogIndexContent() {
         ) : (
           <div className="section">
             <div className="section-header">
-              <div className="title">No Posts Available</div>
+              <h2 className="title">No Posts Available</h2>
             </div>
             <div className="panel settings">
               <div className="body-text">

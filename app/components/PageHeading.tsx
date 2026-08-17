@@ -123,6 +123,8 @@ export default function PageHeading({
 
   // Floating hero actions fade out over the first 50%.
   const actionsOpacity = Math.max(0, 1 - progress / 0.5);
+  const heroActionsHidden = actionsOpacity < 0.1;
+  const barHidden = barOpacity < 0.1;
   const expandProgress = 1 - progress;
   const heroStyle: CSSProperties | undefined = defaultCollapsed
     ? {
@@ -140,9 +142,11 @@ export default function PageHeading({
         {(leadingAction || trailingAction) && (
           <div
             className="page-heading-hero-actions"
+            aria-hidden={heroActionsHidden}
+            inert={heroActionsHidden ? true : undefined}
             style={{
               opacity: actionsOpacity,
-              pointerEvents: actionsOpacity < 0.1 ? 'none' : undefined,
+              pointerEvents: heroActionsHidden ? 'none' : undefined,
             }}
           >
             <div>{leadingAction}</div>
@@ -150,12 +154,12 @@ export default function PageHeading({
           </div>
         )}
 
-        <div
+        <h1
           className="page-heading-hero-title"
           style={{ opacity: heroOpacity }}
         >
           {title}
-        </div>
+        </h1>
       </div>
 
       {/* ── Collapsed fixed bar ────────────────────────────────────────
@@ -164,9 +168,11 @@ export default function PageHeading({
       {mounted && createPortal(
         <div
           className="top-app-bar"
+          aria-hidden={barHidden}
+          inert={barHidden ? true : undefined}
           style={{
             opacity: barOpacity,
-            pointerEvents: barOpacity < 0.1 ? 'none' : 'auto',
+            pointerEvents: barHidden ? 'none' : 'auto',
             transition: 'none',
           }}
         >
@@ -182,7 +188,7 @@ export default function PageHeading({
               </button>
             )}
             <div className="title-container">
-              <div className="title">{title}</div>
+              <div className="title" aria-hidden="true">{title}</div>
             </div>
             {barTrailingAction}
           </div>

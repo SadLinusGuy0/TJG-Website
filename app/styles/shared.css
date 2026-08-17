@@ -111,14 +111,44 @@ a.nav-icon-container-selected:any-link {
   align-items: flex-start;
   justify-content: center;
   padding: 20px;
+  box-sizing: border-box;
   font-size: var(--subtitle-size);
+}
+
+.section-header > .title {
+  margin: 0;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 100000;
+  top: 12px;
+  left: 12px;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+  padding: 12px 18px;
+  border-radius: var(--br-md);
+  background: var(--primary);
+  color: var(--background) !important;
+  font-family: 'One UI Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  transform: translateY(calc(-100% - 24px));
+  transition: transform 160ms ease-out;
+}
+
+.skip-link:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  transform: translateY(0);
 }
 
 .button {
   align-self: stretch;
   border-radius: var(--br-lg);
   background-color: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   overflow: visible;
   display: flex;
   flex-direction: row;
@@ -246,7 +276,8 @@ button.list:hover {
 }
 
 .theme-card.selected .theme-card-label {
-  color: var(--accent);
+  color: var(--primary);
+  font-weight: 700;
 }
 
 .theme-card-radio {
@@ -1395,7 +1426,7 @@ button.media-card:hover {
 }
 
 .beta-chip {
-  background-color: #E0632D;
+  background-color: #B84316;
   color: white;
   padding: 3px 10px;
   border-radius: 100px;
@@ -1406,6 +1437,21 @@ button.media-card:hover {
   font-family: 'One UI Sans';
   letter-spacing: 0.02em;
   flex-shrink: 0;
+}
+
+.feature-flag-control:focus-visible,
+.feature-flag-reset-button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.feature-flag-control::placeholder {
+  color: var(--secondary);
+  opacity: 1;
+}
+
+.feature-flag-reset-button:disabled {
+  visibility: hidden;
 }
 
 

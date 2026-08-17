@@ -112,6 +112,8 @@ export default async function RootLayout({
                     lilac: '#a78bfa',
                     mono: '#808080'
                   };
+                  if (!accentColors[accentColor]) accentColor = 'blue';
+                  document.documentElement.dataset.accent = accentColor;
                   document.documentElement.style.setProperty('--accent', accentColors[accentColor] || accentColors.blue);
                   var csAvailable = ${cornerSmoothingEnabledValue ? 'true' : 'false'};
                   var csLisseSupported = 'ResizeObserver' in window && window.CSS && CSS.supports && CSS.supports('clip-path', 'path("M 0 0 L 1 0 L 1 1 Z")');
@@ -144,10 +146,13 @@ export default async function RootLayout({
         />
         <ThemeProvider cornerSmoothingAvailable={cornerSmoothingEnabledValue} fmpSeparatedViewAvailable={fmpSeparatedViewEnabledValue}>
           <BlogFlagProvider blogEnabled={blogEnabledValue}>
+            <a className="skip-link" href="#main-content">Skip to main content</a>
             <ProgressiveBlur />
             <ProgressiveBlur position="bottom" />
             <Navigation />
-            {children}
+            <main className="site-main" id="main-content">
+              {children}
+            </main>
             <DiscordPopup />
           </BlogFlagProvider>
         </ThemeProvider>

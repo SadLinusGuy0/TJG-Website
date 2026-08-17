@@ -143,10 +143,14 @@ function setStringCookieOverride(key: string, value: string | null) {
 
 function OverrideControl({
   flagKey,
+  labelledBy,
+  label,
   state,
   onSelect,
 }: {
   flagKey: string;
+  labelledBy: string;
+  label: string;
   state: OverrideState;
   onSelect: (next: OverrideState) => void;
 }) {
@@ -164,18 +168,22 @@ function OverrideControl({
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
       <button
+        type="button"
         onClick={(e) => {
           e.stopPropagation();
           e.preventDefault();
           onSelect('cloud');
         }}
-        aria-label="Revert to cloud value"
+        aria-label={`Revert ${label} to cloud value`}
+        aria-hidden={!isOverriding}
+        disabled={!isOverriding}
+        className="feature-flag-reset-button"
         style={{
           opacity: isOverriding ? 1 : 0,
           pointerEvents: isOverriding ? 'auto' : 'none',
           transition: 'opacity 0.15s ease-out',
-          width: '22px',
-          height: '22px',
+          width: '32px',
+          height: '32px',
           borderRadius: '50%',
           background: 'rgba(120,120,128,0.18)',
           border: 'none',
@@ -196,6 +204,7 @@ function OverrideControl({
         id={`flag-toggle-${flagKey}`}
         checked={isOn}
         onChange={() => handleToggleChange()}
+        ariaLabelledBy={labelledBy}
         asLabel
         style={{ opacity: state === 'cloud' ? 0.4 : 1, transition: 'opacity 0.15s ease-out', cursor: 'pointer' }}
       />
@@ -205,6 +214,8 @@ function OverrideControl({
 
 function StringOverrideControl({
   flagKey,
+  labelledBy,
+  label,
   value,
   defaultValue,
   options,
@@ -212,6 +223,8 @@ function StringOverrideControl({
   onClear,
 }: {
   flagKey: string;
+  labelledBy: string;
+  label: string;
   value: string | null;
   defaultValue: string;
   options?: Array<{ value: string; label: string }>;
@@ -239,19 +252,23 @@ function StringOverrideControl({
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, width: '100%' }}>
       <button
+        type="button"
         onClick={(e) => {
           e.stopPropagation();
           e.preventDefault();
           onClear();
           setInputValue('');
         }}
-        aria-label="Revert to cloud value"
+        aria-label={`Revert ${label} to cloud value`}
+        aria-hidden={!isOverriding}
+        disabled={!isOverriding}
+        className="feature-flag-reset-button"
         style={{
           opacity: isOverriding ? 1 : 0,
           pointerEvents: isOverriding ? 'auto' : 'none',
           transition: 'opacity 0.15s ease-out',
-          width: '22px',
-          height: '22px',
+          width: '32px',
+          height: '32px',
           borderRadius: '50%',
           background: 'rgba(120,120,128,0.18)',
           border: 'none',
@@ -271,6 +288,8 @@ function StringOverrideControl({
       {options ? (
         <select
           id={`flag-string-${flagKey}`}
+          className="feature-flag-control"
+          aria-labelledby={labelledBy}
           value={value ?? defaultValue}
           onChange={(e) => onChange(e.target.value)}
           style={{
@@ -281,8 +300,7 @@ function StringOverrideControl({
             border: '1px solid rgba(120,120,128,0.2)',
             background: isOverriding ? 'var(--container-background)' : 'transparent',
             color: 'var(--primary)',
-            opacity: isOverriding ? 1 : 0.65,
-            outline: 'none',
+            opacity: 1,
             width: '100%',
             minWidth: 0,
           }}
@@ -295,6 +313,8 @@ function StringOverrideControl({
         <input
           ref={inputRef}
           id={`flag-string-${flagKey}`}
+          className="feature-flag-control"
+          aria-labelledby={labelledBy}
           type="text"
           value={inputValue}
           placeholder={defaultValue}
@@ -315,19 +335,16 @@ function StringOverrideControl({
             border: '1px solid rgba(120,120,128,0.2)',
             background: isOverriding ? 'var(--container-background)' : 'transparent',
             color: 'var(--primary)',
-            opacity: isOverriding ? 1 : 0.5,
-            outline: 'none',
-            transition: 'opacity 0.15s ease-out, border-color 0.15s ease-out',
+            opacity: 1,
+            transition: 'border-color 0.15s ease-out',
             width: '100%',
             minWidth: 0,
           }}
           onFocus={(e) => {
             e.target.style.borderColor = 'var(--accent)';
-            e.target.style.opacity = '1';
           }}
           onBlurCapture={(e) => {
             e.target.style.borderColor = 'rgba(120,120,128,0.2)';
-            if (!isOverriding) e.target.style.opacity = '0.5';
           }}
         />
       )}
@@ -421,12 +438,13 @@ function FeatureFlagsContent() {
 
         <div className="list-group">
           {FLAGS.map(flag => {
+            const labelId = `flag-label-${flag.key}`;
             if (flag.type === 'string') {
               const value = mounted ? (stringOverrides[flag.key] ?? null) : null;
               return (
                 <div key={flag.key} className="list" style={{ cursor: 'default', flexDirection: 'column', alignItems: 'stretch', gap: '10px' }}>
                   <div className="list-item-content">
-                    <div className="body-text">{flag.name}</div>
+                    <div className="body-text" id={labelId}>{flag.name}</div>
                     <div className="information-wrapper">
                       <div className="information">{flag.description}</div>
                     </div>
@@ -434,6 +452,8 @@ function FeatureFlagsContent() {
                   {mounted && (
                     <StringOverrideControl
                       flagKey={flag.key}
+                      labelledBy={labelId}
+                      label={flag.name}
                       value={value}
                       defaultValue={flag.defaultValue}
                       options={flag.options}
@@ -449,7 +469,7 @@ function FeatureFlagsContent() {
             return (
               <div key={flag.key} className="list" style={{ cursor: 'default' }}>
                 <div className="list-item-content" style={{ flex: 1 }}>
-                  <div className="body-text">{flag.name}</div>
+                  <div className="body-text" id={labelId}>{flag.name}</div>
                   <div className="information-wrapper">
                     <div className="information">{flag.description}</div>
                   </div>
@@ -457,6 +477,8 @@ function FeatureFlagsContent() {
                 {mounted && (
                   <OverrideControl
                     flagKey={flag.key}
+                    labelledBy={labelId}
+                    label={flag.name}
                     state={state}
                     onSelect={(next) => handleBooleanSelect(flag.key, next)}
                   />

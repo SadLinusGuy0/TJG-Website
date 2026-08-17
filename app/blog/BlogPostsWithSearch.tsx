@@ -68,7 +68,7 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
         ) : (
           <div className="section">
             <div className="section-header">
-              <div className="title">No Posts Found</div>
+              <h2 className="title">No Posts Found</h2>
             </div>
             <div className="panel settings">
               <div className="body-text">

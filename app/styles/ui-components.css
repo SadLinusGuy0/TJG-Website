@@ -151,7 +151,7 @@ input:checked + .slider {
 /* Element Badges */
 .badge {
     background: var(--accent);
-    color: white;
+    color: var(--on-accent);
     padding: 2px 8px;
     border-radius: 10px;
     font-size: 10px;
@@ -482,6 +482,7 @@ html[data-theme="light"] .dialogue-btn-separator {
     font-weight: 700;
     font-family: 'One UI Sans', var(--body), sans-serif;
     color: var(--primary);
+    margin: 0;
     padding: 0 48px;
     word-break: break-word;
 }

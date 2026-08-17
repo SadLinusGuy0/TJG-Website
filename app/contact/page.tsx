@@ -26,7 +26,7 @@ export default function Contact() {
           />
           <div className="section">
             <div className="section-header">
-              <div className="title">Support my work</div>
+              <h2 className="title">Support my work</h2>
             </div>
             <a href="https://www.paypal.com/paypalme/ThatJoshGuy690" className="list" target="_blank" rel="noopener noreferrer" aria-label="Donate via PayPal">
               <div className="list-item-icon">
@@ -49,10 +49,10 @@ export default function Contact() {
           </div>
           <div className="section">
             <div className="section-header">
-              <div className="title">Hit me up</div>
+              <h2 className="title">Hit me up</h2>
             </div>
             <div className="list-group">
-              <a href="https://twitter.com/thatjoshguy69" className="list" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <a href="https://twitter.com/thatjoshguy69" className="list" target="_blank" rel="noopener noreferrer">
                 <div className="list-item-icon">
                   {/* Twitter SVG */}
                   <svg width="24" height="20" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -73,7 +73,7 @@ export default function Contact() {
                   </svg>
                 </div>
               </a>
-              <a href="mailto:email@thatjoshguy.me" className="list" aria-label="Email">
+              <a href="mailto:email@thatjoshguy.me" className="list">
                 <div className="list-item-icon">
                   {/* Email SVG */}
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -98,10 +98,10 @@ export default function Contact() {
           </div>
           <div className="section">
             <div className="section-header">
-              <div className="title">My socials</div>
+              <h2 className="title">My socials</h2>
             </div>
             <div className="list-group">
-              <a href="https://bsky.app/profile/thatjoshguy.me/" className="list" target="_blank" rel="noopener noreferrer" aria-label="Bluesky">
+              <a href="https://bsky.app/profile/thatjoshguy.me/" className="list" target="_blank" rel="noopener noreferrer">
                 <div className="list-item-icon">
                   {/* Bluesky SVG */}
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10.6473C10.9133 8.26964 7.95386 3.83863 5.20231 1.6533C2.56647 -0.440125 1.56093 -0.0774049 0.901733 0.257696C0.138729 0.645566 0 1.96339 0 2.73873C0 3.51406 0.377832 9.09539 0.624277 10.027C1.43857 13.1053 4.33735 14.1455 7.00693 13.8117C7.14339 13.7889 7.28179 13.7679 7.42193 13.7484C7.28446 13.7731 7.14599 13.7943 7.00693 13.8117C3.09469 14.4635 -0.379747 16.0675 4.17721 21.7747C9.18986 27.6135 11.047 20.5228 12 16.9276C12.953 20.5228 14.0507 27.3578 19.733 21.7747C24 16.9276 20.9053 14.4637 16.9931 13.8118C16.854 13.7944 16.7155 13.7734 16.5781 13.7486C16.7182 13.768 16.8566 13.7891 16.9931 13.8118C19.6626 14.1457 22.5614 13.1055 23.3757 10.0273C23.6222 9.09562 24 3.51426 24 2.73892C24 1.96358 23.8612 0.645759 23.0982 0.257888C22.439 -0.0772114 21.4335 -0.439931 18.7977 1.65349C16.0461 3.83882 13.0867 8.26964 12 10.6473Z" fill="var(--accent)"/></svg>
@@ -120,7 +120,7 @@ export default function Contact() {
                   </svg>
                 </div>
               </a>
-              <a href="https://instagram.com/thatjoshguy69/" className="list" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <a href="https://instagram.com/thatjoshguy69/" className="list" target="_blank" rel="noopener noreferrer">
                 <div className="list-item-icon">
                   {/* Instagram SVG */}
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -140,7 +140,7 @@ export default function Contact() {
                   </svg>
                 </div>
               </a>
-              <a href="https://youtube.com/@thatjoshguy08/" className="list" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+              <a href="https://youtube.com/@thatjoshguy08/" className="list" target="_blank" rel="noopener noreferrer">
                 <div className="list-item-icon">
                   {/* YouTube SVG */}
                   <svg width="24" height="17" viewBox="0 0 24 17" fill="none" xmlns="http://www.w3.org/2000/svg">

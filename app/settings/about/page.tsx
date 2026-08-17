@@ -128,14 +128,12 @@ function AboutContent() {
         <div style={{ height: 200 }} />
 
         <div className="section-header" style={{ paddingTop: "0" }}>
-            <div className="title">Credits</div>
+            <h2 className="title">Credits</h2>
           </div>
           <div className="list-group">
             <a
               href="https://x.com/BennettBuhner"
               className="list"
-              role="button"
-              aria-label="Bennett Buhner"
             >
               <div
                 className="list-item-icon"
@@ -143,7 +141,7 @@ function AboutContent() {
               >
                 <Image
                   src="/images/credits/benit.png"
-                  alt="Bennett Buhner"
+                  alt=""
                   width={30}
                   height={30}
                   style={{ borderRadius: "50%" }}
@@ -180,8 +178,6 @@ function AboutContent() {
             <a
               href="https://dhirenv.in"
               className="list"
-              role="button"
-              aria-label="Dhiren Vasnani"
             >
               <div
                 className="list-item-icon"
@@ -189,7 +185,7 @@ function AboutContent() {
               >
                 <Image
                   src="/images/credits/dhirenv.png"
-                  alt="Dhiren Vasnani"
+                  alt=""
                   width={30}
                   height={30}
                   style={{ borderRadius: "50%" }}
@@ -237,8 +233,6 @@ function AboutContent() {
             <a
               href="https://github.com/SadLinusGuy0/TJG-Website/tree/main"
               className="list"
-              role="button"
-              aria-label="GitHub Repository"
             >
               <div className="list-item-icon">
                 <svg

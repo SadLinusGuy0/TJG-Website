@@ -1511,7 +1511,7 @@ html[data-theme="dark"] .floating-search-bar {
   min-width: 0;
   background: none;
   border: none;
-  color: #fff;
+  color: var(--on-accent);
   font-family: 'One UI Sans', sans-serif;
   font-size: 0.8125rem;
   font-weight: 600;
@@ -1525,7 +1525,7 @@ html[data-theme="dark"] .floating-search-bar {
 .floating-search-filter-chip-close {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: color-mix(in srgb, var(--on-accent) 72%, transparent);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1626,7 +1626,7 @@ html[data-theme="dark"] .floating-search-bar {
 
 .floating-search-filter-item[data-selected="true"] {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .floating-search-filter-item[data-selected="true"]:hover {
@@ -1812,7 +1812,7 @@ html[data-theme="dark"] .post-search-bar {
   border-radius: 999px;
   min-height: 36px;
   padding: 8px 14px 8px 12px;
-  color: #fff;
+  color: var(--on-accent);
   font-family: 'One UI Sans', sans-serif;
   font-size: 0.85rem;
   font-weight: 600;
@@ -2008,7 +2008,7 @@ html[data-theme="dark"] .post-search-bar {
   padding: 14px 28px;
   border-radius: var(--br-9xl);
   background-color: var(--accent);
-  color: #fff !important;
+  color: var(--on-accent) !important;
   text-decoration: none;
   font-family: 'One UI Sans';
   font-weight: 600;

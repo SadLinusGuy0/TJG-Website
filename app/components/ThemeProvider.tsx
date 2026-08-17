@@ -159,6 +159,7 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpS
   const [hydrated, setHydrated] = useState(false);
 
   const applyAccentColor = (color: AccentColor) => {
+    document.documentElement.dataset.accent = color;
     document.documentElement.style.setProperty('--accent', ACCENT_COLORS[color]);
     
     // Apply complimentary backgrounds based on current theme

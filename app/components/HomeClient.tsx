@@ -727,7 +727,12 @@ export default function HomeClient({
             <div ref={publicationMarqueeRef} className="publications-marquee-wrapper">
               <div className="publications-marquee publications-marquee-forward">
                 {[0, 1].map((copy) => (
-                <div className="publications-marquee-content" key={copy} aria-hidden={copy === 1 ? true : undefined}>
+                <div
+                  className="publications-marquee-content"
+                  key={copy}
+                  aria-hidden={copy === 1 ? true : undefined}
+                  inert={copy === 1 ? true : undefined}
+                >
                   {[
                     { name: 'SammyGuru', logo: (
                       <svg width="713" height="154" viewBox="0 0 713 154" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -831,7 +836,12 @@ export default function HomeClient({
               </div>
               <div className="publications-marquee publications-marquee-reverse">
                 {[0, 1].map((copy) => (
-                  <div className="publications-marquee-content" key={copy} aria-hidden={copy === 1 ? true : undefined}>
+                  <div
+                    className="publications-marquee-content"
+                    key={copy}
+                    aria-hidden={copy === 1 ? true : undefined}
+                    inert={copy === 1 ? true : undefined}
+                  >
                     {SECONDARY_PUBLICATIONS.map((pub, index) => (
                       <a
                         key={`${copy}-${index}`}
@@ -942,11 +952,11 @@ export default function HomeClient({
           {miscSectionEnabled && (
             <div className="section">
               <div className="section-header">
-                <div className="title">Misc</div>
+                <h2 className="title">Misc</h2>
               </div>
 
               <div className="list-group">
-                <a href="https://legacy.thatjoshguy.me" className="list" role="button" aria-label="My old site">
+                <a href="https://legacy.thatjoshguy.me" className="list">
                   <div className="list-item-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <mask id="mask0_misc_home" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
