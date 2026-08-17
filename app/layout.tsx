@@ -79,6 +79,32 @@ export default async function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <meta name="theme-color" content="#000" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var viewportWidth = window.innerWidth;
+                var frame = 0;
+
+                function lockHeroViewportHeight() {
+                  document.documentElement.style.setProperty(
+                    '--hero-viewport-height',
+                    window.innerHeight + 'px'
+                  );
+                }
+
+                lockHeroViewportHeight();
+
+                window.addEventListener('resize', function() {
+                  if (window.innerWidth === viewportWidth) return;
+                  viewportWidth = window.innerWidth;
+                  cancelAnimationFrame(frame);
+                  frame = requestAnimationFrame(lockHeroViewportHeight);
+                }, { passive: true });
+              })();
+            `,
+          }}
+        />
         <link
           rel="preload"
           href="/fonts/oneuisans-subset.woff2"
