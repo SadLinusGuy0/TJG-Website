@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useTheme } from './ThemeProvider';
 
 interface ProgressiveBlurProps {
   position?: 'top' | 'bottom';
@@ -30,23 +29,9 @@ function buildMask(stops: number[], position: 'top' | 'bottom'): string {
 }
 
 export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurProps) {
-  const { blurEnabled, hydrated } = useTheme();
-  const [isDesktop, setIsDesktop] = useState(
-    typeof window !== 'undefined' ? window.innerWidth >= 700 : true
-  );
   const [topOpacity, setTopOpacity] = useState(0);
 
   const isTopBlur = position === 'top';
-
-  useEffect(() => {
-    if (position !== 'bottom') return;
-    function handleResize() {
-      setIsDesktop(window.innerWidth >= 700);
-    }
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  }, [position]);
 
   useEffect(() => {
     if (!isTopBlur) return;
@@ -61,10 +46,6 @@ export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurPro
     window.addEventListener('scroll', updateOpacity, { passive: true });
     return () => window.removeEventListener('scroll', updateOpacity);
   }, [isTopBlur]);
-
-  if (!hydrated) return null;
-  if (!blurEnabled) return null;
-  if (position === 'bottom' && !isDesktop) return null;
 
   const isTop = position === 'top';
 

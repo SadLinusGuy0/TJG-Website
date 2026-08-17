@@ -2228,6 +2228,7 @@ height: 120px;
 pointer-events: none;
 z-index: 9;
 isolation: isolate;
+contain: layout paint style;
 }
 
 .progressive-blur-overlay--top {
@@ -2236,6 +2237,10 @@ top: 0;
 
 .progressive-blur-overlay--bottom {
 bottom: 0;
+}
+
+html[data-progressive-blur="false"] .progressive-blur-overlay {
+display: none;
 }
 
 @media (min-width: 700px) {
@@ -2253,6 +2258,10 @@ inset: 0;
 @media (max-width: 699px) {
 .progressive-blur-overlay {
   height: 68px;
+}
+
+.progressive-blur-overlay--bottom {
+  display: none;
 }
 }
 

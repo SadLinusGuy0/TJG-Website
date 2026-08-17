@@ -1,11 +1,7 @@
-"use client";
 import Footer from "../components/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { getGumroadProducts, GumroadProduct } from "../../lib/gumroad";
-import { LoadingDots } from "../components/LoadingAnim";
+import { fetchGumroadProducts } from "../../lib/gumroad-server";
 import PageHeading from "../components/PageHeading";
 import { Download, Settings, Shopping } from "@thatjoshguy/oneui-icons";
 
@@ -30,24 +26,10 @@ function ProductRating({ average, count }: { average: number; count?: number }) 
   );
 }
 
-export default function Shop() {
-  const pathname = usePathname();
-  const [products, setProducts] = useState<GumroadProduct[]>([]);
-  const [loading, setLoading] = useState(true);
+export default async function Shop() {
+  const products = await fetchGumroadProducts();
+  const settingsHref = '/settings?from=%2Fshop';
 
-  useEffect(() => {
-    async function loadProducts() {
-      try {
-        const productList = await getGumroadProducts();
-        setProducts(productList);
-      } catch (error) {
-        console.error('Failed to load products:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadProducts();
-  }, []);
   return (
     <div className="page">
       <div className="page-body">
@@ -55,12 +37,12 @@ export default function Shop() {
           <PageHeading
             title="Shop"
             trailingAction={
-              <Link href={`/settings?from=${encodeURIComponent(pathname)}`} className="top-app-bar-icon" aria-label="Settings" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
+              <Link href={settingsHref} className="top-app-bar-icon" aria-label="Settings" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
                 <Settings color="var(--primary)" />
               </Link>
             }
             barTrailingAction={
-              <Link href={`/settings?from=${encodeURIComponent(pathname)}`} className="top-app-bar-icon" aria-label="Settings" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
+              <Link href={settingsHref} className="top-app-bar-icon" aria-label="Settings" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
                 <Settings color="var(--primary)" />
               </Link>
             }
@@ -68,11 +50,7 @@ export default function Shop() {
 
           <div className="section shop-products-section">
             <div className="theme-container">
-              {loading ? (
-                <div className="panel" style={{ padding: 'var(--padding-xll)', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
-                  <LoadingDots />
-                </div>
-              ) : products.length > 0 ? (
+              {products.length > 0 ? (
                 <div className="shop-product-grid">
                   {products.map((product) => (
                     <a
