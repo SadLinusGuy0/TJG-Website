@@ -918,20 +918,27 @@ export default function NavigationClient({
   return (
     <NavCollapseContext.Provider value={{ collapsed, setCollapsed }}>
       {!hideDesktop && (
-        <nav
-          ref={desktopNavRef}
-          className={`tab-container desktop-nav${collapsed ? ' collapsed' : ''}${desktopNavIsResizing ? ' desktop-nav--resizing' : ''}${desktopNavIsDragging ? ' desktop-nav--dragging' : ''}`}
-          onTransitionEnd={(event) => {
-            if (event.currentTarget === event.target && event.propertyName === 'width') {
-              setDesktopNavIsResizing(false);
-            }
-          }}
-          onTransitionCancel={(event) => {
-            if (event.currentTarget === event.target && event.propertyName === 'width') {
-              setDesktopNavIsResizing(false);
-            }
-          }}
-        >
+        <>
+          <div
+            className="desktop-nav-shadow"
+            data-no-smooth-corners=""
+            aria-hidden="true"
+          />
+          <nav
+            ref={desktopNavRef}
+            className={`tab-container desktop-nav${collapsed ? ' collapsed' : ''}${desktopNavIsResizing ? ' desktop-nav--resizing' : ''}${desktopNavIsDragging ? ' desktop-nav--dragging' : ''}`}
+            data-no-smooth-corners=""
+            onTransitionEnd={(event) => {
+              if (event.currentTarget === event.target && event.propertyName === 'width') {
+                setDesktopNavIsResizing(false);
+              }
+            }}
+            onTransitionCancel={(event) => {
+              if (event.currentTarget === event.target && event.propertyName === 'width') {
+                setDesktopNavIsResizing(false);
+              }
+            }}
+          >
           <div
             className={`desktop-nav-indicator${displayedDesktopNavIndex < 0 ? ' desktop-nav-indicator--hidden' : ''}${displayedDesktopNavIndex < 0 || desktopIndicatorState.instant || !desktopIndicatorState.hasMounted ? ' desktop-nav-indicator--instant' : ' desktop-nav-indicator--animate'}`}
             data-direction={desktopIndicatorState.direction}
@@ -1004,7 +1011,8 @@ export default function NavigationClient({
               onDoubleClick={resetSidebarWidth}
             />
           )}
-        </nav>
+          </nav>
+        </>
       )}
 
       {!shouldHideMobileNav && (

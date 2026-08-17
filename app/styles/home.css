@@ -27,6 +27,15 @@
   background: transparent;
 }
 
+.hero-environment-chip {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  z-index: 3;
+  margin-right: 0;
+  transform: translate(-50%, -50%);
+}
+
 .hero-mesh {
   position: absolute;
   inset: 0;
@@ -607,6 +616,11 @@ html[data-theme="dark"] .hero-theme-asset-dark {
     margin-bottom: 0;
   }
 
+  .hero-environment-chip {
+    top: clamp(16px, 3.5vh, 28px);
+    transform: translateX(-50%);
+  }
+
   .hero-intro {
     top: 46%;
     gap: 10px;
@@ -841,11 +855,6 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 .publications-marquee-reverse {
   animation: publicationsMarqueeReverse 40s linear infinite;
-}
-
-.publications-marquee-wrapper:has(.publication-item:hover) .publications-marquee,
-.publications-marquee-wrapper:has(.publication-item:focus-visible) .publications-marquee {
-  animation-play-state: paused;
 }
 
 .publications-marquee-content {
@@ -1169,7 +1178,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 @media screen and (max-width: 699px) {
   .journalist-section {
-    margin: 28px 0;
+    margin: 16px 0 28px;
     gap: 0;
   }
 
@@ -1485,7 +1494,9 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   }
 
   .home-page .featured-stories-scroll-wrapper {
-    --featured-stories-card-start-inset: calc(var(--featured-stories-peek) + 37px);
+    --featured-stories-card-start-inset: calc(
+      var(--home-carousel-left-bleed) + var(--home-carousel-start-gap) + 11px
+    );
     --featured-stories-snap-start-inset: calc(
       var(--home-carousel-curtain-boundary) + var(--home-carousel-curtain-fade)
     );
@@ -1499,7 +1510,9 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   }
 
   .home-page .design-projects-scroll-wrapper {
-    --design-projects-card-start-inset: calc(var(--design-projects-peek) + 37px);
+    --design-projects-card-start-inset: calc(
+      var(--home-carousel-left-bleed) + var(--home-carousel-start-gap) + 11px
+    );
     --design-projects-snap-start-inset: calc(
       var(--home-carousel-curtain-boundary) + var(--home-carousel-curtain-fade)
     );
@@ -1609,7 +1622,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 /* Figma project showcase: App Store-style cards driven by Edge Config. */
 .projects-showcase-section {
-  margin: 8px 0 72px;
+  margin: 8px 0 12px;
 }
 
 .featured-stories-section:has(+ .projects-showcase-section) {
@@ -1622,11 +1635,14 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 }
 
 .projects-showcase-section .design-projects-scroll-wrapper {
-  padding-top: 34px;
+  padding-top: 18px;
+  padding-bottom: 8px;
 }
 
 .projects-showcase-section .design-projects-scroll-inner {
   gap: 30px;
+  padding-top: 8px;
+  padding-bottom: 18px;
 }
 
 /* Keep the horizontal scrollport, but move its vertical clip edges far enough
@@ -1634,14 +1650,6 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 .projects-showcase-section .design-projects-scroll {
   margin-block: -36px;
   padding-block: 36px;
-}
-
-@media screen and (min-width: 700px) {
-  .home-page .projects-showcase-section .design-projects-scroll-wrapper {
-    --design-projects-card-start-inset: calc(
-      var(--home-carousel-left-bleed) + var(--home-carousel-start-gap) + 11px
-    );
-  }
 }
 
 .project-app-card {
@@ -1654,8 +1662,13 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   height: 302px;
   aspect-ratio: 426 / 302;
   border-radius: 28px;
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
+  box-shadow: none;
   isolation: isolate;
+  transition: box-shadow 0.22s ease;
+}
+
+.project-app-card:hover {
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
 }
 
 .project-app-card--light {
@@ -1674,9 +1687,18 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   object-position: center;
 }
 
+.project-app-card-body-link {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: block;
+  border-radius: inherit;
+  cursor: pointer;
+}
+
 .project-app-card-panel {
   position: relative;
-  z-index: 2;
+  z-index: 4;
   width: 100%;
   height: 120px;
   margin-top: auto;
@@ -1686,6 +1708,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   align-items: center;
   gap: 12px;
   color: var(--project-card-title);
+  pointer-events: none;
 }
 
 .project-app-card-panel::before {
@@ -1829,6 +1852,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   background: rgba(252, 252, 255, 0.68);
   color: #000;
   cursor: pointer;
+  pointer-events: auto;
   text-decoration: none;
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
@@ -1869,12 +1893,17 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 .stack-headline {
   font-family: 'One UI Sans', sans-serif;
-  font-size: clamp(32px, 5vw, 64px);
+  font-size: clamp(24px, 5vw, 48px);
   font-weight: 700;
   color: var(--primary);
   line-height: 1.2;
   margin: 0;
   text-align: center;
+}
+
+.home-page .stack-section {
+  margin: 12px 0 28px;
+  overflow: visible;
 }
 
 .stack-subtitle {
@@ -1895,7 +1924,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   max-width: none;
   margin: 0 auto 96px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 414px;
+  grid-template-columns: minmax(0, 1.75fr) minmax(320px, 1fr);
   align-items: start;
   gap: 30px;
   padding: 60px 11px;
@@ -1911,10 +1940,12 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 @media screen and (min-width: 1200px) {
   .about-copy {
+    position: sticky;
+    top: 120px;
     display: flex;
-    align-self: stretch;
+    align-self: start;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 30px;
   }
 
   .about-copy .about-headline,
@@ -1959,8 +1990,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 }
 
 .about-aside {
-  position: sticky;
-  top: 60px;
+  position: static;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -2226,7 +2256,7 @@ a.discord-activity-card:hover {
     grid-template-columns: minmax(0, 1fr) minmax(300px, 0.92fr);
     grid-template-rows: auto auto;
     width: 100%;
-    max-width: 760px;
+    max-width: none;
     align-items: stretch;
   }
 
@@ -2593,8 +2623,8 @@ a.shop-product-card:focus-visible {
     padding: 16px;
   }
 
-  .projects-showcase-section {
-    margin: 0 0 56px;
+  .design-projects-section.projects-showcase-section {
+    margin: 0 0 12px;
   }
 
   .projects-showcase-section .design-projects-headline {
@@ -2603,11 +2633,14 @@ a.shop-product-card:focus-visible {
   }
 
   .projects-showcase-section .design-projects-scroll-wrapper {
-    padding-top: 20px;
+    padding-top: 12px;
+    padding-bottom: 4px;
   }
 
   .projects-showcase-section .design-projects-scroll-inner {
     gap: 16px;
+    padding-top: 8px;
+    padding-bottom: 16px;
   }
 
   .project-app-card-panel {
@@ -2670,10 +2703,10 @@ a.shop-product-card:focus-visible {
   }
 
   .stack-section {
-    margin: 28px 0;
+    margin: 12px 0 28px;
     flex-direction: column;
-    gap: 16px;
-    overflow: hidden;
+    gap: 0;
+    overflow: visible;
   }
 
   .stack-headline {
@@ -2692,7 +2725,7 @@ a.shop-product-card:focus-visible {
     display: grid;
     width: 100%;
     max-width: none;
-    margin: 0 0 72px;
+    margin: 0 0 16px;
     padding: 0;
     gap: 20px;
   }

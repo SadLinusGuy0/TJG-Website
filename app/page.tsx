@@ -6,6 +6,7 @@ import { getMiscSectionEnabled } from "../lib/getMiscSectionFlag";
 import { getRecentBlogPostsEnabled } from "../lib/getRecentBlogPostsFlag";
 import { getRecentBlogPosts } from "../lib/recent-blog-posts";
 import { getHomeProfileFacts } from "../lib/home-profile";
+import { getSiteEdition } from "../lib/siteEdition";
 import HomeClient from "./components/HomeClient";
 
 // Ensure flags are evaluated per-request (needed for toolbar overrides)
@@ -29,6 +30,12 @@ export default async function Home() {
     getRecentBlogPostsEnabled(),
     getHomeProfileFacts(),
   ]);
+  const siteEdition = await getSiteEdition();
+  const environmentLabel = process.env.NODE_ENV === "development"
+    ? "Dev"
+    : siteEdition === "beta" || process.env.VERCEL_ENV === "preview"
+      ? "Beta"
+      : null;
   const recentBlogPosts = recentBlogPostsEnabled ? await getRecentBlogPosts(6) : [];
   return (
     <HomeClient
@@ -40,6 +47,7 @@ export default async function Home() {
       recentBlogPostsEnabled={recentBlogPostsEnabled}
       recentBlogPosts={recentBlogPosts}
       profileFacts={profileFacts}
+      environmentLabel={environmentLabel}
     />
   );
 }

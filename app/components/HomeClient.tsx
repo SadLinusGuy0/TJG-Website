@@ -6,7 +6,7 @@ import DiscordActivityCard from "./DiscordActivityCard";
 import TopAppBarIcon from "./TopAppBarIcon";
 import { Location, Settings } from '@thatjoshguy/oneui-icons';
 import Footer from "./Footer";
-import { CSSProperties, ReactElement, ReactNode, useState } from "react";
+import { CSSProperties, ReactElement, ReactNode, RefObject, useEffect, useRef, useState } from "react";
 import { SmoothCorners } from '@lisse/react';
 import { useTheme } from './ThemeProvider';
 import type { FeaturedStory } from "../../lib/featured-stories";
@@ -141,14 +141,183 @@ function SmoothHoverCard({
 
 function StackIcon({ tool }: { tool: StackTool }) {
   return (
-    <div className="stack-icon" title={tool.name}>
+    <div
+      className="stack-icon"
+      title={tool.name}
+      data-no-smooth-corners=""
+    >
       <Image
         src={tool.icon}
         alt={tool.name}
-        width={64}
-        height={64}
+        width={128}
+        height={128}
         className="stack-icon-image"
       />
+    </div>
+  );
+}
+
+function useAdaptiveMarqueeMotion(
+  wrapperRef: RefObject<HTMLDivElement | null>,
+  trackSelector: string,
+  itemSelector: string,
+) {
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    const tracks = wrapper
+      ? Array.from(wrapper.querySelectorAll<HTMLElement>(trackSelector))
+      : [];
+
+    if (!wrapper || !tracks.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    let isVisible = false;
+    let isInteractingWithItem = false;
+    let currentRate = 1;
+    let scrollVelocity = 0;
+    let lastScrollY = window.scrollY;
+    let lastScrollAt = performance.now();
+    let lastFrameAt = lastScrollAt;
+    let frameId = 0;
+
+    const getAnimations = () => tracks.flatMap((track) => (
+      typeof track.getAnimations === "function" ? track.getAnimations() : []
+    ));
+
+    const requestTick = () => {
+      if (!frameId) {
+        frameId = window.requestAnimationFrame(tick);
+      }
+    };
+
+    const tick = (now: number) => {
+      frameId = 0;
+      const delta = Math.min(64, now - lastFrameAt);
+      lastFrameAt = now;
+
+      const timeSinceScroll = now - lastScrollAt;
+      const scrollBoost = timeSinceScroll < 180
+        ? 1 + Math.min(2.25, scrollVelocity * 0.85)
+        : 1;
+      const targetRate = isInteractingWithItem ? 0.06 : (isVisible ? scrollBoost : 1);
+      const easingTime = targetRate < currentRate ? 280 : 170;
+      const easing = 1 - Math.exp(-delta / easingTime);
+      currentRate += (targetRate - currentRate) * easing;
+
+      getAnimations().forEach((animation) => {
+        if (typeof animation.updatePlaybackRate === "function") {
+          animation.updatePlaybackRate(currentRate);
+        } else {
+          animation.playbackRate = currentRate;
+        }
+      });
+
+      if (
+        Math.abs(targetRate - currentRate) > 0.008 ||
+        (isVisible && timeSinceScroll < 420)
+      ) {
+        requestTick();
+      }
+    };
+
+    const handleScroll = () => {
+      const now = performance.now();
+      const elapsed = Math.max(16, now - lastScrollAt);
+      const instantaneousVelocity = Math.abs(window.scrollY - lastScrollY) / elapsed;
+      scrollVelocity = Math.max(instantaneousVelocity, scrollVelocity * 0.55);
+      lastScrollY = window.scrollY;
+      lastScrollAt = now;
+
+      if (isVisible) {
+        requestTick();
+      }
+    };
+
+    const handlePointerOver = (event: PointerEvent) => {
+      if ((event.target as Element | null)?.closest(itemSelector)) {
+        isInteractingWithItem = true;
+        requestTick();
+      }
+    };
+
+    const handlePointerOut = (event: PointerEvent) => {
+      const nextTarget = event.relatedTarget as Element | null;
+      if (!nextTarget?.closest?.(itemSelector)) {
+        isInteractingWithItem = false;
+        requestTick();
+      }
+    };
+
+    const handleFocusIn = (event: FocusEvent) => {
+      if ((event.target as Element | null)?.closest(itemSelector)) {
+        isInteractingWithItem = true;
+        requestTick();
+      }
+    };
+
+    const handleFocusOut = (event: FocusEvent) => {
+      const nextTarget = event.relatedTarget as Element | null;
+      if (!nextTarget?.closest?.(itemSelector)) {
+        isInteractingWithItem = false;
+        requestTick();
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        requestTick();
+      },
+      { threshold: 0.08 },
+    );
+
+    observer.observe(wrapper);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    wrapper.addEventListener("pointerover", handlePointerOver);
+    wrapper.addEventListener("pointerout", handlePointerOut);
+    wrapper.addEventListener("focusin", handleFocusIn);
+    wrapper.addEventListener("focusout", handleFocusOut);
+    requestTick();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+      wrapper.removeEventListener("pointerover", handlePointerOver);
+      wrapper.removeEventListener("pointerout", handlePointerOut);
+      wrapper.removeEventListener("focusin", handleFocusIn);
+      wrapper.removeEventListener("focusout", handleFocusOut);
+      if (frameId) {
+        window.cancelAnimationFrame(frameId);
+      }
+    };
+  }, [itemSelector, trackSelector, wrapperRef]);
+}
+
+function StackMarquee({
+  tools,
+  reverse = false,
+  wrapperClassName = "",
+}: {
+  tools: StackTool[];
+  reverse?: boolean;
+  wrapperClassName?: string;
+}) {
+  return (
+    <div className={`stack-marquee-wrapper ${wrapperClassName}`.trim()}>
+      <div className={`stack-marquee${reverse ? " stack-marquee-reverse" : ""}`}>
+        {[0, 1, 2, 3].map((copyIndex) => (
+          <div
+            key={copyIndex}
+            className="stack-marquee-content"
+            aria-hidden={copyIndex > 0 ? "true" : undefined}
+          >
+            {tools.map((tool) => (
+              <StackIcon key={`${copyIndex}-${tool.name}`} tool={tool} />
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -204,7 +373,9 @@ function ProjectCard({ project }: { project: Project }) {
       ? copied
         ? "Page link copied"
         : "Copy this page link"
-      : `Open ${project.title}`;
+      : project.actionIcon === "download"
+        ? `View ${project.title} releases`
+        : `Open ${project.title}`;
   const actionIcon = (
     <Image
       src={PROJECT_ACTION_ICONS[project.actionIcon]}
@@ -221,35 +392,54 @@ function ProjectCard({ project }: { project: Project }) {
       className={`project-app-card-action${copied ? " is-copied" : ""}`}
       aria-label={actionLabel}
       title={actionLabel}
-      onClick={async () => {
-        await navigator.clipboard.writeText(window.location.href);
+      onClick={async (event) => {
+        event.stopPropagation();
+        await navigator.clipboard.writeText(window.location.origin);
         setCopied(true);
         window.setTimeout(() => setCopied(false), 1600);
       }}
     >
       {actionIcon}
     </button>
-  ) : project.url?.startsWith("/") ? (
+  ) : project.actionUrl?.startsWith("/") ? (
     <Link
-      href={project.url}
+      href={project.actionUrl}
       className="project-app-card-action"
       aria-label={actionLabel}
       title={actionLabel}
+      onClick={(event) => event.stopPropagation()}
     >
       {actionIcon}
     </Link>
   ) : (
     <a
-      href={project.url}
+      href={project.actionUrl}
       target="_blank"
       rel="noopener noreferrer"
       className="project-app-card-action"
       aria-label={actionLabel}
       title={actionLabel}
+      onClick={(event) => event.stopPropagation()}
     >
       {actionIcon}
     </a>
   );
+
+  const bodyLink = project.bodyUrl?.startsWith("/") ? (
+    <Link
+      href={project.bodyUrl}
+      className="project-app-card-body-link"
+      aria-label={`Open ${project.title}`}
+    />
+  ) : project.bodyUrl ? (
+    <a
+      href={project.bodyUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="project-app-card-body-link"
+      aria-label={`Open ${project.title}`}
+    />
+  ) : null;
 
   return (
     <SmoothHoverCard corners={PROJECT_CARD_CORNERS}>
@@ -266,6 +456,7 @@ function ProjectCard({ project }: { project: Project }) {
             className="design-project-image"
           />
         </div>
+        {bodyLink}
         <div className="project-app-card-panel">
           <span className="project-app-card-progressive-blur" aria-hidden="true" />
           {project.icon && (
@@ -324,6 +515,7 @@ export default function HomeClient({
   recentBlogPostsEnabled = true,
   recentBlogPosts = [],
   profileFacts,
+  environmentLabel,
 }: {
   featuredStories: FeaturedStory[];
   projects?: Project[];
@@ -333,18 +525,31 @@ export default function HomeClient({
   recentBlogPostsEnabled?: boolean;
   recentBlogPosts?: RecentBlogPost[];
   profileFacts: ProfileFact[];
+  environmentLabel: "Beta" | "Dev" | null;
 }) {
   const stackTools: StackTool[] = [
-    { name: 'Notion', icon: '/images/stack/notion.png' },
-    { name: 'Notion Mail', icon: '/images/stack/notion-mail.png' },
-    { name: 'Claude', icon: '/images/stack/claude.png' },
-    { name: 'GitHub', icon: '/images/stack/github.png' },
     { name: 'Todoist', icon: '/images/stack/todoist.png' },
     { name: 'Figma', icon: '/images/stack/figma.png' },
-    { name: 'Arc', icon: '/images/stack/arc.png' },
+    { name: 'Notion', icon: '/images/stack/notion.png' },
+    { name: 'GitHub', icon: '/images/stack/github.png' },
     { name: 'Cursor', icon: '/images/stack/cursor.png' },
-    { name: 'Sketch', icon: '/images/stack/sketch.png' },
+    { name: 'Claude', icon: '/images/stack/claude.png' },
+    { name: 'ChatGPT', icon: '/images/stack/chatgpt.png' },
+    { name: 'Dia', icon: '/images/stack/dia.png' },
+    { name: 'Warp', icon: '/images/stack/warp.png' },
+    { name: 'Slack', icon: '/images/stack/slack.png' },
+    { name: 'Framer', icon: '/images/stack/framer.png' },
+    { name: 'Calendar', icon: '/images/stack/calendar.png' },
+    { name: '1Password', icon: '/images/stack/1password.png' },
+    { name: 'X', icon: '/images/stack/x.png' },
+    { name: 'Twidget', icon: '/images/stack/twidget.png' },
+    { name: 'Termius', icon: '/images/stack/termius.png' },
   ];
+  const stackRows = [stackTools.slice(0, 8), stackTools.slice(8)];
+  const publicationMarqueeRef = useRef<HTMLDivElement>(null);
+  const stackMarqueeRef = useRef<HTMLDivElement>(null);
+  useAdaptiveMarqueeMotion(publicationMarqueeRef, ".publications-marquee", ".publication-item");
+  useAdaptiveMarqueeMotion(stackMarqueeRef, ".stack-marquee", ".stack-icon");
 
   return (
     <div className="page home-page">
@@ -362,6 +567,9 @@ export default function HomeClient({
           <div className="hero-role-wrapper">
             {/* Hero Section */}
             <div className="hero-section">
+              {environmentLabel && (
+                <span className="beta-chip hero-environment-chip">{environmentLabel}</span>
+              )}
               <div className="hero-mesh" aria-hidden="true">
                 <Image src="/images/home/hero/mesh-light-left.svg" alt="" width={1637} height={1603} className="hero-mesh-layer hero-mesh-light hero-mesh-light-left" priority />
                 <Image src="/images/home/hero/mesh-light-center.svg" alt="" width={1637} height={1603} className="hero-mesh-layer hero-mesh-light hero-mesh-light-center" priority />
@@ -460,7 +668,7 @@ export default function HomeClient({
           {/* Journalist Section */}
           <div className="journalist-section">
             <h2 className="journalist-headline">Featured In</h2>
-            <div className="publications-marquee-wrapper">
+            <div ref={publicationMarqueeRef} className="publications-marquee-wrapper">
               <div className="publications-marquee publications-marquee-forward">
                 {[0, 1].map((copy) => (
                 <div className="publications-marquee-content" key={copy} aria-hidden={copy === 1 ? true : undefined}>
@@ -618,29 +826,24 @@ export default function HomeClient({
             </section>
           )}
 
-          {/* My Stack */}
+          {/* Tools */}
           <div className="stack-section">
             <div className="stack-text">
-              <h2 className="stack-headline">My Stack</h2>
-              <p className="stack-subtitle">The tools I use to design, develop, and create.</p>
+              <h2 className="stack-headline">Tools I use</h2>
             </div>
             <div className="stack-icon-grid">
               {stackTools.map((tool, index) => (
                 <StackIcon key={index} tool={tool} />
               ))}
             </div>
-            <div className="stack-marquee-wrapper">
-              <div className="stack-marquee">
-                {[0, 1, 2, 3].map((copyIndex) => (
-                  <div
-                    key={copyIndex}
-                    className="stack-marquee-content"
-                    aria-hidden={copyIndex > 0 ? 'true' : undefined}
-                  >
-                    {stackTools.map((tool, index) => (
-                      <StackIcon key={`m-${copyIndex}-${index}`} tool={tool} />
-                    ))}
-                  </div>
+            <div ref={stackMarqueeRef} className="stack-marquee-rows">
+              <StackMarquee tools={stackRows[0]} />
+              <StackMarquee tools={stackRows[1]} reverse />
+            </div>
+            <div className="stack-marquee-wrapper stack-marquee-wide-wrapper">
+              <div className="stack-marquee-wide-content">
+                {stackTools.map((tool) => (
+                  <StackIcon key={`wide-${tool.name}`} tool={tool} />
                 ))}
               </div>
             </div>
