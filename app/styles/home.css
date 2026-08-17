@@ -17,8 +17,9 @@
 .hero-section {
   position: relative;
   width: 100%;
-  height: min(888px, calc(100svh - 64px));
-  min-height: 680px;
+  height: min(888px, calc(100vh - 16px));
+  height: min(888px, calc(100dvh - 16px));
+  min-height: 0;
   min-width: 0;
   overflow: visible;
   isolation: isolate;
