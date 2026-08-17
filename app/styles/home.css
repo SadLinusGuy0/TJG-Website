@@ -25,7 +25,8 @@
   position: relative;
   width: 100%;
   height: min(888px, calc(100vh - 16px));
-  height: min(888px, calc(100dvh - 16px));
+  /* Keep the hero stable while mobile browser controls expand or collapse. */
+  height: min(888px, calc(100svh - 16px));
   min-height: 0;
   min-width: 0;
   overflow: visible;
@@ -787,7 +788,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
     --mobile-hero-top-offset: calc(28px + 2vw);
     --mobile-nav-clearance: calc(98px + env(safe-area-inset-bottom, 0px));
     height: calc(100vh - var(--mobile-hero-top-offset));
-    height: calc(100dvh - var(--mobile-hero-top-offset));
+    height: calc(100svh - var(--mobile-hero-top-offset));
     min-height: 0;
     margin-bottom: 0;
   }
