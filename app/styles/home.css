@@ -4,6 +4,10 @@
 
 .hero-role-wrapper {
   --hero-center-x: 50%;
+  --hero-content-center-y: 40%;
+  --hero-reveal-center-x: 50%;
+  --hero-reveal-center-y: 46%;
+  --hero-reveal-duration: 760ms;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -24,8 +28,7 @@
 .hero-section {
   position: relative;
   width: 100%;
-  height: min(888px, calc(100vh - 16px));
-  height: min(888px, calc(var(--hero-viewport-height, 100svh) - 16px));
+  height: calc(var(--hero-viewport-height, 100svh) - 16px);
   min-height: 0;
   min-width: 0;
   overflow: visible;
@@ -36,7 +39,6 @@
 
 .hero-environment-chip {
   position: absolute;
-  top: 40px;
   left: var(--hero-center-x);
   z-index: 10;
   margin-right: 0;
@@ -49,7 +51,7 @@
   z-index: 0;
   overflow: visible;
   pointer-events: none;
-  transform-origin: var(--hero-center-x) 46%;
+  transform-origin: var(--hero-center-x) var(--hero-content-center-y);
 }
 
 @property --hero-reveal-inner {
@@ -212,7 +214,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 .hero-intro {
   position: absolute;
   left: var(--hero-center-x);
-  top: 46%;
+  top: var(--hero-content-center-y);
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -282,7 +284,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
     --hero-reveal-inner: 0%;
     --hero-reveal-outer: 22%;
     background: radial-gradient(
-      circle at 50% 46%,
+      circle at var(--hero-reveal-center-x) var(--hero-reveal-center-y),
       transparent 0 var(--hero-reveal-inner),
       var(--background) var(--hero-reveal-outer) 100%
     );
@@ -306,11 +308,11 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   }
 
   .home-page .hero-launch-ready .hero-mesh {
-    animation: hero-mesh-in 760ms cubic-bezier(0.25, 0.1, 0.25, 1) both;
+    animation: hero-mesh-in var(--hero-reveal-duration) cubic-bezier(0.25, 0.1, 0.25, 1) both;
   }
 
   .home-page .hero-launch-ready .hero-section::after {
-    animation: hero-reveal-in 760ms cubic-bezier(0.25, 0.1, 0.25, 1) both;
+    animation: hero-reveal-in var(--hero-reveal-duration) cubic-bezier(0.25, 0.1, 0.25, 1) both;
   }
 
   .home-page .hero-launch-ready .hero-environment-chip {
@@ -354,6 +356,26 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   color: inherit;
   margin: 0;
   white-space: nowrap;
+}
+
+@keyframes hero-name-weight-sweep {
+  0%,
+  100% {
+    font-weight: 700;
+  }
+
+  50% {
+    font-weight: 200;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-page .hero-launch-ready .hero-name-entrance > span {
+    animation: hero-name-weight-sweep 700ms ease-in-out both;
+    animation-delay: calc(
+      var(--hero-reveal-duration) + (var(--animated-text-character-index) * 62ms)
+    );
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -402,13 +424,13 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 .hero-scroll-indicator:any-link {
   position: absolute;
   left: var(--hero-center-x);
-  bottom: clamp(64px, 8vh, 88px);
+  bottom: 20%;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
   color: inherit;
   transform: translateX(-50%);
 }
@@ -419,7 +441,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 .hero-scroll-arrow {
   position: absolute;
-  width: 58px;
+  width: 40px;
   height: auto;
   animation: hero-arrow-bounce 1.6s cubic-bezier(0.45, 0, 0.25, 1) infinite;
 }
@@ -747,8 +769,8 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 @media screen and (min-width: 700px) {
   .home-page .hero-role-wrapper {
-    /* Counter the desktop content column's collapsed-nav gutter. */
-    --hero-center-x: calc(50% - max(4vw, 44px));
+    /* The reveal is viewport-fixed, so mirror the content column's centre. */
+    --hero-reveal-center-x: calc(50% + clamp(44px, 4vw, 64px));
   }
 }
 
@@ -778,27 +800,25 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 @media screen and (max-width: 699px) {
   .hero-role-wrapper {
+    --mobile-hero-top-offset: calc(28px + 2vw);
+    --hero-content-center-y: 37%;
+    --hero-reveal-center-y: 50%;
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
 
   .hero-section {
-    --mobile-hero-top-offset: calc(28px + 2vw);
-    --mobile-nav-clearance: calc(98px + env(safe-area-inset-bottom, 0px));
-    height: calc(100vh - var(--mobile-hero-top-offset));
     height: calc(var(--hero-viewport-height, 100svh) - var(--mobile-hero-top-offset));
     min-height: 0;
     margin-bottom: 0;
   }
 
   .hero-environment-chip {
-    top: clamp(16px, 3.5vh, 28px);
     transform: translateX(-50%);
   }
 
   .hero-intro {
-    top: 46%;
     gap: 10px;
   }
 
@@ -823,7 +843,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   }
 
   .hero-scroll-indicator:any-link {
-    bottom: var(--mobile-nav-clearance);
+    bottom: 25%;
     width: 50px;
     height: 50px;
   }
@@ -969,7 +989,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 .journalist-section {
   width: 100%;
-  margin: 36px 0;
+  margin: 36px 0 0;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -1132,7 +1152,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 .featured-stories-section {
   width: 100%;
-  margin: 36px 0;
+  margin: 0 0 36px;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -1153,13 +1173,12 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   position: relative;
   /* Bleed left + right past the column so a peek of the next card shows and shadows have air */
   --featured-stories-peek: min(72px, 10vw);
-  /* Align first card with main column (peek bleed + .main-content horizontal padding); mandatory snap otherwise scrolls past padding-left */
-  --featured-stories-card-start-inset: calc(var(--featured-stories-peek) + 20px);
+  /* Counter the left bleed so the first card aligns with the main column. */
+  --featured-stories-card-start-inset: var(--featured-stories-peek);
   --featured-stories-snap-start-inset: var(--featured-stories-card-start-inset);
   width: calc(100% + 2 * var(--featured-stories-peek));
   margin-left: calc(-1 * var(--featured-stories-peek));
   margin-right: calc(-1 * var(--featured-stories-peek));
-  padding: 24px 0;
   overflow-x: visible;
   overflow-y: visible;
 }
@@ -1319,7 +1338,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 @media screen and (max-width: 699px) {
   .featured-stories-section {
-    margin: 28px 0;
+    margin: 0 0 28px;
   }
 
   .featured-stories-headline {
@@ -1328,7 +1347,6 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   }
 
   .featured-stories-scroll-wrapper {
-    padding: 24px 0;
     --featured-stories-peek: min(48px, 12vw);
     --featured-stories-card-start-inset: var(--featured-stories-peek);
     width: calc(100% + 2 * var(--featured-stories-peek));
@@ -1358,7 +1376,6 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 @media screen and (max-width: 699px) {
   .journalist-section {
-    margin: 16px 0 28px;
     gap: 0;
   }
 
@@ -1369,6 +1386,11 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
   .publications-marquee-wrapper {
     padding: 24px 0;
+    gap: 6px;
+  }
+
+  .publications-marquee {
+    min-height: 64px;
   }
 
   .publications-marquee {
@@ -1456,18 +1478,18 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   }
 
   .publications-marquee-content {
-    gap: 32px;
-    padding-right: 32px;
+    gap: 20px;
+    padding-right: 20px;
   }
 
   .publication-logo-image {
-    max-height: 40px;
-    max-width: 120px;
+    max-height: 46px;
+    max-width: 140px;
   }
 
   .publication-logo-image svg {
-    max-height: 40px;
-    max-width: 120px;
+    max-height: 46px;
+    max-width: 140px;
   }
 
   .design-projects-stack-headline {
@@ -1567,12 +1589,11 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 .design-projects-scroll-wrapper {
   position: relative;
   --design-projects-peek: min(72px, 10vw);
-  --design-projects-card-start-inset: calc(var(--design-projects-peek) + 20px);
+  --design-projects-card-start-inset: var(--design-projects-peek);
   --design-projects-snap-start-inset: var(--design-projects-card-start-inset);
   width: calc(100% + 2 * var(--design-projects-peek));
   margin-left: calc(-1 * var(--design-projects-peek));
   margin-right: calc(-1 * var(--design-projects-peek));
-  padding: 24px 0;
   overflow-x: visible;
   overflow-y: visible;
 }
@@ -1614,7 +1635,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   .home-page
     .design-projects-section:not(.projects-showcase-section)
     .design-projects-scroll-wrapper {
-    --home-carousel-curtain-boundary: calc(var(--home-carousel-left-bleed) + 11px);
+    --home-carousel-curtain-boundary: var(--home-carousel-left-bleed);
     --home-carousel-curtain-fade: clamp(96px, 10vw, 160px);
     isolation: isolate;
   }
@@ -1692,7 +1713,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
   .home-page .featured-stories-scroll-wrapper {
     --featured-stories-card-start-inset: calc(
-      var(--home-carousel-left-bleed) + var(--home-carousel-start-gap) + 11px
+      var(--home-carousel-left-bleed) + var(--home-carousel-start-gap)
     );
     --featured-stories-snap-start-inset: calc(
       var(--home-carousel-curtain-boundary) + var(--home-carousel-curtain-fade)
@@ -1708,7 +1729,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
   .home-page .design-projects-scroll-wrapper {
     --design-projects-card-start-inset: calc(
-      var(--home-carousel-left-bleed) + var(--home-carousel-start-gap) + 11px
+      var(--home-carousel-left-bleed) + var(--home-carousel-start-gap)
     );
     --design-projects-snap-start-inset: calc(
       var(--home-carousel-curtain-boundary) + var(--home-carousel-curtain-fade)
@@ -1838,7 +1859,6 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 .projects-showcase-section .design-projects-scroll-inner {
   gap: 30px;
-  padding-top: 8px;
   padding-bottom: 18px;
 }
 
@@ -2119,12 +2139,12 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 .about-section {
   width: 100%;
   max-width: none;
-  margin: 0 auto 96px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1.75fr) minmax(320px, 1fr);
   align-items: start;
   gap: 30px;
-  padding: 60px 11px;
+  padding: 60px 11px 14px;
   box-sizing: border-box;
   color: var(--primary);
   background: transparent;
@@ -2133,22 +2153,6 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 
 .about-copy {
   min-width: 0;
-}
-
-@media screen and (min-width: 1200px) {
-  .about-copy {
-    position: sticky;
-    top: 120px;
-    display: flex;
-    align-self: start;
-    flex-direction: column;
-    gap: 30px;
-  }
-
-  .about-copy .about-headline,
-  .about-copy .about-text {
-    margin-bottom: 0;
-  }
 }
 
 .about-headline {
@@ -2192,6 +2196,19 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   flex-direction: column;
   gap: 20px;
   min-width: 0;
+}
+
+@media screen and (min-width: 901px) {
+  .about-aside {
+    position: sticky;
+    top: 120px;
+    align-self: start;
+  }
+
+  .about-portrait {
+    height: 255px;
+    aspect-ratio: auto;
+  }
 }
 
 .about-portrait {
@@ -2324,109 +2341,12 @@ html[data-theme="dark"] .home-fact-icon-f1 img {
   line-height: 1.2;
 }
 
-.discord-activity-card,
-a.discord-activity-card:any-link {
-  display: flex;
-  width: 100%;
-  min-height: 103px;
-  align-items: center;
-  gap: 20px;
-  margin: 0;
-  padding: 20px;
-  box-sizing: border-box;
-  border: 0;
-  border-radius: 28px;
-  color: var(--primary);
-  background: color-mix(in srgb, var(--container-background) 50%, transparent);
-  font-family: 'One UI Sans', sans-serif;
-  text-align: left;
-  text-decoration: none;
-}
-
-a.discord-activity-card:hover {
-  background: color-mix(in srgb, var(--container-background) 72%, transparent);
-}
-
-.discord-activity-art {
-  display: flex;
-  flex: 0 0 53px;
-  width: 53px;
-  height: 53px;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 6px;
-  color: var(--secondary);
-  background-color: color-mix(in srgb, var(--secondary) 12%, transparent);
-  background-position: center;
-  background-size: cover;
-}
-
-.discord-activity-art.has-image {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--primary) 8%, transparent);
-}
-
-.discord-activity-copy {
-  display: flex;
-  min-width: 0;
-  flex: 1 1 auto;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.discord-activity-label {
-  overflow: hidden;
-  color: var(--secondary);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.discord-activity-title {
-  display: -webkit-box;
-  overflow: hidden;
-  color: var(--primary);
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.16;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.discord-activity-subtitle {
-  display: block;
-  min-width: 0;
-  overflow: hidden;
-  color: var(--primary);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.2;
-  max-height: 2.4em;
-}
-
-.discord-activity-subtitle svg {
-  display: inline-block;
-  margin-right: 5px;
-  vertical-align: -3px;
-}
-
-.discord-activity-subtitle svg,
-.discord-activity-open {
-  flex: 0 0 auto;
-}
-
-.discord-activity-open {
-  margin-left: auto;
-}
-
-@media screen and (max-width: 1199px) {
+@media screen and (max-width: 900px) {
   .about-section {
     grid-template-columns: minmax(0, 1fr);
     gap: 32px;
     max-width: none;
-    padding: 48px 11px;
+    padding: 48px 11px 14px;
   }
 
   .about-headline {
@@ -2447,11 +2367,11 @@ a.discord-activity-card:hover {
   }
 }
 
-@media screen and (min-width: 800px) and (max-width: 1199px) {
+@media screen and (min-width: 800px) and (max-width: 900px) {
   .about-aside {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(300px, 0.92fr);
-    grid-template-rows: auto auto;
+    grid-template-rows: auto;
     width: 100%;
     max-width: none;
     align-items: stretch;
@@ -2459,21 +2379,15 @@ a.discord-activity-card:hover {
 
   .about-portrait {
     grid-column: 1;
-    grid-row: 1 / span 2;
-    height: 100%;
-    min-height: 380px;
+    grid-row: 1;
+    height: 255px;
+    min-height: 0;
     aspect-ratio: auto;
   }
 
   .home-facts-list {
     grid-column: 2;
     grid-row: 1;
-  }
-
-  .discord-activity-card,
-  a.discord-activity-card:any-link {
-    grid-column: 2;
-    grid-row: 2;
   }
 
   .home-facts-list > .home-fact-item {
@@ -2488,12 +2402,6 @@ a.discord-activity-card:hover {
   .home-fact-value {
     font-size: 16px;
   }
-
-  .discord-activity-card,
-  a.discord-activity-card:any-link {
-    gap: 14px;
-    padding: 16px;
-  }
 }
 
 /* =============================================
@@ -2501,12 +2409,7 @@ a.discord-activity-card:hover {
    ============================================= */
 
 .site-footer {
-  --footer-mesh-left-position: left -170px bottom -38px;
-  --footer-mesh-right-position: right -205px bottom -68px;
-  --footer-mesh-left-size: 387px 309px;
-  --footer-mesh-right-size: 468px 322px;
   position: relative;
-  isolation: isolate;
   width: 100%;
   min-height: 210px;
   margin: 36px 0 16px;
@@ -2517,48 +2420,6 @@ a.discord-activity-card:hover {
   box-sizing: border-box;
 }
 
-.site-footer::before {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  left: 50%;
-  bottom: 0;
-  width: 100vw;
-  height: 310px;
-  transform: translateX(-50%);
-  background-image:
-    url("/images/footer/mesh-left.svg"),
-    url("/images/footer/mesh-right.svg");
-  background-repeat: no-repeat;
-  background-position:
-    var(--footer-mesh-left-position),
-    var(--footer-mesh-right-position);
-  background-size:
-    var(--footer-mesh-left-size),
-    var(--footer-mesh-right-size);
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0, 0, 0, 0.18) 18%,
-    #000 52%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0, 0, 0, 0.18) 18%,
-    #000 52%
-  );
-  pointer-events: none;
-  user-select: none;
-}
-
-/*
- * The footer artwork deliberately spills above and beyond the footer box, but
- * its oversized image bounds must not create several hundred pixels of empty
- * scrollable space after the visible footer. Keep that spill on desktop while
- * ending the painted layer at the footer's bottom edge, and retire the old
- * bottom-blur clearance for pages that end in this footer.
- */
 @media screen and (min-width: 700px) {
   .page:has(.main-content > .site-footer) {
     padding-bottom: 0;
@@ -2569,50 +2430,8 @@ a.discord-activity-card:hover {
   }
 
   .main-content > .site-footer {
-    --footer-mesh-left-position: left -40px bottom -230px;
-    --footer-mesh-right-position: right -40px bottom -346px;
-    --footer-mesh-left-size: 720px 603px;
-    --footer-mesh-right-size: 624px 716px;
     margin-bottom: 0;
   }
-
-  .main-content > .site-footer::before {
-    /* The footer lives inside the collapsed-nav content gutter. Anchor its
-       artwork back to the viewport edge instead of centring 100vw inside the
-       narrower content column. */
-    left: calc(100% - 100vw + 10px);
-    bottom: 0;
-    width: 100vw;
-    height: 370px;
-    transform: none;
-    background-image:
-      url("/images/footer/mesh-left.svg"),
-      url("/images/footer/mesh-right.svg");
-    background-position:
-      var(--footer-mesh-left-position),
-      var(--footer-mesh-right-position);
-    background-size:
-      var(--footer-mesh-left-size),
-      var(--footer-mesh-right-size);
-  }
-}
-
-.footer-mesh {
-  display: none;
-}
-
-.footer-mesh-left {
-  top: -127px;
-  left: -224px;
-  width: 720px;
-  height: 603px;
-}
-
-.footer-mesh-right {
-  top: -30px;
-  right: -304px;
-  width: 624px;
-  height: 716px;
 }
 
 .footer-divider {
@@ -2919,18 +2738,6 @@ html[data-theme="dark"] .site-footer {
   background: transparent;
 }
 
-html[data-theme="dark"] .site-footer::before {
-  background-image:
-    url("/images/footer/mesh-left-dark.svg"),
-    url("/images/footer/mesh-right-dark.svg");
-  background-position:
-    var(--footer-mesh-left-position),
-    var(--footer-mesh-right-position);
-  background-size:
-    var(--footer-mesh-left-size),
-    var(--footer-mesh-right-size);
-}
-
 @media (prefers-color-scheme: dark) {
   html:not([data-theme="light"]) .footer-brand {
     filter: invert(1);
@@ -2938,18 +2745,6 @@ html[data-theme="dark"] .site-footer::before {
 
   html:not([data-theme="light"]) .site-footer {
     background: transparent;
-  }
-
-  html:not([data-theme="light"]) .site-footer::before {
-    background-image:
-      url("/images/footer/mesh-left-dark.svg"),
-      url("/images/footer/mesh-right-dark.svg");
-    background-position:
-      var(--footer-mesh-left-position),
-      var(--footer-mesh-right-position);
-    background-size:
-      var(--footer-mesh-left-size),
-      var(--footer-mesh-right-size);
   }
 }
 
@@ -2990,7 +2785,6 @@ html[data-theme="dark"] .site-footer::before {
 
   .projects-showcase-section .design-projects-scroll-inner {
     gap: 16px;
-    padding-top: 8px;
     padding-bottom: 16px;
   }
 
@@ -3039,7 +2833,6 @@ html[data-theme="dark"] .site-footer::before {
   }
 
   .design-projects-scroll-wrapper {
-    padding: 24px 0;
     --design-projects-peek: min(48px, 12vw);
     --design-projects-card-start-inset: var(--design-projects-peek);
     width: calc(100% + 2 * var(--design-projects-peek));
@@ -3077,7 +2870,7 @@ html[data-theme="dark"] .site-footer::before {
     width: 100%;
     max-width: none;
     margin: 0 0 16px;
-    padding: 0;
+    padding: 0 0 14px;
     gap: 20px;
   }
 
@@ -3131,13 +2924,6 @@ html[data-theme="dark"] .site-footer::before {
     font-size: 16px;
   }
 
-  .discord-activity-card,
-  a.discord-activity-card:any-link {
-    min-height: 103px;
-    gap: 16px;
-    padding: 16px;
-  }
-
   .site-footer {
     width: 100vw;
     min-height: 157px;
@@ -3149,20 +2935,6 @@ html[data-theme="dark"] .site-footer::before {
 
   .footer-contact-label {
     display: none;
-  }
-
-  .footer-mesh-left {
-    top: -127px;
-    left: -224px;
-    width: 387px;
-    height: 309px;
-  }
-
-  .footer-mesh-right {
-    top: -83px;
-    right: -218px;
-    width: 468px;
-    height: 322px;
   }
 
   .footer-divider {
@@ -3209,6 +2981,29 @@ html[data-theme="dark"] .site-footer::before {
     justify-content: flex-end;
     gap: 10px;
   }
+}
+
+/* Keep the homepage H2s consistent with the shared "Misc" heading. */
+.home-page .journalist-headline,
+.home-page .featured-stories-headline,
+.home-page .design-projects-headline,
+.home-page .stack-headline {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  padding: 14px;
+  font-size: 30px;
+  text-align: left;
+}
+
+.home-page .stack-text {
+  width: 100%;
+}
+
+.home-page .featured-stories-scroll-wrapper,
+.home-page .design-projects-scroll-wrapper {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 /* ── Discord Banner ── */

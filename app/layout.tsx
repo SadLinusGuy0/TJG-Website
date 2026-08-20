@@ -84,23 +84,35 @@ export default async function RootLayout({
             __html: `
               (function() {
                 var viewportWidth = window.innerWidth;
+                var viewportHeight = window.innerHeight;
                 var frame = 0;
+                var hasCoarsePointer = window.matchMedia('(pointer: coarse)');
 
                 function lockHeroViewportHeight() {
+                  viewportWidth = window.innerWidth;
+                  viewportHeight = window.innerHeight;
                   document.documentElement.style.setProperty(
                     '--hero-viewport-height',
-                    window.innerHeight + 'px'
+                    viewportHeight + 'px'
                   );
+                }
+
+                function scheduleHeroViewportLock() {
+                  cancelAnimationFrame(frame);
+                  frame = requestAnimationFrame(lockHeroViewportHeight);
                 }
 
                 lockHeroViewportHeight();
 
                 window.addEventListener('resize', function() {
-                  if (window.innerWidth === viewportWidth) return;
-                  viewportWidth = window.innerWidth;
-                  cancelAnimationFrame(frame);
-                  frame = requestAnimationFrame(lockHeroViewportHeight);
+                  var widthChanged = window.innerWidth !== viewportWidth;
+                  var heightChanged = window.innerHeight !== viewportHeight;
+
+                  if (!widthChanged && (!heightChanged || hasCoarsePointer.matches)) return;
+                  scheduleHeroViewportLock();
                 }, { passive: true });
+
+                window.addEventListener('orientationchange', scheduleHeroViewportLock, { passive: true });
               })();
             `,
           }}

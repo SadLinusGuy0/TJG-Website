@@ -26,23 +26,6 @@ const socialLinks = [
 export default function Footer() {
   return (
     <footer className="site-footer" aria-label="Site footer">
-      <Image
-        className="footer-mesh footer-mesh-left"
-        src="/images/footer/mesh-left.svg"
-        alt=""
-        width={720}
-        height={603}
-        aria-hidden="true"
-      />
-      <Image
-        className="footer-mesh footer-mesh-right"
-        src="/images/footer/mesh-right.svg"
-        alt=""
-        width={624}
-        height={716}
-        aria-hidden="true"
-      />
-
       <div className="footer-divider" aria-hidden="true" />
 
       <div className="footer-brand-block">

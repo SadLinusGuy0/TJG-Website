@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import AnimatedText from "./AnimatedText";
-import DiscordActivityCard from "./DiscordActivityCard";
 import TopAppBarIcon from "./TopAppBarIcon";
 import { Location, Settings } from '@thatjoshguy/oneui-icons';
 import Footer from "./Footer";
@@ -720,7 +719,6 @@ export default function HomeClient({
                 ))}
               </ul>
 
-              <DiscordActivityCard />
             </aside>
           </section>
 
@@ -921,7 +919,6 @@ export default function HomeClient({
           {recentBlogPostsEnabled && recentBlogPosts.length > 0 && (
             <div className="design-projects-section">
               <h2 className="design-projects-headline">Recent Blog Posts</h2>
-              <p className="design-projects-subtitle">Fresh off the press.</p>
               <div className="design-projects-scroll-wrapper">
                 <EdgeMaskedCarousel className="design-projects-scroll">
                   <div className="design-projects-scroll-inner">
