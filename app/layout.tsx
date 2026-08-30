@@ -66,8 +66,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({
   children,
+  popover,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
+  popover?: React.ReactNode;
 }) {
   const blogEnabledValue = await getBlogEnabled();
   const cornerSmoothingEnabledValue = await getCornerSmoothingEnabled();
@@ -198,6 +200,7 @@ export default async function RootLayout({
             <main className="site-main" id="main-content">
               {children}
             </main>
+            {popover}
             <DiscordPopup />
           </BlogFlagProvider>
         </ThemeProvider>

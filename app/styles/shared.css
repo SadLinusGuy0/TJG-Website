@@ -181,6 +181,47 @@ a.skip-link:any-link:focus-visible {
   /* Make the box adapt to the text inside */
 }
 
+/* Shared native pill button, also used by inline blog CTAs. */
+.blog-button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.body-text .blog-button,
+.blog-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: var(--br-9xl);
+  background-color: var(--accent);
+  color: var(--on-accent) !important;
+  text-decoration: none;
+  font-family: 'One UI Sans';
+  font-weight: 600;
+  font-size: 16px;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.blog-button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.blog-button:active {
+  transform: scale(0.98);
+}
+
+@media screen and (max-width: 699px) {
+  .blog-button {
+    padding: 12px 22px;
+    font-size: 14px;
+  }
+}
+
 /* Hover scale effect for links and buttons */
 a,
 .button,
@@ -2287,6 +2328,239 @@ padding-top: 80px !important;
   padding-bottom: 0 !important;
 }
 
+.oneui-popover-layer {
+  --oneui-popover-width: clamp(420px, 42vw, 620px);
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: stretch;
+  padding: 20px;
+  box-sizing: border-box;
+  background: color-mix(in srgb, #000 18%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  overscroll-behavior: none;
+  touch-action: none;
+  animation: oneui-popover-backdrop-in 200ms cubic-bezier(0.2, 0.72, 0.24, 1) both;
+}
+
+.oneui-popover-layer::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: var(--oneui-popover-width);
+  max-width: calc(100vw - 40px);
+  height: calc(100dvh - 40px);
+  border-radius: 36px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+  pointer-events: none;
+  transform-origin: left center;
+  animation: oneui-popover-shadow-in 200ms cubic-bezier(0.2, 0.72, 0.24, 1) both;
+}
+
+.oneui-popover-surface {
+  --oneui-popover-content-inset: 20px;
+  width: var(--oneui-popover-width);
+  max-width: calc(100vw - 40px);
+  height: calc(100dvh - 40px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--secondary) 58%, transparent) transparent;
+  scrollbar-gutter: stable;
+  border: 1px solid color-mix(in srgb, var(--primary) 10%, transparent);
+  border-radius: 36px;
+  background: var(--background);
+  clip-path: inset(0 round 36px);
+  isolation: isolate;
+  box-sizing: border-box;
+  transform-origin: left center;
+  animation: oneui-popover-surface-in 200ms cubic-bezier(0.2, 0.72, 0.24, 1) both;
+}
+
+.oneui-popover-layer--closing {
+  animation: oneui-popover-backdrop-out 180ms cubic-bezier(0.4, 0, 0.6, 1) both;
+}
+
+.oneui-popover-layer--closing::before {
+  animation: oneui-popover-shadow-out 180ms cubic-bezier(0.4, 0, 0.6, 1) both;
+}
+
+.oneui-popover-layer--closing .oneui-popover-surface {
+  animation: oneui-popover-surface-out 180ms cubic-bezier(0.4, 0, 0.6, 1) both;
+  pointer-events: none;
+}
+
+.oneui-popover-surface::-webkit-scrollbar {
+  width: 10px;
+}
+
+.oneui-popover-surface::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.oneui-popover-surface::-webkit-scrollbar-thumb {
+  min-height: 44px;
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--secondary) 58%, transparent);
+  background-clip: padding-box;
+}
+
+.oneui-popover-surface::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--secondary) 78%, transparent);
+  background-clip: padding-box;
+}
+
+.oneui-popover-surface:focus {
+  outline: none;
+}
+
+.oneui-popover-surface .top-app-bar-icon:focus-visible,
+.oneui-popover-surface .theme-card:focus-visible,
+.oneui-popover-surface .accent-color-selection label:has(input:focus-visible) {
+  outline: 3px solid var(--accent) !important;
+  outline-offset: 3px;
+}
+
+.oneui-popover-surface .list:focus-visible,
+.oneui-popover-surface .list:has(:focus-visible) {
+  z-index: 2;
+  outline: none !important;
+  background-color: color-mix(in srgb, var(--accent) 10%, var(--container-background)) !important;
+  box-shadow: inset 0 0 0 3px var(--accent);
+}
+
+.oneui-popover-surface .list-group > .list:first-child {
+  border-top-left-radius: var(--br-9xl);
+  border-top-right-radius: var(--br-9xl);
+}
+
+.oneui-popover-surface .list-group > .list:last-child {
+  border-bottom-right-radius: var(--br-9xl);
+  border-bottom-left-radius: var(--br-9xl);
+}
+
+.oneui-popover-surface .list:focus-visible::after,
+.oneui-popover-surface .list:has(:focus-visible)::after {
+  opacity: 0;
+}
+
+.oneui-popover-surface .switch input:focus-visible + .slider {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.oneui-popover-surface .progressive-blur-overlay--contained {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 96px !important;
+  margin-bottom: -96px;
+  z-index: 9;
+}
+
+.oneui-popover-surface .page,
+.oneui-popover-surface .page-body {
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.oneui-popover-surface .main-content,
+.oneui-popover-surface .settings-page .main-content {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 var(--oneui-popover-content-inset) 36px !important;
+  box-sizing: border-box !important;
+  overflow-x: visible !important;
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.oneui-popover-surface .top-app-bar--contained {
+  position: sticky !important;
+  inset: auto !important;
+  top: 0 !important;
+  z-index: 20 !important;
+  width: calc(100% + (var(--oneui-popover-content-inset) * 2));
+  margin: 0 calc(var(--oneui-popover-content-inset) * -1) 10px;
+  padding: 14px var(--oneui-popover-content-inset) !important;
+  box-sizing: border-box;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  pointer-events: auto;
+  transition: none;
+}
+
+@keyframes oneui-popover-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes oneui-popover-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes oneui-popover-surface-in {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+@keyframes oneui-popover-surface-out {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    filter: blur(6px);
+    transform: scale(0.96);
+  }
+}
+
+@keyframes oneui-popover-shadow-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes oneui-popover-shadow-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
 /* Ensure settings page gets proper mobile styling */
 @media screen and (max-width: 699px) {
   .settings-page .main-content {
@@ -2296,6 +2570,73 @@ padding-top: 80px !important;
     box-sizing: border-box !important;
     overflow-x: visible !important;
     padding-top: 80px !important;
+  }
+
+  .oneui-popover-layer {
+    padding: 0;
+    background: var(--background);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .oneui-popover-layer::before {
+    display: none;
+  }
+
+  .oneui-popover-surface {
+    --oneui-popover-content-inset: 10px;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    clip-path: none;
+    box-shadow: none;
+    animation-name: oneui-popover-mobile-in;
+  }
+
+  .oneui-popover-layer--closing .oneui-popover-surface {
+    animation-name: oneui-popover-mobile-out;
+  }
+
+  .oneui-popover-surface .progressive-blur-overlay--contained {
+    height: 78px !important;
+    margin-bottom: -78px;
+  }
+
+  .oneui-popover-surface .main-content,
+  .oneui-popover-surface .settings-page .main-content {
+    padding: 0 var(--oneui-popover-content-inset) 60px !important;
+  }
+}
+
+@keyframes oneui-popover-mobile-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes oneui-popover-mobile-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oneui-popover-layer,
+  .oneui-popover-layer::before,
+  .oneui-popover-surface {
+    animation: none;
   }
 }
 

@@ -40,6 +40,7 @@
 
 .hero-environment-chip {
   position: absolute;
+  top: 40px;
   left: var(--hero-center-x);
   z-index: 10;
   margin-right: 0;
@@ -816,6 +817,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   }
 
   .hero-environment-chip {
+    top: clamp(16px, 3.5vh, 28px);
     transform: translateX(-50%);
   }
 

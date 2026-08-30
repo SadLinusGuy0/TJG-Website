@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 
 interface ProgressiveBlurProps {
   position?: 'top' | 'bottom';
+  contained?: boolean;
+  getScrollContainer?: () => HTMLElement | null;
 }
 
 const BLUR_LAYERS = [
@@ -28,7 +30,11 @@ function buildMask(stops: number[], position: 'top' | 'bottom'): string {
   return `linear-gradient(rgba(0,0,0,0) ${s[0]}%, rgba(0,0,0,1) ${s[1]}%, rgba(0,0,0,1) ${s[2]}%, rgba(0,0,0,0) ${s[3]}%)`;
 }
 
-export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurProps) {
+export default function ProgressiveBlur({
+  position = 'top',
+  contained = false,
+  getScrollContainer,
+}: ProgressiveBlurProps) {
   const [topOpacity, setTopOpacity] = useState(0);
 
   const isTopBlur = position === 'top';
@@ -37,21 +43,25 @@ export default function ProgressiveBlur({ position = 'top' }: ProgressiveBlurPro
     if (!isTopBlur) return;
 
     const FADE_DISTANCE = 4;
+    const scrollContainer = getScrollContainer?.() ?? window;
     const updateOpacity = () => {
-      const progress = Math.min(1, Math.max(0, window.scrollY / FADE_DISTANCE));
+      const scrollTop = scrollContainer instanceof Window
+        ? scrollContainer.scrollY
+        : scrollContainer.scrollTop;
+      const progress = Math.min(1, Math.max(0, scrollTop / FADE_DISTANCE));
       setTopOpacity(progress);
     };
 
     updateOpacity();
-    window.addEventListener('scroll', updateOpacity, { passive: true });
-    return () => window.removeEventListener('scroll', updateOpacity);
-  }, [isTopBlur]);
+    scrollContainer.addEventListener('scroll', updateOpacity, { passive: true });
+    return () => scrollContainer.removeEventListener('scroll', updateOpacity);
+  }, [getScrollContainer, isTopBlur]);
 
   const isTop = position === 'top';
 
   return (
     <div
-      className={`progressive-blur-overlay progressive-blur-overlay--${position}`}
+      className={`progressive-blur-overlay progressive-blur-overlay--${position}${contained ? ' progressive-blur-overlay--contained' : ''}`}
       aria-hidden="true"
       style={{
         opacity: isTopBlur ? topOpacity : 1,

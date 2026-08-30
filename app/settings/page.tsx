@@ -1,11 +1,15 @@
 "use client";
 
 import { useTheme, ACCENT_COLORS, ACCENT_LIGHT_BACKGROUNDS, ACCENT_LIGHT_CONTAINER_BACKGROUNDS, ACCENT_DARK_BACKGROUNDS, ACCENT_DARK_CONTAINER_BACKGROUNDS, AccentColor } from '../components/ThemeProvider';
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, Suspense, type KeyboardEvent } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { LoadingDots } from '../components/LoadingAnim';
 import TopAppBar from '../components/TopAppBar';
 import Switch from '../components/Switch';
+
+const THEME_OPTIONS = ['auto', 'light', 'dark'] as const;
+type ThemeOption = (typeof THEME_OPTIONS)[number];
 
 function ThemePreviewLight({ accent }: { accent: AccentColor }) {
   const bg = ACCENT_LIGHT_BACKGROUNDS[accent];
@@ -78,6 +82,33 @@ function SettingsContent() {
   const [fmpSeparatedView, setFmpSeparatedView] = useState(true);
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || '/';
+  const handleThemeKeyDown = (
+    event: KeyboardEvent<HTMLDivElement>,
+    currentTheme: ThemeOption,
+  ) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      setTheme(currentTheme);
+      return;
+    }
+
+    const direction = event.key === 'ArrowRight' || event.key === 'ArrowDown'
+      ? 1
+      : event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+        ? -1
+        : 0;
+    if (!direction) return;
+
+    event.preventDefault();
+    const currentIndex = THEME_OPTIONS.indexOf(currentTheme);
+    const nextTheme = THEME_OPTIONS[
+      (currentIndex + direction + THEME_OPTIONS.length) % THEME_OPTIONS.length
+    ];
+    setTheme(nextTheme);
+    window.requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>(`[data-theme-option="${nextTheme}"]`)?.focus();
+    });
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -106,14 +137,15 @@ function SettingsContent() {
         </div>
         <div className="panel" style={{ padding: 'var(--padding-xll)' }}>
           {mounted && (
-            <div className="theme-cards">
+            <div className="theme-cards" role="radiogroup" aria-label="Theme">
               <div
                 className={`theme-card${theme === 'auto' ? ' selected' : ''}`}
+                data-theme-option="auto"
                 onClick={() => setTheme('auto')}
                 role="radio"
                 aria-checked={theme === 'auto'}
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && setTheme('auto')}
+                tabIndex={theme === 'auto' ? 0 : -1}
+                onKeyDown={(event) => handleThemeKeyDown(event, 'auto')}
               >
                 <div className="theme-card-preview">
                   <ThemePreviewAuto accent={accentColor} />
@@ -123,11 +155,12 @@ function SettingsContent() {
               </div>
               <div
                 className={`theme-card${theme === 'light' ? ' selected' : ''}`}
+                data-theme-option="light"
                 onClick={() => setTheme('light')}
                 role="radio"
                 aria-checked={theme === 'light'}
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && setTheme('light')}
+                tabIndex={theme === 'light' ? 0 : -1}
+                onKeyDown={(event) => handleThemeKeyDown(event, 'light')}
               >
                 <div className="theme-card-preview">
                   <ThemePreviewLight accent={accentColor} />
@@ -137,11 +170,12 @@ function SettingsContent() {
               </div>
               <div
                 className={`theme-card${theme === 'dark' ? ' selected' : ''}`}
+                data-theme-option="dark"
                 onClick={() => setTheme('dark')}
                 role="radio"
                 aria-checked={theme === 'dark'}
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && setTheme('dark')}
+                tabIndex={theme === 'dark' ? 0 : -1}
+                onKeyDown={(event) => handleThemeKeyDown(event, 'dark')}
               >
                 <div className="theme-card-preview">
                   <ThemePreviewDark accent={accentColor} />
@@ -334,7 +368,7 @@ function SettingsContent() {
               <h2 className="title">Developer options</h2>
             </div>
             <div className="list-group">
-              <a href="/settings/feature-flags" className="list">
+              <Link href="/settings/feature-flags" className="list">
                 <div className="list-item-content">
                   <div className="body-text">Feature Flags</div>
                   <div className="information-wrapper">
@@ -345,8 +379,8 @@ function SettingsContent() {
                 <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
                   <path d="M1 1L7 7L1 13" stroke="var(--secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-              </a>
-              <a href="/playground" className="list">
+              </Link>
+              <Link href="/playground" className="list">
                 <div className="list-item-content">
                   <div className="body-text">Component Playground</div>
                   <div className="information-wrapper">
@@ -357,7 +391,7 @@ function SettingsContent() {
                 <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
                   <path d="M1 1L7 7L1 13" stroke="var(--secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-              </a>
+              </Link>
             </div>
           </>
         )}
@@ -366,7 +400,7 @@ function SettingsContent() {
         </div>
 
         <div className="list-group">
-          <a href="/settings/about" className="list">
+          <Link href="/settings/about" className="list">
             <div className="list-item-content">
               <div className="body-text">About this site</div>
             </div>
@@ -374,7 +408,7 @@ function SettingsContent() {
             <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
               <path d="M1 1L7 7L1 13" stroke="var(--secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-          </a>
+          </Link>
         </div>
         </div>
     </>
