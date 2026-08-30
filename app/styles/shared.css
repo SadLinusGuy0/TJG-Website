@@ -154,14 +154,21 @@ a.skip-link:any-link {
   font-family: 'One UI Sans', sans-serif;
   font-size: 16px;
   font-weight: 700;
+  clip-path: inset(50%);
+  opacity: 0;
+  pointer-events: none;
   transform: translateY(calc(-100% - 24px));
-  transition: transform 160ms ease-out;
+  transition: clip-path 0ms 160ms, opacity 120ms ease-out, transform 160ms ease-out;
 }
 
 a.skip-link:any-link:focus-visible {
+  clip-path: inset(0);
+  opacity: 1;
   outline: 3px solid var(--accent);
   outline-offset: 3px;
+  pointer-events: auto;
   transform: translateY(0);
+  transition-delay: 0ms;
 }
 
 .button {
@@ -1711,8 +1718,13 @@ body.nav-collapsed .desktop-nav-shadow {
     background: transparent;
     border-radius: var(--br-xl);
     z-index: 1000;
+    opacity: 1;
+    visibility: visible;
     transform: translateY(0);
-    transition: transform 520ms cubic-bezier(0.22, 1.35, 0.36, 1);
+    transition-property: transform, opacity, visibility;
+    transition-duration: 520ms, 120ms, 0ms;
+    transition-timing-function: cubic-bezier(0.22, 1.35, 0.36, 1), ease-out, linear;
+    transition-delay: 0ms;
     will-change: transform;
   }
 
@@ -1720,18 +1732,54 @@ body.nav-collapsed .desktop-nav-shadow {
   body:has(.oneui-popover-layer:not(.oneui-popover-layer--closing)) .mobile-nav-bar,
   body:has(.settings-page):not(:has(.oneui-popover-layer)) .mobile-nav-bar {
     z-index: 1300;
-    transform: translateY(calc(100% + 32px + env(safe-area-inset-bottom, 0px)));
-    transition-duration: 260ms;
-    transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(calc(
+      100% + 220px + 100lvh - 100svh + env(safe-area-inset-bottom, 0px)
+    ));
+    transition-duration: 260ms, 120ms, 0ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 1, 1), ease-out, linear;
+    transition-delay: 0ms, 140ms, 260ms;
     pointer-events: none;
   }
 
   body:has(.oneui-popover-layer--closing) .mobile-nav-bar {
     z-index: 1300;
+    opacity: 1;
+    visibility: visible;
     transform: translateY(0);
-    transition-duration: 520ms;
-    transition-timing-function: cubic-bezier(0.22, 1.35, 0.36, 1);
+    transition-duration: 520ms, 120ms, 0ms;
+    transition-timing-function: cubic-bezier(0.22, 1.35, 0.36, 1), ease-out, linear;
+    transition-delay: 0ms;
     pointer-events: none;
+  }
+
+  body.mobile-settings-nav-preparing-exit .mobile-nav-bar {
+    display: block;
+    z-index: 1300;
+    opacity: 0;
+    visibility: visible;
+    transform: translateY(calc(
+      100% + 220px + 100lvh - 100svh + env(safe-area-inset-bottom, 0px)
+    ));
+    transition: none;
+    pointer-events: none;
+  }
+
+  body.mobile-settings-nav-exiting .mobile-nav-bar {
+    display: block;
+    z-index: 1300;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition-duration: 420ms, 120ms, 0ms;
+    transition-timing-function: cubic-bezier(0.22, 1.35, 0.36, 1), ease-out, linear;
+    transition-delay: 0ms;
+    pointer-events: none;
+  }
+
+  body:has(.settings-page):not(:has(.oneui-popover-layer)):not(.mobile-settings-nav-preparing-exit):not(.mobile-settings-nav-exiting) .mobile-nav-bar {
+    display: none;
   }
 
   .mobile-nav-tabs {

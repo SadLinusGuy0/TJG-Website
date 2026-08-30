@@ -17,7 +17,7 @@ const turbopackFlagsDefinitionsAlias = flagsDefinitionsAlias
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  allowedDevOrigins: ['server', '*.local.tjg.gg'],
+  allowedDevOrigins: ['server', '*.local.tjg.gg', '192.168.1.226'],
   outputFileTracingRoot: path.join(__dirname),
   experimental: {
     inlineCss: true,

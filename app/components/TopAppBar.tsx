@@ -2,13 +2,14 @@
 
 import { Back, Settings } from "@thatjoshguy/oneui-icons";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
+  type MouseEvent as ReactMouseEvent,
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
@@ -21,16 +22,42 @@ const EXPANDED_HERO_VIEWPORT_HEIGHT = 25;
 const COLLAPSED_HERO_PADDING_TOP = 0;
 const EXPANDED_HERO_PADDING_TOP = 0;
 const MOBILE_SETTINGS_NAV_PENDING_CLASS = "mobile-settings-nav-pending";
+const MOBILE_SETTINGS_NAV_PREPARING_EXIT_CLASS = "mobile-settings-nav-preparing-exit";
+const MOBILE_SETTINGS_NAV_EXITING_CLASS = "mobile-settings-nav-exiting";
 
-function beginMobileSettingsNavigation() {
+function beginMobileSettingsNavigation(event: ReactMouseEvent<HTMLAnchorElement>) {
   if (!window.matchMedia("(max-width: 699px)").matches) return;
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
+  event.preventDefault();
+  const destination = event.currentTarget.href;
   document.body.classList.add(MOBILE_SETTINGS_NAV_PENDING_CLASS);
   window.setTimeout(() => {
-    if (!document.querySelector(".oneui-popover-layer")) {
-      document.body.classList.remove(MOBILE_SETTINGS_NAV_PENDING_CLASS);
-    }
-  }, 2000);
+    const mobileNav = document.querySelector<HTMLElement>(".mobile-nav-bar");
+    if (mobileNav) mobileNav.style.display = "none";
+    window.setTimeout(() => {
+      window.location.assign(destination);
+    }, 80);
+  }, 260);
+}
+
+function beginMobileOwnedPageExit(event: ReactMouseEvent<HTMLAnchorElement>) {
+  if (!window.matchMedia("(max-width: 699px)").matches) return;
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+  event.preventDefault();
+  const destination = event.currentTarget.href;
+  const mobileNav = document.querySelector<HTMLElement>(".mobile-nav-bar");
+  document.body.classList.add(MOBILE_SETTINGS_NAV_PREPARING_EXIT_CLASS);
+  void mobileNav?.offsetHeight;
+
+  window.setTimeout(() => {
+    document.body.classList.add(MOBILE_SETTINGS_NAV_EXITING_CLASS);
+    document.body.classList.remove(MOBILE_SETTINGS_NAV_PREPARING_EXIT_CLASS);
+  }, 16);
+  window.setTimeout(() => {
+    window.location.assign(destination);
+  }, 540);
 }
 
 interface TopAppBarProps {
@@ -63,8 +90,14 @@ export default function TopAppBar({
   mobileSettingsHref,
 }: TopAppBarProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const popover = useOneUiPopover();
   const isContained = popover !== null;
+  const isMobileOwnedPage = !isContained && (
+    pathname === "/settings"
+    || pathname.startsWith("/settings/")
+    || pathname === "/playground"
+  );
   const getScrollContainer = popover?.getScrollContainer;
   const anchorRef = useRef<HTMLSpanElement>(null);
   const touchStartY = useRef(0);
@@ -262,7 +295,7 @@ export default function TopAppBar({
     >
       <div className="top-app-bar-container">
         {backHref && (
-          isContained || backBehavior === "history" ? (
+          isContained || (backBehavior === "history" && !isMobileOwnedPage) ? (
             <button
               type="button"
               className="top-app-bar-icon"
@@ -278,7 +311,12 @@ export default function TopAppBar({
               <Back color="var(--primary)" />
             </button>
           ) : (
-            <Link href={backHref} className="top-app-bar-icon" aria-label="Back">
+            <Link
+              href={backHref}
+              className="top-app-bar-icon"
+              aria-label="Back"
+              onClick={isMobileOwnedPage ? beginMobileOwnedPageExit : undefined}
+            >
               <Back color="var(--primary)" />
             </Link>
           )

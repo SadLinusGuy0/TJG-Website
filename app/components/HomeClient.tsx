@@ -629,8 +629,16 @@ export default function HomeClient({
     if (!hero) return;
 
     let cancelled = false;
+    let launchReady = false;
     let firstFrame = 0;
     let secondFrame = 0;
+    let timeout = 0;
+    const markHeroLaunchReady = () => {
+      if (cancelled || launchReady) return;
+      launchReady = true;
+      window.clearTimeout(timeout);
+      setHeroLaunchReady(true);
+    };
     const images = Array.from(hero.querySelectorAll<HTMLImageElement>(".hero-mesh img"));
     const decoded = images.map(async (image) => {
       if (!image.complete) {
@@ -645,17 +653,14 @@ export default function HomeClient({
       }
     });
 
-    const timeout = window.setTimeout(() => {
-      if (!cancelled) setHeroLaunchReady(true);
-    }, 900);
+    timeout = window.setTimeout(markHeroLaunchReady, 900);
 
     void Promise.all(decoded).then(() => {
       if (cancelled) return;
-      window.clearTimeout(timeout);
 
       firstFrame = requestAnimationFrame(() => {
         secondFrame = requestAnimationFrame(() => {
-          if (!cancelled) setHeroLaunchReady(true);
+          markHeroLaunchReady();
         });
       });
     });
