@@ -63,6 +63,12 @@ a.nav-icon-container-selected:any-link {
   margin-top: 20%;
 }
 
+.header-container.about-identity-container {
+  height: calc(304px + min(5vw, 44px));
+  min-height: 0;
+  margin-top: 0 !important;
+}
+
 @media screen and (max-width: 900px) {
   .header-container {
     margin-top: 5% !important;
@@ -119,7 +125,21 @@ a.nav-icon-container-selected:any-link {
   margin: 0;
 }
 
-.skip-link {
+.settings-page .section-header:has(> h2.title),
+.contact-page .section-header:has(> h2.title) {
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.settings-page .section-header > h2.title,
+.contact-page .section-header > h2.title {
+  color: var(--secondary);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+a.skip-link:any-link {
   position: fixed;
   z-index: 100000;
   top: 12px;
@@ -138,7 +158,7 @@ a.nav-icon-container-selected:any-link {
   transition: transform 160ms ease-out;
 }
 
-.skip-link:focus-visible {
+a.skip-link:any-link:focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 3px;
   transform: translateY(0);
@@ -978,42 +998,53 @@ button.media-card:hover {
 
 .top-app-bar-container {
   display: flex !important;
-  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
   width: 100%;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-}
-
-/* When only settings button is present, align it to the right */
-.top-app-bar .top-app-bar-container.settings-only {
-  justify-content: flex-end !important;
-}
-
-/* When only back button is present, align it to the left */
-.top-app-bar .top-app-bar-container.back-only {
-  justify-content: flex-start !important;
-}
-
-/* When both buttons are present, use space-between */
-.top-app-bar .top-app-bar-container.both-buttons {
-  justify-content: space-between !important;
+  min-height: 50px;
+  max-width: 100%;
+  padding: 0 !important;
 }
 
 .top-app-bar {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: calc(26px - clamp(12px, 1.5vw, 20px));
+  left: var(--top-app-bar-left, 20px) !important;
+  right: var(--top-app-bar-right, 20px) !important;
   z-index: 999 !important;
   width: auto;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0px 10px;
-  margin-top: 40px;
+  padding: clamp(12px, 1.5vw, 20px) var(--top-app-bar-padding-right, 20px) clamp(12px, 1.5vw, 20px) var(--top-app-bar-padding-left, 20px) !important;
+  margin: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+  transition: left 0.18s ease, right 0.18s ease, padding 0.18s ease;
+}
+
+.top-app-bar-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0 12px;
+  color: var(--primary);
+  font-family: 'One UI Sans', var(--body), sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transform: translateY(0);
+  transition: opacity 0.18s ease;
+  pointer-events: none;
+}
+
+.top-app-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-shrink: 0;
   pointer-events: auto;
 }
 
@@ -1026,70 +1057,27 @@ button.media-card:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--br-sm);
   border: 1px solid color-mix(in srgb, var(--primary) 10%, transparent 80%);
-  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: content-box;
+  padding: 4px;
+  transform: scale(1);
+  transition: transform 0.2s ease-out, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   pointer-events: auto;
-}
-
-@media screen and (min-width: 700px) {
-  .top-app-bar .top-app-bar-icon[aria-label="Settings"] {
-    display: none !important;
-  }
-}
-
-/* For back button in settings and similar pages */
-.top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon,
-.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon,
-.top-app-bar-icon[onclick="window.history.back()"] {
-  transform: scale(1);
-  transition: transform 0.2s ease-out, background 0.2s ease, backdrop-filter 0.2s ease;
-  margin-right: 0;
   border-radius: 50%;
-  padding: 4px;
-  box-sizing: content-box;
   cursor: pointer;
 }
 
-.top-app-bar-container[onclick="window.history.back()"] .top-app-bar-icon:hover,
-.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon:hover,
-.top-app-bar-icon[onclick="window.history.back()"]:hover {
-  transform: scale(1.1);
-  transition: transform 0.2s ease-in, background 0.2s ease, backdrop-filter 0.2s ease;
-  background: color-mix(in srgb, var(--container-background) 75%, transparent 25%);
-  border-color: color-mix(in srgb, var(--primary) 30%, transparent 70%);
-}
-
-/* Keep the original behavior for the settings icon only */
-.top-app-bar-icon:not([onclick="window.history.back()"]):not(.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon) {
-  transform: scale(1);
-  transition: transform 0.2s ease-out, rotate 0.2s ease, background 0.2s ease, backdrop-filter 0.2s ease;
-  border-radius: 50%;
-  padding: 4px;
-  box-sizing: content-box;
-  cursor: pointer;
-
-}
-
-.top-app-bar-icon:not([onclick="window.history.back()"]):not(.top-app-bar-container[onclick*="handleBackNavigation"] .top-app-bar-icon):hover {
-  transform: scale(1.1);
-  transition: transform 0.2s ease-in, rotate 0.2s ease, background 0.2s ease, backdrop-filter 0.2s ease;
+.top-app-bar-icon:hover {
+  transform: scale(1.05);
   background: color-mix(in srgb, var(--container-background) 75%, transparent 25%);
   backdrop-filter: blur(15px) !important;
   -webkit-backdrop-filter: blur(15px) !important;
   border-color: color-mix(in srgb, var(--primary) 30%, transparent 70%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.title-container {
-  display: flex;
-  align-items: center;
-  padding-left: 10px;
-}
-
-.title-container .title {
-  font-size: var(--subtitle-size);
-  padding: 0;
-  margin: 0;
+.top-app-bar-settings {
+  display: none;
 }
 
 .main-content {
@@ -1272,9 +1260,6 @@ button.media-card:hover {
       padding: 0 0 10px;
       align-items: center;
   }
-  .top-app-bar .top-app-bar-container.settings-only {
-      display: none !important;
-  }
   .desktop-nav .nav-icon-container,
   .desktop-nav .nav-icon-container-selected {
       margin: 0;
@@ -1337,10 +1322,6 @@ button.media-card:hover {
       align-items: flex-start;
       box-sizing: border-box;
   }
-  .top-app-bar-container {
-      padding-left: min(36%, 416px) !important;
-      padding-right: 20px !important;
-  }
   .page-body {
       flex-direction: row;
       align-items: flex-start;
@@ -1355,21 +1336,6 @@ button.media-card:hover {
       width: calc(100% - max(8%, 88px)) !important;
       padding-left: 10px !important;
       padding-right: 10px !important;
-  }
-  body.nav-collapsed .top-app-bar-container {
-      padding-left: 0 !important;
-      padding-right: 0 !important;
-  }
-
-  body.nav-collapsed .top-app-bar {
-      left: max(15.5%, 88px) !important;
-      right: 7% !important;
-      width: auto !important;
-      padding-left: 0 !important;
-      padding-right: 0 !important;
-  }
-  .top-app-bar {
-      margin-top: 40px;
   }
 }
 
@@ -1686,14 +1652,6 @@ body.nav-collapsed .desktop-nav-shadow {
 /* --- Mobile Navigation Bar --- */
 .mobile-nav-bar { display: none; }
 
-/* Desktop uses sidebar settings nav; hide duplicate top-app-bar settings icon. */
-@media screen and (min-width: 700px) {
-  .top-app-bar .top-app-bar-icon[aria-label="Settings"],
-  .page-heading-hero-actions .top-app-bar-icon[aria-label="Settings"] {
-    display: none !important;
-  }
-}
-
 @media screen and (max-width: 699px) {
   .desktop-nav,
   .desktop-nav-shadow { display: none !important; }
@@ -1829,6 +1787,13 @@ body.nav-collapsed .desktop-nav-shadow {
     background: transparent;
   }
 
+  .mobile-nav-tabs:not([data-indicator-ready]) .mobile-nav-tab--active {
+    border-radius: var(--br-9xl);
+    border: 1px solid color-mix(in srgb, var(--primary) 10%, transparent);
+    background: var(--container-background);
+    box-shadow: 0 1px 8px color-mix(in srgb, var(--primary) 8%, transparent);
+  }
+
   a.mobile-nav-tab:hover:not(.mobile-nav-tab--active),
   a.mobile-nav-tab:focus-visible:not(.mobile-nav-tab--active) {
     background: transparent;
@@ -1940,32 +1905,13 @@ body.nav-collapsed .desktop-nav-shadow {
 }
 
 
-/* Add after the .top-app-bar-icon rules */
-.top-app-bar-icon:hover {
-  background: color-mix(in srgb, var(--container-background) 75%, transparent 25%);
-  backdrop-filter: blur(15px) !important;
-  -webkit-backdrop-filter: blur(15px) !important;
-  border-color: color-mix(in srgb, var(--primary) 30%, transparent 70%);
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
 /* SVG styling for top app bar icons */
 .top-app-bar-icon svg {
   width: 20px;
   height: 20px;
-  fill: white;
+  color: var(--primary);
+  fill: currentColor;
   transition: all 0.3s ease;
-}
-
-/* Only rotate the SVG for the settings cog, not the back button */
-.top-app-bar-icon[aria-label="Settings"]:hover svg {
-  transform: rotate(90deg);
-  fill: var(--accent);
-}
-
-.top-app-bar-icon[aria-label="Back"]:hover svg {
-  fill: var(--accent);
 }
 
 body.nav-collapsed .icon-container {
@@ -2244,6 +2190,10 @@ display: none;
 }
 
 @media (min-width: 700px) {
+  body:not(:has(.top-app-bar-anchor[data-desktop-buttons])):not(:has(.top-app-bar-anchor[data-desktop-heading])) .progressive-blur-overlay--top {
+    height: 48px;
+  }
+
   .progressive-blur-overlay--bottom {
     height: 48px;
   }
@@ -2258,6 +2208,10 @@ inset: 0;
 @media (max-width: 699px) {
 .progressive-blur-overlay {
   height: 68px;
+}
+
+body:not(:has(.top-app-bar-anchor[data-mobile-buttons])):not(:has(.top-app-bar-anchor[data-mobile-heading])) .progressive-blur-overlay--top {
+  height: 48px;
 }
 
 .progressive-blur-overlay--bottom {
@@ -2282,6 +2236,18 @@ inset: 0;
 
 .top-app-bar-container {
   max-width: 100% !important;
+}
+
+.top-app-bar {
+  top: 16px;
+}
+
+.top-app-bar-settings {
+  display: flex;
+}
+
+.top-app-bar-title--mobile-hidden {
+  display: none;
 }
 }
 
@@ -2522,20 +2488,6 @@ justify-content: flex-start;
     padding-right: 10px !important;
   }
 
-  .top-app-bar-container,
-  body.nav-collapsed .top-app-bar-container {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  .top-app-bar,
-  body.nav-collapsed .top-app-bar {
-    left: max(15.5%, 88px) !important;
-    right: 7% !important;
-    width: auto !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -12,7 +12,9 @@ import { FMP_SLUG } from "../../../lib/fmpSections";
 import FmpViewWrapper from "./FmpViewWrapper";
 import { getInPostSearchBarEnabled } from "../../../lib/getInPostSearchBarFlag";
 import { getInPostSearchBarFmpEnabled } from "../../../lib/getInPostSearchBarFmpFlag";
-import PostHeroTopAppBar from "./PostHeroTopAppBar";
+import TopAppBar from "../../components/TopAppBar";
+import TableOfContents from "../TableOfContents";
+import ForceRefreshButton from "./ForceRefreshButton";
 import { getDisplayWordCount, processContentWithEmbeds } from "../../../lib/blogContentProcessing";
 import { portableTextToPlainText, stripHtmlAndDecode } from "../../../lib/portableText";
 import { getSiteEdition, getSiteUrl } from "../../../lib/siteEdition";
@@ -157,7 +159,17 @@ async function BlogPostBody({ slug }: { slug: string }) {
 
   return (
     <>
-      <PostHeroTopAppBar content={tocContent} slug={slug} title={titleText} />
+      <TopAppBar
+        title={titleText}
+        backHref="/blog"
+        collapseTarget=".post-hero-card"
+        actions={
+          <>
+            <TableOfContents content={tocContent} />
+            <ForceRefreshButton slug={slug} />
+          </>
+        }
+      />
 
       {/* Featured Image with Title Overlay */}
       <div className="post-hero-card">

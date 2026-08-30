@@ -159,7 +159,7 @@ a:not(:any-link) {
     --light-primary: #000;
     --light-selected: #EFEFEF;
     --accent: #387aff;
-    --on-accent: #000;
+    --on-accent: #fff;
     --gap-xl: 10px;
     --gap-xll: 20px;
     --gap-11xs: 2px;

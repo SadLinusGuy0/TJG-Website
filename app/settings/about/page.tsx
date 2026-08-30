@@ -1,19 +1,15 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
 import "../../globals.css";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useRef, Suspense } from "react";
-import { useRouter } from "next/navigation";
 import Toast from "../../components/Toast";
 import AnimatedText from "../../components/AnimatedText";
 import { LoadingDots } from "../../components/LoadingAnim";
-import PageHeading from "../../components/PageHeading";
-import { Back } from "@thatjoshguy/oneui-icons";
+import TopAppBar from "../../components/TopAppBar";
 
 function AboutContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const from = searchParams.get("from") || "/settings";
   const [tapCount, setTapCount] = useState(0);
   const [showToast, setShowToast] = useState(false);
@@ -83,17 +79,12 @@ function AboutContent() {
           opacity: 0,
         }}
       >
-        <PageHeading
+        <TopAppBar
           title="About this site"
           defaultCollapsed
-          leadingAction={
-            <Link href={from} className="top-app-bar-icon" aria-label="Back" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
-              <Back color="var(--primary)" />
-            </Link>
-          }
-          onBack={() => router.push(from)}
+          backHref={from}
         />
-        <div className="header-container" style={{ marginTop: 0, height: 'auto', minHeight: 0 }}>
+        <div className="header-container about-identity-container">
           <div
             style={{
               display: "flex",
@@ -125,9 +116,7 @@ function AboutContent() {
           </div>
         </div>
 
-        <div style={{ height: 200 }} />
-
-        <div className="section-header" style={{ paddingTop: "0" }}>
+        <div className="section-header">
             <h2 className="title">Credits</h2>
           </div>
           <div className="list-group">
@@ -221,13 +210,11 @@ function AboutContent() {
             </a>
           </div>
 
-          <div className="panel settings">
-            <div className="body-text">
-              <p className="prose">
-                This site was created using my One UI Design Kit, and built
-                using Next.js.
-              </p>
-            </div>
+          <div className="section-header">
+            <h2 className="title">
+              This site was created using my One UI Design Kit, and built
+              using Next.js.
+            </h2>
           </div>
           <div className="list-group">
             <a

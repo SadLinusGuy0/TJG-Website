@@ -1,12 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback, useRef, Suspense } from "react";
-import { useRouter } from "next/navigation";
 import { LoadingDots } from "../../components/LoadingAnim";
-import PageHeading from "../../components/PageHeading";
-import { Back } from "@thatjoshguy/oneui-icons";
+import TopAppBar from "../../components/TopAppBar";
 import Switch from "../../components/Switch";
 
 const FLAG_COOKIE_PREFIX = 'ff-';
@@ -354,7 +351,6 @@ function StringOverrideControl({
 
 function FeatureFlagsContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const from = searchParams.get('from') || '/settings';
   const [booleanOverrides, setBooleanOverrides] = useState<Record<string, OverrideState>>({});
   const [stringOverrides, setStringOverrides] = useState<Record<string, string | null>>({});
@@ -419,14 +415,9 @@ function FeatureFlagsContent() {
   return (
     <>
       <div className="main-content" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0 }}>
-        <PageHeading
+        <TopAppBar
           title="Feature Flags"
-          leadingAction={
-            <Link href={from} className="top-app-bar-icon" aria-label="Back" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
-              <Back color="var(--primary)" />
-            </Link>
-          }
-          onBack={() => router.push(from)}
+          backHref={from}
         />
         <div style={{ padding: 'var(--padding-xll)' }}>
           <div className="information-wrapper">

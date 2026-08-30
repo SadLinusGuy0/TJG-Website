@@ -434,10 +434,27 @@ export default function NavigationClient({
       previousDesktopIndicatorLayoutRef.current = nextLayout;
     };
 
+    const observeDesktopNavLayout = () => {
+      const resizeObserver = typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(updateDesktopIndicatorLayout)
+        : null;
+
+      if (resizeObserver && desktopNavRef.current) {
+        resizeObserver.observe(desktopNavRef.current);
+      }
+
+      window.addEventListener('resize', updateDesktopIndicatorLayout);
+
+      return () => {
+        resizeObserver?.disconnect();
+        window.removeEventListener('resize', updateDesktopIndicatorLayout);
+      };
+    };
+
     const nextLayout = measureTabAtIndex(displayedDesktopNavIndex);
 
     if (!nextLayout) {
-      return;
+      return observeDesktopNavLayout();
     }
 
     const previousIndex = previousDesktopNavIndexRef.current;
@@ -483,20 +500,7 @@ export default function NavigationClient({
     previousDesktopNavCountRef.current = desktopNavCount;
     previousDesktopIndicatorLayoutRef.current = nextLayout;
 
-    const resizeObserver = typeof ResizeObserver !== 'undefined'
-      ? new ResizeObserver(updateDesktopIndicatorLayout)
-      : null;
-
-    if (resizeObserver && desktopNavRef.current) {
-      resizeObserver.observe(desktopNavRef.current);
-    }
-
-    window.addEventListener('resize', updateDesktopIndicatorLayout);
-
-    return () => {
-      resizeObserver?.disconnect();
-      window.removeEventListener('resize', updateDesktopIndicatorLayout);
-    };
+    return observeDesktopNavLayout();
   }, [desktopNavCount, desktopNavIsResizing, desktopNavItems, displayedDesktopNavIndex, hideDesktop]);
 
   const mobileNavItems = useMemo(() => [
@@ -592,10 +596,27 @@ export default function NavigationClient({
       previousMobileIndicatorLayoutRef.current = nextLayout;
     };
 
+    const observeMobileNavLayout = () => {
+      const resizeObserver = typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(updateMobileIndicatorLayout)
+        : null;
+
+      if (resizeObserver && mobileNavRailRef.current) {
+        resizeObserver.observe(mobileNavRailRef.current);
+      }
+
+      window.addEventListener('resize', updateMobileIndicatorLayout);
+
+      return () => {
+        resizeObserver?.disconnect();
+        window.removeEventListener('resize', updateMobileIndicatorLayout);
+      };
+    };
+
     const nextLayout = measureActiveTab();
 
     if (!nextLayout) {
-      return;
+      return observeMobileNavLayout();
     }
 
     const previousIndex = previousMobileNavIndexRef.current;
@@ -711,20 +732,7 @@ export default function NavigationClient({
     previousMobileNavCountRef.current = mobileNavCount;
     previousMobileIndicatorLayoutRef.current = nextLayout;
 
-    const resizeObserver = typeof ResizeObserver !== 'undefined'
-      ? new ResizeObserver(updateMobileIndicatorLayout)
-      : null;
-
-    if (resizeObserver && mobileNavRailRef.current) {
-      resizeObserver.observe(mobileNavRailRef.current);
-    }
-
-    window.addEventListener('resize', updateMobileIndicatorLayout);
-
-    return () => {
-      resizeObserver?.disconnect();
-      window.removeEventListener('resize', updateMobileIndicatorLayout);
-    };
+    return observeMobileNavLayout();
   }, [activeMobileNavIndex, displayedMobileNavIndex, mobileNavCount, mobileNavItems, shouldHideMobileNav]);
 
   const handleDesktopNavClick = (event: MouseEvent<HTMLAnchorElement>, index: number) => {
@@ -1058,6 +1066,7 @@ export default function NavigationClient({
             ref={mobileNavRailRef}
             className="mobile-nav-tabs"
             data-item-count={mobileNavCount}
+            data-indicator-ready={mobileIndicatorLayout.width > 0 ? '' : undefined}
             style={{ backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)' }}
           >
             <div

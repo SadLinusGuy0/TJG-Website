@@ -95,10 +95,6 @@ export default function LightboxClient(): React.JSX.Element | null {
       imageIndexes = nextIndexes;
       itemsRef.current = nextItems;
       setItems(nextItems);
-
-      imgs.forEach((img) => {
-        img.style.cursor = "pointer";
-      });
     };
 
     collectImages();

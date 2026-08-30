@@ -1,28 +1,16 @@
 "use client";
-import Link from "next/link";
 import Footer from '../components/Footer';
-import { usePathname } from "next/navigation";
-import PageHeading from "../components/PageHeading";
-import { Settings } from "@thatjoshguy/oneui-icons";
+import TopAppBar from "../components/TopAppBar";
 
 export default function Contact() {
-  const pathname = usePathname();
   return (
-    <div className="page">
+    <div className="page contact-page">
       <div className="page-body">
         <div className="main-content" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0 }}>
-          <PageHeading
+          <TopAppBar
             title="Contact"
-            trailingAction={
-              <Link href={`/settings?from=${encodeURIComponent(pathname)}`} className="top-app-bar-icon" aria-label="Settings" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
-                <Settings color="var(--primary)" />
-              </Link>
-            }
-            barTrailingAction={
-              <Link href={`/settings?from=${encodeURIComponent(pathname)}`} className="top-app-bar-icon" aria-label="Settings" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
-                <Settings color="var(--primary)" />
-              </Link>
-            }
+            hideBarTitleOnMobile
+            mobileSettingsHref="/settings?from=%2Fcontact"
           />
           <div className="section">
             <div className="section-header">

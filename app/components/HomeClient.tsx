@@ -2,15 +2,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import AnimatedText from "./AnimatedText";
-import TopAppBarIcon from "./TopAppBarIcon";
-import { Location, Settings } from '@thatjoshguy/oneui-icons';
+import { Location } from '@thatjoshguy/oneui-icons';
 import Footer from "./Footer";
-import { CSSProperties, ReactElement, ReactNode, RefObject, Suspense, lazy, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { CSSProperties, ReactElement, ReactNode, RefObject, Suspense, lazy, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from './ThemeProvider';
 import type { FeaturedStory } from "../../lib/featured-stories";
 import type { Project } from "../../lib/projects";
 import type { RecentBlogPost } from "../../lib/recent-blog-posts";
 import type { ProfileFact } from "../../lib/home-profile";
+import TopAppBar from "./TopAppBar";
 
 interface StackTool {
   name: string;
@@ -161,33 +161,53 @@ function StackIcon({ tool }: { tool: StackTool }) {
   );
 }
 
-function useAdaptiveMarqueeMotion(
-  wrapperRef: RefObject<HTMLDivElement | null>,
-  trackSelector: string,
-  itemSelector: string,
-) {
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    const tracks = wrapper
-      ? Array.from(wrapper.querySelectorAll<HTMLElement>(trackSelector))
-      : [];
+type MarqueeMotionTarget = {
+  wrapperRef: RefObject<HTMLDivElement | null>;
+  trackSelector: string;
+  itemSelector: string;
+};
 
-    if (!wrapper || !tracks.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+function useAdaptiveMarqueeMotion(targets: MarqueeMotionTarget[]) {
+  useEffect(() => {
+    const motionTargets = targets.flatMap(({ wrapperRef, trackSelector, itemSelector }) => {
+      const wrapper = wrapperRef.current;
+      const tracks = wrapper
+        ? Array.from(wrapper.querySelectorAll<HTMLElement>(trackSelector))
+        : [];
+
+      return wrapper && tracks.length
+        ? [{ wrapper, tracks, itemSelector, isVisible: false, isInteractingWithItem: false, currentRate: 1 }]
+        : [];
+    });
+
+    if (!motionTargets.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
 
-    let isVisible = false;
-    let isInteractingWithItem = false;
-    let currentRate = 1;
     let scrollVelocity = 0;
+    let scrollDirection: 1 | -1 = 1;
+    let appliedDirection: 1 | -1 = 1;
     let lastScrollY = window.scrollY;
     let lastScrollAt = performance.now();
     let lastFrameAt = lastScrollAt;
     let frameId = 0;
 
-    const getAnimations = () => tracks.flatMap((track) => (
+    const getAnimations = (tracks: HTMLElement[]) => tracks.flatMap((track) => (
       typeof track.getAnimations === "function" ? track.getAnimations() : []
     ));
+
+    const moveAnimationsAwayFromStart = (animations: Animation[]) => {
+      animations.forEach((animation) => {
+        const currentTime = typeof animation.currentTime === "number" ? animation.currentTime : null;
+        const duration = Number(animation.effect?.getComputedTiming().duration);
+
+        if (currentTime !== null && Number.isFinite(duration) && duration > 0 && currentTime < duration * 4) {
+          // Moving back through an infinite animation needs headroom before time zero.
+          // Whole iterations preserve the exact visual position, so this remains seamless.
+          animation.currentTime = currentTime + duration * 1000;
+        }
+      });
+    };
 
     const requestTick = () => {
       if (!frameId) {
@@ -204,22 +224,37 @@ function useAdaptiveMarqueeMotion(
       const scrollBoost = timeSinceScroll < 180
         ? 1 + Math.min(2.25, scrollVelocity * 0.85)
         : 1;
-      const targetRate = isInteractingWithItem ? 0.06 : (isVisible ? scrollBoost : 1);
-      const easingTime = targetRate < currentRate ? 280 : 170;
-      const easing = 1 - Math.exp(-delta / easingTime);
-      currentRate += (targetRate - currentRate) * easing;
+      const directionChanged = scrollDirection !== appliedDirection;
 
-      getAnimations().forEach((animation) => {
-        if (typeof animation.updatePlaybackRate === "function") {
-          animation.updatePlaybackRate(currentRate);
-        } else {
-          animation.playbackRate = currentRate;
+      motionTargets.forEach((target) => {
+        const targetRate = target.isInteractingWithItem ? 0.06 : (target.isVisible ? scrollBoost : 1);
+        const easingTime = targetRate < target.currentRate ? 280 : 170;
+        const easing = 1 - Math.exp(-delta / easingTime);
+        target.currentRate += (targetRate - target.currentRate) * easing;
+
+        const animations = getAnimations(target.tracks);
+        if (directionChanged && scrollDirection < 0) {
+          moveAnimationsAwayFromStart(animations);
         }
+
+        const signedRate = target.currentRate * scrollDirection;
+        animations.forEach((animation) => {
+          if (typeof animation.updatePlaybackRate === "function") {
+            animation.updatePlaybackRate(signedRate);
+          } else {
+            animation.playbackRate = signedRate;
+          }
+        });
       });
 
+      appliedDirection = scrollDirection;
+
       if (
-        Math.abs(targetRate - currentRate) > 0.008 ||
-        (isVisible && timeSinceScroll < 420)
+        motionTargets.some((target) => {
+          const targetRate = target.isInteractingWithItem ? 0.06 : (target.isVisible ? scrollBoost : 1);
+          return Math.abs(targetRate - target.currentRate) > 0.008;
+        }) ||
+        (motionTargets.some((target) => target.isVisible) && timeSinceScroll < 420)
       ) {
         requestTick();
       }
@@ -228,74 +263,88 @@ function useAdaptiveMarqueeMotion(
     const handleScroll = () => {
       const now = performance.now();
       const elapsed = Math.max(16, now - lastScrollAt);
-      const instantaneousVelocity = Math.abs(window.scrollY - lastScrollY) / elapsed;
+      const scrollDelta = window.scrollY - lastScrollY;
+      const instantaneousVelocity = Math.abs(scrollDelta) / elapsed;
       scrollVelocity = Math.max(instantaneousVelocity, scrollVelocity * 0.55);
+      if (Math.abs(scrollDelta) >= 2) {
+        scrollDirection = scrollDelta < 0 ? -1 : 1;
+      }
       lastScrollY = window.scrollY;
       lastScrollAt = now;
 
-      if (isVisible) {
-        requestTick();
-      }
-    };
-
-    const handlePointerOver = (event: PointerEvent) => {
-      if ((event.target as Element | null)?.closest(itemSelector)) {
-        isInteractingWithItem = true;
-        requestTick();
-      }
-    };
-
-    const handlePointerOut = (event: PointerEvent) => {
-      const nextTarget = event.relatedTarget as Element | null;
-      if (!nextTarget?.closest?.(itemSelector)) {
-        isInteractingWithItem = false;
-        requestTick();
-      }
-    };
-
-    const handleFocusIn = (event: FocusEvent) => {
-      if ((event.target as Element | null)?.closest(itemSelector)) {
-        isInteractingWithItem = true;
-        requestTick();
-      }
-    };
-
-    const handleFocusOut = (event: FocusEvent) => {
-      const nextTarget = event.relatedTarget as Element | null;
-      if (!nextTarget?.closest?.(itemSelector)) {
-        isInteractingWithItem = false;
+      if (motionTargets.some((target) => target.isVisible) || scrollDirection !== appliedDirection) {
         requestTick();
       }
     };
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisible = entry.isIntersecting;
+      (entries) => {
+        entries.forEach((entry) => {
+          const target = motionTargets.find(({ wrapper }) => wrapper === entry.target);
+          if (target) target.isVisible = entry.isIntersecting;
+        });
         requestTick();
       },
       { threshold: 0.08 },
     );
 
-    observer.observe(wrapper);
+    const eventCleanups = motionTargets.map((target) => {
+      const handlePointerOver = (event: PointerEvent) => {
+        if ((event.target as Element | null)?.closest(target.itemSelector)) {
+          target.isInteractingWithItem = true;
+          requestTick();
+        }
+      };
+
+      const handlePointerOut = (event: PointerEvent) => {
+        const nextTarget = event.relatedTarget as Element | null;
+        if (!nextTarget?.closest?.(target.itemSelector)) {
+          target.isInteractingWithItem = false;
+          requestTick();
+        }
+      };
+
+      const handleFocusIn = (event: FocusEvent) => {
+        if ((event.target as Element | null)?.closest(target.itemSelector)) {
+          target.isInteractingWithItem = true;
+          requestTick();
+        }
+      };
+
+      const handleFocusOut = (event: FocusEvent) => {
+        const nextTarget = event.relatedTarget as Element | null;
+        if (!nextTarget?.closest?.(target.itemSelector)) {
+          target.isInteractingWithItem = false;
+          requestTick();
+        }
+      };
+
+      observer.observe(target.wrapper);
+      target.wrapper.addEventListener("pointerover", handlePointerOver);
+      target.wrapper.addEventListener("pointerout", handlePointerOut);
+      target.wrapper.addEventListener("focusin", handleFocusIn);
+      target.wrapper.addEventListener("focusout", handleFocusOut);
+
+      return () => {
+        target.wrapper.removeEventListener("pointerover", handlePointerOver);
+        target.wrapper.removeEventListener("pointerout", handlePointerOut);
+        target.wrapper.removeEventListener("focusin", handleFocusIn);
+        target.wrapper.removeEventListener("focusout", handleFocusOut);
+      };
+    });
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    wrapper.addEventListener("pointerover", handlePointerOver);
-    wrapper.addEventListener("pointerout", handlePointerOut);
-    wrapper.addEventListener("focusin", handleFocusIn);
-    wrapper.addEventListener("focusout", handleFocusOut);
     requestTick();
 
     return () => {
       observer.disconnect();
       window.removeEventListener("scroll", handleScroll);
-      wrapper.removeEventListener("pointerover", handlePointerOver);
-      wrapper.removeEventListener("pointerout", handlePointerOut);
-      wrapper.removeEventListener("focusin", handleFocusIn);
-      wrapper.removeEventListener("focusout", handleFocusOut);
+      eventCleanups.forEach((cleanup) => cleanup());
       if (frameId) {
         window.cancelAnimationFrame(frameId);
       }
     };
-  }, [itemSelector, trackSelector, wrapperRef]);
+  }, [targets]);
 }
 
 function StackMarquee({
@@ -539,23 +588,34 @@ export default function HomeClient({
     { name: 'Cursor', icon: '/images/stack/cursor.png' },
     { name: 'Claude', icon: '/images/stack/claude.png' },
     { name: 'ChatGPT', icon: '/images/stack/chatgpt.png' },
-    { name: 'Dia', icon: '/images/stack/dia.png' },
-    { name: 'Warp', icon: '/images/stack/warp.png' },
+    { name: 'Helium', icon: '/images/stack/dia.png' },
+    { name: 'Codex', icon: '/images/stack/warp.png' },
     { name: 'Slack', icon: '/images/stack/slack.png' },
-    { name: 'Framer', icon: '/images/stack/framer.png' },
+    { name: 'Blip', icon: '/images/stack/framer.png' },
     { name: 'Calendar', icon: '/images/stack/calendar.png' },
     { name: '1Password', icon: '/images/stack/1password.png' },
     { name: 'X', icon: '/images/stack/x.png' },
     { name: 'Twidget', icon: '/images/stack/twidget.png' },
-    { name: 'Termius', icon: '/images/stack/termius.png' },
+    { name: 'Codex Meter', icon: '/images/stack/termius.png' },
   ];
   const stackRows = [stackTools.slice(0, 8), stackTools.slice(8)];
   const heroRef = useRef<HTMLDivElement>(null);
   const [heroLaunchReady, setHeroLaunchReady] = useState(false);
   const publicationMarqueeRef = useRef<HTMLDivElement>(null);
   const stackMarqueeRef = useRef<HTMLDivElement>(null);
-  useAdaptiveMarqueeMotion(publicationMarqueeRef, ".publications-marquee", ".publication-item");
-  useAdaptiveMarqueeMotion(stackMarqueeRef, ".stack-marquee", ".stack-icon");
+  const marqueeMotionTargets = useMemo<MarqueeMotionTarget[]>(() => [
+    {
+      wrapperRef: publicationMarqueeRef,
+      trackSelector: ".publications-marquee",
+      itemSelector: ".publication-item",
+    },
+    {
+      wrapperRef: stackMarqueeRef,
+      trackSelector: ".stack-marquee",
+      itemSelector: ".stack-icon",
+    },
+  ], []);
+  useAdaptiveMarqueeMotion(marqueeMotionTargets);
 
   useLayoutEffect(() => {
     const navigationEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
@@ -610,16 +670,9 @@ export default function HomeClient({
 
   return (
     <div className="page home-page">
-      <div className="top-app-bar">
-        <div className="top-app-bar-container settings-only">
-          <TopAppBarIcon href="/settings" ariaLabel="Settings">
-            <Settings size={24} color="var(--primary)" />
-          </TopAppBarIcon>
-        </div>
-      </div>
-      
       <div className="page-body">
         <div className="main-content">
+          <TopAppBar mobileSettingsHref="/settings?from=%2F" />
           {/* Hero + Role Cards Layout */}
           <div
             ref={heroRef}
@@ -732,7 +785,6 @@ export default function HomeClient({
                   className="publications-marquee-content"
                   key={copy}
                   aria-hidden={copy === 1 ? true : undefined}
-                  inert={copy === 1 ? true : undefined}
                 >
                   {[
                     { name: 'SammyGuru', logo: (
@@ -828,6 +880,7 @@ export default function HomeClient({
                       rel="noopener noreferrer"
                       title={pub.name}
                       data-publication={pub.name}
+                      tabIndex={copy === 1 ? -1 : undefined}
                     >
                       <PublicationLogo logo={pub.logo} alt={pub.name} />
                     </a>
@@ -841,7 +894,6 @@ export default function HomeClient({
                     className="publications-marquee-content"
                     key={copy}
                     aria-hidden={copy === 1 ? true : undefined}
-                    inert={copy === 1 ? true : undefined}
                   >
                     {SECONDARY_PUBLICATIONS.map((pub, index) => (
                       <a
@@ -852,6 +904,7 @@ export default function HomeClient({
                         rel="noopener noreferrer"
                         title={pub.name}
                         data-publication={pub.name}
+                        tabIndex={copy === 1 ? -1 : undefined}
                       >
                         <PublicationLogo logo={pub.logo} alt={pub.name} />
                       </a>

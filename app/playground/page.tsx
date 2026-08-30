@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useRef, Suspense } from "react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import AnimatedText from "../components/AnimatedText";
 import { LoadingDots } from "../components/LoadingAnim";
@@ -9,9 +8,7 @@ import Toast from "../components/Toast";
 import ProgressiveBlur from "../components/ProgressiveBlur";
 import NativeSlideshow from "../blog/NativeSlideshow";
 import { useTheme, ACCENT_COLORS, ACCENT_DARK_BACKGROUNDS, ACCENT_LIGHT_BACKGROUNDS, ACCENT_DARK_CONTAINER_BACKGROUNDS, ACCENT_LIGHT_CONTAINER_BACKGROUNDS, type AccentColor } from "../components/ThemeProvider";
-import { useRouter } from "next/navigation";
-import PageHeading from "../components/PageHeading";
-import { Back } from "@thatjoshguy/oneui-icons";
+import TopAppBar from "../components/TopAppBar";
 import Switch from "../components/Switch";
 
 /* ------------------------------------------------------------------ */
@@ -1002,7 +999,6 @@ function PlaygroundContent() {
   const [toastMsg, setToastMsg] = useState("");
   const [showDialog, setShowDialog] = useState(false);
   const searchParams = useSearchParams();
-  const router = useRouter();
   const from = searchParams.get("from") || "/settings";
 
   const fireToast = useCallback((msg: string) => {
@@ -1019,14 +1015,9 @@ function PlaygroundContent() {
   return (
     <>
       <div className="main-content" style={{ animation: "fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards", opacity: 0 }}>
-        <PageHeading
+        <TopAppBar
           title="Component Playground"
-          leadingAction={
-            <Link href={from} className="top-app-bar-icon" aria-label="Back" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
-              <Back color="var(--primary)" />
-            </Link>
-          }
-          onBack={() => router.push(from)}
+          backHref={from}
         />
 
         {/* ---- Colour Palette ---- */}

@@ -28,6 +28,7 @@
 .hero-section {
   position: relative;
   width: 100%;
+  height: calc(100vh - 16px);
   height: calc(var(--hero-viewport-height, 100svh) - 16px);
   min-height: 0;
   min-width: 0;
@@ -1394,6 +1395,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   }
 
   .publications-marquee {
+    min-height: 64px;
     animation-duration: 30s;
   }
 
@@ -1482,11 +1484,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
     padding-right: 20px;
   }
 
-  .publication-logo-image {
-    max-height: 46px;
-    max-width: 140px;
-  }
-
+  .publication-logo-image,
   .publication-logo-image svg {
     max-height: 46px;
     max-width: 140px;
@@ -2341,6 +2339,19 @@ html[data-theme="dark"] .home-fact-icon-f1 img {
   line-height: 1.2;
 }
 
+@media screen and (min-width: 901px) {
+  .about-aside {
+    position: sticky;
+    top: 120px;
+    align-self: start;
+  }
+
+  .about-portrait {
+    height: 255px;
+    aspect-ratio: auto;
+  }
+}
+
 @media screen and (max-width: 900px) {
   .about-section {
     grid-template-columns: minmax(0, 1fr);
@@ -2420,6 +2431,9 @@ html[data-theme="dark"] .home-fact-icon-f1 img {
   box-sizing: border-box;
 }
 
+/*
+ * Retire the bottom-blur clearance for pages that end in this footer.
+ */
 @media screen and (min-width: 700px) {
   .page:has(.main-content > .site-footer) {
     padding-bottom: 0;
@@ -3093,4 +3107,26 @@ html[data-theme="dark"] .site-footer {
     width: 36px;
     height: 36px;
   }
+}
+
+.home-page .journalist-headline,
+.home-page .featured-stories-headline,
+.home-page .design-projects-headline,
+.home-page .stack-headline {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  padding: 14px;
+  font-size: 30px;
+  text-align: left;
+}
+
+.home-page .stack-text {
+  width: 100%;
+}
+
+.home-page .featured-stories-scroll-wrapper,
+.home-page .design-projects-scroll-wrapper {
+  padding-top: 0;
+  padding-bottom: 0;
 }

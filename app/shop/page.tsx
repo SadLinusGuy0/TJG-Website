@@ -1,9 +1,8 @@
 import Footer from "../components/Footer";
 import Image from "next/image";
-import Link from "next/link";
 import { fetchGumroadProducts } from "../../lib/gumroad-server";
-import PageHeading from "../components/PageHeading";
-import { Download, Settings, Shopping } from "@thatjoshguy/oneui-icons";
+import TopAppBar from "../components/TopAppBar";
+import { Download, Shopping } from "@thatjoshguy/oneui-icons";
 
 function ProductRating({ average, count }: { average: number; count?: number }) {
   const roundedRating = Math.round(average);
@@ -28,24 +27,15 @@ function ProductRating({ average, count }: { average: number; count?: number }) 
 
 export default async function Shop() {
   const products = await fetchGumroadProducts();
-  const settingsHref = '/settings?from=%2Fshop';
 
   return (
     <div className="page">
       <div className="page-body">
         <div className="main-content">
-          <PageHeading
+          <TopAppBar
             title="Shop"
-            trailingAction={
-              <Link href={settingsHref} className="top-app-bar-icon" aria-label="Settings" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
-                <Settings color="var(--primary)" />
-              </Link>
-            }
-            barTrailingAction={
-              <Link href={settingsHref} className="top-app-bar-icon" aria-label="Settings" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
-                <Settings color="var(--primary)" />
-              </Link>
-            }
+            hideBarTitleOnMobile
+            mobileSettingsHref="/settings?from=%2Fshop"
           />
 
           <div className="section shop-products-section">

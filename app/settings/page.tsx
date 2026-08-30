@@ -1,13 +1,10 @@
 "use client";
 
 import { useTheme, ACCENT_COLORS, ACCENT_LIGHT_BACKGROUNDS, ACCENT_LIGHT_CONTAINER_BACKGROUNDS, ACCENT_DARK_BACKGROUNDS, ACCENT_DARK_CONTAINER_BACKGROUNDS, AccentColor } from '../components/ThemeProvider';
-import Link from 'next/link';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
 import { LoadingDots } from '../components/LoadingAnim';
-import PageHeading from '../components/PageHeading';
-import { Back } from '@thatjoshguy/oneui-icons';
+import TopAppBar from '../components/TopAppBar';
 import Switch from '../components/Switch';
 
 function ThemePreviewLight({ accent }: { accent: AccentColor }) {
@@ -80,7 +77,6 @@ function SettingsContent() {
   const [devOptionsEnabled, setDevOptionsEnabled] = useState(false);
   const [fmpSeparatedView, setFmpSeparatedView] = useState(true);
   const searchParams = useSearchParams();
-  const router = useRouter();
   const from = searchParams.get('from') || '/';
 
   useEffect(() => {
@@ -101,14 +97,9 @@ function SettingsContent() {
   return (
     <>
       <div className="main-content" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0 }}>
-        <PageHeading
+        <TopAppBar
           title="Settings"
-          leadingAction={
-            <Link href={from} className="top-app-bar-icon" aria-label="Back" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>
-              <Back color="var(--primary)" />
-            </Link>
-          }
-          onBack={() => router.push(from)}
+          backHref={from}
         />
         <div className="section-header">
           <h2 className="title">Theme</h2>

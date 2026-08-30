@@ -9,7 +9,9 @@ import BlogContent from "../../BlogContent";
 import { extractH1Sections } from "../../../../lib/fmpSections";
 import { countWords, processContentWithEmbeds } from "../../../../lib/blogContentProcessing";
 import { stripHtmlAndDecode } from "../../../../lib/portableText";
-import PostHeroTopAppBar from "../PostHeroTopAppBar";
+import TopAppBar from "../../../components/TopAppBar";
+import TableOfContents from "../../TableOfContents";
+import ForceRefreshButton from "../ForceRefreshButton";
 
 export const revalidate = 300;
 
@@ -86,11 +88,16 @@ async function SectionBody({ slug, section }: { slug: string; section: string })
 
   return (
     <>
-      <PostHeroTopAppBar
-        content={matched.html}
-        slug={slug}
+      <TopAppBar
         title={matched.title}
         backHref={`/blog/${slug}`}
+        collapseTarget=".post-hero-card"
+        actions={
+          <>
+            <TableOfContents content={matched.html} />
+            <ForceRefreshButton slug={slug} />
+          </>
+        }
       />
 
       <div className="post-hero-card post-hero-card--section">
