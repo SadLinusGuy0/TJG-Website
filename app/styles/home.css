@@ -2618,6 +2618,11 @@ a.shop-product-card:focus-visible {
   width: min(100%, 820px);
 }
 
+.shop-product-card-content,
+.shop-product-card-content * {
+  font-family: 'One UI Sans', var(--body), sans-serif !important;
+}
+
 .shop-product-card-content h2 {
   margin: 0;
   color: #fff;
