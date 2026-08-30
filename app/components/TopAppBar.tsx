@@ -2,6 +2,7 @@
 
 import { Back, Settings } from "@thatjoshguy/oneui-icons";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   useEffect,
   useLayoutEffect,
@@ -19,12 +20,26 @@ const COLLAPSED_HERO_HEIGHT = 48;
 const EXPANDED_HERO_VIEWPORT_HEIGHT = 25;
 const COLLAPSED_HERO_PADDING_TOP = 0;
 const EXPANDED_HERO_PADDING_TOP = 0;
+const MOBILE_SETTINGS_NAV_PENDING_CLASS = "mobile-settings-nav-pending";
+
+function beginMobileSettingsNavigation() {
+  if (!window.matchMedia("(max-width: 699px)").matches) return;
+
+  document.body.classList.add(MOBILE_SETTINGS_NAV_PENDING_CLASS);
+  window.setTimeout(() => {
+    if (!document.querySelector(".oneui-popover-layer")) {
+      document.body.classList.remove(MOBILE_SETTINGS_NAV_PENDING_CLASS);
+    }
+  }, 2000);
+}
 
 interface TopAppBarProps {
   /** Omit on Home, where the page hero already provides the identity. */
   title?: string;
   /** Adds the standard leading back button. */
   backHref?: string;
+  /** Use browser history for the back button instead of adding another route entry. */
+  backBehavior?: "link" | "history";
   /** Controls placed at the trailing edge, such as contents and refresh. */
   actions?: ReactNode;
   /** Start collapsed and allow a pull-down gesture to reveal the large title. */
@@ -40,12 +55,14 @@ interface TopAppBarProps {
 export default function TopAppBar({
   title,
   backHref,
+  backBehavior = "link",
   actions,
   defaultCollapsed = false,
   collapseTarget,
   hideBarTitleOnMobile = false,
   mobileSettingsHref,
 }: TopAppBarProps) {
+  const router = useRouter();
   const popover = useOneUiPopover();
   const isContained = popover !== null;
   const getScrollContainer = popover?.getScrollContainer;
@@ -245,12 +262,18 @@ export default function TopAppBar({
     >
       <div className="top-app-bar-container">
         {backHref && (
-          isContained ? (
+          isContained || backBehavior === "history" ? (
             <button
               type="button"
               className="top-app-bar-icon"
               aria-label="Back"
-              onClick={() => popover?.close()}
+              onClick={() => {
+                if (isContained) {
+                  popover?.close();
+                } else {
+                  router.back();
+                }
+              }}
             >
               <Back color="var(--primary)" />
             </button>
@@ -279,6 +302,7 @@ export default function TopAppBar({
                 href={mobileSettingsHref}
                 className="top-app-bar-icon top-app-bar-settings"
                 aria-label="Settings"
+                onClick={beginMobileSettingsNavigation}
               >
                 <Settings size={24} color="var(--primary)" />
               </Link>

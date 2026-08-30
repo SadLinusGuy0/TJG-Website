@@ -2679,7 +2679,7 @@ a.shop-product-card:focus-visible {
   justify-self: center;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .shop-product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

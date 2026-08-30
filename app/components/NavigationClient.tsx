@@ -530,11 +530,13 @@ export default function NavigationClient({
     },
   ], [pathname, showBlog]);
   const activeMobileNavIndex = mobileNavItems.findIndex((item) => item.matchesPath);
-  const displayedMobileNavIndex = optimisticMobileNavIndex ?? activeMobileNavIndex;
+  const displayedMobileNavIndex = optimisticMobileNavIndex
+    ?? (activeMobileNavIndex >= 0
+      ? activeMobileNavIndex
+      : previousMobileNavIndexRef.current ?? 0);
   const mobileNavCount = mobileNavItems.length;
   const shouldHideMobileNav = hideMobile || Boolean(
     pathname?.startsWith('/blog/') ||
-    pathname?.startsWith('/settings') ||
     pathname === '/playground' ||
     pathname?.startsWith('/playground/') ||
     pathname?.startsWith('/work/')

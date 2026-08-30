@@ -1215,7 +1215,7 @@ html[data-theme="dark"] .blog-card-pill-muted {
   background: rgba(255, 255, 255, 0.22);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
   .blog-posts-slide-wrapper .list-group {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

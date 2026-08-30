@@ -21,6 +21,7 @@ type OneUiPopoverContextValue = {
 
 const OneUiPopoverContext = createContext<OneUiPopoverContextValue | null>(null);
 const POPOVER_CLOSE_DURATION_MS = 180;
+const MOBILE_SETTINGS_NAV_PENDING_CLASS = "mobile-settings-nav-pending";
 const FOCUSABLE_SELECTOR = [
   "a[href]",
   "button:not([disabled])",
@@ -74,6 +75,7 @@ export default function OneUiPopover({
   );
 
   useEffect(() => {
+    document.body.classList.remove(MOBILE_SETTINGS_NAV_PENDING_CLASS);
     returnFocusRef.current = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null;
@@ -125,6 +127,7 @@ export default function OneUiPopover({
       document.body.style.left = previousStyles.bodyLeft;
       document.body.style.right = previousStyles.bodyRight;
       document.body.style.width = previousStyles.bodyWidth;
+      document.body.classList.remove(MOBILE_SETTINGS_NAV_PENDING_CLASS);
       window.scrollTo(scrollPosition.x, scrollPosition.y);
       returnFocusRef.current?.focus({ preventScroll: true });
     };
