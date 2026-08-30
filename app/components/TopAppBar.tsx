@@ -2,18 +2,15 @@
 
 import { Back, Settings } from "@thatjoshguy/oneui-icons";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import {
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
-  type MouseEvent as ReactMouseEvent,
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
-import { useOneUiPopover } from "./OneUiPopover";
 
 const SCROLL_RANGE = 530;
 const PULL_EXPAND_DISTANCE = 130;
@@ -21,52 +18,12 @@ const COLLAPSED_HERO_HEIGHT = 48;
 const EXPANDED_HERO_VIEWPORT_HEIGHT = 25;
 const COLLAPSED_HERO_PADDING_TOP = 0;
 const EXPANDED_HERO_PADDING_TOP = 0;
-const MOBILE_SETTINGS_NAV_PENDING_CLASS = "mobile-settings-nav-pending";
-const MOBILE_SETTINGS_NAV_PREPARING_EXIT_CLASS = "mobile-settings-nav-preparing-exit";
-const MOBILE_SETTINGS_NAV_EXITING_CLASS = "mobile-settings-nav-exiting";
-
-function beginMobileSettingsNavigation(event: ReactMouseEvent<HTMLAnchorElement>) {
-  if (!window.matchMedia("(max-width: 699px)").matches) return;
-  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-
-  event.preventDefault();
-  const destination = event.currentTarget.href;
-  document.body.classList.add(MOBILE_SETTINGS_NAV_PENDING_CLASS);
-  window.setTimeout(() => {
-    const mobileNav = document.querySelector<HTMLElement>(".mobile-nav-bar");
-    if (mobileNav) mobileNav.style.display = "none";
-    window.setTimeout(() => {
-      window.location.assign(destination);
-    }, 80);
-  }, 260);
-}
-
-function beginMobileOwnedPageExit(event: ReactMouseEvent<HTMLAnchorElement>) {
-  if (!window.matchMedia("(max-width: 699px)").matches) return;
-  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-
-  event.preventDefault();
-  const destination = event.currentTarget.href;
-  const mobileNav = document.querySelector<HTMLElement>(".mobile-nav-bar");
-  document.body.classList.add(MOBILE_SETTINGS_NAV_PREPARING_EXIT_CLASS);
-  void mobileNav?.offsetHeight;
-
-  window.setTimeout(() => {
-    document.body.classList.add(MOBILE_SETTINGS_NAV_EXITING_CLASS);
-    document.body.classList.remove(MOBILE_SETTINGS_NAV_PREPARING_EXIT_CLASS);
-  }, 16);
-  window.setTimeout(() => {
-    window.location.assign(destination);
-  }, 540);
-}
 
 interface TopAppBarProps {
   /** Omit on Home, where the page hero already provides the identity. */
   title?: string;
   /** Adds the standard leading back button. */
   backHref?: string;
-  /** Use browser history for the back button instead of adding another route entry. */
-  backBehavior?: "link" | "history";
   /** Controls placed at the trailing edge, such as contents and refresh. */
   actions?: ReactNode;
   /** Start collapsed and allow a pull-down gesture to reveal the large title. */
@@ -82,23 +39,12 @@ interface TopAppBarProps {
 export default function TopAppBar({
   title,
   backHref,
-  backBehavior = "link",
   actions,
   defaultCollapsed = false,
   collapseTarget,
   hideBarTitleOnMobile = false,
   mobileSettingsHref,
 }: TopAppBarProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const popover = useOneUiPopover();
-  const isContained = popover !== null;
-  const isMobileOwnedPage = !isContained && (
-    pathname === "/settings"
-    || pathname.startsWith("/settings/")
-    || pathname === "/playground"
-  );
-  const getScrollContainer = popover?.getScrollContainer;
   const anchorRef = useRef<HTMLSpanElement>(null);
   const touchStartY = useRef(0);
   const pullProgressRef = useRef(0);
@@ -116,8 +62,6 @@ export default function TopAppBar({
 
   useLayoutEffect(() => {
     setMounted(true);
-
-    if (isContained) return;
 
     const mainContent = anchorRef.current?.closest<HTMLElement>(".main-content");
     if (!mainContent) return;
@@ -164,70 +108,53 @@ export default function TopAppBar({
       bodyObserver.disconnect();
       window.removeEventListener("resize", updateInsets);
     };
-  }, [collapseTarget, isContained, progress]);
+  }, [collapseTarget, progress]);
 
   useEffect(() => {
     let frame = 0;
-    const scrollContainer = getScrollContainer?.() ?? window;
-    const getScrollTop = () => scrollContainer instanceof Window
-      ? scrollContainer.scrollY
-      : scrollContainer.scrollTop;
     const updateProgress = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         if (collapseTarget) {
-          const target = (scrollContainer instanceof Window ? document : scrollContainer)
-            .querySelector(collapseTarget);
-          const containerTop = scrollContainer instanceof Window
-            ? 0
-            : scrollContainer.getBoundingClientRect().top;
-          setProgress(target && target.getBoundingClientRect().bottom > containerTop ? 0 : 1);
+          const target = document.querySelector(collapseTarget);
+          setProgress(target && target.getBoundingClientRect().bottom > 0 ? 0 : 1);
           return;
         }
 
-        const scrollTop = getScrollTop();
-        const scrollRange = isContained ? 220 : SCROLL_RANGE;
-        const scrollProgress = Math.min(1, Math.max(0, scrollTop / scrollRange));
+        const scrollProgress = Math.min(1, Math.max(0, window.scrollY / SCROLL_RANGE));
         setProgress(defaultCollapsed && !pullExpanded ? 1 : scrollProgress);
 
-        if (defaultCollapsed && scrollTop > 8 && pullExpanded) {
+        if (defaultCollapsed && window.scrollY > 8 && pullExpanded) {
           setPullExpanded(false);
         }
       });
     };
 
-    scrollContainer.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("scroll", updateProgress, { passive: true });
     window.addEventListener("resize", updateProgress, { passive: true });
     updateProgress();
 
     return () => {
       cancelAnimationFrame(frame);
-      scrollContainer.removeEventListener("scroll", updateProgress);
+      window.removeEventListener("scroll", updateProgress);
       window.removeEventListener("resize", updateProgress);
     };
-  }, [collapseTarget, defaultCollapsed, getScrollContainer, isContained, pullExpanded]);
+  }, [collapseTarget, defaultCollapsed, pullExpanded]);
 
   useEffect(() => {
     if (!defaultCollapsed || collapseTarget) return;
 
-    const scrollContainer = getScrollContainer?.() ?? window;
-    const getScrollTop = () => scrollContainer instanceof Window
-      ? scrollContainer.scrollY
-      : scrollContainer.scrollTop;
-
-    function onTouchStart(event: Event) {
-      if (getScrollTop() > 0) return;
-      const touchEvent = event as TouchEvent;
-      touchStartY.current = touchEvent.touches[0]?.clientY ?? 0;
+    function onTouchStart(event: TouchEvent) {
+      if (window.scrollY > 0) return;
+      touchStartY.current = event.touches[0]?.clientY ?? 0;
       pullProgressRef.current = 0;
       isPullingRef.current = true;
     }
 
-    function onTouchMove(event: Event) {
-      if (!isPullingRef.current || getScrollTop() > 0) return;
+    function onTouchMove(event: TouchEvent) {
+      if (!isPullingRef.current || window.scrollY > 0) return;
 
-      const touchEvent = event as TouchEvent;
-      const currentY = touchEvent.touches[0]?.clientY ?? touchStartY.current;
+      const currentY = event.touches[0]?.clientY ?? touchStartY.current;
       const deltaY = Math.max(0, currentY - touchStartY.current);
       if (deltaY <= 0) return;
 
@@ -249,27 +176,26 @@ export default function TopAppBar({
       isPullingRef.current = false;
     }
 
-    scrollContainer.addEventListener("touchstart", onTouchStart, { passive: true });
-    scrollContainer.addEventListener("touchmove", onTouchMove, { passive: false });
-    scrollContainer.addEventListener("touchend", onTouchEnd);
-    scrollContainer.addEventListener("touchcancel", onTouchEnd);
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onTouchEnd);
+    window.addEventListener("touchcancel", onTouchEnd);
 
     return () => {
-      scrollContainer.removeEventListener("touchstart", onTouchStart);
-      scrollContainer.removeEventListener("touchmove", onTouchMove);
-      scrollContainer.removeEventListener("touchend", onTouchEnd);
-      scrollContainer.removeEventListener("touchcancel", onTouchEnd);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
     };
-  }, [collapseTarget, defaultCollapsed, getScrollContainer]);
+  }, [collapseTarget, defaultCollapsed]);
 
-  const effectiveProgress = progress;
-  const heroOpacity = Math.max(0, 1 - effectiveProgress / 0.7);
-  const titleOpacity = Math.min(1, Math.max(0, (effectiveProgress - 0.4) / 0.4));
+  const heroOpacity = Math.max(0, 1 - progress / 0.7);
+  const titleOpacity = Math.min(1, Math.max(0, (progress - 0.4) / 0.4));
   const titleHidden = titleOpacity < 0.1;
-  const expandProgress = 1 - effectiveProgress;
+  const expandProgress = 1 - progress;
   const heroStyle: CSSProperties | undefined = defaultCollapsed
     ? {
-        minHeight: `calc(${COLLAPSED_HERO_HEIGHT * effectiveProgress}px + ${EXPANDED_HERO_VIEWPORT_HEIGHT * expandProgress}vh)`,
+        minHeight: `calc(${COLLAPSED_HERO_HEIGHT * progress}px + ${EXPANDED_HERO_VIEWPORT_HEIGHT * expandProgress}vh)`,
         paddingTop: COLLAPSED_HERO_PADDING_TOP + (EXPANDED_HERO_PADDING_TOP - COLLAPSED_HERO_PADDING_TOP) * expandProgress,
         transition: pullProgress > 0
           ? "none"
@@ -283,87 +209,17 @@ export default function TopAppBar({
   const hasDesktopHeading = Boolean(title);
   const hasMobileHeading = Boolean(title);
 
-  const bar = hasBarContent ? (
-    <div
-      className={`top-app-bar${isContained ? " top-app-bar--contained" : ""}`}
-      style={{
-        "--top-app-bar-left": `${barLayout.left}px`,
-        "--top-app-bar-right": `${barLayout.right}px`,
-        "--top-app-bar-padding-left": `${barLayout.paddingLeft}px`,
-        "--top-app-bar-padding-right": `${barLayout.paddingRight}px`,
-      } as CSSProperties}
-    >
-      <div className="top-app-bar-container">
-        {backHref && (
-          isContained || (backBehavior === "history" && !isMobileOwnedPage) ? (
-            <button
-              type="button"
-              className="top-app-bar-icon"
-              aria-label="Back"
-              onClick={() => {
-                if (isContained) {
-                  popover?.close();
-                } else {
-                  router.back();
-                }
-              }}
-            >
-              <Back color="var(--primary)" />
-            </button>
-          ) : (
-            <Link
-              href={backHref}
-              className="top-app-bar-icon"
-              aria-label="Back"
-              onClick={isMobileOwnedPage ? beginMobileOwnedPageExit : undefined}
-            >
-              <Back color="var(--primary)" />
-            </Link>
-          )
-        )}
-
-        {title && (
-          <div
-            className={`top-app-bar-title${hideBarTitleOnMobile ? " top-app-bar-title--mobile-hidden" : ""}`}
-            aria-hidden={titleHidden}
-            style={{ opacity: titleOpacity }}
-          >
-            {title}
-          </div>
-        )}
-
-        {(actions || mobileSettingsHref) && (
-          <div className="top-app-bar-actions">
-            {actions}
-            {mobileSettingsHref && (
-              <Link
-                href={mobileSettingsHref}
-                className="top-app-bar-icon top-app-bar-settings"
-                aria-label="Settings"
-                onClick={beginMobileSettingsNavigation}
-              >
-                <Settings size={24} color="var(--primary)" />
-              </Link>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  ) : null;
-
   return (
     <>
       <span
         ref={anchorRef}
         className="top-app-bar-anchor"
-        data-desktop-buttons={!isContained && hasDesktopButtons ? "" : undefined}
-        data-mobile-buttons={!isContained && hasMobileButtons ? "" : undefined}
-        data-desktop-heading={!isContained && hasDesktopHeading ? "" : undefined}
-        data-mobile-heading={!isContained && hasMobileHeading ? "" : undefined}
+        data-desktop-buttons={hasDesktopButtons ? "" : undefined}
+        data-mobile-buttons={hasMobileButtons ? "" : undefined}
+        data-desktop-heading={hasDesktopHeading ? "" : undefined}
+        data-mobile-heading={hasMobileHeading ? "" : undefined}
         aria-hidden="true"
       />
-
-      {isContained ? bar : null}
 
       {title && !collapseTarget && (
         <div className="top-app-bar-hero" style={heroStyle}>
@@ -373,7 +229,51 @@ export default function TopAppBar({
         </div>
       )}
 
-      {!isContained && mounted && bar ? createPortal(bar, document.body) : null}
+      {mounted && hasBarContent && createPortal(
+        <div
+          className="top-app-bar"
+          style={{
+            "--top-app-bar-left": `${barLayout.left}px`,
+            "--top-app-bar-right": `${barLayout.right}px`,
+            "--top-app-bar-padding-left": `${barLayout.paddingLeft}px`,
+            "--top-app-bar-padding-right": `${barLayout.paddingRight}px`,
+          } as CSSProperties}
+        >
+          <div className="top-app-bar-container">
+            {backHref && (
+              <Link href={backHref} className="top-app-bar-icon" aria-label="Back">
+                <Back color="var(--primary)" />
+              </Link>
+            )}
+
+            {title && (
+              <div
+                className={`top-app-bar-title${hideBarTitleOnMobile ? " top-app-bar-title--mobile-hidden" : ""}`}
+                aria-hidden={titleHidden}
+                style={{ opacity: titleOpacity }}
+              >
+                {title}
+              </div>
+            )}
+
+            {(actions || mobileSettingsHref) && (
+              <div className="top-app-bar-actions">
+                {actions}
+                {mobileSettingsHref && (
+                  <Link
+                    href={mobileSettingsHref}
+                    className="top-app-bar-icon top-app-bar-settings"
+                    aria-label="Settings"
+                  >
+                    <Settings size={24} color="var(--primary)" />
+                  </Link>
+                )}
+              </div>
+            )}
+          </div>
+        </div>,
+        document.body,
+      )}
     </>
   );
 }

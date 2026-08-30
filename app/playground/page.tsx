@@ -1018,7 +1018,6 @@ function PlaygroundContent() {
         <TopAppBar
           title="Component Playground"
           backHref={from}
-          backBehavior="history"
         />
 
         {/* ---- Colour Palette ---- */}
