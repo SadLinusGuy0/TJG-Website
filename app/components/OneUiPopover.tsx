@@ -84,6 +84,7 @@ export default function OneUiPopover({
       ".site-main, .desktop-nav, .mobile-nav-bar, .progressive-blur-overlay",
     ));
     const scrollPosition = { x: window.scrollX, y: window.scrollY };
+    const isMobileFullscreen = window.matchMedia("(max-width: 699px)").matches;
     const html = document.documentElement;
     const previousStyles = {
       htmlOverflow: html.style.overflow,
@@ -100,15 +101,23 @@ export default function OneUiPopover({
     backgroundElements.forEach((element) => {
       element.inert = true;
     });
-    html.style.overflow = "hidden";
-    html.style.overscrollBehavior = "none";
-    document.body.style.overflow = "hidden";
-    document.body.style.overscrollBehavior = "none";
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollPosition.y}px`;
-    document.body.style.left = `-${scrollPosition.x}px`;
-    document.body.style.right = "0";
-    document.body.style.width = "100%";
+
+    if (isMobileFullscreen) {
+      // Let the document own scrolling on mobile so Safari can collapse and
+      // expand its URL bar. The underlying route remains inert and is hidden
+      // by the mobile pop-over styles.
+      window.scrollTo(0, 0);
+    } else {
+      html.style.overflow = "hidden";
+      html.style.overscrollBehavior = "none";
+      document.body.style.overflow = "hidden";
+      document.body.style.overscrollBehavior = "none";
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollPosition.y}px`;
+      document.body.style.left = `-${scrollPosition.x}px`;
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
+    }
     surfaceRef.current?.focus({ preventScroll: true });
 
     return () => {
