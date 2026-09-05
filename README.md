@@ -46,4 +46,4 @@ Open [http://localhost:3000](http://localhost:3000). Environment variables (Sani
 - [Environments and site editions](docs/ENVIRONMENTS.md) — local, beta, main, college (current vs target)
 - [Vercel Flags setup](docs/VERCEL_FLAGS_SETUP.md) — all feature flags, dashboard setup
 - [CSS class naming](docs/CSS_CLASSES.md) — layout, list, and panel class names (Figma legacy renames)
-- TJG Site Docs (Notion wiki) — architecture, pages reference, integrations, quirks (stale as of 2026-07-05; see `docs/NOTION_DOCS.md`)
+- TJG Site Docs (Notion wiki) — start at Environments & site editions; see `docs/NOTION_DOCS.md`

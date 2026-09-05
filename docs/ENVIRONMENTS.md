@@ -1,9 +1,9 @@
 # Environments and site editions
 
 This is the current source of truth for how local, beta, production, and
-college relate. The Notion wiki still describes an older three-branch
-WordPress setup (last updated 2026-07-05). Prefer this page when they
-disagree.
+college relate. The Notion wiki page **Environments & site editions** mirrors
+this (updated 2026-09-05). The wiki homepage callout may still show the old
+2026-07-05 stamp — that hub is a database MCP cannot edit.
 
 ## Two axes, not four sites
 
@@ -83,8 +83,9 @@ preview college content without a second host, and beta/preview is noindexed.
 5. Set `SITE_EDITION` (or equivalent) for `*.vercel.app` URLs if those
    need a default; generated hosts will not match `beta.*` / `college.*`.
 6. Merge `beta` → `main` on a cadence so production runs the unified code.
-7. Refresh the Notion wiki (see `docs/NOTION_DOCS.md`). It still lists
-   college as a WordPress/git-branch variant and main as WordPress-only.
+7. In the Notion UI, bump the wiki **homepage** callout if it still says
+   2026-07-05 (MCP cannot edit that database hub). Child pages were updated
+   2026-09-05; see `docs/NOTION_DOCS.md`.
 
 ## Local development
 

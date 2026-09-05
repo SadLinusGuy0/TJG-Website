@@ -3,65 +3,37 @@
 Developer documentation for this site lives in the **TJG Site Docs** Notion wiki:
 https://www.notion.so/37d59b88f2b18072b5fcc8f29814afff
 
-The wiki home page is the central hub: it has a reading guide, quick facts, and a
-callout recording the last commit each branch was documented at.
+The wiki home is a Notion wiki database (not an editable page via MCP). Child
+pages hold the docs. Start at **Environments & site editions**.
 
 ## Freshness (2026-09-05)
 
-The home-page callout still reads **2026-07-05** (`main @ 329dab0`, `beta @
-0485b7d`). That is the environment-colored favicons PR. Since then:
+Child pages were rewritten against [ENVIRONMENTS.md](ENVIRONMENTS.md) via
+Notion MCP (Cloud Agents OAuth at cursor.com/agents). Recorded SHAs:
+`main @ aec31c4`, `beta @ df394cd`.
 
-- `500a79b` (2026-07-26) unified site editions on one codebase
-- `aec31c4` (2026-08-16) merged a beta release into `main` (Sanity is on
-  production; main is no longer “WordPress-only”)
-- Live Vercel still pins `college.thatjoshguy.me` to the old `college` git
-  branch, not production
+The **wiki homepage callout** may still show 2026-07-05 — MCP can fetch that
+database but cannot `update-page` it (it is not a page). Edit that one line
+in the Notion UI if you want the hub stamp to match.
 
-Treat the wiki as **historical** until it is rewritten against
-[ENVIRONMENTS.md](ENVIRONMENTS.md). The auto-sync workflow last succeeded on
-the favicon PR; later `main`/`beta` merges did not bump the callout.
-
-Cloud Agents see the Notion MCP (`https://mcp.notion.com/mcp`) but cannot
-complete its OAuth prompt themselves. Desktop login does **not** carry over.
-Authenticate from the Cloud Agents dashboard so the run can write:
-
-1. Open https://cursor.com/agents
-2. Open this run (or **MCP servers** / integrations)
-3. Enable **Notion**, click **Login**, finish OAuth, and grant the **TJG Site
-   Docs** wiki
-4. Reply on the run so the agent can retry
-
-Fallback: the GitHub Action `update-docs.yml` uses a `NOTION_TOKEN` internal
-integration (last succeeded 2026-07-05). That path does not help a live Cloud
-Agent unless the same token is also connected as a dashboard MCP server.
-
-### Wiki edits still needed
-
-| Page | What is wrong |
-| --- | --- |
-| Wiki home | Branch list, “main = WordPress / beta = Sanity”, `next build --webpack`, college as a third git branch |
-| Site Overview & Architecture | WordPress as the blog CMS; no `lib/siteEdition.ts`; CSP (removed); `/work/oneui-design-kit` as a live page |
-| Blog System (WordPress) | Rename/retarget: Sanity is default, WordPress is fallback; college is a tag + host, not `joshskinnertjg.wordpress.com` |
-| Feature Flags | Drop `liquid-glass-enabled`, `year-slider-enabled`, `merged-work-carousel-enabled`; add `projects-enabled` and `blog-content-source`; college is not `wordpress-source-url` |
-| Integrations, APIs & Environment Variables | Add Sanity + `SITE_EDITION`; WordPress is not “two sites: main + college”; shop.thatjoshguy.me is Gumroad |
-| Quirks | Git branch table; college-blogs-enabled is leftover; favicons are deploy-env not edition |
-| Beta Branch — Sanity Migration | Archive or retitle: much of this delta is already on `main`. Keep it as a history of the migration, not “what beta is for” |
-| New / Overview | Point at the two-axis model in ENVIRONMENTS.md: env = local/beta/main, edition = normal/college |
+Cloud Agents cannot complete Notion OAuth themselves. Authenticate from
+https://cursor.com/agents (desktop login does not carry over), then retry.
 
 ## Page map
 
 | Page | Notion page ID |
 | --- | --- |
-| Wiki home (hub / index) | `37d59b88f2b18072b5fcc8f29814afff` |
+| Wiki home (hub / index, database) | `37d59b88f2b18072b5fcc8f29814afff` |
+| Environments & site editions | `3d259b88f2b181fe899aef777c807289` |
 | Site Overview & Architecture | `37d59b88f2b1813d8ea6d382c6082153` |
 | Design System & Theming | `37d59b88f2b181ecb942de065ba3b77e` |
 | Navigation & Core Components | `37d59b88f2b181478070f0b0fc4fd668` |
-| Blog System (WordPress) | `37d59b88f2b181cc9484c331a16e5df2` |
+| Blog System | `37d59b88f2b181cc9484c331a16e5df2` |
 | Feature Flags | `37d59b88f2b1810b841ec4c5770a4550` |
 | Pages Reference | `37d59b88f2b181e4a729d26c2244d867` |
 | Integrations, APIs & Environment Variables | `37d59b88f2b18174baa6c78fdd6b219a` |
 | Quirks, Easter Eggs & Gotchas | `37d59b88f2b18108a3f6ff5ed6ca8ffe` |
-| Beta Branch — Sanity Migration | `37d59b88f2b181658361ff7eb1891950` |
+| Beta branch (Sanity migration history) | `37d59b88f2b181658361ff7eb1891950` |
 
 ## Automated updates
 
