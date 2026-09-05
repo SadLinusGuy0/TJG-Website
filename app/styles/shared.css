@@ -2679,16 +2679,29 @@ justify-content: flex-start;
   width: 230px;
   max-width: calc(100vw - 24px);
   box-sizing: border-box;
-  border: 1px solid color-mix(in srgb, var(--primary) 10%, transparent);
+  padding: 1px;
   border-radius: 20px;
   color: var(--primary);
-  background: color-mix(in srgb, var(--container-background) 92%, transparent);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
   box-shadow: 0 6px 24px rgb(0 0 0 / 14%);
   font: 14px/1.5 'One UI Sans', sans-serif;
   animation: shortcut-popover-in 140ms ease-out;
 }
+.shortcut-popover-surface { position: absolute; inset: -8px; pointer-events: none; }
+.shortcut-popover-fill {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--container-background) 92%, transparent);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+.shortcut-popover-outline { position: absolute; inset: 0; overflow: visible; }
+.shortcut-popover-outline path {
+  fill: none;
+  stroke: color-mix(in srgb, var(--primary) 10%, transparent);
+  stroke-width: 1px;
+  transition: none;
+}
+.shortcut-popover-title, .shortcut-popover-content { position: relative; }
 .shortcut-popover-title {
   display: block;
   padding: 12px 16px 8px;
@@ -2699,9 +2712,6 @@ justify-content: flex-start;
 .shortcut-popover-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .shortcut-popover-row + .shortcut-popover-row { margin-top: 8px; }
 .shortcut-popover .keyboard-shortcut-chip { display: inline-flex; }
-.shortcut-popover-arrow { position: absolute; width: 9px; height: 9px; background: var(--container-background); transform: translate(-50%, -50%) rotate(45deg); }
-.shortcut-popover--top .shortcut-popover-arrow { top: 100%; }
-.shortcut-popover--right .shortcut-popover-arrow { left: 0; }
 @keyframes shortcut-popover-in { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .shortcut-popover { animation: none; } }
 
