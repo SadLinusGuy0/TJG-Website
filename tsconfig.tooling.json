@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "incremental": false, "types": ["node"], "allowJs": false },
+  "include": ["sanity/**/*.ts", "scripts/**/*.ts", "lib/wpPagination.ts"],
+  "exclude": ["node_modules"]
+}

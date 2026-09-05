@@ -1,11 +1,11 @@
 const DEFAULT_SOURCE = 'sanity';
 
-export async function getBlogContentSource(): Promise<string> {
-  try {
+export async function getBlogContentSource(ignoreOverrides = false): Promise<string> {
+  if (!ignoreOverrides) try {
     const { cookies } = await import('next/headers');
     const cookieStore = await cookies();
     const override = cookieStore.get('ff-blog-content-source');
-    if (override?.value) return override.value;
+    if (override?.value === 'sanity' || override?.value === 'wordpress') return override.value;
   } catch {
     // cookies() not available during static generation
   }
@@ -22,7 +22,7 @@ export async function getBlogContentSource(): Promise<string> {
   try {
     const { blogContentSource } = await import('../flags');
     const result = await blogContentSource();
-    return (typeof result === 'string' && result) ? result : DEFAULT_SOURCE;
+    return (result === 'sanity' || result === 'wordpress') ? result : DEFAULT_SOURCE;
   } catch {
     return DEFAULT_SOURCE;
   }

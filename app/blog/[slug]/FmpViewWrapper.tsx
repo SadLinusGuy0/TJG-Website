@@ -2,24 +2,23 @@
 
 import { useFmpCombinedView } from '../useReadingPreferences';
 import Link from 'next/link';
-import BlogContent from '../BlogContent';
-import { extractH1Sections } from '../../../lib/fmpSections';
+
+
 
 interface FmpViewWrapperProps {
-  rawContent: string;
-  processedContent: string;
+  sections: { title: string; slug: string }[];
+  children: React.ReactNode;
   slug: string;
 }
 
-export default function FmpViewWrapper({ rawContent, processedContent, slug }: FmpViewWrapperProps) {
+export default function FmpViewWrapper({ sections, children, slug }: FmpViewWrapperProps) {
   const { combined: combinedView } = useFmpCombinedView();
 
-  const sections = extractH1Sections(rawContent);
 
   if (sections.length === 0) {
     return (
       <div className="panel settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
-        <BlogContent content={processedContent} />
+        {children}
       </div>
     );
   }
@@ -28,7 +27,7 @@ export default function FmpViewWrapper({ rawContent, processedContent, slug }: F
     return (
       <>
         <div className="panel settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
-          <BlogContent content={processedContent} />
+          {children}
         </div>
         <Disclaimer />
       </>
@@ -89,7 +88,7 @@ function Disclaimer() {
       </p>
       <p style={{ margin: 0, fontWeight: 600, color: 'var(--primary)' }}>
         Josh Skinner<br />
-        <a href="mailto:10694305@student.bpc.ac.uk" style={{ color: 'var(--accent)', textDecoration: 'none' }}>
+        <a href="mailto:10694305@student.bpc.ac.uk" style={{ color: 'var(--accent-link)', textDecoration: 'none' }}>
           10694305@student.bpc.ac.uk
         </a>
       </p>

@@ -1,9 +1,10 @@
+import 'server-only';
 import { getBlogContentSource } from './getBlogContentSourceFlag';
 import { getWordpressSourceUrl } from './getWordpressSourceUrlFlag';
 import * as wp from './wordpress';
 import * as sanity from './sanity';
 import { stripHtmlAndDecode, type PortableTextBlock } from './portableText';
-import { getBlogEdition, isPostVisibleOnEdition } from './siteEdition';
+import { getBlogEdition, isPostVisibleOnEdition, type SiteEdition } from './siteEdition';
 
 export { getBlogContentSource };
 
@@ -70,14 +71,14 @@ export function dedupeBlogPostsBySlug(posts: BlogPost[]): BlogPost[] {
 }
 
 async function wpSlugMaps(apiBaseUrl: string) {
-  const [cats, tags] = await Promise.allSettled([
+  const [cats, tags] = await Promise.all([
     wp.fetchCategories(apiBaseUrl),
     wp.fetchTags(apiBaseUrl),
   ]);
   const catMap = new Map<number, string>();
   const tagMap = new Map<number, string>();
-  if (cats.status === 'fulfilled') cats.value.forEach(c => catMap.set(c.id, c.slug));
-  if (tags.status === 'fulfilled') tags.value.forEach(t => tagMap.set(t.id, t.slug));
+  cats.forEach(c => catMap.set(c.id, c.slug));
+  tags.forEach(t => tagMap.set(t.id, t.slug));
   return { catMap, tagMap, cats, tags };
 }
 
@@ -88,7 +89,6 @@ export async function fetchAllBlogPosts(opts?: { tagSlug?: string }): Promise<Bl
   ]);
 
   if (source === 'sanity') {
-    if (!sanity.isSanityConfigured()) return [];
     const posts = await sanity.fetchAllPosts({ ...opts, edition });
     return dedupeBlogPostsBySlug(posts).filter((post) =>
       isPostVisibleOnEdition(post.tags, edition)
@@ -99,8 +99,8 @@ export async function fetchAllBlogPosts(opts?: { tagSlug?: string }): Promise<Bl
   const { catMap, tagMap, tags } = await wpSlugMaps(apiBaseUrl);
 
   let tagId: number | undefined;
-  if (opts?.tagSlug && tags.status === 'fulfilled') {
-    const tag = tags.value.find(t => t.slug === opts.tagSlug);
+  if (opts?.tagSlug) {
+    const tag = tags.find(t => t.slug === opts.tagSlug);
     tagId = tag?.id;
     if (!tagId) return [];
   }
@@ -117,7 +117,6 @@ export async function fetchBlogPostBySlug(slug: string): Promise<BlogPost | null
   ]);
 
   if (source === 'sanity') {
-    if (!sanity.isSanityConfigured()) return null;
     const post = await sanity.fetchPostBySlug(slug, edition);
     return post && isPostVisibleOnEdition(post.tags, edition) ? post : null;
   }
@@ -148,7 +147,6 @@ export async function fetchBlogPostFeaturedImage(slug: string): Promise<string |
   ]);
 
   if (source === 'sanity') {
-    if (!sanity.isSanityConfigured()) return null;
     const post = await sanity.fetchPostBySlug(slug, edition);
     return post?.featuredImageUrl ?? null;
   }
@@ -169,7 +167,6 @@ export async function fetchBlogCategories(): Promise<BlogCategory[]> {
   const source = await getBlogContentSource();
 
   if (source === 'sanity') {
-    if (!sanity.isSanityConfigured()) return [];
     return sanity.fetchCategories();
   }
 
@@ -182,11 +179,49 @@ export async function fetchBlogTags(): Promise<BlogTag[]> {
   const source = await getBlogContentSource();
 
   if (source === 'sanity') {
-    if (!sanity.isSanityConfigured()) return [];
     return sanity.fetchTags();
   }
 
   const apiBaseUrl = await getWordpressSourceUrl();
   const tags = await wp.fetchTags(apiBaseUrl);
   return tags.map(t => ({ id: t.slug, name: t.name, slug: t.slug }));
+}
+
+/** Listing boundary: never serialize article bodies, SEO data, or full search text. */
+export type BlogSummary = Pick<BlogPost, 'id' | 'date' | 'slug' | 'title' | 'excerpt' | 'categories' | 'tags' | 'featuredImageUrl' | 'featuredImageAlt'>;
+export type BlogPage = { posts: BlogSummary[]; hasMore: boolean };
+function summary(post: BlogPost): BlogSummary {
+  const { id, date, slug, categories, tags, featuredImageUrl, featuredImageAlt } = post;
+  return { id, date, slug, categories, tags, featuredImageUrl, featuredImageAlt,
+    title: { rendered: stripHtmlAndDecode(post.title.rendered) },
+    excerpt: { rendered: stripHtmlAndDecode(post.excerpt.rendered).slice(0, 400) },
+  };
+}
+export async function fetchBlogPage(options: { page?: number; perPage?: number; category?: string; search?: string } = {}): Promise<BlogPage> {
+  const page = Math.max(1, Math.min(1000, Math.trunc(options.page || 1)));
+  const perPage = Math.max(1, Math.min(100, Math.trunc(options.perPage || 12)));
+  const [source, edition] = await Promise.all([getBlogContentSource(), getBlogEdition()]);
+  if (source === 'sanity') {
+    const result = await sanity.fetchPostPage({ ...options, page, perPage, edition });
+    return { posts: dedupeBlogPostsBySlug(result.posts).map(summary), hasMore: result.hasMore };
+  }
+  const apiBaseUrl = await getWordpressSourceUrl();
+  const { catMap, tagMap, cats, tags } = await wpSlugMaps(apiBaseUrl);
+  const collegeId = tags.find(t => t.slug === 'college')?.id;
+  const categoryId = options.category ? cats.find(c => c.slug === options.category)?.id : undefined;
+  if ((edition === 'college' && !collegeId) || (options.category && !categoryId)) return { posts: [], hasMore: false };
+  const result = await wp.fetchPostPage({ page, perPage, apiBaseUrl, categoryId, search: options.search,
+    tagId: edition === 'college' ? collegeId : undefined, excludeTagId: edition === 'college' ? undefined : collegeId,
+  });
+  return { posts: dedupeBlogPostsBySlug(result.items.map(p => wpPostToBlogPost(p, catMap, tagMap)))
+    .filter(p => isPostVisibleOnEdition(p.tags, edition)).map(summary), hasMore: result.hasMore };
+}
+
+export async function fetchPublicSitemapPosts(edition: SiteEdition): Promise<Array<{ slug: string; date: string }>> {
+  if (await getBlogContentSource(true) === 'sanity') return sanity.fetchSitemapPosts(edition);
+  const apiBaseUrl = await getWordpressSourceUrl();
+  const { catMap, tagMap } = await wpSlugMaps(apiBaseUrl);
+  const posts = await wp.fetchAllPosts({ apiBaseUrl, summary: true });
+  return dedupeBlogPostsBySlug(posts.map(p => wpPostToBlogPost(p, catMap, tagMap)))
+    .filter(p => isPostVisibleOnEdition(p.tags, edition)).map(p => ({ slug: p.slug, date: p.date }));
 }

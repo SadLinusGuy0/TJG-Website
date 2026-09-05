@@ -120,7 +120,7 @@ input:checked + .slider::after {
 }
 
 input:checked + .slider {
-    background-color: var(--accent);
+    background-color: var(--accent-control);
 }
 
 /* Switch-level interaction states (React component) */
@@ -150,7 +150,7 @@ input:checked + .slider {
 
 /* Element Badges */
 .badge {
-    background: var(--accent);
+    background: var(--accent-control);
     color: var(--on-accent);
     padding: 2px 8px;
     border-radius: 10px;

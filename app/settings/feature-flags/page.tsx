@@ -1,4 +1,5 @@
 "use client";
+import { localPreferences } from '../../../lib/browserStorage';
 
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback, useRef, Suspense } from "react";
@@ -89,13 +90,7 @@ const FLAGS: FlagDef[] = [
       { value: 'wordpress', label: 'WordPress fallback' },
     ],
   },
-  {
-    key: 'wordpress-source-url',
-    name: 'WordPress source URL',
-    description: 'The WordPress site URL used when fallback mode is selected',
-    type: 'string',
-    defaultValue: 'https://tjg8.wordpress.com',
-  },
+
 ];
 
 type OverrideState = 'cloud' | 'on' | 'off';
@@ -123,7 +118,7 @@ function setCookieOverride(key: string, state: OverrideState) {
   if (state === 'cloud') {
     document.cookie = `${cookieName}=; path=/; max-age=0`;
     if (key === 'blog-enabled') {
-      localStorage.removeItem('college-blogs-enabled');
+      localPreferences.removeItem('college-blogs-enabled');
       window.dispatchEvent(new Event('college-blogs-disabled'));
     }
   } else {
@@ -131,10 +126,10 @@ function setCookieOverride(key: string, state: OverrideState) {
     document.cookie = `${cookieName}=${value}; path=/; max-age=${FLAG_COOKIE_MAX_AGE}`;
     if (key === 'blog-enabled') {
       if (state === 'on') {
-        localStorage.setItem('college-blogs-enabled', 'true');
+        localPreferences.setItem('college-blogs-enabled', 'true');
         window.dispatchEvent(new Event('college-blogs-enabled'));
       } else {
-        localStorage.removeItem('college-blogs-enabled');
+        localPreferences.removeItem('college-blogs-enabled');
         window.dispatchEvent(new Event('college-blogs-disabled'));
       }
     }

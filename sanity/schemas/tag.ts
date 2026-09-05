@@ -1,4 +1,4 @@
-import { defineType, defineField } from '@sanity/client';
+import { defineType, defineField } from 'sanity';
 
 export default defineType({
   name: 'tag',

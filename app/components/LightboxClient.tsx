@@ -1,164 +1,96 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
-interface LightboxItem {
-  src: string;
-  caption: string;
-}
+type LightboxItem = { src: string; alt: string; caption: string };
 
-export default function LightboxClient(): React.JSX.Element | null {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
-  const [isOpening, setIsOpening] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
+export default function LightboxClient() {
+  const pathname = usePathname();
+  const dialog = useRef<HTMLDialogElement>(null);
+  const trigger = useRef<HTMLElement | null>(null);
   const [items, setItems] = useState<LightboxItem[]>([]);
-  const itemsRef = useRef<LightboxItem[]>([]);
-  const [direction, setDirection] = useState<'next' | 'prev' | null>(null);
-  const [isSliding, setIsSliding] = useState(false);
-  const [caption, setCaption] = useState<string>("");
-
-  const openAt = useCallback((idx: number) => {
-    const lightboxItems = itemsRef.current;
-    if (!lightboxItems.length) return;
-    const len = lightboxItems.length;
-    const next = ((idx % len) + len) % len;
-    setCurrentIndex(next);
-    setCaption(lightboxItems[next]?.caption || "");
-    setIsOpening(true);
-    setIsOpen(true);
-    // Two rafs to ensure the DOM paints before toggling classes
-    requestAnimationFrame(() => requestAnimationFrame(() => setIsOpening(false)));
-    if (typeof document !== "undefined") {
-      document.documentElement.style.overflow = "hidden";
-    }
-  }, []);
-
-  const close = useCallback(() => {
-    // Play closing transition before unmounting
-    setIsClosing(true);
-    setTimeout(() => {
-      setIsOpen(false);
-      setIsClosing(false);
-      if (typeof document !== "undefined") {
-        document.documentElement.style.overflow = "";
-      }
-    }, 200);
-  }, []);
-
-  const doSlide = useCallback((dir: 'next' | 'prev', targetIndex: number) => {
-    const lightboxItems = itemsRef.current;
-    if (!lightboxItems.length) return;
-    const nextIndex = ((targetIndex % lightboxItems.length) + lightboxItems.length) % lightboxItems.length;
-    setDirection(dir);
-    setIsSliding(true);
-    // Allow CSS to detect sliding-active, then switch image after a tick
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setCurrentIndex(nextIndex);
-        setCaption(lightboxItems[nextIndex]?.caption || "");
-        // End sliding after transition duration
-        setTimeout(() => setIsSliding(false), 260);
-      });
-    });
-  }, []);
-
-  const prev = useCallback(() => doSlide('prev', currentIndex - 1), [currentIndex, doSlide]);
-  const next = useCallback(() => doSlide('next', currentIndex + 1), [currentIndex, doSlide]);
-
-  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    if (target.closest('.lightbox-img, .lightbox-arrow, .lightbox-close, .lightbox-caption-wrap')) return;
-    close();
-  };
+  const [index, setIndex] = useState(0);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const panel = document.querySelector<HTMLElement>(".body-text");
-    if (!panel) return;
-
-    let imageIndexes = new Map<HTMLImageElement, number>();
-
-    const collectImages = () => {
-      const imgs = Array.from(panel.querySelectorAll<HTMLImageElement>("img"));
-      const nextIndexes = new Map<HTMLImageElement, number>();
-      const nextItems = imgs.map((img, index) => {
-        nextIndexes.set(img, index);
-        const figure = img.closest('figure');
-        const figcap = figure?.querySelector('figcaption');
-        return {
-          src: img.getAttribute("data-full") || img.currentSrc || img.getAttribute("src") || "",
-          caption: figcap?.textContent?.trim() || img.getAttribute('alt') || '',
-        };
-      });
-
-      imageIndexes = nextIndexes;
-      itemsRef.current = nextItems;
-      setItems(nextItems);
-    };
-
-    collectImages();
-
-    const onClick = (event: MouseEvent) => {
-      const target = event.target;
-      if (!(target instanceof HTMLImageElement)) return;
-      let index = imageIndexes.get(target);
-      if (index === undefined) {
-        collectImages();
-        index = imageIndexes.get(target);
+    const scope = document.getElementById('main-content');
+    if (!scope) return;
+    const images = () => Array.from(scope.querySelectorAll<HTMLImageElement>('.body-text img'))
+      .filter(img => !img.closest('.ko-compare, button, a'));
+    const previous = new Map<HTMLImageElement, { role: string | null; tab: string | null; label: string | null; alt: string | null }>();
+    const prepare = () => {
+      for (const img of images()) {
+        if (previous.has(img)) continue;
+        previous.set(img, { role: img.getAttribute('role'), tab: img.getAttribute('tabindex'), label: img.getAttribute('aria-label'), alt: img.getAttribute('alt') });
+        img.setAttribute('role', 'button'); img.tabIndex = 0;
+        img.setAttribute('aria-label', `Expand image${img.alt ? `: ${img.alt}` : ''}`);
+        // A functional image needs action text: empty alt implies a presentational role.
+        if (!img.alt) img.alt = 'Expand image';
       }
-      if (index === undefined) return;
-
-      event.preventDefault();
-      openAt(index);
     };
-
-    panel.addEventListener("click", onClick);
-
+    prepare();
+    const observer = new MutationObserver(prepare);
+    observer.observe(scope, { childList: true, subtree: true });
+    const activate = (event: MouseEvent | KeyboardEvent) => {
+      if (event instanceof KeyboardEvent && !['Enter', ' '].includes(event.key)) return;
+      if (!(event.target instanceof HTMLImageElement)) return;
+      const candidates = images(); const selected = candidates.indexOf(event.target);
+      if (selected < 0) return;
+      event.preventDefault(); trigger.current = event.target;
+      setItems(candidates.map(img => ({
+        src: img.getAttribute('data-full') || img.currentSrc || img.src,
+        alt: previous.get(img)?.alt || '',
+        caption: img.closest('figure')?.querySelector('figcaption')?.textContent?.trim() || previous.get(img)?.alt || '',
+      })));
+      setIndex(selected); setOpen(true);
+    };
+    scope.addEventListener('click', activate); scope.addEventListener('keydown', activate);
     return () => {
-      panel.removeEventListener("click", onClick);
+      observer.disconnect(); scope.removeEventListener('click', activate); scope.removeEventListener('keydown', activate);
+      for (const [img, attrs] of previous) for (const [key, value] of [['role', attrs.role], ['tabindex', attrs.tab], ['aria-label', attrs.label], ['alt', attrs.alt]]) {
+        if (value === null) img.removeAttribute(key!); else img.setAttribute(key!, value!);
+      }
     };
-  }, [openAt]);
-
+  }, [pathname]);
 
   useEffect(() => {
-    if (!isOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-      if (e.key === "ArrowLeft") prev();
-      if (e.key === "ArrowRight") next();
+    if (!open || !dialog.current) return;
+    const modal = dialog.current;
+    const previousOverflow = document.documentElement.style.overflow;
+    modal.showModal(); document.documentElement.style.overflow = 'hidden';
+    return () => {
+      modal.close(); document.documentElement.style.overflow = previousOverflow;
+      if (trigger.current?.isConnected) trigger.current.focus({ preventScroll: true });
     };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [isOpen, prev, next, close]);
+  }, [open]);
 
-  if (!isOpen) return null;
-
-  const src = items[currentIndex]?.src || "";
-
+  useEffect(() => { setOpen(false); }, [pathname]);
+  const close = () => setOpen(false);
+  const move = (direction: number) => setIndex(current => (current + direction + items.length) % items.length);
+  const item = items[index];
   return (
-    <div className={`lightbox-overlay ${isOpening ? 'opening' : isClosing ? 'closing' : 'open'} ${direction ? `slide-${direction}` : ''} ${isSliding ? 'sliding-active' : ''}`} aria-hidden={false} onClick={handleBackdropClick}>
-      <div className="lightbox-content" role="dialog" aria-modal="true">
-        <button className="lightbox-close left" aria-label="Close" onClick={close}>
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.4 6.4L17.6 17.6M17.6 6.4L6.4 17.6" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg>
-        </button>
-        <button className="lightbox-arrow lightbox-prev" aria-label="Previous image" onClick={prev}>
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 6L9 12L15 18" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        </button>
+    <dialog ref={dialog} className="lightbox-overlay open" aria-label="Image viewer" onCancel={event => { event.preventDefault(); close(); }}
+      onClick={event => { if (event.target === event.currentTarget || (event.target as HTMLElement).classList.contains('lightbox-stage')) close(); }}
+      onKeyDown={event => {
+        if (event.key === 'Tab') {
+          const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)'));
+          const first = buttons[0], last = buttons[buttons.length - 1];
+          if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+          else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+        }
+        if (event.key === 'ArrowLeft') { event.preventDefault(); move(-1); } if (event.key === 'ArrowRight') { event.preventDefault(); move(1); } }}>
+      <div className="lightbox-content">
+        <button className="lightbox-close left" aria-label="Close image viewer" onClick={close} autoFocus>×</button>
+        {items.length > 1 && <button className="lightbox-arrow lightbox-prev" aria-label="Previous image" onClick={() => move(-1)}>‹</button>}
         <div className="lightbox-stage">
-          {/* eslint-disable-next-line @next/next/no-img-element -- Lightbox displays arbitrary post images at their original source and size. */}
-          <img className={`lightbox-img ${isSliding ? 'incoming' : 'current'}`} style={{ ['--incomingStart' as any]: direction === 'next' ? '8%' : direction === 'prev' ? '-8%' : '0' }} alt="Expanded image" src={src} />
+          {/* Original URLs preserve the user's full-resolution media. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          {item && <img className="lightbox-img current" src={item.src} alt={item.alt} />}
         </div>
-        <button className="lightbox-arrow lightbox-next" aria-label="Next image" onClick={next}>
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 6L15 12L9 18" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        </button>
-        {caption ? (
-          <div className="lightbox-caption-wrap" aria-live="polite">
-            <div className="lightbox-caption-gradient"></div>
-            <div className="lightbox-caption">{caption}</div>
-          </div>
-        ) : null}
+        {items.length > 1 && <button className="lightbox-arrow lightbox-next" aria-label="Next image" onClick={() => move(1)}>›</button>}
+        <div className="lightbox-caption-wrap" aria-live="polite"><div className="lightbox-caption">{item?.caption} {items.length > 1 && `(${index + 1} of ${items.length})`}</div></div>
       </div>
-    </div>
+    </dialog>
   );
 }

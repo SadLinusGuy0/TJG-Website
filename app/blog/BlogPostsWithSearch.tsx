@@ -1,4 +1,5 @@
 'use client';
+import { stripHtmlAndDecode } from '../../lib/portableText';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,7 +10,7 @@ interface BlogPostsWithSearchProps {
 }
 
 export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearchProps) {
-  const { filteredPosts } = useBlogSearch();
+  const { filteredPosts, loading, error, hasMore, loadMore, retry } = useBlogSearch();
   const initialImageIds = new Set(
     filteredPosts
       .filter((post) => Boolean(post.featuredImageUrl))
@@ -19,7 +20,11 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
 
   return (
     <>
-      <div className="blog-posts-slide-wrapper">
+      <div className="blog-posts-slide-wrapper" aria-busy={loading}>
+        {(loading || error) && (
+          <p role="status" aria-live="polite">{loading ? 'Loading articles…' : error}</p>
+        )}
+        {error && <button onClick={retry}>Retry search</button>}
         {filteredPosts.length > 0 ? (
           <div className="section">
             <div className="list-group">
@@ -46,9 +51,9 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
                       )}
                       <div className="blog-card-gradient" aria-hidden="true" />
                       <div className="blog-card-text-content">
-                        <div className="body-text-blog-title" dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+                        <div className="body-text-blog-title" >{stripHtmlAndDecode(post.title.rendered)}</div>
                         <div className="information-wrapper">
-                          <div className="information" dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} />
+                          <div className="information" >{stripHtmlAndDecode(post.excerpt.rendered)}</div>
                           <div className="blog-card-meta">
                             <div className="blog-card-pill">
                               {new Date(post.date).toLocaleDateString('en-US', { 
@@ -79,11 +84,12 @@ export default function BlogPostsWithSearch({ categoryMap }: BlogPostsWithSearch
             </div>
             <div className="panel settings">
               <div className="body-text">
-                <p>No articles match your search. Try different keywords.</p>
+                <p>No articles found. Try different keywords or categories.</p>
               </div>
             </div>
           </div>
         )}
+        {hasMore && !error && <button className="blog-button" onClick={loadMore} disabled={loading}>Load more articles</button>}
       </div>
     </>
   );

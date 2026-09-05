@@ -1,4 +1,5 @@
 "use client";
+import { localPreferences } from '../../lib/browserStorage';
 
 import { useTheme, ACCENT_COLORS, ACCENT_LIGHT_BACKGROUNDS, ACCENT_LIGHT_CONTAINER_BACKGROUNDS, ACCENT_DARK_BACKGROUNDS, ACCENT_DARK_CONTAINER_BACKGROUNDS, AccentColor } from '../components/ThemeProvider';
 import { useEffect, useState, Suspense, type KeyboardEvent } from 'react';
@@ -6,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { LoadingDots } from '../components/LoadingAnim';
 import TopAppBar from '../components/TopAppBar';
+import ReadingLayoutMenu from './ReadingLayoutMenu';
 import Switch from '../components/Switch';
 import { useReadingPreferences } from '../blog/useReadingPreferences';
 
@@ -117,7 +119,7 @@ function SettingsContent() {
 
   useEffect(() => {
     const checkDevOptions = () => {
-      setDevOptionsEnabled(localStorage.getItem('developer-options-enabled') === 'true');
+      setDevOptionsEnabled(localPreferences.getItem('developer-options-enabled') === 'true');
     };
     checkDevOptions();
     window.addEventListener('developer-options-changed', checkDevOptions);
@@ -341,16 +343,13 @@ function SettingsContent() {
 
         <div className="section-header"><h2 className="title">Blog</h2></div>
         <div className="list-group">
-          <label className="list" htmlFor="blog-reading-layout">
+          <div className="list">
             <div className="list-item-content">
               <div className="body-text">Reading layout</div>
               <div className="information-wrapper"><div className="information">Text size, paragraph spacing, and image size</div></div>
             </div>
-            <select id="blog-reading-layout" value={preferences.compact ? "compact" : "comfortable"} onChange={event => setPreferences(p => ({ ...p, compact: event.target.value === "compact" }))} style={{ font: 'inherit', color: 'var(--primary)', background: 'var(--background)', border: 0, borderRadius: 12, padding: '10px 12px', maxWidth: '48%' }}>
-              <option value="comfortable">Comfortable</option>
-              <option value="compact">Compact</option>
-            </select>
-          </label>
+            <ReadingLayoutMenu compact={preferences.compact} onChange={compact => setPreferences(p => ({ ...p, compact }))} />
+          </div>
           <label className="list" htmlFor="blog-focus-mode">
             <div className="list-item-content">
               <div className="body-text">Focus mode</div>

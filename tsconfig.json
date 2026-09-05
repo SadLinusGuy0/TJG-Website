@@ -21,6 +21,10 @@
       {
         "name": "next"
       }
+    ],
+    "types": [
+      "node",
+      "jest"
     ]
   },
   "include": [

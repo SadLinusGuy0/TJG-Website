@@ -1,3 +1,5 @@
+import { routeMetadata } from '../lib/routeMetadata';
+import './styles/home.css';
 import { getFeaturedStories } from "../lib/featured-stories";
 import { getProjects } from "../lib/projects";
 import { getPopularStoriesEnabled } from "../lib/getPopularStoriesFlag";
@@ -13,30 +15,20 @@ import HomeClient from "./components/HomeClient";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [
-    featuredStories,
-    projects,
-    popularStoriesEnabled,
-    projectsEnabled,
-    miscSectionEnabled,
-    recentBlogPostsEnabled,
-    profileFacts,
-  ] = await Promise.all([
-    getFeaturedStories(),
-    getProjects(),
-    getPopularStoriesEnabled(),
-    getProjectsEnabled(),
-    getMiscSectionEnabled(),
-    getRecentBlogPostsEnabled(),
+  const [popularStoriesEnabled, projectsEnabled, miscSectionEnabled, recentBlogPostsEnabled, siteEdition] = await Promise.all([
+    getPopularStoriesEnabled(), getProjectsEnabled(), getMiscSectionEnabled(), getRecentBlogPostsEnabled(), getSiteEdition(),
+  ]);
+  const [featuredStories, projects, recentBlogPosts, profileFacts] = await Promise.all([
+    popularStoriesEnabled ? getFeaturedStories() : Promise.resolve([]),
+    projectsEnabled ? getProjects() : Promise.resolve([]),
+    recentBlogPostsEnabled ? getRecentBlogPosts(6) : Promise.resolve([]),
     getHomeProfileFacts(),
   ]);
-  const siteEdition = await getSiteEdition();
   const environmentLabel = process.env.NODE_ENV === "development"
     ? "Dev"
     : siteEdition === "beta" || process.env.VERCEL_ENV === "preview"
       ? "Beta"
       : null;
-  const recentBlogPosts = recentBlogPostsEnabled ? await getRecentBlogPosts(6) : [];
   return (
     <HomeClient
       featuredStories={featuredStories}
@@ -50,4 +42,9 @@ export default async function Home() {
       environmentLabel={environmentLabel}
     />
   );
+}
+
+export async function generateMetadata() {
+  const college = await getSiteEdition() === 'college';
+  return routeMetadata('/', college ? 'College Portfolio' : 'That Josh Guy', college ? 'Josh Skinner’s college portfolio and development journals.' : 'Designer, tech journalist and Samsung/Android creator. Explore my articles and design projects.');
 }

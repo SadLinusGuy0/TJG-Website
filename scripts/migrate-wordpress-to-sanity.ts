@@ -7,11 +7,12 @@
  * Required environment variables:
  *   NEXT_PUBLIC_SANITY_PROJECT_ID - Your Sanity project ID
  *   NEXT_PUBLIC_SANITY_DATASET    - Dataset name (default: "production")
- *   SANITY_API_TOKEN              - Write-capable API token
+ *   SANITY_MIGRATION_TOKEN              - Write-capable API token
  *   WP_SOURCE_URL                 - WordPress site URL (default: "https://tjg8.wordpress.com")
  */
 
 import { createClient } from '@sanity/client';
+import { collectWordpressPages } from '../lib/wpPagination';
 
 const WP_SOURCE = process.env.WP_SOURCE_URL || 'https://tjg8.wordpress.com';
 
@@ -20,7 +21,7 @@ const sanity = createClient({
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
   apiVersion: '2024-01-01',
   useCdn: false,
-  token: process.env.SANITY_API_TOKEN!,
+  token: process.env.SANITY_MIGRATION_TOKEN!,
 });
 
 type WPPost = {
@@ -59,26 +60,16 @@ function getWpApiBase(): string {
   return `${WP_SOURCE}/wp-json/wp/v2`;
 }
 
-async function wpFetch<T>(path: string): Promise<T> {
-  const url = `${getWpApiBase()}${path}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`WP API error: ${res.status} for ${url}`);
-  return res.json() as Promise<T>;
+async function fetchAllWpItems<T>(resource: string): Promise<T[]> {
+  return collectWordpressPages(async page => {
+    const response = await fetch(`${getWpApiBase()}/${resource}?_embed=wp:featuredmedia&per_page=100&page=${page}`, { signal: AbortSignal.timeout(15000), redirect: 'error' });
+    if (!response.ok) throw new Error(`WordPress returned ${response.status}`);
+    const total = response.headers.get('x-wp-totalpages');
+    if (total === null) throw new Error('Missing WordPress pagination');
+    return { items: await response.json() as T[], totalPages: Number(total) };
+  });
 }
-
-async function fetchAllWpPosts(): Promise<WPPost[]> {
-  const all: WPPost[] = [];
-  let page = 1;
-  while (true) {
-    const batch = await wpFetch<WPPost[]>(
-      `/posts?_embed=wp:featuredmedia&per_page=100&page=${page}&orderby=date&order=desc`
-    );
-    all.push(...batch);
-    if (batch.length < 100) break;
-    page++;
-  }
-  return all;
-}
+async function fetchAllWpPosts(): Promise<WPPost[]> { return fetchAllWpItems<WPPost>('posts'); }
 
 function stripHtml(html: string): string {
   return html
@@ -136,11 +127,11 @@ async function run() {
 
   // Fetch WordPress data
   console.log('Fetching WordPress categories...');
-  const wpCategories = await wpFetch<WPCategory[]>('/categories?per_page=100');
+  const wpCategories = await fetchAllWpItems<WPCategory>('categories');
   console.log(`  Found ${wpCategories.length} categories`);
 
   console.log('Fetching WordPress tags...');
-  const wpTags = await wpFetch<WPTag[]>('/tags?per_page=100');
+  const wpTags = await fetchAllWpItems<WPTag>('tags');
   console.log(`  Found ${wpTags.length} tags`);
 
   console.log('Fetching WordPress posts...');
@@ -193,7 +184,7 @@ async function run() {
         featuredImageAssetId = await uploadImageFromUrl(imgUrl);
       }
 
-      const doc: Record<string, unknown> = {
+      const doc: { _id: string; _type: string; [key: string]: unknown } = {
         _id: `post-${post.slug}`,
         _type: 'post',
         title: stripHtml(post.title.rendered),

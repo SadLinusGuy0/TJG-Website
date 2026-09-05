@@ -1,0 +1,9 @@
+{
+  "pages": [],
+  "fixtureRequests": [],
+  "smoothingScans": {
+    "before": 1,
+    "after": 2
+  },
+  "smoothingEnabled": "true"
+}

@@ -1,3 +1,7 @@
+import 'server-only';
+import { trustedWordpressOrigin } from './wordpressOrigins';
+import { collectWordpressPages } from './wpPagination';
+import { readBoundedJson, UpstreamError } from './upstream';
 export type WPPost = {
   id: number;
   date: string;
@@ -44,7 +48,7 @@ const defaultApiBaseUrl = "https://tjg8.wordpress.com";
 const revalidateSeconds = parseInt(process.env.WP_REVALIDATE_SECONDS ?? "300", 10);
 
 function getApiUrls(apiBaseUrl?: string) {
-  const base = apiBaseUrl || defaultApiBaseUrl;
+  const base = trustedWordpressOrigin(apiBaseUrl || defaultApiBaseUrl);
   ensureConfigured(base);
   let hostname: string;
   try {
@@ -62,16 +66,25 @@ function getApiUrls(apiBaseUrl?: string) {
   };
 }
 
-async function wpFetch<T>(path: string, errorLabel: string, apiBaseUrl?: string): Promise<T> {
+async function wpRequest(path: string, apiBaseUrl?: string): Promise<Response> {
   const { isWPCom, wpJsonBase, wpComBase } = getApiUrls(apiBaseUrl);
   const base = isWPCom ? wpComBase : wpJsonBase;
-  const url = `${base}${path}`;
-  const cacheOpt = revalidateSeconds === 0
-    ? { cache: "no-store" as const }
-    : { next: { revalidate: revalidateSeconds } };
-  const res = await fetch(url, cacheOpt);
-  if (!res.ok) throw new Error(`Failed to fetch ${errorLabel}: ${res.status}`);
-  return res.json();
+  try {
+    return await fetch(`${base}${path}`, {
+      ...(revalidateSeconds === 0 ? { cache: 'no-store' as const } : { next: { revalidate: revalidateSeconds, tags: ['blog'] } }),
+      redirect: 'error', signal: AbortSignal.timeout(10000),
+    });
+  } catch { throw new UpstreamError('WordPress'); }
+}
+async function wpFetch<T>(path: string, _errorLabel: string, apiBaseUrl?: string): Promise<T> {
+  return readBoundedJson<T>(await wpRequest(path, apiBaseUrl), 'WordPress');
+}
+async function wpPage<T>(path: string, apiBaseUrl?: string): Promise<{ items: T[]; totalPages: number }> {
+  const response = await wpRequest(path, apiBaseUrl);
+  const items = await readBoundedJson<T[]>(response, 'WordPress');
+  const header = response.headers.get('x-wp-totalpages');
+  if (!Array.isArray(items) || header === null) throw new UpstreamError('WordPress');
+  return { items, totalPages: Number(header) };
 }
 
 function ensureConfigured(base: string): void {
@@ -81,27 +94,25 @@ function ensureConfigured(base: string): void {
   }
 }
 
-export async function fetchPosts(params: { page?: number; perPage?: number; categoryId?: number; tagId?: number; apiBaseUrl?: string } = {}): Promise<WPPost[]> {
-  const { page = 1, perPage = 10, categoryId, tagId, apiBaseUrl } = params;
-  const path = `/posts?_fields=id,date,slug,link,title,excerpt,content,categories,tags,featured_media,jetpack_featured_media_url&_embed=wp:featuredmedia&page=${page}&per_page=${perPage}&orderby=date&order=desc${categoryId ? `&categories=${categoryId}` : ""}${tagId ? `&tags=${tagId}` : ""}`;
-  return wpFetch<WPPost[]>(path, "posts", apiBaseUrl);
+export type PostQuery = { page?: number; perPage?: number; categoryId?: number; tagId?: number; excludeTagId?: number; search?: string; apiBaseUrl?: string; summary?: boolean };
+export async function fetchPostPage(params: PostQuery = {}) {
+  const { page = 1, perPage = 12, categoryId, tagId, excludeTagId, search, apiBaseUrl, summary = true } = params;
+  const query = new URLSearchParams({
+    _fields: `id,date,slug,link,title,excerpt,${summary ? '' : 'content,'}categories,tags,featured_media,jetpack_featured_media_url,_embedded`,
+    _embed: 'wp:featuredmedia', page: String(page), per_page: String(perPage), orderby: 'date', order: 'desc',
+  });
+  if (categoryId) query.set('categories', String(categoryId));
+  if (tagId) query.set('tags', String(tagId));
+  if (excludeTagId) query.set('tags_exclude', String(excludeTagId));
+  if (search) query.set('search', search);
+  const result = await wpPage<WPPost>(`/posts?${query}`, apiBaseUrl);
+  return { ...result, hasMore: page < result.totalPages };
 }
-
-/** Fetches all posts by paginating through the API. Use when you need the complete set (e.g. blog index). */
-export async function fetchAllPosts(params: { categoryId?: number; tagId?: number; apiBaseUrl?: string } = {}): Promise<WPPost[]> {
-  const { apiBaseUrl, ...rest } = params;
-  const perPage = 100; // WordPress REST API max
-  const all: WPPost[] = [];
-  let page = 1;
-
-  while (true) {
-    const batch = await fetchPosts({ page, perPage, ...rest, apiBaseUrl });
-    all.push(...batch);
-    if (batch.length < perPage) break;
-    page++;
-  }
-
-  return all;
+export async function fetchPosts(params: PostQuery = {}): Promise<WPPost[]> {
+  return (await fetchPostPage(params)).items;
+}
+export async function fetchAllPosts(params: PostQuery = {}): Promise<WPPost[]> {
+  return collectWordpressPages((page) => fetchPostPage({ ...params, page, perPage: 100 }));
 }
 
 export async function fetchPages(params: { page?: number; perPage?: number; apiBaseUrl?: string } = {}): Promise<WPPost[]> {
@@ -111,21 +122,21 @@ export async function fetchPages(params: { page?: number; perPage?: number; apiB
 }
 
 export async function fetchCategories(apiBaseUrl?: string): Promise<WPCategory[]> {
-  return wpFetch<WPCategory[]>("/categories?_fields=id,name,slug", "categories", apiBaseUrl);
+  return collectWordpressPages((page) => wpPage<WPCategory>(`/categories?_fields=id,name,slug&per_page=100&page=${page}`, apiBaseUrl));
 }
 
 export async function fetchTags(apiBaseUrl?: string): Promise<WPTag[]> {
-  return wpFetch<WPTag[]>("/tags?_fields=id,name,slug&per_page=100", "tags", apiBaseUrl);
+  return collectWordpressPages((page) => wpPage<WPTag>(`/tags?_fields=id,name,slug&per_page=100&page=${page}`, apiBaseUrl));
 }
 
 export async function fetchPostBySlug(slug: string, apiBaseUrl?: string): Promise<WPPost | null> {
-  const path = `/posts?slug=${encodeURIComponent(slug)}&_fields=id,date,slug,link,title,excerpt,content,categories,featured_media,jetpack_featured_media_url&_embed=wp:featuredmedia`;
+  const path = `/posts?slug=${encodeURIComponent(slug)}&_fields=id,date,slug,link,title,excerpt,content,categories,tags,_embedded,featured_media,jetpack_featured_media_url&_embed=wp:featuredmedia`;
   const data = await wpFetch<WPPost[]>(path, "post", apiBaseUrl);
   return data[0] || null;
 }
 
 export async function fetchPageBySlug(slug: string, apiBaseUrl?: string): Promise<WPPost | null> {
-  const path = `/pages?slug=${encodeURIComponent(slug)}&_fields=id,date,slug,link,title,excerpt,content,featured_media,jetpack_featured_media_url&_embed=wp:featuredmedia`;
+  const path = `/pages?slug=${encodeURIComponent(slug)}&_fields=id,date,slug,link,title,excerpt,content,categories,tags,_embedded,featured_media,jetpack_featured_media_url&_embed=wp:featuredmedia`;
   const data = await wpFetch<WPPost[]>(path, "page", apiBaseUrl);
   return data[0] || null;
 }

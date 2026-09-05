@@ -1,3 +1,4 @@
+jest.mock('server-only', () => ({}));
 // Mock next/router
 jest.mock('next/router', () => ({
   useRouter() {

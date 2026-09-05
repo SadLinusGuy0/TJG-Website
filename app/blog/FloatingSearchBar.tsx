@@ -1,5 +1,7 @@
 'use client';
 
+import SearchShortcutChip from '../components/SearchShortcutChip';
+
 import { useState, useRef, useEffect } from 'react';
 import { useBlogSearch } from './BlogSearchWrapper';
 
@@ -12,6 +14,26 @@ export default function FloatingSearchBar({ categories }: FloatingSearchBarProps
   const [filterOpen, setFilterOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [searchFocused, setSearchFocused] = useState(false);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.isComposing || event.repeat || event.altKey || event.shiftKey) return;
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        if (inputRef.current && document.activeElement === inputRef.current) {
+          inputRef.current.blur();
+          setFilterOpen(false);
+          return;
+        }
+        setFilterOpen(false);
+        inputRef.current?.focus();
+        inputRef.current?.select();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   const activeCategoryName = activeCategory
     ? categories.find(c => c.slug === activeCategory)?.name ?? activeCategory
@@ -42,7 +64,7 @@ export default function FloatingSearchBar({ categories }: FloatingSearchBarProps
   return (
     <>
       <div className="floating-search-anchor">
-        <div className="floating-search-positioner" ref={filterRef}>
+        <div className="floating-search-positioner" ref={filterRef} onKeyDown={e => { if (e.key === 'Escape' && filterOpen) { setFilterOpen(false); inputRef.current?.focus(); } }}>
           <div
             className="floating-search-bar"
             style={{
@@ -66,9 +88,22 @@ export default function FloatingSearchBar({ categories }: FloatingSearchBarProps
               type="text"
               className="floating-search-input"
               placeholder="What are you looking for?"
+              aria-label="Search blog"
+              aria-keyshortcuts="Meta+k Control+k"
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setSearchFocused(false)}
+              onKeyDown={event => {
+                if (event.key === 'Escape') {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  setFilterOpen(false);
+                  event.currentTarget.blur();
+                }
+              }}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+            <SearchShortcutChip focused={searchFocused} />
 
             {searchQuery && (
               <button
@@ -119,6 +154,7 @@ export default function FloatingSearchBar({ categories }: FloatingSearchBarProps
               <button
                 className="floating-search-filter-item"
                 data-selected={activeCategory === null}
+                aria-pressed={activeCategory === null}
                 onClick={() => handleCategorySelect(null)}
               >
                 All
@@ -128,6 +164,7 @@ export default function FloatingSearchBar({ categories }: FloatingSearchBarProps
                   key={cat.id}
                   className="floating-search-filter-item"
                   data-selected={activeCategory === cat.slug}
+                  aria-pressed={activeCategory === cat.slug}
                   onClick={() => handleCategorySelect(cat.slug)}
                 >
                   {cat.name}

@@ -26,7 +26,8 @@ function ProductRating({ average, count }: { average: number; count?: number }) 
 }
 
 export default async function Shop() {
-  const products = await fetchGumroadProducts();
+  const result = await fetchGumroadProducts().then(products => ({ products, unavailable: false })).catch(() => { console.error('Shop catalogue unavailable'); return { products: [], unavailable: true }; });
+  const { products, unavailable } = result;
 
   return (
     <div className="page">
@@ -107,7 +108,7 @@ export default async function Shop() {
                     alignItems: 'center',
                   }}
                 >
-                  <div className="body-text">No products available at the moment.</div>
+                  <div className="body-text"><p>{unavailable ? 'The catalogue is temporarily unavailable. You can still browse the shop on Gumroad.' : 'No products available at the moment.'}</p><a href="https://thatjoshguy.gumroad.com/" target="_blank" rel="noopener noreferrer">Visit the Gumroad shop</a></div>
                 </div>
               )}
             </div>

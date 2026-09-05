@@ -32,6 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     metadataBase: new URL(siteUrl),
+    robots: edition === "beta" || process.env.VERCEL_ENV === "preview" ? { index: false, follow: true } : undefined,
     title,
     description,
     keywords: 'Josh Skinner, That Josh Guy, UI/UX Designer, Graphic Designer, Web Developer, Writer, Portfolio, Freelance, Creative',
@@ -69,13 +70,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const blogEnabledValue = await getBlogEnabled();
-  const cornerSmoothingEnabledValue = await getCornerSmoothingEnabled();
-  const fmpSeparatedViewEnabledValue = await getFmpSeparatedViewEnabled();
-  const siteEdition = await getSiteEdition();
+  const [blogEnabledValue, cornerSmoothingEnabledValue, fmpSeparatedViewEnabledValue, siteEdition] = await Promise.all([
+    getBlogEnabled(), getCornerSmoothingEnabled(), getFmpSeparatedViewEnabled(), getSiteEdition(),
+  ]);
   
   return (
-    <html lang="en" data-site-edition={siteEdition} suppressHydrationWarning>
+    <html lang="en" data-site-edition={siteEdition} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <meta name="theme-color" content="#000" />

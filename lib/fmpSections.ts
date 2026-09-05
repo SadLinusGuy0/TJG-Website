@@ -1,9 +1,12 @@
+import { uniqueHeadingId } from './headings';
+import { portableTextToPlainText, type PortableTextBlock } from './portableText';
 export const FMP_SLUG = 'getaway-driver-final-major-project';
 
 export interface FmpSection {
   title: string;
   slug: string;
   html: string;
+  blocks?: PortableTextBlock[];
 }
 
 function decodeHtmlEntities(text: string): string {
@@ -17,15 +20,6 @@ function decodeHtmlEntities(text: string): string {
     .replace(/&nbsp;/gi, ' ')
     .replace(/&#(\d+);/g, (_, code: string) => String.fromCharCode(Number(code)))
     .replace(/&#x([0-9a-f]+);/gi, (_, code: string) => String.fromCharCode(parseInt(code, 16)));
-}
-
-function slugify(text: string): string {
-  return decodeHtmlEntities(text)
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim();
 }
 
 /**
@@ -46,16 +40,30 @@ export function extractH1Sections(html: string): FmpSection[] {
   if (matches.length === 0) return [];
 
   const sections: FmpSection[] = [];
+  const seen = new Map<string, number>();
   for (let i = 0; i < matches.length; i++) {
     const start = matches[i].index;
     const end = i + 1 < matches.length ? matches[i + 1].index : html.length;
     const sectionHtml = html.slice(start, end).trim();
-    const slug = slugify(matches[i].title);
+    const slug = uniqueHeadingId(matches[i].title, seen);
 
     if (slug) {
       sections.push({ title: matches[i].title, slug, html: sectionHtml });
     }
   }
 
+  return sections;
+}
+
+export function extractPostSections(post: { contentSource: string; content?: { rendered: string }; portableBody?: PortableTextBlock[] }): FmpSection[] {
+  if (post.contentSource !== 'portableText') return extractH1Sections(post.content?.rendered || '');
+  const sections: FmpSection[] = [];
+  const seen = new Map<string, number>();
+  for (const block of post.portableBody || []) {
+    if (block._type === 'block' && block.style === 'h1') {
+      const title = portableTextToPlainText([block]);
+      sections.push({ title, slug: uniqueHeadingId(title, seen), html: '', blocks: [] });
+    } else if (sections.length) sections[sections.length - 1].blocks!.push(block);
+  }
   return sections;
 }

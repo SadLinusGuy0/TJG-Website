@@ -1,7 +1,10 @@
 "use client";
+import { localPreferences, sessionPreferences } from '../../lib/browserStorage';
 import Link from "next/link";
+import ShortcutPopover from "./ShortcutPopover";
+import { isKeyboardInput } from "../../lib/keyboard";
 import { usePathname, useRouter } from 'next/navigation';
-import { Suspense, createContext, lazy, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, createContext, lazy, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
 import type {
   CSSProperties,
   KeyboardEvent,
@@ -200,7 +203,7 @@ export default function NavigationClient({
       return null;
     }
 
-    const storedWidth = Number.parseFloat(localStorage.getItem(SIDEBAR_WIDTH_STORAGE_KEY) ?? '');
+    const storedWidth = Number.parseFloat(localPreferences.getItem(SIDEBAR_WIDTH_STORAGE_KEY) ?? '');
     return Number.isFinite(storedWidth) ? storedWidth : null;
   });
   const [showBlog, setShowBlog] = useState(() => {
@@ -211,7 +214,7 @@ export default function NavigationClient({
         return cookieMatch.split('=')[1] === 'true' || propShowBlog;
       }
       // Fall back to legacy localStorage override
-      const localStorageValue = localStorage.getItem('college-blogs-enabled');
+      const localStorageValue = localPreferences.getItem('college-blogs-enabled');
       if (localStorageValue !== null) {
         return localStorageValue === 'true' || propShowBlog;
       }
@@ -230,7 +233,7 @@ export default function NavigationClient({
           return;
         }
         // Fall back to legacy localStorage override
-        const localStorageValue = localStorage.getItem('college-blogs-enabled');
+        const localStorageValue = localPreferences.getItem('college-blogs-enabled');
         const enabled = localStorageValue !== null
           ? localStorageValue === 'true'
           : defaultEnabled;
@@ -264,7 +267,7 @@ export default function NavigationClient({
       return;
     }
 
-    const storedPreference = sessionStorage.getItem('sidebar-collapsed');
+    const storedPreference = sessionPreferences.getItem('sidebar-collapsed');
     setCollapsed(storedPreference === null ? true : storedPreference === 'true');
     setCollapsePreferenceReady(true);
   }, [hideDesktop]);
@@ -275,7 +278,7 @@ export default function NavigationClient({
     }
 
     if (collapsePreferenceReady) {
-      sessionStorage.setItem('sidebar-collapsed', collapsed ? 'true' : 'false');
+      sessionPreferences.setItem('sidebar-collapsed', collapsed ? 'true' : 'false');
     }
   }, [collapsePreferenceReady, collapsed, hideDesktop]);
 
@@ -631,7 +634,7 @@ export default function NavigationClient({
 
     if (typeof window !== 'undefined') {
       try {
-        const pendingValue = sessionStorage.getItem(MOBILE_NAV_TRANSITION_KEY);
+        const pendingValue = sessionPreferences.getItem(MOBILE_NAV_TRANSITION_KEY);
         pendingTransition = pendingValue ? JSON.parse(pendingValue) as PendingMobileNavTransition : null;
       } catch {
         pendingTransition = null;
@@ -657,7 +660,7 @@ export default function NavigationClient({
     );
 
     if (pendingTransition && !pendingIsFresh && typeof window !== 'undefined') {
-      sessionStorage.removeItem(MOBILE_NAV_TRANSITION_KEY);
+      sessionPreferences.removeItem(MOBILE_NAV_TRANSITION_KEY);
     }
 
     if (pendingMatchesRoute && pendingTransition) {
@@ -672,7 +675,7 @@ export default function NavigationClient({
       }
 
       if (typeof window !== 'undefined') {
-        sessionStorage.removeItem(MOBILE_NAV_TRANSITION_KEY);
+        sessionPreferences.removeItem(MOBILE_NAV_TRANSITION_KEY);
       }
     }
 
@@ -753,14 +756,50 @@ export default function NavigationClient({
     setOptimisticDesktopNavIndex(index);
   };
 
-  const toggleDesktopNav = () => {
+  const toggleDesktopNav = useCallback(() => {
     setDesktopNavIsResizing(true);
     setDesktopIndicatorState((state) => ({
       ...state,
       instant: true,
     }));
     setCollapsed((current) => !current);
-  };
+  }, []);
+
+  useEffect(() => {
+    if (hideDesktop) return;
+    const onKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.defaultPrevented || event.isComposing || event.repeat || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey || isKeyboardInput(event.target)) return;
+      if (event.key === '/' && window.matchMedia('(min-width: 700px)').matches) {
+        event.preventDefault();
+        toggleDesktopNav();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [hideDesktop, toggleDesktopNav]);
+
+  useEffect(() => {
+    if (hideDesktop || collapsed) return;
+    const navigateTabs = (event: globalThis.KeyboardEvent) => {
+      if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(event.key)
+        || event.defaultPrevented || event.isComposing || event.metaKey || event.ctrlKey
+        || event.altKey || event.shiftKey || isKeyboardInput(event.target)
+        || !window.matchMedia('(min-width: 700px)').matches) return;
+      // Leave arrow handling to other controls such as sliders and radio groups.
+      if (event.target instanceof Element && event.target.closest('[role="slider"], [role="separator"], [role="listbox"], [role="radiogroup"], [role="tablist"], [role="combobox"]')) return;
+      const tabs = Array.from(desktopNavRef.current?.querySelectorAll<HTMLAnchorElement>('a[href]') ?? [])
+        .filter(tab => tab.getClientRects().length > 0);
+      if (!tabs.length) return;
+      event.preventDefault();
+      const direction = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : -1;
+      let index = tabs.indexOf(document.activeElement as HTMLAnchorElement);
+      if (index < 0) index = tabs.findIndex(tab => tab.classList.contains('nav-icon-container-selected'));
+      const next = index < 0 ? (direction > 0 ? 0 : tabs.length - 1) : (index + direction + tabs.length) % tabs.length;
+      tabs[next].focus({ preventScroll: true });
+    };
+    window.addEventListener('keydown', navigateTabs);
+    return () => window.removeEventListener('keydown', navigateTabs);
+  }, [hideDesktop, collapsed]);
 
   useEffect(() => {
     if (hideDesktop || collapsed) {
@@ -835,7 +874,7 @@ export default function NavigationClient({
     const { min, max } = sidebarResizeBoundsRef.current;
     const nextWidth = Math.min(max, Math.max(min, Math.round(requestedWidth)));
     setExpandedSidebarWidth(nextWidth);
-    localStorage.setItem(SIDEBAR_WIDTH_STORAGE_KEY, String(nextWidth));
+    localPreferences.setItem(SIDEBAR_WIDTH_STORAGE_KEY, String(nextWidth));
   };
 
   const handleSidebarResizePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -902,7 +941,7 @@ export default function NavigationClient({
 
   const resetSidebarWidth = () => {
     setExpandedSidebarWidth(null);
-    localStorage.removeItem(SIDEBAR_WIDTH_STORAGE_KEY);
+    localPreferences.removeItem(SIDEBAR_WIDTH_STORAGE_KEY);
   };
 
   const handleMobileNavClick = (event: MouseEvent<HTMLAnchorElement>, index: number, href: string) => {
@@ -928,7 +967,7 @@ export default function NavigationClient({
     const currentItem = mobileNavItems[displayedMobileNavIndex];
 
     if (typeof window !== 'undefined' && currentItem) {
-      sessionStorage.setItem(MOBILE_NAV_TRANSITION_KEY, JSON.stringify({
+      sessionPreferences.setItem(MOBILE_NAV_TRANSITION_KEY, JSON.stringify({
         fromHref: currentItem.href,
         toHref: href,
         createdAt: event.timeStamp,
@@ -994,11 +1033,14 @@ export default function NavigationClient({
             />
           </div>
           <div className="icon-container">
-            <div
+            <ShortcutPopover title="Navigation" placement="right" content={<span>Press <kbd className="keyboard-shortcut-chip">/</kbd> to expand or collapse navigation.</span>}>
+            {(descriptionId) => <div
               className={`sidebar-toggle nav-icon-container ${collapsed ? 'sidebar-toggle-collapsed' : 'sidebar-toggle-expanded'}`}
               tabIndex={0}
               role="button"
               aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'}
+              aria-describedby={descriptionId}
+              aria-keyshortcuts="/"
               onClick={toggleDesktopNav}
               onKeyDown={event => {
                 if (event.key === 'Enter' || event.key === ' ') {
@@ -1008,7 +1050,8 @@ export default function NavigationClient({
               }}
             >
               <Drawer size={24} color="var(--primary)" />
-            </div>
+            </div>}
+            </ShortcutPopover>
 
             {desktopNavItems.map((item, index) => {
               const isSelected = index === displayedDesktopNavIndex;

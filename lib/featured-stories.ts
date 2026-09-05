@@ -1,3 +1,5 @@
+import 'server-only';
+import { safeContentHref } from './contentUrls';
 import { createClient } from "@vercel/edge-config";
 
 export interface FeaturedStory {
@@ -27,7 +29,7 @@ export async function getFeaturedStories(): Promise<FeaturedStory[]> {
     const value = await client.get("featured-stories");
 
     if (Array.isArray(value)) {
-      return (value as unknown[]).filter(isValidStory);
+      return (value as unknown[]).filter(isValidStory).map(story => ({ ...story, url: safeContentHref(story.url), thumbnail: safeContentHref(story.thumbnail, true) })).filter(story => story.url && story.thumbnail);
     }
 
     return [];

@@ -1,4 +1,5 @@
 "use client";
+import { localPreferences } from '../../lib/browserStorage';
 
 import React, { Suspense, createContext, lazy, useContext, useEffect, useState } from 'react';
 import { supportsLisseSmoothCorners } from '../utils/cornerSmoothingSupport';
@@ -90,7 +91,7 @@ const getCornerSmoothingSupported = (): boolean => {
 
 const getInitialAccentColor = (): AccentColor => {
   if (typeof window !== 'undefined') {
-    const saved = localStorage.getItem('accentColor') as AccentColor;
+    const saved = localPreferences.getItem('accentColor') as AccentColor;
     if (saved && ACCENT_COLORS[saved]) return saved;
     // Migrate old color values to new ones
     const oldColorMap: Record<string, AccentColor> = {
@@ -101,7 +102,7 @@ const getInitialAccentColor = (): AccentColor => {
     };
     if (saved && oldColorMap[saved]) {
       const newColor = oldColorMap[saved];
-      localStorage.setItem('accentColor', newColor);
+      localPreferences.setItem('accentColor', newColor);
       return newColor;
     }
   }
@@ -153,15 +154,15 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpS
   };
 
   useEffect(() => {
-    const storedTheme = localStorage.getItem('theme');
+    const storedTheme = localPreferences.getItem('theme');
     const initialTheme: Theme = storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'auto'
       ? storedTheme
       : 'auto';
     const initialAccent = getInitialAccentColor();
-    const storedBlur = localStorage.getItem('progressiveBlur');
+    const storedBlur = localPreferences.getItem('progressiveBlur');
     const initialBlur = storedBlur === null ? true : storedBlur === 'true';
     const smoothingSupported = getCornerSmoothingSupported();
-    const storedSmoothing = localStorage.getItem('cornerSmoothing');
+    const storedSmoothing = localPreferences.getItem('cornerSmoothing');
     const initialSmoothing = cornerSmoothingAvailable
       && smoothingSupported
       && (storedSmoothing === null ? true : storedSmoothing === 'true');
@@ -185,10 +186,10 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpS
     // Listen for system theme changes if theme is auto
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent) => {
-      if ((localStorage.getItem('theme') as Theme) === 'auto') {
+      if ((localPreferences.getItem('theme') as Theme) === 'auto') {
         const newTheme = e.matches ? 'dark' : 'light';
         document.documentElement.dataset.theme = newTheme;
-        const ac = (localStorage.getItem('accentColor') as AccentColor) || 'blue';
+        const ac = getInitialAccentColor();
         updateThemeColorMeta(newTheme, ac);
         // Reapply accent color backgrounds for new theme
         applyAccentColor(ac);
@@ -201,7 +202,7 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpS
   useEffect(() => {
     if (!hydrated) return;
 
-    localStorage.setItem('theme', theme);
+    localPreferences.setItem('theme', theme);
     let currentTheme: 'dark' | 'light';
     if (theme === 'auto') {
       currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -218,7 +219,7 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpS
   useEffect(() => {
     if (!hydrated) return;
 
-    localStorage.setItem('progressiveBlur', blurEnabled.toString());
+    localPreferences.setItem('progressiveBlur', blurEnabled.toString());
     document.documentElement.dataset.progressiveBlur = blurEnabled.toString();
   }, [blurEnabled, hydrated]);
 
@@ -231,20 +232,20 @@ export function ThemeProvider({ children, cornerSmoothingAvailable = false, fmpS
   const setAccentColor = (color: AccentColor) => {
     setAccentColorState(color);
     applyAccentColor(color);
-    localStorage.setItem('accentColor', color);
+    localPreferences.setItem('accentColor', color);
   };
 
   const setBlurEnabled = (enabled: boolean) => {
     setBlurEnabledState(enabled);
     document.documentElement.dataset.progressiveBlur = enabled.toString();
-    localStorage.setItem('progressiveBlur', enabled.toString());
+    localPreferences.setItem('progressiveBlur', enabled.toString());
   };
 
   const setCornerSmoothing = (enabled: boolean) => {
     if (!cornerSmoothingAvailable || !cornerSmoothingSupported) return;
     setCornerSmoothingState(enabled);
     document.documentElement.dataset.cornerSmoothing = enabled.toString();
-    localStorage.setItem('cornerSmoothing', enabled.toString());
+    localPreferences.setItem('cornerSmoothing', enabled.toString());
   };
 
   return (

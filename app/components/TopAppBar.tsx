@@ -36,6 +36,33 @@ interface TopAppBarProps {
   mobileSettingsHref?: string;
 }
 
+function ScrollingBarTitle({ title, hidden, opacity, hideOnMobile }: {
+  title: string; hidden: boolean; opacity: number; hideOnMobile: boolean;
+}) {
+  const viewport = useRef<HTMLDivElement>(null);
+  const text = useRef<HTMLSpanElement>(null);
+  const [overflow, setOverflow] = useState(0);
+  useLayoutEffect(() => {
+    const update = () => {
+      if (viewport.current && text.current) {
+        setOverflow(Math.max(0, text.current.scrollWidth - viewport.current.clientWidth));
+      }
+    };
+    const observer = new ResizeObserver(update);
+    if (viewport.current) observer.observe(viewport.current);
+    if (text.current) observer.observe(text.current);
+    update();
+    return () => observer.disconnect();
+  }, [title]);
+  return <div ref={viewport}
+    className={`top-app-bar-title${hideOnMobile ? ' top-app-bar-title--mobile-hidden' : ''}`}
+    aria-hidden={hidden} data-overflow={overflow > 1}
+    style={{ opacity, '--title-travel': `${-overflow}px`, '--title-duration': `${Math.max(8, overflow / 22 + 4)}s` } as CSSProperties}>
+    <span ref={text} className="top-app-bar-title-text" key={title}
+      style={{ animationPlayState: hidden ? 'paused' : 'running' }}>{title}</span>
+  </div>;
+}
+
 export default function TopAppBar({
   title,
   backHref,
@@ -232,6 +259,8 @@ export default function TopAppBar({
       {mounted && hasBarContent && createPortal(
         <div
           className="top-app-bar"
+          role="navigation"
+          aria-label="Page controls"
           style={{
             "--top-app-bar-left": `${barLayout.left}px`,
             "--top-app-bar-right": `${barLayout.right}px`,
@@ -247,13 +276,8 @@ export default function TopAppBar({
             )}
 
             {title && (
-              <div
-                className={`top-app-bar-title${hideBarTitleOnMobile ? " top-app-bar-title--mobile-hidden" : ""}`}
-                aria-hidden={titleHidden}
-                style={{ opacity: titleOpacity }}
-              >
-                {title}
-              </div>
+              <ScrollingBarTitle title={title} hidden={titleHidden} opacity={titleOpacity}
+                hideOnMobile={hideBarTitleOnMobile} />
             )}
 
             {(actions || mobileSettingsHref) && (

@@ -1,3 +1,5 @@
+import { normalizeHtmlHeadings } from './headings';
+import { sanitizeBlogHtml } from './sanitizeBlogHtml';
 import { sanitizeBlogButtonHref } from './sanitizeBlogButtonHref';
 import { replaceTransitModelPlaceholder } from './transitModelSketchfabEmbed';
 import { stripHtmlAndDecode } from './portableText';
@@ -56,7 +58,7 @@ const EMBED_MAP: Record<string, string> = {
 };
 
 export function getEmbedHtmlForKey(keyphrase: string): string | null {
-  return EMBED_MAP[keyphrase] || null;
+  return EMBED_MAP[keyphrase] ? sanitizeBlogHtml(EMBED_MAP[keyphrase]) : null;
 }
 
 export function countWords(content: string): number {
@@ -72,25 +74,20 @@ export function getDisplayWordCount(storedWordCount: number | null | undefined, 
   return countWords(content);
 }
 
-function countWordsAboveMarker(content: string, marker: string): number {
-  const idx = content.indexOf(marker);
-  if (idx === -1) return 0;
-  return countWords(content.substring(0, idx));
-}
 
 export function processContentWithEmbeds(content: string): string {
   let processedContent = content;
 
   Object.entries(EMBED_MAP).forEach(([keyphrase, embedHtml]) => {
-    processedContent = processedContent.replace(keyphrase, embedHtml);
+    processedContent = processedContent.replaceAll(keyphrase, embedHtml);
   });
 
   const wordCountMarker = 'word-count';
   const wordCounterPlaceholder = '{{WORD_COUNTER}}';
-  if (processedContent.includes(wordCountMarker)) {
-    const wordsAbove = countWordsAboveMarker(processedContent, wordCountMarker);
-    processedContent = processedContent.replace(wordCountMarker, `${wordCounterPlaceholder}:${wordsAbove}`);
-  }
+  const beforeCounters = processedContent;
+  processedContent = processedContent.replaceAll(wordCountMarker, (_match, offset: number) =>
+    `${wordCounterPlaceholder}:${countWords(beforeCounters.slice(0, offset))}`,
+  );
 
   processedContent = replaceTransitModelPlaceholder(processedContent);
 
@@ -104,5 +101,5 @@ export function processContentWithEmbeds(content: string): string {
     }
   );
 
-  return processedContent;
+  return normalizeHtmlHeadings(sanitizeBlogHtml(processedContent));
 }

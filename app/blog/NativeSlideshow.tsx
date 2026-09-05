@@ -73,7 +73,7 @@ export default function NativeSlideshow({ slides }: NativeSlideshowProps) {
     const direction = event.key === 'ArrowLeft' ? -1 : 1;
     viewportRef.current?.scrollBy({
       left: direction * (viewportRef.current.clientWidth * 0.72),
-      behavior: 'smooth',
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
     });
     event.preventDefault();
   };
@@ -108,7 +108,6 @@ export default function NativeSlideshow({ slides }: NativeSlideshowProps) {
                 alt={slide.alt}
                 width={1200}
                 height={800}
-                unoptimized
                 draggable={false}
                 className="native-slideshow__img"
               />

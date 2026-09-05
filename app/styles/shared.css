@@ -25,12 +25,12 @@ a:not(:any-link) {
 /* Inline hyperlinks in prose / WordPress only — not list rows (list/media-card) */
 .body-text a:any-link:not(.list):not(.media-card):not(.blog-button),
 .body-text a:not(:any-link):not(.list):not(.media-card):not(.blog-button) {
-  color: var(--accent);
+  color: var(--accent-link);
 }
 
 .information a:any-link,
 .information a:not(:any-link) {
-  color: var(--accent);
+  color: var(--accent-link);
 }
 
 /* Nav tabs: beat a:any-link (inactive = secondary, active = primary) */
@@ -176,7 +176,7 @@ a.skip-link:any-link:focus-visible {
 .button {
   align-self: stretch;
   border-radius: var(--br-lg);
-  background-color: var(--accent);
+  background-color: var(--accent-control);
   color: var(--on-accent);
   overflow: visible;
   display: flex;
@@ -204,7 +204,7 @@ a.skip-link:any-link:focus-visible {
   gap: 10px;
   padding: 14px 28px;
   border-radius: var(--br-9xl);
-  background-color: var(--accent);
+  background-color: var(--accent-control);
   color: var(--on-accent) !important;
   text-decoration: none;
   font-family: 'One UI Sans';
@@ -361,7 +361,7 @@ button.list:hover {
 }
 
 .theme-card.selected .theme-card-radio {
-  border-color: var(--accent);
+  border-color: var(--accent-link);
 }
 
 .theme-card.selected .theme-card-radio::before {
@@ -369,7 +369,7 @@ button.list:hover {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--accent-control);
   position: absolute;
   top: 50%;
   left: 50%;
@@ -699,7 +699,7 @@ html[data-theme="dark"] label.list:has(.switch):hover,
   left: 0;
   height: 100%;
   border-radius: 999px;
-  background: var(--accent);
+  background: var(--accent-control);
   pointer-events: none;
 }
 
@@ -1075,7 +1075,7 @@ button.media-card:hover {
 .top-app-bar-title {
   flex: 1 1 auto;
   min-width: 0;
-  margin: 0 12px;
+  margin: 0;
   color: var(--primary);
   font-family: 'One UI Sans', var(--body), sans-serif;
   font-size: 20px;
@@ -2653,4 +2653,86 @@ justify-content: flex-start;
     padding-left: 0;
     padding-right: 0;
   }
+}
+
+.keyboard-shortcut-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 18px;
+  padding: 3px 5px;
+  border: 1px solid color-mix(in srgb, var(--primary) 12%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--primary) 5%, transparent);
+  color: var(--secondary);
+  font: 500 11px/1.2 'One UI Sans', sans-serif;
+  white-space: nowrap;
+}
+.sidebar-toggle { position: relative; }
+
+/* Shared, anchored keyboard help. */
+.shortcut-popover-anchor { display: contents; }
+.shortcut-popover {
+  position: fixed;
+  z-index: 1200;
+  width: 230px;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+  border: 1px solid color-mix(in srgb, var(--primary) 10%, transparent);
+  border-radius: 20px;
+  color: var(--primary);
+  background: color-mix(in srgb, var(--container-background) 92%, transparent);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 14%);
+  font: 14px/1.5 'One UI Sans', sans-serif;
+  animation: shortcut-popover-in 140ms ease-out;
+}
+.shortcut-popover-title {
+  display: block;
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid color-mix(in srgb, var(--primary) 8%, transparent);
+  font-weight: 600;
+}
+.shortcut-popover-content { padding: 10px 16px 14px; color: var(--secondary); }
+.shortcut-popover-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.shortcut-popover-row + .shortcut-popover-row { margin-top: 8px; }
+.shortcut-popover .keyboard-shortcut-chip { display: inline-flex; }
+.shortcut-popover-arrow { position: absolute; width: 9px; height: 9px; background: var(--container-background); transform: translate(-50%, -50%) rotate(45deg); }
+.shortcut-popover--top .shortcut-popover-arrow { top: 100%; }
+.shortcut-popover--right .shortcut-popover-arrow { left: 0; }
+@keyframes shortcut-popover-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .shortcut-popover { animation: none; } }
+
+.top-app-bar-title-text { display: inline-block; padding-inline: 6px; }
+.top-app-bar-title[data-overflow="true"] {
+  text-overflow: clip;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 6px, black calc(100% - 6px), transparent);
+  mask-image: linear-gradient(to right, transparent, black 6px, black calc(100% - 6px), transparent);
+}
+.top-app-bar-title[data-overflow="true"] .top-app-bar-title-text {
+  animation: app-bar-title-scroll var(--title-duration) ease-in-out infinite alternate;
+}
+@keyframes app-bar-title-scroll {
+  0%, 20% { transform: translateX(0); }
+  80%, 100% { transform: translateX(var(--title-travel)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .top-app-bar-title[data-overflow="true"] { overflow-x: auto; pointer-events: auto; scrollbar-width: none; }
+  .top-app-bar-title[data-overflow="true"] .top-app-bar-title-text { animation: none; }
+}
+
+.reading-layout-trigger { display: flex; align-items: center; gap: 10px; max-width: 48%; padding: 10px 12px; border: 0; border-radius: 12px; background: var(--background); color: var(--primary); font: inherit; cursor: pointer; }
+.reading-layout-trigger svg { flex-shrink: 0; }
+.reading-layout-menu { position: fixed; z-index: 1100; width: 240px; max-width: calc(100vw - 24px); box-sizing: border-box; padding: 12px 8px; border-radius: 28px; border: 1px solid color-mix(in srgb, var(--primary) 10%, transparent); background: color-mix(in srgb, var(--container-background) 60%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 12px 36px rgb(0 0 0 / 18%); color: var(--primary); animation: shortcut-popover-in 140ms ease-out; }
+.reading-layout-menu button { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 52px; padding: 12px 20px; border: 0; border-radius: 18px; background: transparent; color: inherit; font: inherit; font-size: 18px; cursor: pointer; }
+.reading-layout-menu button:is(:hover, :focus-visible) { background: color-mix(in srgb, var(--primary) 8%, transparent); }
+.reading-layout-trigger:focus-visible, .reading-layout-menu button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+@media (prefers-reduced-motion: reduce) { .reading-layout-menu { animation: none; } }
+
+.reading-layout-trigger,
+.reading-layout-menu,
+.reading-layout-menu button {
+  font-family: 'One UI Sans', var(--body), sans-serif;
 }

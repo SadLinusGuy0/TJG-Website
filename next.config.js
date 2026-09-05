@@ -20,7 +20,7 @@ const nextConfig = {
   allowedDevOrigins: ['server', '*.local.tjg.gg', '192.168.1.226'],
   outputFileTracingRoot: path.join(__dirname),
   experimental: {
-    inlineCss: true,
+    inlineCss: false,
   },
   images: {
     qualities: [75, 90],
@@ -55,6 +55,7 @@ const nextConfig = {
     {
       source: '/(.*)',
       headers: [
+        { key: 'Content-Security-Policy-Report-Only', value: "default-src 'self'; script-src 'self' https://va.vercel-scripts.com https://vercel.live; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; font-src 'self'; connect-src 'self' https:; media-src 'self' https:; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com https://open.spotify.com https://embed.figma.com https://www.figma.com https://docs.google.com https://www.google.com https://forms.office.com https://sketchfab.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self'" },
         {
           key: 'X-Content-Type-Options',
           value: 'nosniff',

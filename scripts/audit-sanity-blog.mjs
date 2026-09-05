@@ -14,7 +14,7 @@ const client = createClient({
   apiVersion: '2024-01-01',
   perspective: 'published',
   useCdn: false,
-  token: process.env.SANITY_API_TOKEN,
+  token: process.env.SANITY_READ_TOKEN,
 });
 
 const posts = await client.fetch(`*[_type == "post"] | order(publishedAt desc) {

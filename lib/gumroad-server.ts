@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { readBoundedJson, UpstreamError } from './upstream';
+import { safeContentHref } from './contentUrls';
 import type { GumroadProduct } from './gumroad';
 
 interface GumroadApiProduct {
@@ -64,31 +66,25 @@ function getRating(product: GumroadApiProduct): GumroadProduct['rating'] {
 export async function fetchGumroadProducts(): Promise<GumroadProduct[]> {
   const token = process.env.GUMROAD_ACCESS_TOKEN;
   if (!token) {
-    console.error('GUMROAD_ACCESS_TOKEN is not set');
-    return [];
+    throw new UpstreamError('Shop');
   }
 
   try {
     const response = await fetch(
-      `https://api.gumroad.com/v2/products?access_token=${encodeURIComponent(token)}`,
-      { next: { revalidate: 3600 } },
+      'https://api.gumroad.com/v2/products',
+      { headers: { Authorization: `Bearer ${token}` }, next: { revalidate: 3600 }, signal: AbortSignal.timeout(10000), redirect: 'error' },
     );
 
-    if (!response.ok) {
-      console.error(`Gumroad API returned ${response.status}`);
-      return [];
-    }
-
-    const data = (await response.json()) as GumroadApiResponse;
-    if (!data.success || !Array.isArray(data.products)) return [];
+    const data = await readBoundedJson<GumroadApiResponse>(response, 'Shop');
+    if (!data.success || !Array.isArray(data.products)) throw new UpstreamError('Shop');
 
     return data.products
       .filter((product) => product.published)
       .map((product) => ({
         id: product.id,
         name: product.name,
-        url: product.short_url,
-        imageUrl: product.preview_url || product.thumbnail_url || '',
+        url: safeContentHref(product.short_url),
+        imageUrl: safeContentHref(product.preview_url || product.thumbnail_url || '', true),
         description: product.description,
         formattedPrice: formatPrice(product),
         salesCount:
@@ -97,9 +93,6 @@ export async function fetchGumroadProducts(): Promise<GumroadProduct[]> {
             : undefined,
         rating: getRating(product),
       }))
-      .filter((product) => product.imageUrl);
-  } catch (error) {
-    console.error('Failed to fetch Gumroad products:', error);
-    return [];
-  }
+      .filter((product) => product.imageUrl && product.url);
+  } catch { throw new UpstreamError('Shop'); }
 }

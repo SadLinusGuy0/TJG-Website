@@ -25,6 +25,8 @@ export function enhanceImageCompare(scope: ParentNode = document): () => void {
     // Avoid duplicate IDs after cloning
     beforeClone.removeAttribute("id");
     afterClone.removeAttribute("id");
+    // A lightbox may have prepared the source images before the lazy enhancer runs.
+    for (const image of [beforeClone, afterClone]) for (const attribute of ['role', 'tabindex', 'aria-label']) image.removeAttribute(attribute);
 
     // Use a11y-friendly alts if missing
     if (!beforeClone.getAttribute("alt")) beforeClone.setAttribute("alt", "Before image");
@@ -48,9 +50,17 @@ export function enhanceImageCompare(scope: ParentNode = document): () => void {
     handle.className = "ko-compare__handle";
     handle.setAttribute("aria-hidden", "true");
 
+    const range = document.createElement('input');
+    range.type = 'range'; range.min = '0'; range.max = '100'; range.value = '50';
+    range.className = 'ko-compare__range';
+    range.setAttribute('aria-label', 'Image comparison position');
+    range.addEventListener('input', () => sync(range.value));
+
     const sync = (value: number | string) => {
       const v = Math.max(0, Math.min(100, Number(value)));
       wrapper.style.setProperty("--pos", `${v}%`);
+      range.value = String(v);
+      range.setAttribute("aria-valuetext", `${v}% before image`);
     };
 
     // Pointer interaction anywhere on the image area
@@ -100,6 +110,8 @@ export function enhanceImageCompare(scope: ParentNode = document): () => void {
     viewport.appendChild(handle);
 
     wrapper.appendChild(viewport);
+    wrapper.appendChild(range);
+    sync(50);
 
     // Re-attach the caption after the slider so existing caption styles still apply
     if (caption) wrapper.appendChild(caption);

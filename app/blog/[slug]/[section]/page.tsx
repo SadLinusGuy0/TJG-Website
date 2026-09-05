@@ -1,3 +1,5 @@
+import { routeMetadata } from '../../../../lib/routeMetadata';
+import PortableTextContent from '../../PortableTextContent';
 import type { Metadata } from "next";
 import { cache, Suspense } from "react";
 import Image from "next/image";
@@ -6,11 +8,10 @@ import { notFound } from "next/navigation";
 import LightboxClient from "../../../components/LightboxClient";
 import { LoadingDots } from "../../../components/LoadingAnim";
 import BlogContent from "../../BlogContent";
-import { extractH1Sections } from "../../../../lib/fmpSections";
+import { extractPostSections } from "../../../../lib/fmpSections";
 import { countWords, processContentWithEmbeds } from "../../../../lib/blogContentProcessing";
-import { stripHtmlAndDecode } from "../../../../lib/portableText";
+import { portableTextToPlainText, stripHtmlAndDecode } from "../../../../lib/portableText";
 import TopAppBar from "../../../components/TopAppBar";
-import TableOfContents from "../../TableOfContents";
 import PostSearchBar from "../../PostSearchBar";
 import PostActions from "../../PostActions";
 
@@ -20,33 +21,17 @@ interface PageProps {
   params: Promise<{ slug: string; section: string }>;
 }
 
-const getContentForSlug = cache(async (slug: string): Promise<BlogPost | null> => {
-  try {
-    return await fetchBlogPostBySlug(slug);
-  } catch (error) {
-    console.error(`Failed to fetch content for slug "${slug}":`, error);
-    return null;
-  }
-});
+const getContentForSlug = cache(async (slug: string): Promise<BlogPost | null> => fetchBlogPostBySlug(slug));
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const { slug, section } = await props.params;
   const content = await getContentForSlug(slug);
   if (!content) notFound();
 
-  try {
-    const sections = extractH1Sections(content.content?.rendered || '');
-    const matched = sections.find(s => s.slug === section);
-    const sectionTitle = matched?.title || section;
-    const postTitle = stripHtmlAndDecode(content.title?.rendered) || "That Josh Guy";
-
-    return {
-      title: `${sectionTitle} - ${postTitle} | That Josh Guy`,
-      description: `${sectionTitle} section of ${postTitle}.`,
-    };
-  } catch {
-    return { title: "Section | That Josh Guy" };
-  }
+  const matched = extractPostSections(content).find(s => s.slug === section);
+  if (!matched) notFound();
+  const postTitle = stripHtmlAndDecode(content.title?.rendered) || 'That Josh Guy';
+  return routeMetadata(`/blog/${slug}/${section}`, `${matched.title} - ${postTitle}`, `${matched.title} section of ${postTitle}.`, Boolean(content.seo?.noIndex));
 }
 
 export default async function SectionPage(props: PageProps) {
@@ -76,7 +61,7 @@ async function SectionBody({ slug, section }: { slug: string; section: string })
   const content = await getContentForSlug(slug);
   if (!content) return notFound();
 
-  const sections = extractH1Sections(content.content?.rendered || '');
+  const sections = extractPostSections(content);
   const matched = sections.find(s => s.slug === section);
   if (!matched) return notFound();
 
@@ -85,7 +70,7 @@ async function SectionBody({ slug, section }: { slug: string; section: string })
     matched.html.replace(/^<h1[^>]*>[\s\S]*?<\/h1>\s*/i, '')
   );
   const postTitle = stripHtmlAndDecode(content.title?.rendered) || "Final Major Project";
-  const sectionWordCount = countWords(matched.html);
+  const sectionWordCount = countWords(matched.blocks ? portableTextToPlainText(matched.blocks) : matched.html);
 
   return (
     <>
@@ -95,7 +80,6 @@ async function SectionBody({ slug, section }: { slug: string; section: string })
         collapseTarget=".post-hero-card"
         actions={
           <>
-            <TableOfContents content={matched.html} />
             <PostActions slug={slug} />
           </>
         }
@@ -106,7 +90,7 @@ async function SectionBody({ slug, section }: { slug: string; section: string })
           <>
             <Image
               src={featuredImageUrl}
-              alt={content.featuredImageAlt || `${matched.title} featured image`}
+              alt={content.featuredImageAlt || ""}
               fill
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
@@ -143,7 +127,7 @@ async function SectionBody({ slug, section }: { slug: string; section: string })
       </div>
 
       <div className="panel settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
-        <BlogContent content={sectionContent} />
+        {matched.blocks ? <PortableTextContent blocks={matched.blocks} /> : <BlogContent content={sectionContent} />}
       </div>
       <PostSearchBar />
     </>

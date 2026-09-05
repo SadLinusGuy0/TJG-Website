@@ -1,3 +1,4 @@
+import 'server-only';
 import { createClient, type SanityClient } from '@sanity/client';
 import { createImageUrlBuilder } from '@sanity/image-url';
 import { sanityConfig } from './sanity.config';
@@ -21,7 +22,9 @@ function getClient(): SanityClient {
     }
     _client = createClient({
       ...sanityConfig,
-      token: process.env.SANITY_API_TOKEN,
+      token: process.env.SANITY_READ_TOKEN,
+      timeout: 10000,
+      maxRetries: 1,
     });
   }
   return _client;
@@ -29,7 +32,7 @@ function getClient(): SanityClient {
 
 function fetchOptions() {
   return {
-    next: { revalidate: REVALIDATE_SECONDS },
+    next: { revalidate: REVALIDATE_SECONDS, tags: ['blog'] },
   } as Record<string, unknown>;
 }
 
@@ -156,26 +159,34 @@ function editionFilter(edition: SiteEdition): string {
   return edition === 'college' ? referencesCollegeTag : `!${referencesCollegeTag}`;
 }
 
-export async function fetchAllPosts(options: {
-  edition: SiteEdition;
-  tagSlug?: string;
-}): Promise<BlogPost[]> {
-  const filters = [
-    `_type == "post"`,
-    `coalesce(hideFromBlogLists, false) == false`,
-    editionFilter(options.edition),
-  ];
-  if (options.tagSlug) {
-    filters.push(`references(*[_type == "tag" && slug.current == $tagSlug]._id)`);
+const SUMMARY_FIELDS = `
+  _id, title, slug, publishedAt, excerpt, featuredImage, "featuredImageAlt": featuredImage.alt,
+  "categories": categories[]->{ _id, title, slug }, "tags": tags[]->{ _id, title, slug }
+`;
+export async function fetchPostPage(options: { edition: SiteEdition; tagSlug?: string; category?: string; search?: string; page?: number; perPage?: number }) {
+  const page = options.page ?? 1;
+  const perPage = options.perPage ?? 12;
+  const filters = [`_type == "post"`, `defined(slug.current)`, `coalesce(hideFromBlogLists, false) == false`, editionFilter(options.edition)];
+  const params: Record<string, string | number> = { start: (page - 1) * perPage, end: page * perPage + 1 };
+  if (options.tagSlug) { filters.push(`references(*[_type == "tag" && slug.current == $tagSlug]._id)`); params.tagSlug = options.tagSlug; }
+  if (options.category) { filters.push(`references(*[_type == "category" && slug.current == $category]._id)`); params.category = options.category; }
+  if (options.search) {
+    filters.push(`(title match $search || excerpt match $search || pt::text(body) match $search || legacyHtml match $search)`);
+    params.search = options.search;
   }
-
   const docs = await getClient().fetch<SanityPostDoc[]>(
-    `*[${filters.join(' && ')}] | order(_updatedAt desc, publishedAt desc) { ${POST_FIELDS} }`,
-    options.tagSlug ? { tagSlug: options.tagSlug } : {},
-    fetchOptions(),
+    `*[${filters.join(' && ')}] | order(publishedAt desc, _id asc) [$start...$end] { ${SUMMARY_FIELDS} }`, params, fetchOptions(),
   );
-
-  return docs.map(mapPost);
+  return { posts: docs.slice(0, perPage).map(mapPost), hasMore: docs.length > perPage };
+}
+export async function fetchAllPosts(options: { edition: SiteEdition; tagSlug?: string }): Promise<BlogPost[]> {
+  const posts: BlogPost[] = [];
+  for (let page = 1; page <= 1000; page++) {
+    const result = await fetchPostPage({ ...options, page, perPage: 100 });
+    posts.push(...result.posts);
+    if (!result.hasMore) return posts;
+  }
+  throw new Error('Blog pagination limit exceeded');
 }
 
 export async function fetchPostBySlug(
@@ -216,4 +227,18 @@ export async function fetchTags(): Promise<BlogTag[]> {
     name: d.title,
     slug: d.slug.current,
   }));
+}
+
+/** Public crawl inventory ignores visitor preview cookies and unpublished/no-index content. */
+export async function fetchSitemapPosts(edition: SiteEdition): Promise<Array<{ slug: string; date: string }>> {
+  const all: Array<{ slug: string; date: string }> = [];
+  for (let start = 0; start < 100000; start += 500) {
+    const posts = await getClient().fetch<Array<{ slug: string; date: string }>>(
+      `*[_type == "post" && defined(slug.current) && coalesce(hideFromBlogLists, false) == false && coalesce(seo.noIndex, false) == false && !defined(seo.canonicalUrl) && ${editionFilter(edition)}] | order(_id asc) [$start...$end] { "slug": slug.current, "date": _updatedAt }`,
+      { start, end: start + 500 }, fetchOptions(),
+    );
+    all.push(...posts);
+    if (posts.length < 500) return all.filter((post, i) => all.findIndex(p => p.slug === post.slug) === i);
+  }
+  throw new Error('Sitemap pagination limit exceeded');
 }

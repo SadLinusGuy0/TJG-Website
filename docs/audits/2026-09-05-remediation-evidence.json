@@ -1,0 +1,164 @@
+[
+  {
+    "label": "home",
+    "status": 200,
+    "htmlBytes": 147323,
+    "htmlGzipBytes": 18631,
+    "metrics": {
+      "title": "That Josh Guy",
+      "canonical": "https://thatjoshguy.me/",
+      "og": "https://thatjoshguy.me",
+      "cssInlineBytes": 0,
+      "cssResources": 111217,
+      "js": 600648,
+      "cards": 0,
+      "iframes": [],
+      "overflow": false
+    },
+    "errors": [],
+    "a11y": []
+  },
+  {
+    "label": "settings",
+    "status": 200,
+    "htmlBytes": 51577,
+    "htmlGzipBytes": 10122,
+    "metrics": {
+      "title": "Settings | That Josh Guy",
+      "canonical": "https://thatjoshguy.me/settings",
+      "og": "https://thatjoshguy.me/settings",
+      "cssInlineBytes": 154,
+      "cssResources": 68166,
+      "js": 585464,
+      "cards": 0,
+      "iframes": [],
+      "overflow": false
+    },
+    "errors": [],
+    "a11y": []
+  },
+  {
+    "label": "blog",
+    "status": 200,
+    "htmlBytes": 79527,
+    "htmlGzipBytes": 13545,
+    "metrics": {
+      "title": "Blog | That Josh Guy",
+      "canonical": "https://thatjoshguy.me/blog",
+      "og": "https://thatjoshguy.me/blog",
+      "cssInlineBytes": 0,
+      "cssResources": 117470,
+      "js": 634838,
+      "cards": 4,
+      "iframes": [],
+      "overflow": false
+    },
+    "errors": [],
+    "a11y": []
+  },
+  {
+    "label": "college-blog",
+    "status": 200,
+    "htmlBytes": 107057,
+    "htmlGzipBytes": 15845,
+    "metrics": {
+      "title": "Blog | That Josh Guy",
+      "canonical": "https://thatjoshguy.me/blog",
+      "og": "https://thatjoshguy.me/blog",
+      "cssInlineBytes": 0,
+      "cssResources": 117470,
+      "js": 634838,
+      "cards": 8,
+      "iframes": [],
+      "overflow": false
+    },
+    "errors": [],
+    "a11y": []
+  },
+  {
+    "label": "college-post",
+    "status": 200,
+    "htmlBytes": 161185,
+    "htmlGzipBytes": 33184,
+    "metrics": {
+      "title": "Unit 6 Video Production | That Josh Guy",
+      "canonical": "https://thatjoshguy.me/blog/video-production",
+      "og": "https://thatjoshguy.me/blog/video-production",
+      "cssInlineBytes": 68,
+      "cssResources": 117470,
+      "js": 609854,
+      "cards": 0,
+      "iframes": [
+        {
+          "title": "www.youtube.com embedded content — FYH9n37B7Yw",
+          "loading": "lazy"
+        },
+        {
+          "title": "www.youtube.com embedded content — 1tBUsXIkG1A",
+          "loading": "lazy"
+        },
+        {
+          "title": "Spotify Embed: A Moment Apart",
+          "loading": "lazy"
+        },
+        {
+          "title": "www.youtube.com embedded content — O9BHULPy2bY",
+          "loading": "lazy"
+        },
+        {
+          "title": "www.youtube.com embedded content — pcQu73d3Z2E",
+          "loading": "lazy"
+        },
+        {
+          "title": "www.youtube.com embedded content — K1UAEtoyi00",
+          "loading": "lazy"
+        },
+        {
+          "title": "www.youtube.com embedded content — w-BYHdplqeo",
+          "loading": "lazy"
+        }
+      ],
+      "overflow": false
+    },
+    "errors": [],
+    "a11y": []
+  },
+  {
+    "label": "fmp",
+    "status": 200,
+    "htmlBytes": 215888,
+    "htmlGzipBytes": 45704,
+    "metrics": {
+      "title": "Final Major Project Getaway Driver | That Josh Guy",
+      "canonical": "https://thatjoshguy.me/blog/getaway-driver-final-major-project",
+      "og": "https://thatjoshguy.me/blog/getaway-driver-final-major-project",
+      "cssInlineBytes": 68,
+      "cssResources": 117470,
+      "js": 609854,
+      "cards": 0,
+      "iframes": [],
+      "overflow": false
+    },
+    "errors": [],
+    "a11y": []
+  },
+  {
+    "label": "shop",
+    "status": 200,
+    "htmlBytes": 60352,
+    "htmlGzipBytes": 11193,
+    "metrics": {
+      "title": "Shop | That Josh Guy",
+      "canonical": "https://thatjoshguy.me/shop",
+      "og": "https://thatjoshguy.me/shop",
+      "cssInlineBytes": 0,
+      "cssResources": 68166,
+      "js": 572192,
+      "cards": 0,
+      "iframes": [],
+      "overflow": false
+    },
+    "errors": [],
+    "a11y": []
+  }
+]

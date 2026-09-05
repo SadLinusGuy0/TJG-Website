@@ -1,3 +1,4 @@
+import { safeContentHref } from './contentUrls';
 /**
  * WordPress often auto-wraps pasted URLs as `<a href="https://...">...</a>`.
  * Custom `(Label)[url]` markup then captures that whole HTML snippet as `url`;
@@ -5,7 +6,7 @@
  *
  * Pull out a usable absolute URL whenever possible.
  */
-export function sanitizeBlogButtonHref(raw: string): string {
+function extractHref(raw: string): string {
   const t = raw.trim();
   if (!t) return t;
 
@@ -44,3 +45,5 @@ function decodeMinimalEntities(s: string): string {
 function trimTrailingJunk(url: string): string {
   return url.replace(/[.,;:!?)\]"'<>]+$/, '');
 }
+
+export function sanitizeBlogButtonHref(raw: string): string { return safeContentHref(extractHref(raw)); }

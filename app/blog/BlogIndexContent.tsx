@@ -1,25 +1,13 @@
-import { fetchAllBlogPosts, fetchBlogCategories, type BlogPost, type BlogCategory } from "../../lib/blog";
+import { fetchBlogPage, fetchBlogCategories,  type BlogCategory } from "../../lib/blog";
 import { BlogSearchProvider } from "./BlogSearchWrapper";
 import BlogPostsWithSearch from "./BlogPostsWithSearch";
 import FloatingSearchBar from "./FloatingSearchBar";
 import BlogDynamicHeader from "./BlogDynamicHeader";
 
 export default async function BlogIndexContent() {
-  let categories: BlogCategory[] = [];
-  let posts: BlogPost[] = [];
-
-  const [fetchedCategories, fetchedPosts] = await Promise.allSettled([
-    fetchBlogCategories(),
-    fetchAllBlogPosts(),
-  ]);
-
-  if (fetchedCategories.status === 'fulfilled') categories = fetchedCategories.value;
-  if (fetchedPosts.status === 'fulfilled') posts = fetchedPosts.value;
-
+  const [categories, result] = await Promise.all([fetchBlogCategories(), fetchBlogPage()]);
   const customOrder = ['blender', 'unit-1', 'unit-2', 'unit-3', 'unit-4', 'unit-5', 'unit-6', 'unit-7', 'final-major-project', 'uncategorized'];
-  const visibleCategorySlugs = new Set(posts.flatMap((post) => post.categories));
   const sortedCategories = categories
-    .filter((category) => visibleCategorySlugs.has(category.slug))
     .sort((a, b) => {
       const aIndex = customOrder.indexOf(a.slug);
       const bIndex = customOrder.indexOf(b.slug);
@@ -30,30 +18,15 @@ export default async function BlogIndexContent() {
     });
 
   const categoryMapObj = Object.fromEntries(categories.map(cat => [cat.slug, cat.name]));
-  const hasPosts = posts.length > 0;
 
   return (
     <BlogSearchProvider
-      posts={posts}
+      initialPage={result}
     >
       <div className="main-content">
         <BlogDynamicHeader />
 
-        {hasPosts ? (
-          <BlogPostsWithSearch categoryMap={categoryMapObj} />
-        ) : (
-          <div className="section">
-            <div className="section-header">
-              <h2 className="title">No Posts Available</h2>
-            </div>
-            <div className="panel settings">
-              <div className="body-text">
-                <p>Unable to load blog posts. Please check your blog CMS configuration.</p>
-                <p>For Sanity, confirm <code>NEXT_PUBLIC_SANITY_PROJECT_ID</code> and <code>NEXT_PUBLIC_SANITY_DATASET</code> are set.</p>
-              </div>
-            </div>
-          </div>
-        )}
+        <BlogPostsWithSearch categoryMap={categoryMapObj} />
       </div>
 
       <FloatingSearchBar categories={sortedCategories} />

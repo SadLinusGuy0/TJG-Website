@@ -1,3 +1,5 @@
+import { safeContentHref } from '../../../lib/contentUrls';
+import { extractPostSections } from '../../../lib/fmpSections';
 import type { Metadata } from "next";
 import { cache, Suspense } from "react";
 import Image from "next/image";
@@ -13,7 +15,6 @@ import FmpViewWrapper from "./FmpViewWrapper";
 import { getInPostSearchBarEnabled } from "../../../lib/getInPostSearchBarFlag";
 import { getInPostSearchBarFmpEnabled } from "../../../lib/getInPostSearchBarFmpFlag";
 import TopAppBar from "../../components/TopAppBar";
-import TableOfContents from "../TableOfContents";
 import PostActions from "../PostActions";
 import { getDisplayWordCount, processContentWithEmbeds } from "../../../lib/blogContentProcessing";
 import { portableTextToPlainText, stripHtmlAndDecode } from "../../../lib/portableText";
@@ -27,14 +28,7 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-const getContentForSlug = cache(async (slug: string): Promise<BlogPost | null> => {
-  try {
-    return await fetchBlogPostBySlug(slug);
-  } catch (error) {
-    console.error(`Failed to fetch content for slug "${slug}":`, error);
-    return null;
-  }
-});
+const getContentForSlug = cache(async (slug: string): Promise<BlogPost | null> => fetchBlogPostBySlug(slug));
 
 function truncate(value: string, maxLength = 160): string {
   if (value.length <= maxLength) return value;
@@ -76,16 +70,19 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     }
 
     const imageAlt = content.seo?.openGraphImageAlt || getFeaturedImageAltText(content) || seoTitle;
-    const siteUrl = getSiteUrl(await getSiteEdition());
+    const edition = await getSiteEdition();
+    const siteUrl = getSiteUrl(edition);
+    const canonical = safeContentHref(content.seo?.canonicalUrl || "") || `${siteUrl}/blog/${slug}`;
 
     return {
       title: `${seoTitle} | That Josh Guy`,
       description,
-      robots: content.seo?.noIndex ? { index: false, follow: false } : undefined,
+      robots: content.seo?.noIndex || edition === "beta" || process.env.VERCEL_ENV === "preview" ? { index: false, follow: false } : undefined,
       openGraph: {
         title: `${seoTitle} | That Josh Guy`,
         description,
         type: "article",
+        url: canonical,
         images: featuredImageUrl
           ? [
               {
@@ -102,7 +99,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
         images: featuredImageUrl ? [featuredImageUrl] : undefined,
       },
       alternates: {
-        canonical: content.seo?.canonicalUrl || `${siteUrl}/blog/${slug}`,
+        canonical,
       },
     };
   } catch (error) {
@@ -153,7 +150,6 @@ async function BlogPostBody({ slug }: { slug: string }) {
   const featuredImageUrl = resolvedFeaturedImage;
   const legacyHtml = content.content?.rendered || '';
   const portablePlainText = portableTextToPlainText(content.portableBody);
-  const tocContent = legacyHtml || portablePlainText;
   const displayedWordCount = getDisplayWordCount(content.wordCount, legacyHtml || portablePlainText);
   const titleText = stripHtmlAndDecode(content.title?.rendered) || "Blog Post";
 
@@ -165,7 +161,6 @@ async function BlogPostBody({ slug }: { slug: string }) {
         collapseTarget=".post-hero-card"
         actions={
           <>
-            <TableOfContents content={tocContent} />
             <PostActions slug={slug} />
           </>
         }
@@ -177,7 +172,7 @@ async function BlogPostBody({ slug }: { slug: string }) {
           <>
             <Image
               src={featuredImageUrl}
-              alt="Featured image"
+              alt={content.featuredImageAlt || ""}
               fill
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
@@ -186,9 +181,7 @@ async function BlogPostBody({ slug }: { slug: string }) {
             <div className="post-hero-gradient" />
             <div className="post-hero-text">
               <h1
-                className="post-hero-title"
-                dangerouslySetInnerHTML={{ __html: content.title.rendered }}
-              />
+                className="post-hero-title">{titleText}</h1>
               <div className="post-hero-meta">
                 <span className="post-hero-chip">
                   {new Date(content.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
@@ -210,9 +203,7 @@ async function BlogPostBody({ slug }: { slug: string }) {
           <div className="post-hero-fallback">
             <h1
               className="post-hero-title"
-              style={{ color: 'var(--primary)' }}
-              dangerouslySetInnerHTML={{ __html: content.title.rendered }}
-            />
+              style={{ color: 'var(--primary)' }}>{titleText}</h1>
             <div className="post-hero-meta">
               <span className="post-hero-chip" style={{ background: 'var(--background)' }}>
                 {new Date(content.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
@@ -234,10 +225,13 @@ async function BlogPostBody({ slug }: { slug: string }) {
 
       {slug === FMP_SLUG ? (
         <FmpViewWrapper
-          rawContent={legacyHtml}
-          processedContent={processContentWithEmbeds(legacyHtml)}
+          sections={extractPostSections(content).map(({ title, slug }) => ({ title, slug }))}
           slug={slug}
-        />
+        >
+          {content.contentSource === 'portableText'
+            ? <PortableTextContent blocks={content.portableBody || []} />
+            : <BlogContent content={processContentWithEmbeds(legacyHtml)} />}
+        </FmpViewWrapper>
       ) : content.contentSource === 'portableText' ? (
         <div className="panel settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
           <PortableTextContent blocks={content.portableBody || []} />

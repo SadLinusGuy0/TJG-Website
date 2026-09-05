@@ -1,9 +1,7 @@
-import { NextResponse } from "next/server";
-import { fetchGumroadProducts } from "../../../../lib/gumroad-server";
-
-export const revalidate = 3600;
-
+import { NextResponse } from 'next/server';
+import { fetchGumroadProducts } from '../../../../lib/gumroad-server';
+export const dynamic = 'force-dynamic';
 export async function GET() {
-  const products = await fetchGumroadProducts();
-  return NextResponse.json({ products });
+  try { return NextResponse.json({ products: await fetchGumroadProducts() }); }
+  catch { return NextResponse.json({ error: 'The catalogue is temporarily unavailable.' }, { status: 503 }); }
 }

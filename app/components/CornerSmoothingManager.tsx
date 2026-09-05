@@ -112,66 +112,51 @@ export function CornerSmoothingManager({ enabled }: { enabled: boolean }) {
     }
 
     let frame = 0;
-
-    const scan = () => {
+    // Only components that opt in (or established rounded surfaces) are measured.
+    const selector = '[data-smooth-corners], .panel, .list, .floating-search-bar, .settings-group, .nav-link, .blog-button, .profile-image';
+    const known = new Map<HTMLElement, SmoothTarget>();
+    const pending = new Set<HTMLElement>();
+    const enqueue = (root: Element) => {
+      if (root instanceof HTMLElement && root.matches(selector)) pending.add(root);
+      root.querySelectorAll<HTMLElement>(selector).forEach(el => pending.add(el));
+    };
+    const flush = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        const elements = Array.from(document.body.querySelectorAll('*'))
-          .filter((element): element is HTMLElement => (
-            element instanceof HTMLElement
-            && element.isConnected
-            && !element.hasAttribute('data-no-smooth-corners')
-          ));
-
-        for (const element of elements) {
+        for (const el of known.keys()) if (!el.isConnected) known.delete(el);
+        for (const element of pending) {
+          if (!element.isConnected || element.closest('[data-no-smooth-corners]')) { known.delete(element); continue; }
           inlineRadiusSignatures.set(element, inlineRadiusSignature(element));
+          const corners = getCornerOptions(element);
+          if (corners) known.set(element, { element, corners, id: targetId(element), signature: JSON.stringify(corners) });
+          else known.delete(element);
         }
-
-        const next = elements
-          .flatMap((element) => {
-            const corners = getCornerOptions(element);
-            return corners ? [{
-              element,
-              corners,
-              id: targetId(element),
-              signature: JSON.stringify(corners),
-            }] : [];
-          });
-
-        setTargets((previous) => sameTargets(previous, next) ? previous : next);
+        pending.clear();
+        const next = [...known.values()];
+        setTargets(previous => sameTargets(previous, next) ? previous : next);
       });
     };
-
-    scan();
-
-    const observer = new MutationObserver((records) => {
-      const shouldScan = records.some((record) => {
-        if (record.type === 'childList' || record.attributeName === 'class') return true;
-        if (record.attributeName !== 'style' || !(record.target instanceof HTMLElement)) {
-          return false;
+    enqueue(document.body);
+    flush();
+    const observer = new MutationObserver(records => {
+      let removed = false;
+      for (const record of records) {
+        if (record.type === 'childList') {
+          record.addedNodes.forEach(node => { if (node instanceof Element) enqueue(node); });
+          removed ||= record.removedNodes.length > 0;
+        } else if (record.target instanceof HTMLElement && record.target.matches(selector)) {
+          const element = record.target;
+          const current = inlineRadiusSignature(element);
+          if (record.attributeName === 'class' || inlineRadiusSignatures.get(element) !== current) pending.add(element);
         }
-
-        const current = inlineRadiusSignature(record.target);
-        const previous = inlineRadiusSignatures.get(record.target);
-        inlineRadiusSignatures.set(record.target, current);
-        return previous !== undefined && previous !== current;
-      });
-
-      if (shouldScan) scan();
+      }
+      if (pending.size || removed) flush();
     });
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['class', 'style'],
-      childList: true,
-      subtree: true,
-    });
-    window.addEventListener('resize', scan, { passive: true });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class', 'style'], childList: true, subtree: true });
+    const resize = () => { known.forEach((_, el) => pending.add(el)); flush(); };
+    window.addEventListener('resize', resize, { passive: true });
+    return () => { cancelAnimationFrame(frame); observer.disconnect(); window.removeEventListener('resize', resize); };
 
-    return () => {
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-      window.removeEventListener('resize', scan);
-    };
   }, [enabled]);
 
   return targets.map((target) => (

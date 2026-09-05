@@ -1,4 +1,5 @@
 "use client";
+import { localPreferences } from '../../lib/browserStorage';
 import { useEffect, useState, useCallback } from "react";
 
 const STORAGE_KEY = "discordPopupDismissed";
@@ -13,7 +14,7 @@ export default function DiscordPopup() {
 
   useEffect(() => {
     try {
-      if (localStorage.getItem(STORAGE_KEY)) return;
+      if (localPreferences.getItem(STORAGE_KEY)) return;
     } catch {
       return;
     }
@@ -30,24 +31,18 @@ export default function DiscordPopup() {
     if (e) e.stopPropagation();
     setVisible(false);
     try {
-      localStorage.setItem(STORAGE_KEY, "1");
+      localPreferences.setItem(STORAGE_KEY, "1");
     } catch {}
     setTimeout(() => setAnimating(false), 340);
   }, []);
-
-  const handleJoin = useCallback(() => {
-    window.open(DISCORD_URL, "_blank", "noopener,noreferrer");
-    dismiss();
-  }, [dismiss]);
 
   if (!animating) return null;
 
   return (
     <div
       className={`discord-banner ${visible ? "discord-banner-visible" : ""}`}
-      role="dialog"
+      role="region"
       aria-label="Join the TJG Discord server"
-      onClick={handleJoin}
     >
       <div className="discord-banner-icon">
         <svg width="28" height="28" viewBox="0 0 127.14 96.36" fill="currentColor">
@@ -55,7 +50,7 @@ export default function DiscordPopup() {
         </svg>
       </div>
 
-      <span className="discord-banner-text">Join the TJG Discord server</span>
+      <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer" onClick={() => dismiss()} className="discord-banner-text">Join the TJG Discord server</a>
 
       <button
         className="discord-banner-close"

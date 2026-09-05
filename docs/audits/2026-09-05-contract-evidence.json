@@ -1,0 +1,57 @@
+{
+  "editions": [
+    {
+      "edition": "main",
+      "metadata": {
+        "canonical": "https://thatjoshguy.me/blog",
+        "og": "https://thatjoshguy.me/blog"
+      },
+      "robots": "User-Agent: *\nAllow: /\nDisallow: /api/\nDisallow: /settings\n\nSitemap: https://thatjoshguy.me/sitemap.xml\n",
+      "sitemapStatus": 200,
+      "sitemap": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n<url>\n<loc>https://thatjoshguy.me/</loc>\n</url>\n<url>\n<loc>https://thatjoshguy.me/blog</loc>\n</url>\n<url>\n<loc>https://thatjoshguy.me/contact</loc>\n</url>\n<url>\n<loc>https://thatjoshguy.me/shop</loc>\n</url>\n<url>\n<loc>https://thatjoshguy.me/blog/camera-shots-angles-and-movement</loc>\n<lastmod>2026-06-05T09:46:23Z</lastmod>\n</url>\n<url>\n<loc>https://thatjoshguy.me/blog/unit-3-careers</loc>\n<lastmod>2026-06-05T09:46:08Z</lastmod>\n</url>\n<url>\n<loc>https://thatjoshguy.me/blog/week-1-11-09</loc>\n<lastmod>2026-07-26T15:25:23Z</lastmod>\n</url>\n</urlset>\n"
+    },
+    {
+      "edition": "college",
+      "metadata": {
+        "canonical": "https://college.thatjoshguy.me/blog",
+        "og": "https://college.thatjoshguy.me/blog"
+      },
+      "robots": "User-Agent: *\nAllow: /\nDisallow: /api/\nDisallow: /settings\n\nSitemap: https://college.thatjoshguy.me/sitemap.xml\n",
+      "sitemapStatus": 200,
+      "sitemap": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n<url>\n<loc>https://college.thatjoshguy.me/</loc>\n</url>\n<url>\n<loc>https://college.thatjoshguy.me/blog</loc>\n</url>\n<url>\n<loc>https://college.thatjoshguy.me/contact</loc>\n</url>\n<url>\n<loc>https://college.thatjoshguy.me/shop</loc>\n</url>\n<url>\n<loc>https://college.thatjoshguy.me/blog/getaway-driver-final-major-project</loc>\n<lastmod>2026-07-26T17:16:55Z</lastmod>\n</url>\n<url>\n<loc>https://college.thatjoshguy.me/blog/unit-1-galaxy-trifold</loc>\n<lastmod>2026-07-26T17:28:26Z</lastmod>\n</url>\n<url>\n<loc>https://college.thatjoshguy.me/blog/unit-2-games-design-document</loc>\n<lastmod>2026-07-26T17:26:48Z</lastmod>\n</url>\n<url>\n<loc>https://college.thatjoshguy.me/blog/unit-4-storytelling</loc>\n<lastmod>2026-07-26T17:26:39Z</lastmod>\n</url>\n<url>\n<loc>https://college.thatjoshguy.me/blog/unit-5-audio</loc>\n<lastmod>2026-07-26T17:26:29Z</lastmod>\n</url>\n<url>\n<loc>https://college.thatjoshguy.me/blog/unit-7-escape-room</loc>\n<lastmod>2026-07-26T17:27:00Z</lastmod>\n</url>\n<url>\n<loc>https://college.thatjoshguy.me/blog/video-production</loc>\n<lastmod>2026-07-26T17:28:36Z</lastmod>\n</url>\n<url>\n<loc>https://college.thatjoshguy.me/blog/work-experience-mv-studio</loc>\n<lastmod>2026-07-26T17:26:14Z</lastmod>\n</url>\n</urlset>\n"
+    },
+    {
+      "edition": "beta",
+      "metadata": {
+        "canonical": "https://beta.thatjoshguy.me/blog",
+        "og": "https://beta.thatjoshguy.me/blog",
+        "robots": "noindex, follow"
+      },
+      "robots": "User-Agent: *\nDisallow: /\n\n",
+      "sitemapStatus": 200,
+      "sitemap": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n</urlset>\n"
+    }
+  ],
+  "smoothing": {
+    "enabled": "true",
+    "broadScans": 0,
+    "reads": 0
+  },
+  "mobileLightbox": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "dialog": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 844
+    },
+    "imageRight": 365.984375,
+    "imageBottom": 518.109375,
+    "boxSizing": "border-box",
+    "keyboardFocusWrap": "passed",
+    "source": "Headless Chrome local production build; /blog/video-production with college content preview"
+  }
+}

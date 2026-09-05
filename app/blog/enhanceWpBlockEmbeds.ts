@@ -1,3 +1,4 @@
+import { safeEmbedHref, embedTitle } from '../../lib/contentUrls';
 /**
  * WordPress sometimes outputs lazy embed placeholders as an <a> carrying the
  * real URL in data-src / data-iframe-src, with a small inline script that
@@ -28,10 +29,11 @@ export function enhanceWpBlockEmbeds(scope: ParentNode = document): () => void {
       placeholder.getAttribute('data-iframe-src') ||
       placeholder.getAttribute('data-src') ||
       '';
-    if (!src.trim()) return;
+    const safeSrc = safeEmbedHref(src);
+    if (!safeSrc) return;
 
     const iframe = document.createElement('iframe');
-    iframe.setAttribute('src', src.trim());
+    iframe.setAttribute('src', safeSrc);
     iframe.setAttribute('loading', 'lazy');
     iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
     iframe.setAttribute('allowfullscreen', '');
@@ -41,7 +43,7 @@ export function enhanceWpBlockEmbeds(scope: ParentNode = document): () => void {
     iframe.style.minHeight = '360px';
 
     const title = placeholder.getAttribute('title') || placeholder.textContent?.trim();
-    if (title) iframe.setAttribute('title', title);
+    iframe.setAttribute('title', title || embedTitle(safeSrc));
 
     placeholder.replaceWith(iframe);
   };

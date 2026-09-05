@@ -1,4 +1,5 @@
 "use client";
+import { localPreferences } from '../../../lib/browserStorage';
 import Image from "next/image";
 import "../../globals.css";
 import { useSearchParams } from "next/navigation";
@@ -31,7 +32,7 @@ function AboutContent() {
 
     if (newCount >= 7) {
       const alreadyEnabled =
-        localStorage.getItem("developer-options-enabled") === "true";
+        localPreferences.getItem("developer-options-enabled") === "true";
 
       if (alreadyEnabled) {
         setToastMessage("Developer options are already enabled");
@@ -48,7 +49,7 @@ function AboutContent() {
   };
 
   const handleDevOptionsAccept = () => {
-    localStorage.setItem("developer-options-enabled", "true");
+    localPreferences.setItem("developer-options-enabled", "true");
     window.dispatchEvent(new Event("developer-options-changed"));
     setShowDevDialog(false);
     setToastMessage("Developer options enabled");

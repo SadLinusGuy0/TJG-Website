@@ -180,34 +180,19 @@ export default function BlogContent({ content }: BlogContentProps) {
         return <NativeSlideshow key={`slide-${i}`} slides={seg.slides} />;
       }
 
-      let html = seg.html;
-      const wcMatch = html.match(WORD_COUNTER_REGEX);
-      if (wcMatch) {
-        const count = parseInt(wcMatch[1], 10);
-        const [before, after] = html.split(wcMatch[0]);
-        return (
-          <div key={`html-${i}`}>
-            {before && <div dangerouslySetInnerHTML={{ __html: before }} />}
-            <WordCounter count={count} />
-            {after && <div dangerouslySetInnerHTML={{ __html: after }} />}
-          </div>
-        );
+      const marker = /\{\{WORD_COUNTER\}\}:(\d+)|\{\{BUTTON:([^|]+)\|([^|}]+)(?:\|([^}]+))?\}\}/g;
+      const parts: React.ReactNode[] = [];
+      let cursor = 0;
+      for (const match of seg.html.matchAll(marker)) {
+        const start = match.index!;
+        if (start > cursor) parts.push(<div key={`text-${cursor}`} dangerouslySetInnerHTML={{ __html: seg.html.slice(cursor, start) }} />);
+        parts.push(match[1] !== undefined
+          ? <WordCounter key={`marker-${start}`} count={Number(match[1])} />
+          : <BlogButton key={`marker-${start}`} label={match[2]} href={match[3]} iconName={match[4]} />);
+        cursor = start + match[0].length;
       }
-
-      const btnMatch = html.match(BUTTON_REGEX);
-      if (btnMatch) {
-        const [label, href, iconName] = [btnMatch[1], btnMatch[2], btnMatch[3]];
-        const [before, after] = html.split(btnMatch[0]);
-        return (
-          <div key={`html-${i}`}>
-            {before && <div dangerouslySetInnerHTML={{ __html: before }} />}
-            <BlogButton label={label} href={href} iconName={iconName} />
-            {after && <div dangerouslySetInnerHTML={{ __html: after }} />}
-          </div>
-        );
-      }
-
-      return <div key={`html-${i}`} dangerouslySetInnerHTML={{ __html: html }} />;
+      if (cursor < seg.html.length) parts.push(<div key={`text-${cursor}`} dangerouslySetInnerHTML={{ __html: seg.html.slice(cursor) }} />);
+      return <div key={`html-${i}`}>{parts}</div>;
     });
 
   const hasSlideshows = segments.some(s => s.type === 'slideshow');

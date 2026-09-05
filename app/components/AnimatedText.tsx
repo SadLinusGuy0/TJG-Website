@@ -15,6 +15,7 @@ export default function AnimatedText({ text, className, style, inverse = false }
   const isTouching = useRef(false);
 
   const updatePosition = (clientX: number, clientY: number) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       setPointerPosition({
@@ -45,7 +46,6 @@ export default function AnimatedText({ text, className, style, inverse = false }
   };
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    e.preventDefault(); // Prevent scrolling while dragging
     const touch = e.touches[0];
     if (touch) {
       updatePosition(touch.clientX, touch.clientY);
@@ -73,11 +73,12 @@ export default function AnimatedText({ text, className, style, inverse = false }
     let closestIndex = 0;
     let minDistance = Infinity;
 
+    const containerRect = containerRef.current?.getBoundingClientRect();
+    if (!containerRect) return;
     charRefs.current.forEach((charRef, index) => {
-      if (!charRef || !containerRef.current) return;
+      if (!charRef) return;
 
       const charRect = charRef.getBoundingClientRect();
-      const containerRect = containerRef.current.getBoundingClientRect();
       
       // Get center position of the character relative to panel
       const charCenterX = charRect.left - containerRect.left + charRect.width / 2;
@@ -149,7 +150,7 @@ export default function AnimatedText({ text, className, style, inverse = false }
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
       className={className}
-      style={{ display: 'inline-block', cursor: 'default', touchAction: 'none', ...style }}
+      style={{ display: 'inline-block', cursor: 'default', touchAction: 'pan-y', ...style }}
     >
       {text.split('').map((char, index) => (
         <span

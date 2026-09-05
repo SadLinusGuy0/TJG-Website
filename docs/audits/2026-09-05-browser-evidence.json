@@ -1,0 +1,1048 @@
+{
+  "pages": [
+    {
+      "label": "home",
+      "status": 200,
+      "title": "That Josh Guy",
+      "lang": "en",
+      "h1": [
+        "Josh Skinner"
+      ],
+      "elements": 713,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "ogUrl": "https://thatjoshguy.me",
+      "cssBytes": 107170,
+      "navigation": [
+        {
+          "ttfb": 98.60000000009313,
+          "domContentLoaded": 274.20000000018626,
+          "decodedBytes": 504916
+        }
+      ],
+      "js": [
+        {
+          "url": "/_next/static/chunks/27jktro2p5rq9.js",
+          "bytes": 44414
+        },
+        {
+          "url": "/_next/static/chunks/29194twgvgfhb.js",
+          "bytes": 145701
+        },
+        {
+          "url": "/_next/static/chunks/turbopack-2ae7g-6cwnqx2.js",
+          "bytes": 10580
+        },
+        {
+          "url": "/_next/static/chunks/1upe53-127sm4.js",
+          "bytes": 227315
+        },
+        {
+          "url": "/_next/static/chunks/2zdglbk9crp0_.js",
+          "bytes": 40421
+        },
+        {
+          "url": "/_next/static/chunks/41q7-wwc_0a_o.js",
+          "bytes": 20229
+        },
+        {
+          "url": "/_next/static/chunks/2mt3rsamwne28.js",
+          "bytes": 4417
+        },
+        {
+          "url": "/_next/static/chunks/2mxakhbs_2ez-.js",
+          "bytes": 1449
+        },
+        {
+          "url": "/_next/static/chunks/14mrh2-p_w84d.js",
+          "bytes": 54646
+        },
+        {
+          "url": "/_next/static/chunks/34kaqrw-u4wr0.js",
+          "bytes": 22433
+        },
+        {
+          "url": "/_next/static/chunks/3rg5m3uloa2b9.js",
+          "bytes": 140988
+        }
+      ],
+      "images": [],
+      "iframes": [],
+      "htmlBytes": 504916,
+      "htmlGzipBytes": 81603,
+      "axe": []
+    },
+    {
+      "label": "blog",
+      "status": 200,
+      "title": "That Josh Guy",
+      "lang": "en",
+      "h1": [
+        "Blog"
+      ],
+      "elements": 239,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "ogUrl": "https://thatjoshguy.me",
+      "cssBytes": 156086,
+      "navigation": [
+        {
+          "ttfb": 18.90000000037253,
+          "domContentLoaded": 92.3000000002794,
+          "decodedBytes": 636014
+        }
+      ],
+      "js": [
+        {
+          "url": "/_next/static/chunks/27jktro2p5rq9.js",
+          "bytes": 44414
+        },
+        {
+          "url": "/_next/static/chunks/29194twgvgfhb.js",
+          "bytes": 145701
+        },
+        {
+          "url": "/_next/static/chunks/1upe53-127sm4.js",
+          "bytes": 227315
+        },
+        {
+          "url": "/_next/static/chunks/turbopack-2ae7g-6cwnqx2.js",
+          "bytes": 10580
+        },
+        {
+          "url": "/_next/static/chunks/2zdglbk9crp0_.js",
+          "bytes": 40421
+        },
+        {
+          "url": "/_next/static/chunks/41q7-wwc_0a_o.js",
+          "bytes": 20229
+        },
+        {
+          "url": "/_next/static/chunks/14mrh2-p_w84d.js",
+          "bytes": 54646
+        },
+        {
+          "url": "/_next/static/chunks/36fafhqqg1p-t.js",
+          "bytes": 27128
+        },
+        {
+          "url": "/_next/static/chunks/2mxakhbs_2ez-.js",
+          "bytes": 1449
+        },
+        {
+          "url": "/_next/static/chunks/40wmm79ycn6w-.js",
+          "bytes": 50797
+        }
+      ],
+      "images": [],
+      "iframes": [],
+      "htmlBytes": 636014,
+      "htmlGzipBytes": 109204,
+      "axe": []
+    },
+    {
+      "label": "contact",
+      "status": 200,
+      "title": "That Josh Guy",
+      "lang": "en",
+      "h1": [
+        "Contact"
+      ],
+      "elements": 265,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "ogUrl": "https://thatjoshguy.me",
+      "cssBytes": 107170,
+      "navigation": [
+        {
+          "ttfb": 11.399999999906868,
+          "domContentLoaded": 44.200000000186265,
+          "decodedBytes": 394258
+        }
+      ],
+      "js": [
+        {
+          "url": "/_next/static/chunks/27jktro2p5rq9.js",
+          "bytes": 44414
+        },
+        {
+          "url": "/_next/static/chunks/29194twgvgfhb.js",
+          "bytes": 145701
+        },
+        {
+          "url": "/_next/static/chunks/1upe53-127sm4.js",
+          "bytes": 227315
+        },
+        {
+          "url": "/_next/static/chunks/turbopack-2ae7g-6cwnqx2.js",
+          "bytes": 10580
+        },
+        {
+          "url": "/_next/static/chunks/2zdglbk9crp0_.js",
+          "bytes": 40421
+        },
+        {
+          "url": "/_next/static/chunks/41q7-wwc_0a_o.js",
+          "bytes": 20229
+        },
+        {
+          "url": "/_next/static/chunks/14mrh2-p_w84d.js",
+          "bytes": 54646
+        },
+        {
+          "url": "/_next/static/chunks/2mt3rsamwne28.js",
+          "bytes": 4417
+        },
+        {
+          "url": "/_next/static/chunks/2mxakhbs_2ez-.js",
+          "bytes": 1449
+        },
+        {
+          "url": "/_next/static/chunks/00tyjdudsr6m7.js",
+          "bytes": 34660
+        }
+      ],
+      "images": [],
+      "iframes": [],
+      "htmlBytes": 394258,
+      "htmlGzipBytes": 69367,
+      "axe": []
+    },
+    {
+      "label": "shop",
+      "status": 200,
+      "title": "That Josh Guy",
+      "lang": "en",
+      "h1": [
+        "Shop"
+      ],
+      "elements": 190,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "ogUrl": "https://thatjoshguy.me",
+      "cssBytes": 107170,
+      "navigation": [
+        {
+          "ttfb": 12.600000000093132,
+          "domContentLoaded": 41.90000000037253,
+          "decodedBytes": 385282
+        }
+      ],
+      "js": [
+        {
+          "url": "/_next/static/chunks/27jktro2p5rq9.js",
+          "bytes": 44414
+        },
+        {
+          "url": "/_next/static/chunks/29194twgvgfhb.js",
+          "bytes": 145701
+        },
+        {
+          "url": "/_next/static/chunks/1upe53-127sm4.js",
+          "bytes": 227315
+        },
+        {
+          "url": "/_next/static/chunks/turbopack-2ae7g-6cwnqx2.js",
+          "bytes": 10580
+        },
+        {
+          "url": "/_next/static/chunks/2zdglbk9crp0_.js",
+          "bytes": 40421
+        },
+        {
+          "url": "/_next/static/chunks/41q7-wwc_0a_o.js",
+          "bytes": 20229
+        },
+        {
+          "url": "/_next/static/chunks/14mrh2-p_w84d.js",
+          "bytes": 54646
+        },
+        {
+          "url": "/_next/static/chunks/2mxakhbs_2ez-.js",
+          "bytes": 1449
+        },
+        {
+          "url": "/_next/static/chunks/3014zi6ccz2oy.js",
+          "bytes": 18780
+        },
+        {
+          "url": "/_next/static/chunks/2mt3rsamwne28.js",
+          "bytes": 4417
+        }
+      ],
+      "images": [],
+      "iframes": [],
+      "htmlBytes": 385282,
+      "htmlGzipBytes": 65715,
+      "axe": []
+    },
+    {
+      "label": "settings",
+      "status": 200,
+      "title": "That Josh Guy",
+      "lang": "en",
+      "h1": [
+        "Settings"
+      ],
+      "elements": 263,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "ogUrl": "https://thatjoshguy.me",
+      "cssBytes": 107324,
+      "navigation": [
+        {
+          "ttfb": 8.299999999813735,
+          "domContentLoaded": 34.09999999962747,
+          "decodedBytes": 376702
+        }
+      ],
+      "js": [
+        {
+          "url": "/_next/static/chunks/27jktro2p5rq9.js",
+          "bytes": 44414
+        },
+        {
+          "url": "/_next/static/chunks/29194twgvgfhb.js",
+          "bytes": 145701
+        },
+        {
+          "url": "/_next/static/chunks/1upe53-127sm4.js",
+          "bytes": 227315
+        },
+        {
+          "url": "/_next/static/chunks/turbopack-2ae7g-6cwnqx2.js",
+          "bytes": 10580
+        },
+        {
+          "url": "/_next/static/chunks/2zdglbk9crp0_.js",
+          "bytes": 40421
+        },
+        {
+          "url": "/_next/static/chunks/41q7-wwc_0a_o.js",
+          "bytes": 20229
+        },
+        {
+          "url": "/_next/static/chunks/14mrh2-p_w84d.js",
+          "bytes": 54646
+        },
+        {
+          "url": "/_next/static/chunks/2mt3rsamwne28.js",
+          "bytes": 4417
+        },
+        {
+          "url": "/_next/static/chunks/2mxakhbs_2ez-.js",
+          "bytes": 1449
+        },
+        {
+          "url": "/_next/static/chunks/2uqk2sz9ha3ol.js",
+          "bytes": 31881
+        }
+      ],
+      "images": [],
+      "iframes": [],
+      "htmlBytes": 376702,
+      "htmlGzipBytes": 64845,
+      "axe": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": [
+            {
+              "target": [
+                ".top-app-bar-icon"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "flags",
+      "status": 200,
+      "title": "That Josh Guy",
+      "lang": "en",
+      "h1": [
+        "Feature Flags"
+      ],
+      "elements": 290,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "ogUrl": "https://thatjoshguy.me",
+      "cssBytes": 107170,
+      "navigation": [
+        {
+          "ttfb": 7.199999999720603,
+          "domContentLoaded": 71.09999999962747,
+          "decodedBytes": 378675
+        }
+      ],
+      "js": [
+        {
+          "url": "/_next/static/chunks/27jktro2p5rq9.js",
+          "bytes": 44414
+        },
+        {
+          "url": "/_next/static/chunks/29194twgvgfhb.js",
+          "bytes": 145701
+        },
+        {
+          "url": "/_next/static/chunks/1upe53-127sm4.js",
+          "bytes": 227315
+        },
+        {
+          "url": "/_next/static/chunks/turbopack-2ae7g-6cwnqx2.js",
+          "bytes": 10580
+        },
+        {
+          "url": "/_next/static/chunks/2zdglbk9crp0_.js",
+          "bytes": 40421
+        },
+        {
+          "url": "/_next/static/chunks/41q7-wwc_0a_o.js",
+          "bytes": 20229
+        },
+        {
+          "url": "/_next/static/chunks/14mrh2-p_w84d.js",
+          "bytes": 54646
+        },
+        {
+          "url": "/_next/static/chunks/2mt3rsamwne28.js",
+          "bytes": 4417
+        },
+        {
+          "url": "/_next/static/chunks/2mxakhbs_2ez-.js",
+          "bytes": 1449
+        },
+        {
+          "url": "/_next/static/chunks/0yla9fb9w9yqw.js",
+          "bytes": 16196
+        }
+      ],
+      "images": [],
+      "iframes": [],
+      "htmlBytes": 378675,
+      "htmlGzipBytes": 65034,
+      "axe": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": [
+            {
+              "target": [
+                ".top-app-bar-icon"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "college-blog",
+      "status": 200,
+      "title": "That Josh Guy",
+      "lang": "en",
+      "h1": [
+        "Blog"
+      ],
+      "elements": 313,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "ogUrl": "https://thatjoshguy.me",
+      "cssBytes": 156086,
+      "navigation": [
+        {
+          "ttfb": 33.799999999813735,
+          "domContentLoaded": 181.29999999981374,
+          "decodedBytes": 1500688
+        }
+      ],
+      "js": [
+        {
+          "url": "/_next/static/chunks/27jktro2p5rq9.js",
+          "bytes": 44414
+        },
+        {
+          "url": "/_next/static/chunks/29194twgvgfhb.js",
+          "bytes": 145701
+        },
+        {
+          "url": "/_next/static/chunks/1upe53-127sm4.js",
+          "bytes": 227315
+        },
+        {
+          "url": "/_next/static/chunks/turbopack-2ae7g-6cwnqx2.js",
+          "bytes": 10580
+        },
+        {
+          "url": "/_next/static/chunks/2zdglbk9crp0_.js",
+          "bytes": 40421
+        },
+        {
+          "url": "/_next/static/chunks/41q7-wwc_0a_o.js",
+          "bytes": 20229
+        },
+        {
+          "url": "/_next/static/chunks/14mrh2-p_w84d.js",
+          "bytes": 54646
+        },
+        {
+          "url": "/_next/static/chunks/36fafhqqg1p-t.js",
+          "bytes": 27128
+        },
+        {
+          "url": "/_next/static/chunks/2mxakhbs_2ez-.js",
+          "bytes": 1449
+        },
+        {
+          "url": "/_next/static/chunks/40wmm79ycn6w-.js",
+          "bytes": 50797
+        }
+      ],
+      "images": [],
+      "iframes": [],
+      "htmlBytes": 1500688,
+      "htmlGzipBytes": 251232,
+      "axe": []
+    },
+    {
+      "label": "college-post",
+      "status": 200,
+      "title": "Unit 6 Video Production | That Josh Guy",
+      "lang": "en",
+      "h1": [
+        "Unit 6 Video Production",
+        "Research",
+        "Plan",
+        "Production",
+        "Feedback",
+        "Reflection",
+        "Bibilography"
+      ],
+      "elements": 472,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "canonical": "https://thatjoshguy.me/blog/video-production",
+      "cssBytes": 156086,
+      "navigation": [
+        {
+          "ttfb": 16.90000000037253,
+          "domContentLoaded": 173.3000000002794,
+          "decodedBytes": 826593
+        }
+      ],
+      "js": [
+        {
+          "url": "/_next/static/chunks/27jktro2p5rq9.js",
+          "bytes": 44414
+        },
+        {
+          "url": "/_next/static/chunks/29194twgvgfhb.js",
+          "bytes": 145701
+        },
+        {
+          "url": "/_next/static/chunks/1upe53-127sm4.js",
+          "bytes": 227315
+        },
+        {
+          "url": "/_next/static/chunks/turbopack-2ae7g-6cwnqx2.js",
+          "bytes": 10580
+        },
+        {
+          "url": "/_next/static/chunks/2zdglbk9crp0_.js",
+          "bytes": 40421
+        },
+        {
+          "url": "/_next/static/chunks/41q7-wwc_0a_o.js",
+          "bytes": 20229
+        },
+        {
+          "url": "/_next/static/chunks/14mrh2-p_w84d.js",
+          "bytes": 54646
+        },
+        {
+          "url": "/_next/static/chunks/40wmm79ycn6w-.js",
+          "bytes": 50797
+        },
+        {
+          "url": "/_next/static/chunks/2mxakhbs_2ez-.js",
+          "bytes": 1449
+        }
+      ],
+      "images": [],
+      "iframes": [
+        {
+          "title": "",
+          "loading": "lazy"
+        },
+        {
+          "title": "",
+          "loading": "lazy"
+        },
+        {
+          "title": "Spotify Embed: A Moment Apart",
+          "loading": "lazy"
+        },
+        {
+          "title": "",
+          "loading": "lazy"
+        },
+        {
+          "title": "",
+          "loading": "lazy"
+        },
+        {
+          "title": "",
+          "loading": "lazy"
+        },
+        {
+          "title": "",
+          "loading": "lazy"
+        }
+      ],
+      "htmlBytes": 826593,
+      "htmlGzipBytes": 121748,
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                "li:nth-child(1) > a"
+              ],
+              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.45 (foreground color: #387aff, background color: #f1f1f3, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "li:nth-child(2) > a"
+              ],
+              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.45 (foreground color: #387aff, background color: #f1f1f3, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "li:nth-child(3) > a"
+              ],
+              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.45 (foreground color: #387aff, background color: #f1f1f3, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "li:nth-child(4) > a"
+              ],
+              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.45 (foreground color: #387aff, background color: #f1f1f3, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "li:nth-child(5) > a[rel=\"nofollow\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.45 (foreground color: #387aff, background color: #f1f1f3, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "li:nth-child(6) > a[rel=\"nofollow\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.45 (foreground color: #387aff, background color: #f1f1f3, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".post-search-jump-text"
+              ],
+              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.89 (foreground color: #ffffff, background color: #387aff, font size: 10.2pt (13.6px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "frame-title",
+          "impact": "serious",
+          "description": "Ensure <iframe> and <frame> elements have an accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".is-type-video.is-provider-youtube.wp-block-embed-youtube:nth-child(17) > .wp-block-embed__wrapper > .embed-youtube > .youtube-player[width=\"640\"][height=\"360\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element has no title attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                ".is-type-video.is-provider-youtube.wp-block-embed-youtube:nth-child(32) > .wp-block-embed__wrapper > .embed-youtube > .youtube-player[width=\"640\"][height=\"360\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element has no title attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                ".is-type-video.is-provider-youtube.wp-block-embed-youtube:nth-child(65) > .wp-block-embed__wrapper > .embed-youtube > .youtube-player[width=\"640\"][height=\"360\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element has no title attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                ".is-type-video.is-provider-youtube.wp-block-embed-youtube:nth-child(69) > .wp-block-embed__wrapper > .embed-youtube > .youtube-player[width=\"640\"][height=\"360\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element has no title attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                ".is-type-video.is-provider-youtube.wp-block-embed-youtube:nth-child(78) > .wp-block-embed__wrapper > .embed-youtube > .youtube-player[width=\"640\"][height=\"360\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element has no title attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                ".is-type-video.is-provider-youtube.wp-block-embed-youtube:nth-child(99) > .wp-block-embed__wrapper > .embed-youtube > .youtube-player[width=\"640\"][height=\"360\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element has no title attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": [
+            {
+              "target": [
+                "#which-game-am-i-making-a-trailer-for"
+              ],
+              "summary": "Fix any of the following:\n  Heading order invalid"
+            },
+            {
+              "target": [
+                "#what-did-i-enjoy-about-making-this-trailer"
+              ],
+              "summary": "Fix any of the following:\n  Heading order invalid"
+            }
+          ]
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": [
+            {
+              "target": [
+                "a[aria-label=\"Back\"]"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            },
+            {
+              "target": [
+                ".top-app-bar-action-group"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "fixture-post",
+      "status": 200,
+      "title": "Audit fixture | That Josh Guy",
+      "lang": "en",
+      "h1": [
+        "Audit fixture"
+      ],
+      "elements": 183,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "canonical": "https://thatjoshguy.me/blog/audit-fixture",
+      "cssBytes": 156086,
+      "navigation": [
+        {
+          "ttfb": 10.400000000372529,
+          "domContentLoaded": 101.5,
+          "decodedBytes": 482129
+        }
+      ],
+      "js": [
+        {
+          "url": "/_next/static/chunks/27jktro2p5rq9.js",
+          "bytes": 44414
+        },
+        {
+          "url": "/_next/static/chunks/29194twgvgfhb.js",
+          "bytes": 145701
+        },
+        {
+          "url": "/_next/static/chunks/1upe53-127sm4.js",
+          "bytes": 227315
+        },
+        {
+          "url": "/_next/static/chunks/turbopack-2ae7g-6cwnqx2.js",
+          "bytes": 10580
+        },
+        {
+          "url": "/_next/static/chunks/2zdglbk9crp0_.js",
+          "bytes": 40421
+        },
+        {
+          "url": "/_next/static/chunks/41q7-wwc_0a_o.js",
+          "bytes": 20229
+        },
+        {
+          "url": "/_next/static/chunks/14mrh2-p_w84d.js",
+          "bytes": 54646
+        },
+        {
+          "url": "/_next/static/chunks/40wmm79ycn6w-.js",
+          "bytes": 50797
+        },
+        {
+          "url": "/_next/static/chunks/2mxakhbs_2ez-.js",
+          "bytes": 1449
+        }
+      ],
+      "images": [
+        "/_next/image?url=%2Faudit-invalid-image&w=3840&q=75",
+        "/audit-invalid-image"
+      ],
+      "iframes": [],
+      "htmlBytes": 482129,
+      "htmlGzipBytes": 81154,
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".post-search-jump-text"
+              ],
+              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.89 (foreground color: #ffffff, background color: #387aff, font size: 10.2pt (13.6px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-alt",
+          "impact": "critical",
+          "description": "Ensure <img> elements have alternative text or a role of none or presentation",
+          "nodes": [
+            {
+              "target": [
+                "img[src$=\"audit-invalid-image\"]"
+              ],
+              "summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": [
+            {
+              "target": [
+                "a[aria-label=\"Back\"]"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            },
+            {
+              "target": [
+                ".top-app-bar-action-group"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "home-mobile",
+      "status": 200,
+      "title": "That Josh Guy",
+      "lang": "en",
+      "h1": [
+        "Josh Skinner"
+      ],
+      "elements": 719,
+      "width": 390,
+      "scrollWidth": 390,
+      "ogUrl": "https://thatjoshguy.me",
+      "cssBytes": 107170,
+      "navigation": [
+        {
+          "ttfb": 17.100000000093132,
+          "domContentLoaded": 176,
+          "decodedBytes": 504916
+        }
+      ],
+      "js": [
+        {
+          "url": "/_next/static/chunks/27jktro2p5rq9.js",
+          "bytes": 44414
+        },
+        {
+          "url": "/_next/static/chunks/29194twgvgfhb.js",
+          "bytes": 145701
+        },
+        {
+          "url": "/_next/static/chunks/1upe53-127sm4.js",
+          "bytes": 227315
+        },
+        {
+          "url": "/_next/static/chunks/turbopack-2ae7g-6cwnqx2.js",
+          "bytes": 10580
+        },
+        {
+          "url": "/_next/static/chunks/2zdglbk9crp0_.js",
+          "bytes": 40421
+        },
+        {
+          "url": "/_next/static/chunks/41q7-wwc_0a_o.js",
+          "bytes": 20229
+        },
+        {
+          "url": "/_next/static/chunks/14mrh2-p_w84d.js",
+          "bytes": 54646
+        },
+        {
+          "url": "/_next/static/chunks/2mt3rsamwne28.js",
+          "bytes": 4417
+        },
+        {
+          "url": "/_next/static/chunks/2mxakhbs_2ez-.js",
+          "bytes": 1449
+        },
+        {
+          "url": "/_next/static/chunks/34kaqrw-u4wr0.js",
+          "bytes": 22433
+        },
+        {
+          "url": "/_next/static/chunks/3rg5m3uloa2b9.js",
+          "bytes": 140988
+        }
+      ],
+      "images": [],
+      "iframes": [],
+      "htmlBytes": 504916,
+      "htmlGzipBytes": 81603,
+      "axe": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": [
+            {
+              "target": [
+                ".top-app-bar"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "settings-mobile",
+      "status": 200,
+      "title": "That Josh Guy",
+      "lang": "en",
+      "h1": [
+        "Settings"
+      ],
+      "elements": 263,
+      "width": 390,
+      "scrollWidth": 390,
+      "ogUrl": "https://thatjoshguy.me",
+      "cssBytes": 107324,
+      "navigation": [
+        {
+          "ttfb": 12.300000000279397,
+          "domContentLoaded": 37.8000000002794,
+          "decodedBytes": 376702
+        }
+      ],
+      "js": [
+        {
+          "url": "/_next/static/chunks/27jktro2p5rq9.js",
+          "bytes": 44414
+        },
+        {
+          "url": "/_next/static/chunks/29194twgvgfhb.js",
+          "bytes": 145701
+        },
+        {
+          "url": "/_next/static/chunks/1upe53-127sm4.js",
+          "bytes": 227315
+        },
+        {
+          "url": "/_next/static/chunks/turbopack-2ae7g-6cwnqx2.js",
+          "bytes": 10580
+        },
+        {
+          "url": "/_next/static/chunks/2zdglbk9crp0_.js",
+          "bytes": 40421
+        },
+        {
+          "url": "/_next/static/chunks/41q7-wwc_0a_o.js",
+          "bytes": 20229
+        },
+        {
+          "url": "/_next/static/chunks/14mrh2-p_w84d.js",
+          "bytes": 54646
+        },
+        {
+          "url": "/_next/static/chunks/2mt3rsamwne28.js",
+          "bytes": 4417
+        },
+        {
+          "url": "/_next/static/chunks/2uqk2sz9ha3ol.js",
+          "bytes": 31881
+        },
+        {
+          "url": "/_next/static/chunks/2mxakhbs_2ez-.js",
+          "bytes": 1449
+        }
+      ],
+      "images": [],
+      "iframes": [],
+      "htmlBytes": 376702,
+      "htmlGzipBytes": 64845,
+      "axe": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": [
+            {
+              "target": [
+                ".top-app-bar-icon"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "fixtureRequests": [],
+  "browserErrors": [],
+  "ssrf": {
+    "hitLocalServer": false,
+    "indexShowsCollege": 0,
+    "collegeRaw": true,
+    "collegeStatus": 200,
+    "collegeBody": "Skip to main content\nHome\nShop\nBlog\nContact\nSettings\nAudit college only\nSep 5, 2026\n1 words\nTesting\n\nCOLLEGE_FIXTURE_CONTENT\n\nBack to top\nAudit college only",
+    "detailShowsCollege": true
+  },
+  "xss": true,
+  "toc": {
+    "tag": "DIV",
+    "tabIndex": -1,
+    "role": null
+  },
+  "lightbox": {
+    "open": true,
+    "focusInside": false,
+    "label": null
+  },
+  "storageErrors": [
+    "Storage blocked"
+  ],
+  "storageBody": "This page couldn’t load\n\nReload to try again, or go back.\n\nReload\nBack"
+}

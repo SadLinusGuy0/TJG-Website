@@ -1,3 +1,5 @@
+import { uniqueHeadingId } from '../../lib/headings';
+import { safeContentHref } from '../../lib/contentUrls';
 import Image from 'next/image';
 import type React from 'react';
 import { getEmbedHtmlForKey, processContentWithEmbeds } from '../../lib/blogContentProcessing';
@@ -21,7 +23,7 @@ function renderSpan(span: PortableTextSpan, markDefs: PortableTextMarkDef[] | un
     const def = getMarkDef(markDefs, mark);
     if (def?._type === 'link' && def.href) {
       node = (
-        <a key={`${span._key || index}-${mark}`} href={def.href} target="_blank" rel="noopener noreferrer">
+        <a key={`${span._key || index}-${mark}`} href={safeContentHref(def.href) || undefined} target="_blank" rel="noopener noreferrer">
           {node}
         </a>
       );
@@ -44,7 +46,15 @@ function renderChildren(block: PortableTextBlock) {
 }
 
 function PortableImage({ block }: { block: PortableTextBlock }) {
-  const src = getSanityImageUrl(block as SanityImageSource);
+  const image = block as SanityImageSource;
+  const src = getSanityImageUrl(image);
+  const dimensions = image?.asset?._ref?.match(/-(\d+)x(\d+)-[^-]+$/);
+  // Unknown legacy asset dimensions: avoid inventing an aspect ratio.
+  // eslint-disable-next-line @next/next/no-img-element
+  if (!dimensions) return src ? <figure><img src={src} alt={block.alt || block.caption || ''} loading="lazy" decoding="async" />{block.caption && <figcaption>{block.caption}</figcaption>}</figure> : null;
+  const crop = image?.crop;
+  const width = Math.max(1, Math.round(Number(dimensions[1]) * (1 - (crop?.left || 0) - (crop?.right || 0))));
+  const height = Math.max(1, Math.round(Number(dimensions[2]) * (1 - (crop?.top || 0) - (crop?.bottom || 0))));
   if (!src) return null;
 
   return (
@@ -53,8 +63,8 @@ function PortableImage({ block }: { block: PortableTextBlock }) {
         <Image
           src={src}
           alt={block.alt || block.caption || ''}
-          width={1200}
-          height={800}
+          width={width}
+          height={height}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
           style={{ width: '100%', height: 'auto' }}
         />
@@ -64,7 +74,7 @@ function PortableImage({ block }: { block: PortableTextBlock }) {
   );
 }
 
-function renderBlock(block: PortableTextBlock, index: number) {
+function renderBlock(block: PortableTextBlock, index: number, heading?: { id: string; level: number }) {
   const key = block._key || index;
 
   if (block._type === 'image') {
@@ -94,51 +104,48 @@ function renderBlock(block: PortableTextBlock, index: number) {
     return <li key={key}>{children}</li>;
   }
 
-  switch (block.style) {
-    case 'h1':
-      return <h1 key={key}>{children}</h1>;
-    case 'h2':
-      return <h2 key={key}>{children}</h2>;
-    case 'h3':
-      return <h3 key={key}>{children}</h3>;
-    case 'h4':
-      return <h4 key={key}>{children}</h4>;
-    case 'blockquote':
-      return <blockquote key={key}>{children}</blockquote>;
-    default:
-      return <p key={key}>{children}</p>;
+  if (heading) {
+    const Tag = `h${heading.level}` as 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+    return <Tag key={key} id={heading.id} className={`content-heading-${block.style}`}>{children}</Tag>;
   }
+  return block.style === 'blockquote' ? <blockquote key={key}>{children}</blockquote> : <p key={key}>{children}</p>;
 }
 
 export default function PortableTextContent({ blocks }: PortableTextContentProps) {
   const renderedBlocks: React.ReactNode[] = [];
-  let pendingList: React.ReactNode[] = [];
-  let pendingListType: 'bullet' | 'number' | null = null;
-
-  const flushList = () => {
-    if (!pendingListType || pendingList.length === 0) return;
-    const ListTag = pendingListType === 'number' ? 'ol' : 'ul';
-    renderedBlocks.push(<ListTag key={`list-${renderedBlocks.length}`}>{pendingList}</ListTag>);
-    pendingList = [];
-    pendingListType = null;
-  };
-
-  blocks.forEach((block, index) => {
-    if (block.listItem === 'bullet' || block.listItem === 'number') {
-      if (pendingListType && pendingListType !== block.listItem) flushList();
-      pendingListType = block.listItem;
-      pendingList.push(renderBlock(block, index));
-      return;
+  const ids = new Map<string, number>();
+  const shift = blocks.some(b => b.style === 'h1') ? 1 : 0;
+  let previousHeading = 1;
+  let index = 0;
+  function list(level: number, type: 'bullet' | 'number'): React.ReactNode {
+    const children: React.ReactNode[] = [];
+    const start = index;
+    while (index < blocks.length) {
+      const block = blocks[index];
+      const depth = Math.max(1, Math.min(6, block.level || 1));
+      if (!block.listItem || depth < level || (depth === level && block.listItem !== type)) break;
+      const key = block._key || index;
+      index++;
+      const nested: React.ReactNode[] = [];
+      while (index < blocks.length && blocks[index].listItem && Math.max(1, Math.min(6, blocks[index].level || 1)) > level) {
+        nested.push(list(Math.max(1, Math.min(6, blocks[index].level || 1)), blocks[index].listItem!));
+      }
+      children.push(<li key={key}>{renderChildren(block)}{nested}</li>);
     }
-
-    flushList();
-    renderedBlocks.push(renderBlock(block, index));
-  });
-  flushList();
-
-  return (
-    <div className="body-text portable-text">
-      {renderedBlocks}
-    </div>
-  );
+    const Tag = type === 'number' ? 'ol' : 'ul';
+    return <Tag key={`list-${start}`}>{children}</Tag>;
+  }
+  while (index < blocks.length) {
+    const block = blocks[index];
+    if (block.listItem) { renderedBlocks.push(list(Math.max(1, Math.min(6, block.level || 1)), block.listItem)); continue; }
+    let heading: { id: string; level: number } | undefined;
+    if (/^h[1-6]$/.test(block.style || '')) {
+      const level = Math.max(2, Math.min(6, Number(block.style![1]) + shift, previousHeading + 1));
+      previousHeading = level;
+      heading = { level, id: uniqueHeadingId(block.children?.map(s => s.text || '').join('') || 'section', ids) };
+    }
+    renderedBlocks.push(renderBlock(block, index, heading));
+    index++;
+  }
+  return <div className="body-text portable-text">{renderedBlocks}</div>;
 }

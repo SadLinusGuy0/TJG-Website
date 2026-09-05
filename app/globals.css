@@ -1,5 +1,5 @@
 @import url('./styles/shared.css');
-@import url('./styles/home.css');
+@import url('./styles/footer-shop.css');
 @import url('./styles/ui-components.css');
 
 html {
@@ -201,3 +201,12 @@ a:not(:any-link) {
 }
 
 /* === index.css is imported above and contains all component/utility styles === */
+
+/* Decoration, readable links and filled controls have separate contrast roles. */
+:root, html[data-accent="blue"] { --accent-control: #1f54c7; --accent-link: #1f54c7; }
+html[data-accent="coral"] { --accent-control: #a82735; --accent-link: #a82735; }
+html[data-accent="mint"] { --accent-control: #126861; --accent-link: #126861; }
+html[data-accent="lilac"] { --accent-control: #633fad; --accent-link: #633fad; }
+html[data-accent="mono"] { --accent-control: #595959; --accent-link: #595959; }
+html[data-theme="dark"] { --accent-link: var(--accent); }
+.discord-banner-text:any-link { color: inherit; text-decoration: underline; }

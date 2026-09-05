@@ -1,8 +1,24 @@
 'use client';
 
+import ShortcutPopover from '../components/ShortcutPopover';
+import SearchShortcutChip from '../components/SearchShortcutChip';
+
+import { rankPostSections, searchWords } from '../../lib/postSearch';
+import { isKeyboardInput } from '../../lib/keyboard';
 import { useReadingPreferences } from './useReadingPreferences';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+
+// Include the fading edge of the toolbar blur, not just the buttons.
+function headingJumpOffset() {
+  let bottom = 80;
+  document.querySelectorAll<HTMLElement>('.top-app-bar, .progressive-blur-overlay--top').forEach(element => {
+    if (!element.getClientRects().length) return;
+    const rect = element.getBoundingClientRect();
+    if (rect.top <= 80) bottom = Math.max(bottom, rect.bottom);
+  });
+  return bottom + 24;
+}
 
 interface HeadingInfo {
   id: string;
@@ -16,14 +32,63 @@ export default function PostSearchBar({ enabledByDefault = true }: { enabledByDe
   const [isBackToTop, setIsBackToTop] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [matchCount, setMatchCount] = useState(0);
+  const [results, setResults] = useState<{ title: string; excerpt: string; target: HTMLElement }[]>([]);
+  const [activeResult, setActiveResult] = useState(0);
+  const [resultsQuery, setResultsQuery] = useState('');
+  function goToResult(index: number) {
+    const result = results[index];
+    if (!result) return;
+    inputRef.current?.blur();
+    window.scrollTo({ top: result.target.getBoundingClientRect().top + window.scrollY - headingJumpOffset(),
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+  }
   const inputRef = useRef<HTMLInputElement>(null);
+  const [searchFocused, setSearchFocused] = useState(false);
+  const [shortcutOpen, setShortcutOpen] = useState(false);
+  const resultsVisible = searchFocused && searchQuery.trim().length > 0 && resultsQuery === searchQuery;
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.isComposing || event.repeat) return;
+      if ((event.metaKey || event.ctrlKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        if (inputRef.current && document.activeElement === inputRef.current) {
+          inputRef.current.blur();
+          setShortcutOpen(false);
+          return;
+        }
+        setShortcutOpen(true);
+        inputRef.current?.focus();
+        inputRef.current?.select();
+        return;
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey || isKeyboardInput(event.target)) return;
+      if (event.key !== '[' && event.key !== ']') return;
+      const headings = Array.from(document.querySelectorAll<HTMLElement>('.body-text h2')).filter(el => el.getClientRects().length > 0);
+      const offset = headingJumpOffset();
+      const heading = event.key === ']'
+        ? headings.find(el => el.getBoundingClientRect().top > offset + 12)
+        : headings.reverse().find(el => el.getBoundingClientRect().top < offset - 12);
+      event.preventDefault();
+      const top = heading
+        ? window.scrollY + heading.getBoundingClientRect().top - offset
+        : event.key === '[' ? 0 : document.documentElement.scrollHeight;
+      window.scrollTo({ top, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
+  useEffect(() => {
+    if (shortcutOpen) { inputRef.current?.focus(); inputRef.current?.select(); }
+  }, [shortcutOpen]);
 
   // Extract h1 headings from .body-text and assign IDs
   useEffect(() => {
     const id = setTimeout(() => {
       const bodyText = document.querySelector('.body-text');
       if (!bodyText) return;
-      const els = bodyText.querySelectorAll('h1');
+      const els = bodyText.querySelectorAll('h2');
       const extracted: HeadingInfo[] = [];
       els.forEach((el, i) => {
         const text = el.textContent?.trim() || '';
@@ -49,11 +114,11 @@ export default function PostSearchBar({ enabledByDefault = true }: { enabledByDe
   // Update which heading is next based on scroll position
   const updateNextHeading = useCallback(() => {
     if (headings.length === 0) return;
-    const scrollPos = window.scrollY + 120;
+    const scrollPos = window.scrollY + headingJumpOffset() + 12;
     let found: HeadingInfo | null = null;
     for (const h of headings) {
       const el = document.getElementById(h.id);
-      if (el && el.offsetTop > scrollPos) {
+      if (el && el.getBoundingClientRect().top + window.scrollY > scrollPos) {
         found = h;
         break;
       }
@@ -69,101 +134,72 @@ export default function PostSearchBar({ enabledByDefault = true }: { enabledByDe
     return () => window.removeEventListener('scroll', updateNextHeading);
   }, [headings, updateNextHeading]);
 
-  // Remove all highlight marks from the DOM
-  const clearHighlights = useCallback(() => {
-    const bodyText = document.querySelector('.body-text');
-    if (!bodyText) return;
-    bodyText.querySelectorAll('mark.post-search-hl').forEach(mark => {
-      const parent = mark.parentNode;
-      if (!parent) return;
-      parent.replaceChild(
-        document.createTextNode(mark.textContent || ''),
-        mark
-      );
-      parent.normalize();
-    });
-    setMatchCount(0);
+  useEffect(() => {
+    if (!CSS.highlights) return;
+    const style = document.createElement('style');
+    style.textContent = '::highlight(post-search) { color: #111; background-color: #ffe066; }';
+    document.head.append(style);
+    return () => style.remove();
   }, []);
 
-  // Walk text nodes and wrap matches in <mark> elements
-  const applyHighlights = useCallback(
-    (query: string) => {
-      clearHighlights();
-      if (!query.trim()) return;
-      const bodyText = document.querySelector('.body-text');
-      if (!bodyText) return;
-
-      const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const regex = new RegExp(escaped, 'gi');
-
-      const walker = document.createTreeWalker(
-        bodyText,
-        NodeFilter.SHOW_TEXT,
-        {
-          acceptNode(node) {
-            const p = node.parentElement;
-            if (!p) return NodeFilter.FILTER_REJECT;
-            const tag = p.tagName.toLowerCase();
-            if (
-              ['script', 'style', 'mark', 'textarea', 'input'].includes(tag)
-            )
-              return NodeFilter.FILTER_REJECT;
-            return NodeFilter.FILTER_ACCEPT;
-          },
-        }
-      );
-
-      const nodes: Text[] = [];
-      let n: Node | null;
-      while ((n = walker.nextNode())) nodes.push(n as Text);
-
-      let count = 0;
-      nodes.forEach(textNode => {
-        const text = textNode.textContent || '';
-        if (!regex.test(text)) {
-          regex.lastIndex = 0;
-          return;
-        }
-        regex.lastIndex = 0;
-
-        const frag = document.createDocumentFragment();
-        let last = 0;
-        let m: RegExpExecArray | null;
-        while ((m = regex.exec(text)) !== null) {
-          if (m.index > last)
-            frag.appendChild(document.createTextNode(text.slice(last, m.index)));
-          const mark = document.createElement('mark');
-          mark.className = 'post-search-hl';
-          mark.textContent = m[0];
-          frag.appendChild(mark);
-          count++;
-          last = regex.lastIndex;
-        }
-        if (last < text.length)
-          frag.appendChild(document.createTextNode(text.slice(last)));
-        textNode.parentNode?.replaceChild(frag, textNode);
-      });
-
-      setMatchCount(count);
-    },
-    [clearHighlights]
-  );
-
+  // CSS ranges leave React-owned text nodes intact, including during rerenders.
   useEffect(() => {
-    if (searchQuery) applyHighlights(searchQuery);
-    else clearHighlights();
-  }, [searchQuery, applyHighlights, clearHighlights]);
-
-  // Clean up marks when unmounting
-  useEffect(() => () => { clearHighlights(); }, [clearHighlights]);
+    const timer = setTimeout(() => {
+      CSS.highlights?.delete('post-search');
+      const query = searchQuery.trim().toLocaleLowerCase();
+      if (!query) { setMatchCount(0); setResults([]); setResultsQuery(searchQuery); return; }
+      const sections: { title: string; text: string; target: HTMLElement }[] = [];
+      document.querySelectorAll<HTMLElement>('.body-text').forEach(root => {
+        if (root.parentElement?.closest('.body-text') || !root.getClientRects().length) return;
+        let section = { title: 'Introduction', text: '', target: root };
+        root.querySelectorAll<HTMLElement>('h1,h2,h3,h4,h5,h6,p,li,figcaption,td').forEach(element => {
+          if (!element.getClientRects().length || element.closest('button,script,style')) return;
+          if (/^H[1-6]$/.test(element.tagName)) {
+            if (section.text.trim()) sections.push(section);
+            section = { title: element.textContent?.trim() || 'Section', text: '', target: element };
+          } else if (!element.parentElement?.closest('p,li,td')) {
+            section.text += ' ' + (element.textContent || '');
+          }
+        });
+        if (section.text.trim()) sections.push(section);
+      });
+      const terms = new Set(searchWords(query));
+      setResults(rankPostSections(sections, query).map(({ index }) => {
+        const section = sections[index];
+        const sentences = section.text.split(/(?<=[.!?])\s+/);
+        const best = sentences.map(text => ({ text, score: searchWords(text).filter(word => terms.has(word)).length }))
+          .sort((a, b) => b.score - a.score)[0]?.text.trim() || section.text.trim();
+        return { title: section.title, target: section.target, excerpt: best.length > 180 ? best.slice(0, 177) + '…' : best };
+      }));
+      setActiveResult(0);
+      setResultsQuery(searchQuery);
+      const ranges: Range[] = [];
+      document.querySelectorAll('.body-text').forEach(root => {
+        if (root.parentElement?.closest('.body-text')) return;
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+          acceptNode: node => node.parentElement?.closest('script,style,input,textarea,button') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
+        });
+        let node: Node | null;
+        while ((node = walker.nextNode()) && ranges.length < 10000) {
+          const text = node.textContent?.toLocaleLowerCase() || '';
+          for (let start = text.indexOf(query); start !== -1 && ranges.length < 10000; start = text.indexOf(query, start + query.length)) {
+            const range = document.createRange(); range.setStart(node, start); range.setEnd(node, start + query.length); ranges.push(range);
+          }
+        }
+      });
+      if (typeof Highlight !== 'undefined' && CSS.highlights) CSS.highlights.set('post-search', new Highlight(...ranges));
+      setMatchCount(ranges.length);
+    }, 200);
+    return () => { clearTimeout(timer); CSS.highlights?.delete('post-search'); };
+  }, [searchQuery]);
 
   const handleJump = () => {
     if (headings.length === 0 || isBackToTop || !nextHeading) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
       return;
     }
     const el = document.getElementById(nextHeading.id);
-    if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - headingJumpOffset(), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   };
 
   const jumpLabel =
@@ -172,12 +208,23 @@ export default function PostSearchBar({ enabledByDefault = true }: { enabledByDe
       : nextHeading?.text ?? 'Back to top';
   const isBackToTopMode = headings.length === 0 || isBackToTop;
 
-  if (!enabledByDefault && !hasSavedPreferences) return null;
+  if (!enabledByDefault && !hasSavedPreferences && !shortcutOpen) return null;
 
   return (
     <>
-      <div className="post-search-anchor">
+      <div className="post-search-anchor" data-shortcut-open={shortcutOpen}>
         <div className="post-search-positioner">
+          {resultsVisible && <div className="post-search-results">
+            <div className="post-search-results-title" role="status">{results.length ? 'Relevant sections' : 'No matching sections. Try another word or topic.'}</div>
+            <div id="post-search-results" role="listbox" aria-label="Matching sections">
+              {results.map((result, index) => <button key={index} type="button" role="option"
+                id={`post-search-result-${index}`} aria-selected={index === activeResult}
+                onPointerDown={event => event.preventDefault()}
+                onClick={() => goToResult(index)} tabIndex={-1}>
+                <strong>{result.title}</strong><span>{result.excerpt}</span>
+              </button>)}
+            </div>
+          </div>}
           <div
             className="post-search-bar"
             style={{
@@ -205,14 +252,38 @@ export default function PostSearchBar({ enabledByDefault = true }: { enabledByDe
               ref={inputRef}
               type="text"
               className="post-search-input"
-              placeholder="Search in post…"
+              placeholder="Search…"
+              aria-label="Search in post"
+              aria-keyshortcuts="Meta+k Control+k"
+              title="Search in post"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded={resultsVisible && results.length > 0}
+              aria-controls={resultsVisible ? 'post-search-results' : undefined}
+              aria-activedescendant={resultsVisible && results.length ? `post-search-result-${activeResult}` : undefined}
+              onKeyDown={event => {
+                if (event.nativeEvent.isComposing) return;
+                if (resultsVisible && results.length && ['ArrowDown', 'ArrowUp', 'Enter'].includes(event.key)) {
+                  event.preventDefault();
+                  if (event.key === 'Enter') goToResult(activeResult);
+                  else setActiveResult(index => (index + (event.key === 'ArrowDown' ? 1 : -1) + results.length) % results.length);
+                }
+                if (event.key === 'Escape') {
+                  event.preventDefault();
+                  setShortcutOpen(false);
+                  inputRef.current?.blur();
+                }
+              }}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => { setSearchFocused(false); setShortcutOpen(false); }}
               value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value.slice(0, 200))}
             />
+            <SearchShortcutChip focused={searchFocused} />
 
             {/* Match count */}
-            {searchQuery && matchCount > 0 && (
-              <span className="post-search-match-badge">{matchCount}</span>
+            {searchFocused && searchQuery && matchCount > 0 && (
+              <span className="post-search-match-badge" title="Exact phrase matches">{matchCount}</span>
             )}
 
             {/* Clear */}
@@ -241,13 +312,34 @@ export default function PostSearchBar({ enabledByDefault = true }: { enabledByDe
             )}
 
             {/* Divider */}
+
             <div className="post-search-divider" aria-hidden="true" />
 
             {/* Jump / Back to top */}
-            <button
+            {searchQuery.trim() ? (
+              <button
+                type="button"
+                className="post-search-jump post-search-results-trigger"
+                aria-label={resultsQuery !== searchQuery ? 'Search in progress' : `Show ${results.length} matching ${results.length === 1 ? 'section' : 'sections'}`}
+                aria-expanded={resultsVisible}
+                onClick={() => {
+                  setShortcutOpen(true);
+                  inputRef.current?.focus();
+                }}
+              >
+                <span className="post-search-jump-text">{resultsQuery !== searchQuery
+                  ? 'Searching…'
+                  : `${results.length} ${results.length === 1 ? 'section' : 'sections'} found`}</span>
+              </button>
+            ) : <ShortcutPopover title={jumpLabel} content={<>
+              <span className="shortcut-popover-row"><span>Previous heading or top</span><kbd className="keyboard-shortcut-chip">[</kbd></span>
+              <span className="shortcut-popover-row"><span>Next heading or bottom</span><kbd className="keyboard-shortcut-chip">]</kbd></span>
+            </>}>
+            {(descriptionId) => <button
               className="post-search-jump"
               onClick={handleJump}
               aria-label={jumpLabel}
+              aria-describedby={descriptionId}
             >
               {isBackToTopMode ? (
                 <svg
@@ -273,7 +365,8 @@ export default function PostSearchBar({ enabledByDefault = true }: { enabledByDe
                 </svg>
               )}
               <span className="post-search-jump-text">{jumpLabel}</span>
-            </button>
+            </button>}
+            </ShortcutPopover>}
           </div>
         </div>
       </div>
