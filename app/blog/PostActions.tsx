@@ -42,9 +42,13 @@ export default function PostActions({ slug }: { slug: string }) {
     if (!ready) return;
     document.body.classList.add("post-reading-active");
     document.body.classList.toggle("post-reading-compact", preferences.compact);
-    document.body.classList.toggle("post-reading-focus", preferences.focus);
+    const desktop = window.matchMedia('(min-width: 700px)');
+    const updateFocus = () => document.body.classList.toggle("post-reading-focus", preferences.focus && desktop.matches);
+    updateFocus();
+    desktop.addEventListener('change', updateFocus);
     document.body.classList.toggle("post-reading-hide-search", !preferences.search);
     window.dispatchEvent(new Event("resize"));
+    return () => desktop.removeEventListener('change', updateFocus);
   }, [preferences, ready]);
 
   useEffect(() => {
@@ -85,7 +89,7 @@ export default function PostActions({ slug }: { slug: string }) {
         <div ref={menu} id={id} className="post-options-menu" data-state={open ? "open" : "closed"} inert={!open} aria-hidden={!open} onAnimationEnd={event => {
           if (event.target === event.currentTarget && !open) setPresent(false);
         }} role="menu" aria-label="Post options" style={position} onKeyDown={event => {
-          const items = Array.from(menu.current?.querySelectorAll<HTMLButtonElement>("button") || []);
+          const items = Array.from(menu.current?.querySelectorAll<HTMLButtonElement>("button") || []).filter(item => item.getClientRects().length > 0);
           const index = items.indexOf(document.activeElement as HTMLButtonElement);
           if (event.key === "Escape") { event.preventDefault(); setOpen(false); trigger.current?.focus(); }
           if (event.key === "Tab") setOpen(false);
@@ -101,7 +105,7 @@ export default function PostActions({ slug }: { slug: string }) {
             <button role="menuitemradio" aria-checked={preferences.compact} onClick={() => setPreferences(p => ({ ...p, compact: true }))}>Compact <span aria-hidden="true">{preferences.compact && <Selected size={20} color="var(--primary)" />}</span></button>
           </div>
           <div className="post-options-separator" role="separator" />
-          <button role="menuitemcheckbox" aria-checked={preferences.focus} onClick={() => setPreferences(p => ({ ...p, focus: !p.focus }))}>Focus mode <span className="post-options-switch" aria-hidden="true" data-on={preferences.focus} /></button>
+          <button className="desktop-focus-option" role="menuitemcheckbox" aria-checked={preferences.focus} onClick={() => setPreferences(p => ({ ...p, focus: !p.focus }))}>Focus mode <span className="post-options-switch" aria-hidden="true" data-on={preferences.focus} /></button>
           <button role="menuitemcheckbox" aria-checked={preferences.search} onClick={() => setPreferences(p => ({ ...p, search: !p.search }))}>Show search bar <span className="post-options-switch" aria-hidden="true" data-on={preferences.search} /></button>
           <div className="post-options-separator" role="separator" />
           {slug === FMP_SLUG && fmpSeparatedViewAvailable && (

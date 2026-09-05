@@ -350,7 +350,7 @@ function SettingsContent() {
             </div>
             <ReadingLayoutMenu compact={preferences.compact} onChange={compact => setPreferences(p => ({ ...p, compact }))} />
           </div>
-          <label className="list" htmlFor="blog-focus-mode">
+          <label className="list desktop-focus-option" htmlFor="blog-focus-mode">
             <div className="list-item-content">
               <div className="body-text">Focus mode</div>
               <div className="information-wrapper"><div className="information">Fade navigation until hovered or focused, and hide the search bar while reading</div></div>

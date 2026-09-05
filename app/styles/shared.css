@@ -2764,3 +2764,7 @@ justify-content: flex-start;
   justify-content: center;
   align-items: center;
 }
+
+@media (max-width: 699px) {
+  .desktop-focus-option { display: none !important; }
+}
