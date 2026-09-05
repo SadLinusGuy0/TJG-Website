@@ -517,7 +517,7 @@ export default function FeatureFlagsPage() {
     <div className="page settings-page">
       <div className="page-body">
         <Suspense fallback={
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+          <div className="page-loading-spinner">
             <LoadingDots />
           </div>
         }>

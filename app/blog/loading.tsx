@@ -11,7 +11,7 @@ export default function BlogLoading() {
             hideBarTitleOnMobile
             mobileSettingsHref="/settings?from=%2Fblog"
           />
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+          <div className="page-loading-spinner">
             <LoadingDots />
           </div>
         </div>

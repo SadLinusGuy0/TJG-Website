@@ -44,7 +44,7 @@ export default async function SectionPage(props: PageProps) {
       <div className="page-body">
         <div className="main-content">
           <Suspense fallback={
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+            <div className="page-loading-spinner">
               <LoadingDots />
             </div>
           }>

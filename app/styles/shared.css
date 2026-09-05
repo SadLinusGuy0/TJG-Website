@@ -2736,3 +2736,12 @@ justify-content: flex-start;
 .reading-layout-menu button {
   font-family: 'One UI Sans', var(--body), sans-serif;
 }
+
+.page-loading-spinner {
+  width: 100%;
+  min-height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}

@@ -10,7 +10,7 @@ export default function BlogIndex() {
 
         <Suspense fallback={
           <div className="main-content">
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+            <div className="page-loading-spinner">
               <LoadingDots />
             </div>
           </div>
