@@ -1312,7 +1312,7 @@ html[data-theme="dark"] .blog-card-pill-muted {
 
 @media (max-width: 699px) {
   .floating-search-anchor {
-    bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
     transform: none;
@@ -1594,7 +1594,7 @@ mark.post-search-hl {
 
 @media (max-width: 699px) {
   .post-search-anchor {
-    bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
     width: calc(100% - 32px);
