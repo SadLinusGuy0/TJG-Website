@@ -21,9 +21,19 @@ Treat the wiki as **historical** until it is rewritten against
 [ENVIRONMENTS.md](ENVIRONMENTS.md). The auto-sync workflow last succeeded on
 the favicon PR; later `main`/`beta` merges did not bump the callout.
 
-This session could not write to Notion (no Notion MCP in the cloud-agent
-tool list). Apply the page-by-page notes below in the wiki, or re-run
-`update-docs.yml`.
+Cloud Agents see the Notion MCP (`https://mcp.notion.com/mcp`) but cannot
+complete its OAuth prompt themselves. Desktop login does **not** carry over.
+Authenticate from the Cloud Agents dashboard so the run can write:
+
+1. Open https://cursor.com/agents
+2. Open this run (or **MCP servers** / integrations)
+3. Enable **Notion**, click **Login**, finish OAuth, and grant the **TJG Site
+   Docs** wiki
+4. Reply on the run so the agent can retry
+
+Fallback: the GitHub Action `update-docs.yml` uses a `NOTION_TOKEN` internal
+integration (last succeeded 2026-07-05). That path does not help a live Cloud
+Agent unless the same token is also connected as a dashboard MCP server.
 
 ### Wiki edits still needed
 
