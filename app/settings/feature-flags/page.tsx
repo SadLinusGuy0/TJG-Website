@@ -64,7 +64,19 @@ const FLAGS: FlagDef[] = [
   {
     key: 'fmp-separated-view-enabled',
     name: 'FMP view toggle',
-    description: 'Show the FMP separated/combined view toggle in Settings',
+    description: 'Show the FMP separated/combined view toggle in the post overflow menu',
+  },
+  {
+    key: 'blog-content-edition',
+    name: 'Blog content',
+    description: 'Preview normal or college posts on this browser. Auto follows the site hostname.',
+    type: 'string',
+    defaultValue: 'auto',
+    options: [
+      { value: 'auto', label: 'Auto (site default)' },
+      { value: 'normal', label: 'Normal' },
+      { value: 'college', label: 'College' },
+    ],
   },
   {
     key: 'blog-content-source',

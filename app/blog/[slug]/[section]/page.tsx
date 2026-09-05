@@ -11,7 +11,7 @@ import { countWords, processContentWithEmbeds } from "../../../../lib/blogConten
 import { stripHtmlAndDecode } from "../../../../lib/portableText";
 import TopAppBar from "../../../components/TopAppBar";
 import TableOfContents from "../../TableOfContents";
-import ForceRefreshButton from "../ForceRefreshButton";
+import PostActions from "../../PostActions";
 
 export const revalidate = 300;
 
@@ -95,7 +95,7 @@ async function SectionBody({ slug, section }: { slug: string; section: string })
         actions={
           <>
             <TableOfContents content={matched.html} />
-            <ForceRefreshButton slug={slug} />
+            <PostActions slug={slug} />
           </>
         }
       />

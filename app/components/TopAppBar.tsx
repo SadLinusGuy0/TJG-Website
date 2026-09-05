@@ -241,7 +241,7 @@ export default function TopAppBar({
         >
           <div className="top-app-bar-container">
             {backHref && (
-              <Link href={backHref} className="top-app-bar-icon" aria-label="Back">
+              <Link href={backHref} className="top-app-bar-icon" aria-label="Back" title="Back">
                 <Back color="var(--primary)" />
               </Link>
             )}
@@ -264,6 +264,7 @@ export default function TopAppBar({
                     href={mobileSettingsHref}
                     className="top-app-bar-icon top-app-bar-settings"
                     aria-label="Settings"
+                    title="Open settings"
                   >
                     <Settings size={24} color="var(--primary)" />
                   </Link>

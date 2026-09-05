@@ -1,4 +1,4 @@
-import { headers } from 'next/headers';
+import { headers, cookies } from 'next/headers';
 
 export const SITE_EDITIONS = ['main', 'college', 'beta'] as const;
 
@@ -58,4 +58,14 @@ export function getSiteUrl(edition: SiteEdition): string {
 export function isPostVisibleOnEdition(tags: string[], edition: SiteEdition): boolean {
   const isCollegePost = tags.some((tag) => tag.trim().toLowerCase() === 'college');
   return edition === 'college' ? isCollegePost : !isCollegePost;
+}
+
+/** Browser-local content preview; site identity and canonical URLs remain host-based. */
+export async function getBlogEdition(): Promise<SiteEdition> {
+  try {
+    const override = (await cookies()).get('ff-blog-content-edition')?.value;
+    if (override === 'normal') return 'main';
+    if (override === 'college') return 'college';
+  } catch { /* Build-time callers use the site's configured edition. */ }
+  return getSiteEdition();
 }

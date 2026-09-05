@@ -14,7 +14,7 @@ import { getInPostSearchBarEnabled } from "../../../lib/getInPostSearchBarFlag";
 import { getInPostSearchBarFmpEnabled } from "../../../lib/getInPostSearchBarFmpFlag";
 import TopAppBar from "../../components/TopAppBar";
 import TableOfContents from "../TableOfContents";
-import ForceRefreshButton from "./ForceRefreshButton";
+import PostActions from "../PostActions";
 import { getDisplayWordCount, processContentWithEmbeds } from "../../../lib/blogContentProcessing";
 import { portableTextToPlainText, stripHtmlAndDecode } from "../../../lib/portableText";
 import { getSiteEdition, getSiteUrl } from "../../../lib/siteEdition";
@@ -166,7 +166,7 @@ async function BlogPostBody({ slug }: { slug: string }) {
         actions={
           <>
             <TableOfContents content={tocContent} />
-            <ForceRefreshButton slug={slug} />
+            <PostActions slug={slug} />
           </>
         }
       />

@@ -132,7 +132,9 @@ a.nav-icon-container-selected:any-link {
 }
 
 .settings-page .section-header > h2.title,
-.contact-page .section-header > h2.title {
+.contact-page .section-header > h2.title,
+.post-options-label {
+  font-family: 'One UI Sans';
   color: var(--secondary);
   font-size: 14px;
   font-weight: 700;
@@ -1122,6 +1124,47 @@ button.media-card:hover {
   -webkit-backdrop-filter: blur(15px) !important;
   border-color: color-mix(in srgb, var(--primary) 30%, transparent 70%);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.top-app-bar-action-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--primary) 10%, transparent 80%);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--container-background) 60%, transparent 40%);
+  -webkit-backdrop-filter: blur(10px) !important;
+  backdrop-filter: blur(10px) !important;
+  transform: scale(1);
+  transition: transform 0.2s ease-out, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.top-app-bar-action-group:has(.top-app-bar-icon:not(:disabled):is(:hover, :focus-visible)) {
+  transform: scale(1.05);
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent 70%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.top-app-bar-action-group .top-app-bar-icon:not(:disabled):focus-visible {
+  transform: scale(1.05);
+}
+
+.top-app-bar-action-group .top-app-bar-icon,
+.top-app-bar-action-group .top-app-bar-icon:hover {
+  border-color: transparent;
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none;
+}
+
+.top-app-bar-action-group .top-app-bar-icon:disabled {
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+.top-app-bar-action-group .top-app-bar-icon:not(:disabled):is(:hover, :focus-visible) {
+  background: color-mix(in srgb, var(--primary) 8%, transparent) !important;
 }
 
 .top-app-bar-settings {

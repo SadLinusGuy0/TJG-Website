@@ -118,7 +118,7 @@ export const fmpSeparatedViewEnabled = flag({
   key: 'fmp-separated-view-enabled',
   adapter: vercelAdapter(),
   defaultValue: false,
-  description: 'Show the FMP separated/combined view toggle in Settings',
+  description: 'Show the FMP separated/combined view toggle in the post overflow menu',
   options: [
     { value: true, label: 'Enabled' },
     { value: false, label: 'Disabled' },

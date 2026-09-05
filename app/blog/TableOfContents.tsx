@@ -121,6 +121,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
       <div
         ref={containerRef}
         className="toc-container"
+        title="Table of contents"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={(e) => {
           // Only close if mouse is not moving to the dropdown

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useFmpCombinedView } from '../useReadingPreferences';
 import Link from 'next/link';
 import BlogContent from '../BlogContent';
 import { extractH1Sections } from '../../../lib/fmpSections';
@@ -12,13 +12,7 @@ interface FmpViewWrapperProps {
 }
 
 export default function FmpViewWrapper({ rawContent, processedContent, slug }: FmpViewWrapperProps) {
-  const [combinedView, setCombinedView] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setCombinedView(localStorage.getItem('fmpCombinedView') === 'true');
-    setMounted(true);
-  }, []);
+  const { combined: combinedView } = useFmpCombinedView();
 
   const sections = extractH1Sections(rawContent);
 
@@ -28,10 +22,6 @@ export default function FmpViewWrapper({ rawContent, processedContent, slug }: F
         <BlogContent content={processedContent} />
       </div>
     );
-  }
-
-  if (!mounted) {
-    return <SeparatedView sections={sections} slug={slug} />;
   }
 
   if (combinedView) {

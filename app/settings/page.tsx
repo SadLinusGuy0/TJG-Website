@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { LoadingDots } from '../components/LoadingAnim';
 import TopAppBar from '../components/TopAppBar';
 import Switch from '../components/Switch';
+import { useReadingPreferences } from '../blog/useReadingPreferences';
 
 const THEME_OPTIONS = ['auto', 'light', 'dark'] as const;
 type ThemeOption = (typeof THEME_OPTIONS)[number];
@@ -76,10 +77,10 @@ function ThemePreviewAuto({ accent }: { accent: AccentColor }) {
 }
 
 function SettingsContent() {
-  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable, fmpSeparatedViewAvailable } = useTheme();
+  const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [devOptionsEnabled, setDevOptionsEnabled] = useState(false);
-  const [fmpSeparatedView, setFmpSeparatedView] = useState(true);
+  const { preferences, setPreferences } = useReadingPreferences();
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || '/';
   const handleThemeKeyDown = (
@@ -119,8 +120,6 @@ function SettingsContent() {
       setDevOptionsEnabled(localStorage.getItem('developer-options-enabled') === 'true');
     };
     checkDevOptions();
-    const saved = localStorage.getItem('fmpCombinedView');
-    setFmpSeparatedView(saved === null ? true : saved !== 'true');
     window.addEventListener('developer-options-changed', checkDevOptions);
     return () => window.removeEventListener('developer-options-changed', checkDevOptions);
   }, []);
@@ -340,27 +339,33 @@ function SettingsContent() {
 
         </div>
 
-        {fmpSeparatedViewAvailable && (
-          <>
-            <div className="section-header">
-              <h2 className="title">Blog</h2>
+        <div className="section-header"><h2 className="title">Blog</h2></div>
+        <div className="list-group">
+          <label className="list" htmlFor="blog-reading-layout">
+            <div className="list-item-content">
+              <div className="body-text">Reading layout</div>
+              <div className="information-wrapper"><div className="information">Text size, paragraph spacing, and image size</div></div>
             </div>
-            <div className="list-group">
-              <label htmlFor="fmp-combined-view-toggle" className="list" style={{ cursor: 'pointer' }}>
-                <div className="list-item-content">
-                  <div className="body-text">FMP separated view</div>
-                  <div className="information-wrapper">
-                    <div className="information">Show FMP sections on separate pages instead of one combined page</div>
-                  </div>
-                </div>
-                <Switch id="fmp-combined-view-toggle" checked={fmpSeparatedView} onChange={(val) => {
-                  setFmpSeparatedView(val);
-                  localStorage.setItem('fmpCombinedView', (!val).toString());
-                }} />
-              </label>
+            <select id="blog-reading-layout" value={preferences.compact ? "compact" : "comfortable"} onChange={event => setPreferences(p => ({ ...p, compact: event.target.value === "compact" }))} style={{ font: 'inherit', color: 'var(--primary)', background: 'var(--background)', border: 0, borderRadius: 12, padding: '10px 12px', maxWidth: '48%' }}>
+              <option value="comfortable">Comfortable</option>
+              <option value="compact">Compact</option>
+            </select>
+          </label>
+          <label className="list" htmlFor="blog-focus-mode">
+            <div className="list-item-content">
+              <div className="body-text">Focus mode</div>
+              <div className="information-wrapper"><div className="information">Fade navigation until hovered or focused, and hide the search bar while reading</div></div>
             </div>
-          </>
-        )}
+            <Switch id="blog-focus-mode" checked={preferences.focus} onChange={value => setPreferences(p => ({ ...p, focus: value }))} />
+          </label>
+          <label className="list" htmlFor="blog-show-search">
+            <div className="list-item-content">
+              <div className="body-text">Show search bar</div>
+              <div className="information-wrapper"><div className="information">Show search on supported posts; hidden while focus mode is on</div></div>
+            </div>
+            <Switch id="blog-show-search" checked={preferences.search} onChange={value => setPreferences(p => ({ ...p, search: value }))} />
+          </label>
+        </div>
 
         {devOptionsEnabled && (
           <>

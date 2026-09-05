@@ -3,7 +3,7 @@ import { getWordpressSourceUrl } from './getWordpressSourceUrlFlag';
 import * as wp from './wordpress';
 import * as sanity from './sanity';
 import { stripHtmlAndDecode, type PortableTextBlock } from './portableText';
-import { getSiteEdition, isPostVisibleOnEdition } from './siteEdition';
+import { getBlogEdition, isPostVisibleOnEdition } from './siteEdition';
 
 export { getBlogContentSource };
 
@@ -84,7 +84,7 @@ async function wpSlugMaps(apiBaseUrl: string) {
 export async function fetchAllBlogPosts(opts?: { tagSlug?: string }): Promise<BlogPost[]> {
   const [source, edition] = await Promise.all([
     getBlogContentSource(),
-    getSiteEdition(),
+    getBlogEdition(),
   ]);
 
   if (source === 'sanity') {
@@ -113,7 +113,7 @@ export async function fetchAllBlogPosts(opts?: { tagSlug?: string }): Promise<Bl
 export async function fetchBlogPostBySlug(slug: string): Promise<BlogPost | null> {
   const [source, edition] = await Promise.all([
     getBlogContentSource(),
-    getSiteEdition(),
+    getBlogEdition(),
   ]);
 
   if (source === 'sanity') {
@@ -144,7 +144,7 @@ export async function fetchBlogPostBySlug(slug: string): Promise<BlogPost | null
 export async function fetchBlogPostFeaturedImage(slug: string): Promise<string | null> {
   const [source, edition] = await Promise.all([
     getBlogContentSource(),
-    getSiteEdition(),
+    getBlogEdition(),
   ]);
 
   if (source === 'sanity') {
