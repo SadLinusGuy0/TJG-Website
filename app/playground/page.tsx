@@ -1140,7 +1140,7 @@ function PlaygroundContent() {
         </Section>
 
         {/* ---- Loading Animation ---- */}
-        <Section title="Loading Animation" description="Lottie circle progress spinner in different sizes">
+        <Section title="Loading Animation" description="Samsung One UI four-dot spinner in different sizes">
           <div style={{ display: "flex", gap: 32, alignItems: "center", flexWrap: "wrap" }}>
             <div style={{ textAlign: "center" }}>
               <LoadingDots size={32} />
@@ -1158,7 +1158,7 @@ function PlaygroundContent() {
         </Section>
 
         {/* ---- Loading Animation (full-width demo) ---- */}
-        <Section title="Loading State" description="Lottie circle progress animation used as a page loading indicator">
+        <Section title="Loading State" description="Samsung One UI four-dot animation used as a page loading indicator">
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200, width: "100%" }}>
             <LoadingDots />
           </div>
