@@ -11,6 +11,7 @@ import { countWords, processContentWithEmbeds } from "../../../../lib/blogConten
 import { stripHtmlAndDecode } from "../../../../lib/portableText";
 import TopAppBar from "../../../components/TopAppBar";
 import TableOfContents from "../../TableOfContents";
+import PostSearchBar from "../../PostSearchBar";
 import PostActions from "../../PostActions";
 
 export const revalidate = 300;
@@ -144,6 +145,7 @@ async function SectionBody({ slug, section }: { slug: string; section: string })
       <div className="panel settings" style={{ padding: '0', marginBottom: '0', maxWidth: '100%' }}>
         <BlogContent content={sectionContent} />
       </div>
+      <PostSearchBar />
     </>
   );
 }

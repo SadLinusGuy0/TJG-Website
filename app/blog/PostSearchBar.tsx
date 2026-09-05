@@ -1,5 +1,7 @@
 'use client';
 
+import { useReadingPreferences } from './useReadingPreferences';
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 interface HeadingInfo {
@@ -7,7 +9,8 @@ interface HeadingInfo {
   text: string;
 }
 
-export default function PostSearchBar() {
+export default function PostSearchBar({ enabledByDefault = true }: { enabledByDefault?: boolean }) {
+  const { hasSavedPreferences } = useReadingPreferences();
   const [headings, setHeadings] = useState<HeadingInfo[]>([]);
   const [nextHeading, setNextHeading] = useState<HeadingInfo | null>(null);
   const [isBackToTop, setIsBackToTop] = useState(false);
@@ -168,6 +171,8 @@ export default function PostSearchBar() {
       ? 'Back to top'
       : nextHeading?.text ?? 'Back to top';
   const isBackToTopMode = headings.length === 0 || isBackToTop;
+
+  if (!enabledByDefault && !hasSavedPreferences) return null;
 
   return (
     <>

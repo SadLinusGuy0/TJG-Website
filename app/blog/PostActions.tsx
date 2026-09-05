@@ -16,6 +16,7 @@ export default function PostActions({ slug }: { slug: string }) {
   const { fmpSeparatedViewAvailable } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
+  const showingCombined = pathname === `/blog/${slug}` && combined;
   const [open, setOpen] = useState(false);
   const [present, setPresent] = useState(false);
   const [notice, setNotice] = useState("");
@@ -105,10 +106,10 @@ export default function PostActions({ slug }: { slug: string }) {
           <div className="post-options-separator" role="separator" />
           {slug === FMP_SLUG && fmpSeparatedViewAvailable && (
             <>
-              <button role="menuitemcheckbox" aria-checked={combined} onClick={() => {
-                setCombined(!combined);
+              <button role="menuitemcheckbox" aria-checked={showingCombined} onClick={() => {
+                setCombined(!showingCombined);
                 if (pathname !== `/blog/${slug}`) router.push(`/blog/${slug}`);
-              }}>Combined view <span className="post-options-switch" aria-hidden="true" data-on={combined} /></button>
+              }}>Combined view <span className="post-options-switch" aria-hidden="true" data-on={showingCombined} /></button>
               <div className="post-options-separator" role="separator" />
             </>
           )}

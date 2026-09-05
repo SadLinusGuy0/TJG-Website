@@ -17,9 +17,13 @@ function read(): ReadingPreferences {
 export function useReadingPreferences() {
   const [preferences, setState] = useState(defaults);
   const [ready, setReady] = useState(false);
+  const [hasSavedPreferences, setHasSavedPreferences] = useState(false);
   useEffect(() => {
-    const sync = () => setState(read());
-    const local = (event: Event) => setState((event as CustomEvent<ReadingPreferences>).detail);
+    const sync = () => {
+      setState(read());
+      try { setHasSavedPreferences(localStorage.getItem(KEY) !== null); } catch { /* No saved override. */ }
+    };
+    const local = (event: Event) => { setState((event as CustomEvent<ReadingPreferences>).detail); setHasSavedPreferences(true); };
     sync();
     setReady(true);
     window.addEventListener("storage", sync);
@@ -29,10 +33,11 @@ export function useReadingPreferences() {
   const setPreferences = useCallback((update: (current: ReadingPreferences) => ReadingPreferences) => {
     const next = update(preferences);
     setState(next);
+    setHasSavedPreferences(true);
     try { localStorage.setItem(KEY, JSON.stringify(next)); } catch { /* Keep the change for this visit. */ }
     window.dispatchEvent(new CustomEvent(EVENT, { detail: next }));
   }, [preferences]);
-  return { preferences, setPreferences, ready };
+  return { preferences, setPreferences, ready, hasSavedPreferences };
 }
 
 const VIEW_EVENT = "fmp-view-changed";

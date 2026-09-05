@@ -247,9 +247,7 @@ async function BlogPostBody({ slug }: { slug: string }) {
           <BlogContent content={processContentWithEmbeds(legacyHtml)} />
         </div>
       )}
-      {(searchBarEnabled || (searchBarFmpEnabled && slug === FMP_SLUG)) && (
-        <PostSearchBar />
-      )}
+      <PostSearchBar enabledByDefault={searchBarEnabled || (searchBarFmpEnabled && slug === FMP_SLUG)} />
     </>
   );
 }

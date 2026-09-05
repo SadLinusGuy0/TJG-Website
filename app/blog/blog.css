@@ -1594,7 +1594,7 @@ mark.post-search-hl {
 
 @media (max-width: 699px) {
   .post-search-anchor {
-    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(100px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
     width: calc(100% - 32px);
@@ -1995,3 +1995,13 @@ body.post-reading-focus .mobile-nav-bar:is(:hover, :focus-within) {
 }
 
 .post-options-action-label { display: inline-flex; align-items: center; gap: 12px; }
+
+/* Keep focus-mode reveals gentle in both directions, without moving the page. */
+body.post-reading-active .desktop-nav,
+body.post-reading-active .mobile-nav-bar {
+  transition: opacity 220ms ease, width 0.3s ease, transform 0.3s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  body.post-reading-active .desktop-nav,
+  body.post-reading-active .mobile-nav-bar { transition: none; }
+}
