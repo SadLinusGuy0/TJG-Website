@@ -6,6 +6,38 @@ https://www.notion.so/37d59b88f2b18072b5fcc8f29814afff
 The wiki home page is the central hub: it has a reading guide, quick facts, and a
 callout recording the last commit each branch was documented at.
 
+## Freshness (2026-09-05)
+
+The home-page callout still reads **2026-07-05** (`main @ 329dab0`, `beta @
+0485b7d`). That is the environment-colored favicons PR. Since then:
+
+- `500a79b` (2026-07-26) unified site editions on one codebase
+- `aec31c4` (2026-08-16) merged a beta release into `main` (Sanity is on
+  production; main is no longer “WordPress-only”)
+- Live Vercel still pins `college.thatjoshguy.me` to the old `college` git
+  branch, not production
+
+Treat the wiki as **historical** until it is rewritten against
+[ENVIRONMENTS.md](ENVIRONMENTS.md). The auto-sync workflow last succeeded on
+the favicon PR; later `main`/`beta` merges did not bump the callout.
+
+This session could not write to Notion (no Notion MCP in the cloud-agent
+tool list). Apply the page-by-page notes below in the wiki, or re-run
+`update-docs.yml`.
+
+### Wiki edits still needed
+
+| Page | What is wrong |
+| --- | --- |
+| Wiki home | Branch list, “main = WordPress / beta = Sanity”, `next build --webpack`, college as a third git branch |
+| Site Overview & Architecture | WordPress as the blog CMS; no `lib/siteEdition.ts`; CSP (removed); `/work/oneui-design-kit` as a live page |
+| Blog System (WordPress) | Rename/retarget: Sanity is default, WordPress is fallback; college is a tag + host, not `joshskinnertjg.wordpress.com` |
+| Feature Flags | Drop `liquid-glass-enabled`, `year-slider-enabled`, `merged-work-carousel-enabled`; add `projects-enabled` and `blog-content-source`; college is not `wordpress-source-url` |
+| Integrations, APIs & Environment Variables | Add Sanity + `SITE_EDITION`; WordPress is not “two sites: main + college”; shop.thatjoshguy.me is Gumroad |
+| Quirks | Git branch table; college-blogs-enabled is leftover; favicons are deploy-env not edition |
+| Beta Branch — Sanity Migration | Archive or retitle: much of this delta is already on `main`. Keep it as a history of the migration, not “what beta is for” |
+| New / Overview | Point at the two-axis model in ENVIRONMENTS.md: env = local/beta/main, edition = normal/college |
+
 ## Page map
 
 | Page | Notion page ID |
