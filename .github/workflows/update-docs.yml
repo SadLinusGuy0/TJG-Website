@@ -51,8 +51,10 @@ jobs:
 
             Current branch: ${{ github.base_ref || github.ref_name }}
 
-            1. Fetch the wiki home page. The blockquote near the top records the
-               last documented commit for each branch (e.g. "main @ <sha>").
+            1. Fetch the Environments & site editions page from docs/NOTION_DOCS.md.
+               Its Documentation checkpoint records the last documented commit
+               for each branch (e.g. "main @ <sha>"). The wiki hub is a database;
+               do not attempt to update it as a page.
             2. Run `git log <last-documented-sha>..HEAD --oneline` and
                `git diff <last-documented-sha>..HEAD --stat` to see what changed.
                If the recorded sha is unknown to git, fall back to documenting the
@@ -65,8 +67,10 @@ jobs:
                Pay special attention to: feature flags added/removed, env vars,
                routes, dependencies, localStorage/cookie keys, and anything listed
                on the "Quirks, Easter Eggs & Gotchas" page.
-            5. Finally, update the home page blockquote so this branch's entry
-               reads the new HEAD sha (short form) and today's date.
+            5. Finally, update the Documentation checkpoint on the Environments
+               page so this branch's entry reads the new HEAD sha (short form)
+               and today's date. Keep deployment status separate: do not infer
+               that a commit is live merely because it was merged.
 
             If nothing user-facing or developer-facing changed (e.g. only lockfile
-            or build-info churn), update only the home page blockquote and stop.
+            or build-info churn), update only that Documentation checkpoint and stop.

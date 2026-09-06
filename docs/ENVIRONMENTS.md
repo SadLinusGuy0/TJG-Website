@@ -10,8 +10,7 @@ The Notion **Environments & site editions** page mirrors this guide.
 | Preview | `beta` | `beta.thatjoshguy.me` | `college.beta.thatjoshguy.me` |
 | Development | local checkout | `localhost:3000` or `normal.localhost:3000` | `college.localhost:3000` or `SITE_EDITION=college` |
 
-The domain table is the rollout target. See the deployment record below for
-what has actually been verified. Both production domains must share one
+The domain table is live. See the deployment record below for verification. Both production domains must share one
 production deployment; both beta domains must track the `beta` branch preview.
 Vercel's standard Production/Preview environments are sufficient.
 
@@ -104,9 +103,27 @@ Avoid rolling code back across incompatible CMS schema changes.
 
 ## Deployment record — 6 September 2026
 
-Implementation and checks are in progress. Domain cutover has not yet occurred.
-Previous production: `dpl_DgTgVn11scHt16qy1sG6EXpZsfNb` (`aec31c4`).
-The college domain is currently assigned to the `college` branch; normal beta
-tracks `beta`. College beta is provisioned and verified, tracking `beta`; its first deployment
-of the refactored code is pending. Vercel is configured for Node.js 24.
-Previous college: `dpl_2BPSGCfueQKBFciX95UiaCpZvhko` (`48a13b5`).
+The shared-edition rollout is live at application commit `dcbd31f`:
+
+- Production: `dpl_AuVb6NnH21XdJ3CUewJ4ub2wrCrQ`, both main and college domains.
+- Beta: `dpl_6UQqF7t3dz5Xfx4kXAU4T1mvLMwD`, both beta domains.
+- Both Git branches contain the same application commit and preserved main-only
+  workflows. Vercel uses Node.js 24. GitHub CI has the public Sanity project ID.
+- Local checks: 93 unit tests, 12 browser tests, lint and tooling checks, schema
+  validation and production build passed; both dependency audits found zero
+  vulnerabilities. Beta CI `34025086661` and main CI `34025406350` passed.
+- Live checks verified both editions in each environment: home/blog/direct post
+  identity and canonicals, wrong-edition rejection, robots and sitemap policy.
+  Browser inspection verified the normal beta home and college blog/FMP flow.
+- College has moved off its old branch onto Production. Future `college` branch
+  deployments are disabled by `vercel.json`; branch history remains intact.
+- Documentation-only updates and the retired-branch setting may produce newer
+  deployments; the IDs above record the initially verified application release.
+
+Rollback references: previous production `dpl_DgTgVn11scHt16qy1sG6EXpZsfNb`
+(`aec31c4`); previous college `dpl_2BPSGCfueQKBFciX95UiaCpZvhko` (`48a13b5`).
+Restoring the former college setup also requires restoring its domain's
+`gitBranch: college` assignment and enabling future builds if needed.
+
+The wiki's Environments page records ongoing rollout and documentation
+checkpoints. Its database hub cannot be updated as a page through MCP.

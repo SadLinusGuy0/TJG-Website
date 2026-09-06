@@ -2,7 +2,8 @@
   "cleanUrls": true,
   "git": {
     "deploymentEnabled": {
-      "legacy": false
+      "legacy": false,
+      "college": false
     }
   },
   "redirects": [
