@@ -6,8 +6,8 @@ The Notion **Environments & site editions** page mirrors this guide.
 
 | Environment | Branch | Normal edition | College edition |
 | --- | --- | --- | --- |
-| Production | `main` | `thatjoshguy.me` | `college.thatjoshguy.me` |
-| Preview | `beta` | `beta.thatjoshguy.me` | `college.beta.thatjoshguy.me` |
+| Production | `main` | `tjg.gg` | `college.tjg.gg` |
+| Preview | `beta` | `beta.tjg.gg` | `college.beta.tjg.gg` |
 | Development | local checkout | `localhost:3000` or `normal.localhost:3000` | `college.localhost:3000` or `SITE_EDITION=college` |
 
 The domain table is live. See the deployment record below for verification. Both production domains must share one

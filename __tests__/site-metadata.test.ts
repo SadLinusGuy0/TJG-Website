@@ -16,11 +16,15 @@ beforeEach(() => {
 afterEach(() => { process.env = originalEnv; });
 
 it.each([
-  ['thatjoshguy.me', 'normal', 'https://thatjoshguy.me', true],
-  ['college.thatjoshguy.me', 'college', 'https://college.thatjoshguy.me', true],
-  ['beta.thatjoshguy.me', 'normal', 'https://thatjoshguy.me', false],
-  ['college.beta.thatjoshguy.me', 'college', 'https://college.thatjoshguy.me', false],
-  ['website-git-beta.vercel.app', 'normal', 'https://thatjoshguy.me', false],
+  ['tjg.gg', 'normal', 'https://tjg.gg', true],
+  ['college.tjg.gg', 'college', 'https://college.tjg.gg', true],
+  ['beta.tjg.gg', 'normal', 'https://tjg.gg', false],
+  ['college.beta.tjg.gg', 'college', 'https://college.tjg.gg', false],
+  ['thatjoshguy.me', 'normal', 'https://tjg.gg', true],
+  ['college.thatjoshguy.me', 'college', 'https://college.tjg.gg', true],
+  ['beta.thatjoshguy.me', 'normal', 'https://tjg.gg', false],
+  ['college.beta.thatjoshguy.me', 'college', 'https://college.tjg.gg', false],
+  ['website-git-beta.vercel.app', 'normal', 'https://tjg.gg', false],
 ] as const)('serves metadata and sitemap for host %s regardless of content override cookies', async (host, edition, canonical, indexable) => {
   (headers as jest.Mock).mockResolvedValue(new Headers({ host: 'localhost:3100', 'x-forwarded-host': host }));
   const metadata = await routeMetadata('/blog', 'Blog', 'Blog description');

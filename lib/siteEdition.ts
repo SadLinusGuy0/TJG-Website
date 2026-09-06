@@ -5,10 +5,16 @@ export type SiteEdition = (typeof SITE_EDITIONS)[number];
 export type SiteEnvironment = 'development' | 'preview' | 'production';
 
 const PRODUCTION_ORIGINS: Record<SiteEdition, string> = {
-  normal: 'https://thatjoshguy.me',
-  college: 'https://college.thatjoshguy.me',
+  normal: 'https://tjg.gg',
+  college: 'https://college.tjg.gg',
 };
 const HOST_EDITIONS: Record<string, SiteEdition> = {
+  'tjg.gg': 'normal',
+  'www.tjg.gg': 'normal',
+  'college.tjg.gg': 'college',
+  'beta.tjg.gg': 'normal',
+  'college.beta.tjg.gg': 'college',
+  // Keep old hosts recognized during the domain cutover and for compatibility.
   'thatjoshguy.me': 'normal',
   'www.thatjoshguy.me': 'normal',
   'college.thatjoshguy.me': 'college',
@@ -19,8 +25,8 @@ const HOST_EDITIONS: Record<string, SiteEdition> = {
   'college.localhost': 'college',
   'college.beta.localhost': 'college',
 };
-const PREVIEW_HOSTS = new Set(['beta.thatjoshguy.me', 'college.beta.thatjoshguy.me']);
-const PUBLIC_HOSTS = new Set(['thatjoshguy.me', 'www.thatjoshguy.me', 'college.thatjoshguy.me']);
+const PREVIEW_HOSTS = new Set(['beta.tjg.gg', 'college.beta.tjg.gg', 'beta.thatjoshguy.me', 'college.beta.thatjoshguy.me']);
+const PUBLIC_HOSTS = new Set(['tjg.gg', 'www.tjg.gg', 'college.tjg.gg', 'thatjoshguy.me', 'www.thatjoshguy.me', 'college.thatjoshguy.me']);
 
 function parseHost(rawHost: string | null | undefined): URL | undefined {
   const host = rawHost?.split(',')[0].trim().toLowerCase();

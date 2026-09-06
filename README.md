@@ -20,8 +20,8 @@ One codebase serves two editions (`normal` and `college`) in production and beta
 
 | Environment | Normal | College |
 | --- | --- | --- |
-| Production (`main`) | `thatjoshguy.me` | `college.thatjoshguy.me` |
-| Preview (`beta`) | `beta.thatjoshguy.me` | `college.beta.thatjoshguy.me` |
+| Production (`main`) | `tjg.gg` | `college.tjg.gg` |
+| Preview (`beta`) | `beta.tjg.gg` | `college.beta.tjg.gg` |
 
 Posts tagged `college` appear on the college edition; other posts appear on
 normal. Both environments read the same published Sanity dataset. Beta tests

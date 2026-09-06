@@ -1,10 +1,14 @@
 import { test, expect } from '@playwright/test';
 
 const sites = [
-  { host: 'thatjoshguy.me', edition: 'normal', environment: 'production', canonical: 'https://thatjoshguy.me', indexable: true },
-  { host: 'college.thatjoshguy.me', edition: 'college', environment: 'production', canonical: 'https://college.thatjoshguy.me', indexable: true },
-  { host: 'beta.thatjoshguy.me', edition: 'normal', environment: 'preview', canonical: 'https://thatjoshguy.me', indexable: false },
-  { host: 'college.beta.thatjoshguy.me', edition: 'college', environment: 'preview', canonical: 'https://college.thatjoshguy.me', indexable: false },
+  { host: 'tjg.gg', edition: 'normal', environment: 'production', canonical: 'https://tjg.gg', indexable: true },
+  { host: 'college.tjg.gg', edition: 'college', environment: 'production', canonical: 'https://college.tjg.gg', indexable: true },
+  { host: 'beta.tjg.gg', edition: 'normal', environment: 'preview', canonical: 'https://tjg.gg', indexable: false },
+  { host: 'college.beta.tjg.gg', edition: 'college', environment: 'preview', canonical: 'https://college.tjg.gg', indexable: false },
+  { host: 'thatjoshguy.me', edition: 'normal', environment: 'production', canonical: 'https://tjg.gg', indexable: true },
+  { host: 'college.thatjoshguy.me', edition: 'college', environment: 'production', canonical: 'https://college.tjg.gg', indexable: true },
+  { host: 'beta.thatjoshguy.me', edition: 'normal', environment: 'preview', canonical: 'https://tjg.gg', indexable: false },
+  { host: 'college.beta.thatjoshguy.me', edition: 'college', environment: 'preview', canonical: 'https://college.tjg.gg', indexable: false },
 ];
 
 for (const site of sites) {

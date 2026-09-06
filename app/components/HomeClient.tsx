@@ -945,7 +945,7 @@ export default function HomeClient({
               </div>
 
               <div className="list-group">
-                <a href="https://legacy.thatjoshguy.me" className="list">
+                <a href="https://legacy.tjg.gg" className="list">
                   <div className="list-item-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <mask id="mask0_misc_home" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
@@ -962,7 +962,7 @@ export default function HomeClient({
                   <div className="list-item-content">
                     <div className="body-text">My old site</div>
                     <div className="information-wrapper">
-                      <div className="information">legacy.thatjoshguy.me, made in conjunction with Dhiren Vasnani</div>
+                      <div className="information">legacy.tjg.gg, made in conjunction with Dhiren Vasnani</div>
                     </div>
                   </div>
                 </a>

@@ -77,8 +77,8 @@ them have been replaced (keep them while an older deployment needs them):
 
 ## Editions and deployment environments
 
-College is selected by hostname (`college.thatjoshguy.me` and
-`college.beta.thatjoshguy.me`), not by a CMS flag or a separate branch.
+College is selected by hostname (`college.tjg.gg` and
+`college.beta.tjg.gg`), not by a CMS flag or a separate branch.
 Both editions use Sanity by default and filter posts by the `college` tag.
 `SITE_EDITION=normal|college` supplies a default for localhost/generated URLs.
 
