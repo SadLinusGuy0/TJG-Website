@@ -4,12 +4,13 @@ Josh Skinner's ("That Josh Guy") personal portfolio, blog, and shop — built wi
 
 ## Blog content sources
 
-The blog is dual-sourced behind the `blog-content-source` feature flag:
+The blog uses Sanity by default. Set the server environment variable
+`BLOG_CONTENT_SOURCE=wordpress` only for an explicit fallback deployment:
 
 - **Sanity CMS** (default) — schemas in `sanity/`, client in `lib/sanity.ts`
-- **WordPress.com** (fallback) — REST client in `lib/wordpress.ts`, site selected by trusted server configuration (`WORDPRESS_SOURCE_URL` or the cloud flag; exact HTTPS origins only)
+- **WordPress.com** (fallback) — REST client in `lib/wordpress.ts`, site selected by trusted server configuration (`WORDPRESS_SOURCE_URL`; exact HTTPS origins only)
 
-The abstraction layer in `lib/blog.ts` normalizes both into `BlogPost` details and bounded `BlogSummary` pages. See `docs/VERCEL_FLAGS_SETUP.md` for flag setup, including how to serve the College site variant from this same codebase via configuration.
+The abstraction layer in `lib/blog.ts` normalizes both into `BlogPost` details and bounded `BlogSummary` pages. CMS configuration lives in `lib/blogSourceConfig.ts` and `.env.example`; browser cookies and Vercel flags cannot select the CMS. See `docs/ENVIRONMENTS.md` for normal/college edition setup.
 
 ## Getting Started
 

@@ -1,6 +1,6 @@
 import { getDisplayWordCount, processContentWithEmbeds } from '../lib/blogContentProcessing';
 import { dedupeBlogPostsBySlug, type BlogPost } from '../lib/blog';
-import { getBlogContentSource } from '../lib/getBlogContentSourceFlag';
+import { getBlogContentSource } from '../lib/blogSourceConfig';
 import { portableTextToPlainText, type PortableTextBlock } from '../lib/portableText';
 
 jest.mock('../lib/sanity', () => ({
@@ -28,6 +28,7 @@ function post(slug: string, id = slug): BlogPost {
 
 describe('blog migration compatibility', () => {
   beforeEach(() => {
+    delete process.env.BLOG_CONTENT_SOURCE;
     delete process.env.FLAGS;
     delete process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
   });

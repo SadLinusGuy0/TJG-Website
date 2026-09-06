@@ -124,33 +124,3 @@ export const fmpSeparatedViewEnabled = flag({
     { value: false, label: 'Disabled' },
   ],
 });
-
-/**
- * WordPress source URL flag - controls which WordPress site the blog loads from.
- * Configure per-environment in the Vercel Dashboard (e.g. college vs main site).
- */
-export const wordpressSourceUrl = flag<string>({
-  key: 'wordpress-source-url',
-  adapter: vercelAdapter(),
-  defaultValue: 'https://tjg8.wordpress.com',
-  description: 'The WordPress site URL used as the blog data source',
-  options: [
-    { value: 'https://tjg8.wordpress.com', label: 'Main Site' },
-    { value: 'https://joshskinnertjg.wordpress.com', label: 'College Site' },
-  ],
-});
-
-/**
- * Blog content source flag - controls which CMS backend provides blog content.
- * Defaults to Sanity. Set to "wordpress" only for fallback/debug usage.
- */
-export const blogContentSource = flag<string>({
-  key: 'blog-content-source',
-  adapter: vercelAdapter(),
-  defaultValue: 'sanity',
-  description: 'Which CMS backend to use for blog content',
-  options: [
-    { value: 'wordpress', label: 'WordPress' },
-    { value: 'sanity', label: 'Sanity' },
-  ],
-});

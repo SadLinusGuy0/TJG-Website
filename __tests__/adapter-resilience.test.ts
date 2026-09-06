@@ -3,8 +3,10 @@ import * as wp from '../lib/wordpress';
 import { getBlogEdition } from '../lib/siteEdition';
 import { readBoundedJson } from '../lib/upstream';
 jest.mock('../lib/sanity', () => ({}));
-jest.mock('../lib/getBlogContentSourceFlag', () => ({ getBlogContentSource: async () => 'wordpress' }));
-jest.mock('../lib/getWordpressSourceUrlFlag', () => ({ getWordpressSourceUrl: async () => 'https://tjg8.wordpress.com' }));
+jest.mock('../lib/blogSourceConfig', () => ({
+  getBlogContentSource: async () => 'wordpress',
+  getWordpressSourceUrl: async () => 'https://tjg8.wordpress.com',
+}));
 jest.mock('../lib/siteEdition', () => ({ ...jest.requireActual('../lib/siteEdition'), getBlogEdition: jest.fn() }));
 jest.mock('../lib/wordpress', () => ({ fetchCategories: jest.fn(), fetchTags: jest.fn(), fetchPostPage: jest.fn(), fetchPostBySlug: jest.fn(), fetchPageBySlug: jest.fn(), getFeaturedImageUrl: () => null }));
 const post = { id:1,date:'2026-01-01',slug:'college-post',title:{rendered:'College post'},excerpt:{rendered:'Summary'},content:{rendered:'FULL_BODY_MUST_NOT_BE_SERIALIZED'},categories:[1],tags:[2] };

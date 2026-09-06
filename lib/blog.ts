@@ -1,6 +1,5 @@
 import 'server-only';
-import { getBlogContentSource } from './getBlogContentSourceFlag';
-import { getWordpressSourceUrl } from './getWordpressSourceUrlFlag';
+import { getBlogContentSource, getWordpressSourceUrl } from './blogSourceConfig';
 import * as wp from './wordpress';
 import * as sanity from './sanity';
 import { stripHtmlAndDecode, type PortableTextBlock } from './portableText';
@@ -218,7 +217,7 @@ export async function fetchBlogPage(options: { page?: number; perPage?: number; 
 }
 
 export async function fetchPublicSitemapPosts(edition: SiteEdition): Promise<Array<{ slug: string; date: string }>> {
-  if (await getBlogContentSource(true) === 'sanity') return sanity.fetchSitemapPosts(edition);
+  if (await getBlogContentSource() === 'sanity') return sanity.fetchSitemapPosts(edition);
   const apiBaseUrl = await getWordpressSourceUrl();
   const { catMap, tagMap } = await wpSlugMaps(apiBaseUrl);
   const posts = await wp.fetchAllPosts({ apiBaseUrl, summary: true });

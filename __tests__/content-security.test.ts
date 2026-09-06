@@ -1,7 +1,7 @@
 import { sanitizeBlogHtml } from '../lib/sanitizeBlogHtml';
 import { sanitizeBlogButtonHref } from '../lib/sanitizeBlogButtonHref';
 import { trustedWordpressOrigin } from '../lib/wordpressOrigins';
-import { getWordpressSourceUrl } from '../lib/getWordpressSourceUrlFlag';
+import { getWordpressSourceUrl } from '../lib/blogSourceConfig';
 import { processContentWithEmbeds } from '../lib/blogContentProcessing';
 
 jest.mock('next/headers', () => ({ cookies: async () => ({ get: () => ({ value: 'http://127.0.0.1:3101' }) }) }));
