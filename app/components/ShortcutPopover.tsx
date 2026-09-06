@@ -24,13 +24,15 @@ function surfacePath(width: number, height: number, arrow: number, placement: 't
   ].join(' ');
 }
 
-export default function ShortcutPopover({ title, content, placement = 'top', children }: {
+export default function ShortcutPopover({ title, content, placement = 'top', keyboardOnly = true, children }: {
   title: string;
   content: ReactNode;
   placement?: 'top' | 'right';
+  keyboardOnly?: boolean;
   children: (descriptionId: string | undefined) => ReactNode;
 }) {
   const showHints = useKeyboardHints();
+  const enabled = !keyboardOnly || showHints;
   const id = useId();
   const anchor = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
@@ -38,12 +40,12 @@ export default function ShortcutPopover({ title, content, placement = 'top', chi
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<{ left: number; top: number; arrow: number; width: number; height: number } | null>(null);
   const cancelClose = () => { if (timer.current) clearTimeout(timer.current); };
-  const show = () => { cancelClose(); if (showHints) setOpen(true); };
+  const show = () => { cancelClose(); if (enabled) setOpen(true); };
   const close = () => { cancelClose(); timer.current = setTimeout(() => setOpen(false), 120); };
 
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
   useLayoutEffect(() => {
-    if (!open || !showHints) return;
+    if (!open || !enabled) return;
     const update = () => {
       const trigger = anchor.current?.firstElementChild;
       if (!trigger || !panel.current) return;
@@ -71,15 +73,15 @@ export default function ShortcutPopover({ title, content, placement = 'top', chi
       window.removeEventListener('scroll', update, true);
       window.removeEventListener('keydown', dismiss);
     };
-  }, [open, placement, showHints]);
+  }, [open, placement, enabled]);
 
   const outline = position ? surfacePath(position.width, position.height, position.arrow, placement) : '';
 
   return <div ref={anchor} className="shortcut-popover-anchor"
     onMouseEnter={show} onMouseLeave={close} onFocus={show} onBlur={close}
     onClickCapture={() => setOpen(false)}>
-    {children(open && showHints ? id : undefined)}
-    {open && showHints && createPortal(<div ref={panel} id={id} role="tooltip"
+    {children(open && enabled ? id : undefined)}
+    {open && enabled && createPortal(<div ref={panel} id={id} role="tooltip"
       className={`shortcut-popover shortcut-popover--${placement}`}
       style={{ left: position?.left ?? 0, top: position?.top ?? 0, visibility: position ? 'visible' : 'hidden' }}
       onMouseEnter={show} onMouseLeave={close}>

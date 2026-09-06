@@ -3,6 +3,7 @@
 import { More, Selected, Copy, Edit } from "@thatjoshguy/oneui-icons";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import "./PostActions.css";
 import ForceRefreshButton from "./[slug]/ForceRefreshButton";
 
 import { useReadingPreferences, useFmpCombinedView } from "./useReadingPreferences";
@@ -11,8 +12,11 @@ import { localPreferences } from "../../lib/browserStorage";
 import { useTheme } from "../components/ThemeProvider";
 import { usePathname, useRouter } from "next/navigation";
 
-export default function PostActions({ slug }: { slug: string }) {
-  const { preferences, setPreferences, ready } = useReadingPreferences();
+export default function PostActions({ slug, preview = false }: { slug: string; preview?: boolean }) {
+  const { preferences: savedPreferences, setPreferences: savePreferences, ready } = useReadingPreferences();
+  const [previewPreferences, setPreviewPreferences] = useState({ compact: false, focus: false, search: true });
+  const preferences = preview ? previewPreferences : savedPreferences;
+  const setPreferences = preview ? setPreviewPreferences : savePreferences;
   const { combined, setCombined } = useFmpCombinedView();
   const { fmpSeparatedViewAvailable } = useTheme();
   const pathname = usePathname();
@@ -48,13 +52,14 @@ export default function PostActions({ slug }: { slug: string }) {
   }, [open, present]);
 
   useEffect(() => {
+    if (preview) return;
     return () => {
       document.body.classList.remove("post-reading-active", "post-reading-compact", "post-reading-focus", "post-reading-hide-search");
     };
-  }, []);
+  }, [preview]);
 
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || preview) return;
     document.body.classList.add("post-reading-active");
     document.body.classList.toggle("post-reading-compact", preferences.compact);
     const desktop = window.matchMedia('(min-width: 700px)');
@@ -64,13 +69,16 @@ export default function PostActions({ slug }: { slug: string }) {
     document.body.classList.toggle("post-reading-hide-search", !preferences.search);
     window.dispatchEvent(new Event("resize"));
     return () => desktop.removeEventListener('change', updateFocus);
-  }, [preferences, ready]);
+  }, [preferences, ready, preview]);
 
   useEffect(() => {
     if (!open) return;
     const reposition = () => {
       const rect = trigger.current?.getBoundingClientRect();
-      if (rect) setPosition({ top: rect.bottom + 10, right: Math.max(12, window.innerWidth - rect.right) });
+      if (rect) setPosition({
+        top: Math.max(12, Math.min(rect.bottom + 10, window.innerHeight - (menu.current?.offsetHeight ?? 0) - 12)),
+        right: Math.max(12, window.innerWidth - rect.right),
+      });
     };
     reposition();
     menu.current?.querySelector<HTMLButtonElement>("button")?.focus();
@@ -96,7 +104,7 @@ export default function PostActions({ slug }: { slug: string }) {
 
   return (
     <div className="top-app-bar-action-group" role="group" aria-label="Post actions">
-      <ForceRefreshButton slug={slug} />
+      {!preview && <ForceRefreshButton slug={slug} />}
       <button ref={trigger} type="button" className="top-app-bar-icon" aria-label="More post options" title="More post options" aria-haspopup="menu" aria-expanded={open} aria-controls={open ? id : undefined} onClick={() => { setNotice(""); setPresent(true); setOpen(!open); }}>
         <More color="var(--primary)" />
       </button>
@@ -123,7 +131,7 @@ export default function PostActions({ slug }: { slug: string }) {
           <button className="desktop-focus-option" role="menuitemcheckbox" aria-checked={preferences.focus} onClick={() => setPreferences(p => ({ ...p, focus: !p.focus }))}>Focus mode <span className="post-options-switch" aria-hidden="true" data-on={preferences.focus} /></button>
           <button role="menuitemcheckbox" aria-checked={preferences.search} onClick={() => setPreferences(p => ({ ...p, search: !p.search }))}>Show search bar <span className="post-options-switch" aria-hidden="true" data-on={preferences.search} /></button>
           <div className="post-options-separator" role="separator" />
-          {slug === FMP_SLUG && fmpSeparatedViewAvailable && (
+          {!preview && slug === FMP_SLUG && fmpSeparatedViewAvailable && (
             <>
               <button role="menuitemcheckbox" aria-checked={showingCombined} onClick={() => {
                 setCombined(!showingCombined);
@@ -133,7 +141,7 @@ export default function PostActions({ slug }: { slug: string }) {
             </>
           )}
           <button role="menuitem" onClick={copyLink}><span className="post-options-action-label"><Copy size={20} color="var(--primary)" aria-hidden="true" />Copy link</span></button>
-          {devOptionsEnabled && (
+          {!preview && devOptionsEnabled && (
             <a role="menuitem" href={`https://admin.tjg.gg/content/posts/${encodeURIComponent(slug)}`} onClick={() => setOpen(false)}>
               <span className="post-options-action-label"><Edit size={20} color="var(--primary)" aria-hidden="true" />Edit</span>
             </a>

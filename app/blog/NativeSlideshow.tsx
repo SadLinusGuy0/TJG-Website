@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import './NativeSlideshow.css';
 import { useRef, useState } from 'react';
 
 export interface SlideData {

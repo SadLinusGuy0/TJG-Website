@@ -1,10 +1,10 @@
 "use client";
-import { stripHtmlAndDecode } from "../../lib/portableText";
 import Image from "next/image";
 import Link from "next/link";
 import AnimatedText from "./AnimatedText";
 import { Education, Location } from '@thatjoshguy/oneui-icons';
 import Footer from "./Footer";
+import { CarouselContentCard } from "./ContentCards";
 import { CSSProperties, ReactElement, ReactNode, RefObject, Suspense, lazy, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from './ThemeProvider';
 import type { FeaturedStory } from "../../lib/featured-stories";
@@ -913,23 +913,7 @@ export default function HomeClient({
                   <div className="design-projects-scroll-inner">
                     {recentBlogPosts.map((post) => (
                       <SmoothHoverCard key={post.id}>
-                        <Link href={`/blog/${post.slug}`} className="design-project-card">
-                          <div className="design-project-thumbnail">
-                            {post.thumbnail && (
-                              <Image
-                                src={post.thumbnail}
-                                alt={post.title.replace(/<[^>]*>/g, '')}
-                                width={400}
-                                height={225}
-                                className="design-project-image"
-                              />
-                            )}
-                          </div>
-                          <div className="design-project-info">
-                            <span className="design-project-title" >{stripHtmlAndDecode(post.title)}</span>
-                            <span className="design-project-tag">Blog</span>
-                          </div>
-                        </Link>
+                        <CarouselContentCard post={post} />
                       </SmoothHoverCard>
                     ))}
                   </div>
