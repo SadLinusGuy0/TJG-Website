@@ -10,29 +10,21 @@ import ProgressiveBlur from './components/ProgressiveBlur';
 import DiscordPopup from './components/DiscordPopup';
 import Navigation from './components/Navigation';
 import type { Metadata } from 'next';
-import { getSiteEdition, getSiteUrl } from '../lib/siteEdition';
-
-// Blue favicon in production, purple on preview deploys, green in local dev.
-// VERCEL_ENV is 'production' | 'preview' | 'development' on Vercel; local
-// `next dev` has no VERCEL_ENV, so fall back to NODE_ENV.
-const deploymentEnv =
-  process.env.VERCEL_ENV ??
-  (process.env.NODE_ENV === 'production' ? 'production' : 'development');
-const favicon =
-  deploymentEnv === 'production' ? '/favicon.ico' : `/favicon-${deploymentEnv}.ico`;
+import { getSiteContext } from '../lib/siteEdition';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const edition = await getSiteEdition();
-  const siteUrl = getSiteUrl(edition);
-  const isCollege = edition === 'college';
+  const site = await getSiteContext();
+  const siteUrl = site.canonicalOrigin;
+  const isCollege = site.edition === 'college';
+  const favicon = site.environment === 'production' ? '/favicon.ico' : `/favicon-${site.environment}.ico`;
   const title = isCollege ? 'College Portfolio | That Josh Guy' : 'That Josh Guy';
   const description = isCollege
     ? 'Josh Skinner’s college portfolio, featuring game development projects, process work, and development blogs.'
     : 'Designer, tech journalist, and Samsung/Android creator — explore my work, articles, and design projects.';
 
   return {
-    metadataBase: new URL(siteUrl),
-    robots: edition === "beta" || process.env.VERCEL_ENV === "preview" ? { index: false, follow: true } : undefined,
+    metadataBase: new URL(site.origin),
+    robots: !site.indexable ? { index: false, follow: true } : undefined,
     title,
     description,
     keywords: 'Josh Skinner, That Josh Guy, UI/UX Designer, Graphic Designer, Web Developer, Writer, Portfolio, Freelance, Creative',
@@ -70,12 +62,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [blogEnabledValue, cornerSmoothingEnabledValue, fmpSeparatedViewEnabledValue, siteEdition] = await Promise.all([
-    getBlogEnabled(), getCornerSmoothingEnabled(), getFmpSeparatedViewEnabled(), getSiteEdition(),
+  const [blogEnabledValue, cornerSmoothingEnabledValue, fmpSeparatedViewEnabledValue, site] = await Promise.all([
+    getBlogEnabled(), getCornerSmoothingEnabled(), getFmpSeparatedViewEnabled(), getSiteContext(),
   ]);
   
   return (
-    <html lang="en" data-site-edition={siteEdition} data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html lang="en" data-site-edition={site.edition} data-site-environment={site.environment} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <meta name="theme-color" content="#000" />

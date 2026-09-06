@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 
 it.each([
-  ['normal', 'main'],
+  ['normal', 'normal'],
   ['college', 'college'],
   ['auto', 'college'],
   ['invalid', 'college'],

@@ -18,7 +18,7 @@ import TopAppBar from "../../components/TopAppBar";
 import PostActions from "../PostActions";
 import { getDisplayWordCount, processContentWithEmbeds } from "../../../lib/blogContentProcessing";
 import { portableTextToPlainText, stripHtmlAndDecode } from "../../../lib/portableText";
-import { getSiteEdition, getSiteUrl } from "../../../lib/siteEdition";
+import { getSiteContext } from "../../../lib/siteEdition";
 
 // Access is hostname-dependent, so direct post requests must never reuse static
 // output generated for a different site edition.
@@ -70,14 +70,14 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     }
 
     const imageAlt = content.seo?.openGraphImageAlt || getFeaturedImageAltText(content) || seoTitle;
-    const edition = await getSiteEdition();
-    const siteUrl = getSiteUrl(edition);
+    const site = await getSiteContext();
+    const siteUrl = site.canonicalOrigin;
     const canonical = safeContentHref(content.seo?.canonicalUrl || "") || `${siteUrl}/blog/${slug}`;
 
     return {
       title: `${seoTitle} | That Josh Guy`,
       description,
-      robots: content.seo?.noIndex || edition === "beta" || process.env.VERCEL_ENV === "preview" ? { index: false, follow: false } : undefined,
+      robots: content.seo?.noIndex || !site.indexable ? { index: false, follow: false } : undefined,
       openGraph: {
         title: `${seoTitle} | That Josh Guy`,
         description,

@@ -37,7 +37,7 @@ describe('Sanity blog mapping', () => {
   it('excludes hidden posts from lists while keeping direct slug lookups available', async () => {
     mockFetch.mockResolvedValue([]);
 
-    await fetchAllPosts({ edition: 'main' });
+    await fetchAllPosts({ edition: 'normal' });
     expect(mockFetch.mock.calls[0][0]).toContain('coalesce(hideFromBlogLists, false) == false');
     expect(mockFetch.mock.calls[0][0]).toContain('!references(*[_type == "tag" && slug.current == "college"]._id)');
 
@@ -46,7 +46,7 @@ describe('Sanity blog mapping', () => {
     expect(mockFetch.mock.calls[1][0]).toContain('references(*[_type == "tag" && slug.current == "college"]._id)');
 
     mockFetch.mockResolvedValue(null);
-    await fetchPostBySlug('private-policy', 'main');
+    await fetchPostBySlug('private-policy', 'normal');
     expect(mockFetch.mock.calls[2][0]).not.toContain('hideFromBlogLists');
     expect(mockFetch.mock.calls[2][0]).toContain('!references(*[_type == "tag" && slug.current == "college"]._id)');
   });
@@ -62,7 +62,7 @@ describe('Sanity blog mapping', () => {
       '!references(*[_type == "tag" && slug.current == "college"]._id)',
     );
 
-    await fetchPostBySlug('final-major-project', 'beta');
+    await fetchPostBySlug('final-major-project', 'normal');
     expect(mockFetch.mock.calls[1][0]).toContain(
       '!references(*[_type == "tag" && slug.current == "college"]._id)',
     );

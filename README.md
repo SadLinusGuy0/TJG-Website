@@ -15,17 +15,20 @@ The abstraction layer in `lib/blog.ts` normalizes both into `BlogPost` details a
 
 ### Site editions
 
-The request hostname selects the site edition while every edition uses the same
-codebase and Sanity dataset:
+One codebase serves two editions (`normal` and `college`) in production and beta.
 
-- `thatjoshguy.me` → `main`
-- `college.thatjoshguy.me` → `college`
-- `beta.thatjoshguy.me` → `beta`
+| Environment | Normal | College |
+| --- | --- | --- |
+| Production (`main`) | `thatjoshguy.me` | `college.thatjoshguy.me` |
+| Preview (`beta`) | `beta.thatjoshguy.me` | `college.beta.thatjoshguy.me` |
 
-Posts tagged `college` are visible only on the college edition. All other posts
-are visible only on main and beta. For local development or Vercel-generated
-URLs, set the server-side `SITE_EDITION` environment variable to `main`,
-`college`, or `beta`; local development defaults to `beta`.
+Posts tagged `college` appear on the college edition; other posts appear on
+normal. Both environments read the same published Sanity dataset. Beta tests
+code changes; publishing CMS content affects production too.
+
+Locally use `normal.localhost:3000` and `college.localhost:3000`, or set
+`SITE_EDITION=normal|college` for plain localhost/generated Vercel URLs.
+See [environment configuration and rollout status](docs/ENVIRONMENTS.md).
 
 ```bash
 npm install

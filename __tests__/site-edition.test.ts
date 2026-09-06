@@ -1,34 +1,59 @@
-import {
-  isPostVisibleOnEdition,
-  resolveSiteEditionFromHost,
-} from '../lib/siteEdition';
+import { isPostVisibleOnEdition, resolveSiteEditionFromHost, resolveSiteContext } from '../lib/siteEdition';
 
-describe('site editions', () => {
-  it.each([
-    ['thatjoshguy.me', 'main'],
-    ['www.thatjoshguy.me', 'main'],
-    ['college.thatjoshguy.me', 'college'],
-    ['college.thatjoshguy.me:443', 'college'],
-    ['beta.thatjoshguy.me', 'beta'],
-    ['beta.localhost:3000', 'beta'],
-  ] as const)('maps %s to the %s edition', (host, expected) => {
-    expect(resolveSiteEditionFromHost(host)).toBe(expected);
+const hosts = [
+  ['thatjoshguy.me', 'normal', 'production', true],
+  ['college.thatjoshguy.me', 'college', 'production', true],
+  ['beta.thatjoshguy.me', 'normal', 'preview', false],
+  ['college.beta.thatjoshguy.me', 'college', 'preview', false],
+] as const;
+
+describe('site editions and environments', () => {
+  it.each(hosts)('resolves %s independently of edition defaults', (host, edition, environment, indexable) => {
+    const site = resolveSiteContext(host, { nodeEnv: 'production', siteEdition: 'college' });
+    expect(site).toEqual({ edition, environment, indexable, origin: `https://${host}`,
+      canonicalOrigin: edition === 'college' ? 'https://college.thatjoshguy.me' : 'https://thatjoshguy.me' });
+    expect(isPostVisibleOnEdition(['college', 'year-2'], site.edition)).toBe(edition === 'college');
+    expect(isPostVisibleOnEdition(['android'], site.edition)).toBe(edition === 'normal');
   });
 
-  it('uses the configured fallback for local and Vercel-generated hosts', () => {
+  it('keeps previews non-indexable even on a production hostname', () => {
+    expect(resolveSiteContext('college.thatjoshguy.me', { vercelEnv: 'preview' }).indexable).toBe(false);
+  });
+
+  it('keeps beta and generated hosts non-indexable even with production runtime configuration', () => {
+    for (const host of ['beta.thatjoshguy.me', 'college.beta.thatjoshguy.me', 'website-git-main.vercel.app']) {
+      expect(resolveSiteContext(host, { vercelEnv: 'production' }).indexable).toBe(false);
+    }
+  });
+
+  it('honors the runtime environment for local builds and favicons', () => {
+    expect(resolveSiteContext('college.beta.thatjoshguy.me', { nodeEnv: 'development' }).environment).toBe('development');
+    expect(resolveSiteContext('college.thatjoshguy.me', { vercelEnv: 'preview', nodeEnv: 'production' }).environment).toBe('preview');
+  });
+
+  it('preserves local ports and separates local origin from production canonical', () => {
+    expect(resolveSiteContext('college.localhost:3000', { nodeEnv: 'development' })).toEqual({
+      edition: 'college', environment: 'development', origin: 'http://college.localhost:3000',
+      canonicalOrigin: 'https://college.thatjoshguy.me', indexable: false,
+    });
     expect(resolveSiteEditionFromHost('localhost:3000', 'college')).toBe('college');
-    expect(resolveSiteEditionFromHost('tjg-website-git-main.vercel.app', 'beta')).toBe('beta');
+    expect(resolveSiteEditionFromHost('COLLEGE.BETA.THATJOSHGUY.ME:443')).toBe('college');
+    expect(resolveSiteEditionFromHost('www.thatjoshguy.me')).toBe('normal');
   });
 
-  it('shows college-tagged posts only on college', () => {
-    expect(isPostVisibleOnEdition(['college', 'year-2'], 'college')).toBe(true);
-    expect(isPostVisibleOnEdition(['college', 'year-2'], 'main')).toBe(false);
-    expect(isPostVisibleOnEdition(['college', 'year-2'], 'beta')).toBe(false);
+  it.each(['normal', 'main', 'beta', 'invalid', undefined])('accepts %s as a normal-content fallback', siteEdition => {
+    expect(resolveSiteContext('website-git-beta.vercel.app', { siteEdition }).edition).toBe('normal');
   });
 
-  it('shows non-college posts only on main and beta', () => {
-    expect(isPostVisibleOnEdition(['android'], 'main')).toBe(true);
-    expect(isPostVisibleOnEdition(['android'], 'beta')).toBe(true);
-    expect(isPostVisibleOnEdition(['android'], 'college')).toBe(false);
+  it('uses college fallback on generated previews without changing the canonical edition', () => {
+    expect(resolveSiteContext('website-git-beta.vercel.app', { siteEdition: 'college', vercelEnv: 'preview' })).toMatchObject({
+      edition: 'college', origin: 'https://website-git-beta.vercel.app', canonicalOrigin: 'https://college.thatjoshguy.me', indexable: false,
+    });
+  });
+
+  it.each(['college.example.com', 'college.thatjoshguy.me.evil.test', 'evil.test/@college.thatjoshguy.me', '__proto__', undefined])('does not infer a trusted site from %s', host => {
+    expect(resolveSiteContext(host, { nodeEnv: 'production' })).toMatchObject({
+      edition: 'normal', origin: 'https://thatjoshguy.me', indexable: false,
+    });
   });
 });

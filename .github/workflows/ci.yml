@@ -2,7 +2,7 @@ name: Quality checks
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, beta]
 permissions:
   contents: read
 concurrency:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NEXT_TELEMETRY_DISABLED: 1
-      SITE_EDITION: main
+      SITE_EDITION: normal
       NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
       NEXT_PUBLIC_SANITY_DATASET: production
     steps:

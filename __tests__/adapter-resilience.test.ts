@@ -9,7 +9,7 @@ jest.mock('../lib/siteEdition', () => ({ ...jest.requireActual('../lib/siteEditi
 jest.mock('../lib/wordpress', () => ({ fetchCategories: jest.fn(), fetchTags: jest.fn(), fetchPostPage: jest.fn(), fetchPostBySlug: jest.fn(), fetchPageBySlug: jest.fn(), getFeaturedImageUrl: () => null }));
 const post = { id:1,date:'2026-01-01',slug:'college-post',title:{rendered:'College post'},excerpt:{rendered:'Summary'},content:{rendered:'FULL_BODY_MUST_NOT_BE_SERIALIZED'},categories:[1],tags:[2] };
 beforeEach(()=>{
- jest.clearAllMocks(); (getBlogEdition as jest.Mock).mockResolvedValue('main');
+ jest.clearAllMocks(); (getBlogEdition as jest.Mock).mockResolvedValue('normal');
  (wp.fetchCategories as jest.Mock).mockResolvedValue([{id:1,slug:'test',name:'Test'}]);
  (wp.fetchTags as jest.Mock).mockResolvedValue([{id:2,slug:'college',name:'College'}]);
  (wp.fetchPostPage as jest.Mock).mockResolvedValue({items:[post],hasMore:false});

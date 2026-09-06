@@ -8,15 +8,15 @@ import { getMiscSectionEnabled } from "../lib/getMiscSectionFlag";
 import { getRecentBlogPostsEnabled } from "../lib/getRecentBlogPostsFlag";
 import { getRecentBlogPosts } from "../lib/recent-blog-posts";
 import { getHomeProfileFacts } from "../lib/home-profile";
-import { getSiteEdition } from "../lib/siteEdition";
+import { getSiteEdition, getSiteContext } from "../lib/siteEdition";
 import HomeClient from "./components/HomeClient";
 
 // Ensure flags are evaluated per-request (needed for toolbar overrides)
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [popularStoriesEnabled, projectsEnabled, miscSectionEnabled, recentBlogPostsEnabled, siteEdition] = await Promise.all([
-    getPopularStoriesEnabled(), getProjectsEnabled(), getMiscSectionEnabled(), getRecentBlogPostsEnabled(), getSiteEdition(),
+  const [popularStoriesEnabled, projectsEnabled, miscSectionEnabled, recentBlogPostsEnabled, site] = await Promise.all([
+    getPopularStoriesEnabled(), getProjectsEnabled(), getMiscSectionEnabled(), getRecentBlogPostsEnabled(), getSiteContext(),
   ]);
   const [featuredStories, projects, recentBlogPosts, profileFacts] = await Promise.all([
     popularStoriesEnabled ? getFeaturedStories() : Promise.resolve([]),
@@ -24,9 +24,9 @@ export default async function Home() {
     recentBlogPostsEnabled ? getRecentBlogPosts(6) : Promise.resolve([]),
     getHomeProfileFacts(),
   ]);
-  const environmentLabel = process.env.NODE_ENV === "development"
+  const environmentLabel = site.environment === "development"
     ? "Dev"
-    : siteEdition === "beta" || process.env.VERCEL_ENV === "preview"
+    : site.environment === "preview"
       ? "Beta"
       : null;
   return (

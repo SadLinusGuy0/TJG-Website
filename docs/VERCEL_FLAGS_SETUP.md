@@ -36,7 +36,7 @@ All definitions live in `flags.ts`; each has a getter in `lib/get*Flag.ts` that 
 |------|-----|------|---------|-------------|
 | Blog | `blog-enabled` | Boolean | on | Shows/hides the blog in navigation and controls access to blog pages |
 | Popular Stories | `popular-stories-enabled` | Boolean | on | Shows/hides the Popular Stories section on the home page |
-| Merged Work carousel | `merged-work-carousel-enabled` | Boolean | on | Show all 4 design projects on the Home carousel |
+| Projects | `projects-enabled` | Boolean | on | Show the Projects section from Edge Config |
 | Misc section | `misc-section-enabled` | Boolean | on | Show the Misc section on the Home page |
 | Recent Blog Posts | `recent-blog-posts-enabled` | Boolean | on | Show the Recent Blog Posts carousel on the Home page |
 | In-post search bar | `in-post-search-bar-enabled` | Boolean | off | Show the search bar on every blog post |
@@ -48,17 +48,24 @@ All definitions live in `flags.ts`; each has a getter in `lib/get*Flag.ts` that 
 
 Removed flags — delete these from the Vercel Dashboard if they still exist there:
 
+- `merged-work-carousel-enabled` (replaced by Projects)
 - `liquid-glass-enabled` (feature removed)
 - `year-slider-enabled` (YearSlider UI removed; recent posts always merge year-1/year-2)
 
-## Serving the College site from this branch
+## Editions and deployment environments
 
-The College variant does not need its own branch — it is configuration only. Deploy the same code (e.g. a second Vercel project or environment) with:
+College is selected by hostname (`college.thatjoshguy.me` and
+`college.beta.thatjoshguy.me`), not by a CMS flag or a separate branch.
+Both editions use Sanity by default and filter posts by the `college` tag.
+`SITE_EDITION=normal|college` supplies a default for localhost/generated URLs.
 
-- `blog-content-source` = `wordpress`
-- `wordpress-source-url` = `https://joshskinnertjg.wordpress.com`
+`blog-content-source` and `wordpress-source-url` choose the fallback CMS only.
+The browser-local `ff-blog-content-edition` override previews content without
+changing hostname identity or canonical URLs. Vercel flag values should be
+configured separately for Production, Preview and Development.
 
-Set these as per-environment flag values in the Vercel Dashboard, or as cookie overrides via `/settings/feature-flags` for local testing. Everything else (theme, pages, shop) is shared.
+See [Environments and site editions](ENVIRONMENTS.md) for domain mapping,
+shared-data boundaries and release verification.
 
 ## Behavior
 
