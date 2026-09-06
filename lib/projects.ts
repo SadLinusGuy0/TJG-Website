@@ -1,3 +1,7 @@
+import 'server-only';
+import { createClient } from '@vercel/edge-config';
+import { safeContentHref } from './contentUrls';
+
 export type ProjectTone = "light" | "dark";
 export type ProjectAction = "link" | "copy-current-url";
 export type ProjectActionIcon = "download" | "open" | "link";
@@ -14,8 +18,8 @@ export interface Project {
   actionIcon: ProjectActionIcon;
 }
 
-// Current Home carousel cards. This stays local while the new visual treatment
-// is refined; `icon`, `bodyUrl`, and `actionUrl` are intentionally optional.
+// Offline/outage fallback only. The Edge Config `projects` array is authoritative,
+// including its order and an intentionally empty list.
 export const DEFAULT_PROJECTS: Project[] = [
   {
     title: "Twidget",
@@ -60,6 +64,49 @@ export const DEFAULT_PROJECTS: Project[] = [
   },
 ];
 
+function projectFromConfig(value: unknown): Project | null {
+  if (!value || typeof value !== 'object') return null;
+  const item = value as Record<string, unknown>;
+  if (item.enabled === false) return null;
+  if (typeof item.title !== 'string' || !item.title.trim() ||
+      typeof item.thumbnail !== 'string') return null;
+
+  const thumbnail = safeContentHref(item.thumbnail, true);
+  if (!thumbnail || thumbnail.startsWith('#')) return null;
+  const description = item.description ?? item.tag ?? '';
+  if (typeof description !== 'string') return null;
+  const tone = item.tone ?? 'dark';
+  const action = item.action ?? 'link';
+  const actionIcon = item.actionIcon ?? (action === 'copy-current-url' ? 'link' : 'open');
+  if (tone !== 'light' && tone !== 'dark') return null;
+  if (action !== 'link' && action !== 'copy-current-url') return null;
+  if (actionIcon !== 'download' && actionIcon !== 'open' && actionIcon !== 'link') return null;
+
+  const bodyValue = item.bodyUrl ?? item.url;
+  const actionValue = item.actionUrl ?? bodyValue;
+  const bodyUrl = typeof bodyValue === 'string' ? safeContentHref(bodyValue) : '';
+  const actionUrl = typeof actionValue === 'string' ? safeContentHref(actionValue) : '';
+  if (action === 'link' && !actionUrl) return null;
+  const icon = typeof item.icon === 'string' ? safeContentHref(item.icon, true) : '';
+
+  return {
+    title: item.title.trim(), thumbnail, description, tone, action, actionIcon,
+    ...(bodyUrl ? { bodyUrl } : {}),
+    ...(actionUrl ? { actionUrl } : {}),
+    ...(icon && !icon.startsWith('#') ? { icon } : {}),
+  };
+}
+
 export async function getProjects(): Promise<Project[]> {
-  return DEFAULT_PROJECTS;
+  const connectionString = process.env.EDGE_CONFIG;
+  if (!connectionString) return DEFAULT_PROJECTS;
+
+  try {
+    // Do not persist this read in Next's Data Cache: edits must work without a deploy.
+    const value = await createClient(connectionString, { cache: 'no-store' }).get('projects');
+    if (!Array.isArray(value)) return DEFAULT_PROJECTS;
+    return value.map(projectFromConfig).filter((project): project is Project => project !== null);
+  } catch {
+    return DEFAULT_PROJECTS;
+  }
 }

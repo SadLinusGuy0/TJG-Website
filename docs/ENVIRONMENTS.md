@@ -57,7 +57,7 @@ rollout. Public reads need no token; use a dedicated read token for private data
 
 `FLAGS` is already scoped separately to Production, Preview and Development.
 Keep beta defaults representative of production except for intentional tests.
-Edge Config is shared (projects/featured stories), and Gumroad product reads
+Edge Config is shared ([editing Projects](PROJECTS.md)/featured stories), and Gumroad product reads
 use the same shop. Do not use beta to test changes to shared service content.
 
 CMS webhooks should invalidate both the production deployment and the stable

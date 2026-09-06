@@ -503,6 +503,7 @@ function ProjectCard({ project }: { project: Project }) {
         <div className="design-project-thumbnail">
           <Image
             src={project.thumbnail}
+            unoptimized={/^https:\/\//i.test(project.thumbnail)}
             alt=""
             width={852}
             height={604}
@@ -516,6 +517,7 @@ function ProjectCard({ project }: { project: Project }) {
           {project.icon && (
             <Image
               src={project.icon}
+              unoptimized={/^https:\/\//i.test(project.icon)}
               alt=""
               width={80}
               height={80}
