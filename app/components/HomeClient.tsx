@@ -3,7 +3,7 @@ import { stripHtmlAndDecode } from "../../lib/portableText";
 import Image from "next/image";
 import Link from "next/link";
 import AnimatedText from "./AnimatedText";
-import { Location } from '@thatjoshguy/oneui-icons';
+import { Education, Location } from '@thatjoshguy/oneui-icons';
 import Footer from "./Footer";
 import { CSSProperties, ReactElement, ReactNode, RefObject, Suspense, lazy, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from './ThemeProvider';
@@ -572,6 +572,7 @@ export default function HomeClient({
   recentBlogPosts = [],
   profileFacts,
   environmentLabel,
+  isCollege = false,
 }: {
   featuredStories: FeaturedStory[];
   projects?: Project[];
@@ -582,6 +583,7 @@ export default function HomeClient({
   recentBlogPosts?: RecentBlogPost[];
   profileFacts: ProfileFact[];
   environmentLabel: "Beta" | "Dev" | null;
+  isCollege?: boolean;
 }) {
   const stackTools: StackTool[] = [
     { name: 'Todoist', icon: '/images/stack/todoist.png' },
@@ -687,7 +689,7 @@ export default function HomeClient({
             className={`hero-role-wrapper${heroLaunchReady ? " hero-launch-ready" : ""}`}
           >
             {environmentLabel && (
-              <span className="beta-chip hero-environment-chip">{environmentLabel}</span>
+              <span className="beta-chip hero-environment-chip">{isCollege ? `College ${environmentLabel}` : environmentLabel}</span>
             )}
             {/* Hero Section */}
             <div className="hero-section">
@@ -700,6 +702,11 @@ export default function HomeClient({
                 <Image src="/images/home/hero/mesh-dark-right.svg" alt="" width={1764} height={1856} className="hero-mesh-layer hero-mesh-dark hero-mesh-dark-right" priority />
               </div>
               <div className="hero-intro">
+                {isCollege && (
+                  <span className="hero-college-icon" role="img" aria-label="College portfolio">
+                    <Education size={64} color="currentColor" aria-hidden="true" />
+                  </span>
+                )}
                 <span className="hero-subtitle">Hey, I&apos;m</span>
                 <h1 className="hero-name">
                   <AnimatedText text="Josh Skinner" className="hero-name-entrance" inverse />

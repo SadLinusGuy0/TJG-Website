@@ -230,6 +230,20 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   transform: translate(-50%, -50%);
 }
 
+.hero-college-icon {
+  display: flex;
+  flex: none;
+  width: clamp(40px, 5vw, 64px);
+  height: clamp(40px, 5vw, 64px);
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-college-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
 @keyframes hero-intro-focus {
   from {
     filter: blur(14px);
@@ -296,6 +310,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
     filter: blur(14px);
   }
 
+  .home-page .hero-college-icon,
   .home-page .hero-subtitle,
   .home-page .hero-name,
   .home-page .hero-description {
@@ -325,6 +340,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
     animation: hero-intro-focus 440ms cubic-bezier(0.16, 1, 0.3, 1) 20ms both;
   }
 
+  .home-page .hero-launch-ready .hero-college-icon,
   .home-page .hero-launch-ready .hero-subtitle {
     animation: hero-content-in 420ms cubic-bezier(0.16, 1, 0.3, 1) 55ms both;
   }

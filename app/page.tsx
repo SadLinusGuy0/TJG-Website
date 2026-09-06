@@ -40,6 +40,7 @@ export default async function Home() {
       recentBlogPosts={recentBlogPosts}
       profileFacts={profileFacts}
       environmentLabel={environmentLabel}
+      isCollege={site.edition === "college"}
     />
   );
 }

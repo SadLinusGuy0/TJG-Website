@@ -14,13 +14,14 @@ for (const site of sites) {
     await page.goto('/');
     await expect(page.locator('html')).toHaveAttribute('data-site-edition', site.edition);
     await expect(page.locator('html')).toHaveAttribute('data-site-environment', site.environment);
+    await expect(page.getByRole('img', { name: 'College portfolio' })).toHaveCount(site.edition === 'college' ? 1 : 0);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', site.canonical);
     await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', site.indexable ? '/favicon.ico' : '/favicon-preview.ico');
     if (!site.indexable) {
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
-      await expect(page.locator('.hero-environment-chip')).toHaveText('Beta');
+      await expect(page.locator('main .hero-environment-chip')).toHaveText(site.edition === 'college' ? 'College Beta' : 'Beta');
     } else {
-      await expect(page.locator('.hero-environment-chip')).toHaveCount(0);
+      await expect(page.locator('main .hero-environment-chip')).toHaveCount(0);
       expect(await page.locator('meta[name="robots"]').count()).toBe(0);
     }
     const robots = await (await request.get('/robots.txt', { headers })).text();
