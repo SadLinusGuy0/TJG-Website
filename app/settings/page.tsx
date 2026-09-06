@@ -5,6 +5,7 @@ import { useTheme, ACCENT_COLORS, ACCENT_LIGHT_BACKGROUNDS, ACCENT_LIGHT_CONTAIN
 import { useEffect, useState, Suspense, type KeyboardEvent } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { Education, Labs, SecurityOutline } from '@thatjoshguy/oneui-icons';
 import { LoadingDots } from '../components/LoadingAnim';
 import TopAppBar from '../components/TopAppBar';
 import ReadingLayoutMenu from './ReadingLayoutMenu';
@@ -13,6 +14,13 @@ import { useReadingPreferences } from '../blog/useReadingPreferences';
 
 const THEME_OPTIONS = ['auto', 'light', 'dark'] as const;
 type ThemeOption = (typeof THEME_OPTIONS)[number];
+
+const DEVELOPER_SITE_LINKS = [
+  { label: 'College site', href: 'https://college.tjg.gg', icon: Education },
+  { label: 'Beta site', href: 'https://beta.tjg.gg', icon: Labs },
+  { label: 'College beta site', href: 'https://college.beta.tjg.gg', icon: Education, badge: Labs },
+  { label: 'Admin site', href: 'https://admin.tjg.gg', icon: SecurityOutline },
+];
 
 function ThemePreviewLight({ accent }: { accent: AccentColor }) {
   const bg = ACCENT_LIGHT_BACKGROUNDS[accent];
@@ -396,6 +404,33 @@ function SettingsContent() {
                   <path d="M1 1L7 7L1 13" stroke="var(--secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </Link>
+            </div>
+            <div className="section-header" />
+            <div className="list-group">
+              {DEVELOPER_SITE_LINKS.map(({ label, href, icon: Icon, badge: Badge }) => (
+                <a key={href} href={href} className="list">
+                  <div className="list-item-icon" style={{ flexShrink: 0 }} aria-hidden="true">
+                    <Icon size={24} color="currentColor" />
+                    {Badge && (
+                      <Badge size={14} color="currentColor" style={{
+                        position: 'absolute', right: -5, bottom: -5,
+                        background: 'var(--container-background)', borderRadius: 4,
+                        padding: 2, boxSizing: 'content-box',
+                      }} />
+                    )}
+                  </div>
+                  <div className="list-item-content">
+                    <div className="body-text">{label}</div>
+                    <div className="information-wrapper">
+                      <div className="information">{new URL(href).hostname}</div>
+                    </div>
+                  </div>
+                  <div className="list-item-separator" />
+                  <svg width="8" height="14" viewBox="0 0 8 14" fill="none" aria-hidden="true">
+                    <path d="M1 1L7 7L1 13" stroke="var(--secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </a>
+              ))}
             </div>
           </>
         )}
