@@ -25,6 +25,10 @@
   break-after: avoid;
 }
 
+.playground-columns .playground-section .section-header > .title {
+  color: var(--primary);
+}
+
 .playground-columns .palette-group-card {
   margin-bottom: 10px;
 }
