@@ -242,7 +242,7 @@ export default function TopAppBar({
   const expandProgress = 1 - progress;
   const heroStyle: CSSProperties | undefined = defaultCollapsed
     ? {
-        minHeight: `calc(${COLLAPSED_HERO_HEIGHT * progress}px + ${EXPANDED_HERO_VIEWPORT_HEIGHT * expandProgress}vh)`,
+        minHeight: `calc(${COLLAPSED_HERO_HEIGHT * progress}px + max(${EXPANDED_HERO_VIEWPORT_HEIGHT * expandProgress}vh, calc(var(--top-app-bar-expanded-min-height) * ${expandProgress})))`,
         paddingTop: COLLAPSED_HERO_PADDING_TOP + (EXPANDED_HERO_PADDING_TOP - COLLAPSED_HERO_PADDING_TOP) * expandProgress,
         transition: pullProgress > 0
           ? "none"

@@ -1,5 +1,6 @@
 "use client";
 import { localPreferences } from '../../lib/browserStorage';
+import { getSettingsReturnPath, rememberSettingsReturnPath } from '../../lib/settingsNavigation';
 
 import { useTheme, ACCENT_COLORS, ACCENT_LIGHT_BACKGROUNDS, ACCENT_LIGHT_CONTAINER_BACKGROUNDS, ACCENT_DARK_BACKGROUNDS, ACCENT_DARK_CONTAINER_BACKGROUNDS, AccentColor } from '../components/ThemeProvider';
 import { useEffect, useState, Suspense, type KeyboardEvent } from 'react';
@@ -141,7 +142,13 @@ function SettingsContent() {
   const [devOptionsEnabled, setDevOptionsEnabled] = useState(false);
   const { preferences, setPreferences } = useReadingPreferences();
   const searchParams = useSearchParams();
-  const from = searchParams.get('from') || '/';
+  const from = searchParams.get('from');
+  const [backHref, setBackHref] = useState('/');
+  useEffect(() => {
+    const returnPath = getSettingsReturnPath(from);
+    rememberSettingsReturnPath(returnPath);
+    setBackHref(returnPath);
+  }, [from]);
   const handleThemeKeyDown = (
     event: KeyboardEvent<HTMLDivElement>,
     currentTheme: ThemeOption,
@@ -184,12 +191,47 @@ function SettingsContent() {
     return () => window.removeEventListener('developer-options-changed', checkDevOptions);
   }, []);
 
+  const handleDevOptionsChange = (enabled: boolean) => {
+    localPreferences.setItem('developer-options-enabled', String(enabled));
+    setDevOptionsEnabled(enabled);
+    window.dispatchEvent(new Event('developer-options-changed'));
+  };
+
+  const blogSettings = (
+    <>
+      <div className="section-header"><h2 className="title">Blog</h2></div>
+      <div className="list-group">
+        <div className="list">
+          <div className="list-item-content">
+            <div className="body-text">Reading layout</div>
+            <div className="information-wrapper"><div className="information">Text size, paragraph spacing, and image size</div></div>
+          </div>
+          <ReadingLayoutMenu compact={preferences.compact} onChange={compact => setPreferences(p => ({ ...p, compact }))} />
+        </div>
+        <label className="list desktop-focus-option" htmlFor="blog-focus-mode">
+          <div className="list-item-content">
+            <div className="body-text">Focus mode</div>
+            <div className="information-wrapper"><div className="information">Fade navigation until hovered or focused, and hide the search bar while reading</div></div>
+          </div>
+          <Switch id="blog-focus-mode" checked={preferences.focus} onChange={value => setPreferences(p => ({ ...p, focus: value }))} />
+        </label>
+        <label className="list" htmlFor="blog-show-search">
+          <div className="list-item-content">
+            <div className="body-text">Show search bar</div>
+            <div className="information-wrapper"><div className="information">Show search on supported posts; hidden while focus mode is on</div></div>
+          </div>
+          <Switch id="blog-show-search" checked={preferences.search} onChange={value => setPreferences(p => ({ ...p, search: value }))} />
+        </label>
+      </div>
+    </>
+  );
+
   return (
     <>
       <div className="main-content" style={{ animation: 'fadeInUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards', opacity: 0 }}>
         <TopAppBar
           title="Settings"
-          backHref={from}
+          backHref={backHref}
         />
         <div className="settings-layout">
           <div className="settings-column">
@@ -401,39 +443,23 @@ function SettingsContent() {
 
             </div>
 
-            <div className="section-header"><h2 className="title">Blog</h2></div>
-            <div className="list-group">
-              <div className="list">
-                <div className="list-item-content">
-                  <div className="body-text">Reading layout</div>
-                  <div className="information-wrapper"><div className="information">Text size, paragraph spacing, and image size</div></div>
-                </div>
-                <ReadingLayoutMenu compact={preferences.compact} onChange={compact => setPreferences(p => ({ ...p, compact }))} />
-              </div>
-              <label className="list desktop-focus-option" htmlFor="blog-focus-mode">
-                <div className="list-item-content">
-                  <div className="body-text">Focus mode</div>
-                  <div className="information-wrapper"><div className="information">Fade navigation until hovered or focused, and hide the search bar while reading</div></div>
-                </div>
-                <Switch id="blog-focus-mode" checked={preferences.focus} onChange={value => setPreferences(p => ({ ...p, focus: value }))} />
-              </label>
-              <label className="list" htmlFor="blog-show-search">
-                <div className="list-item-content">
-                  <div className="body-text">Show search bar</div>
-                  <div className="information-wrapper"><div className="information">Show search on supported posts; hidden while focus mode is on</div></div>
-                </div>
-                <Switch id="blog-show-search" checked={preferences.search} onChange={value => setPreferences(p => ({ ...p, search: value }))} />
-              </label>
-            </div>
+            {devOptionsEnabled && blogSettings}
 
           </div>
           <div className="settings-column">
+            {!devOptionsEnabled && blogSettings}
             {devOptionsEnabled && (
               <>
                 <div className="section-header">
                   <h2 className="title">Developer options</h2>
                 </div>
                 <div className="list-group">
+                  <label htmlFor="developer-options-toggle" className="list" style={{ cursor: 'pointer' }}>
+                    <div className="list-item-content">
+                      <div className="body-text">Use developer options</div>
+                    </div>
+                    <Switch id="developer-options-toggle" checked={devOptionsEnabled} onChange={handleDevOptionsChange} />
+                  </label>
                   <Link href="/settings/feature-flags" className="list">
                     <div className="list-item-content">
                       <div className="body-text">Feature Flags</div>

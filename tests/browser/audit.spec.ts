@@ -3,17 +3,20 @@ import { build } from 'esbuild';
 import fs from 'node:fs';
 import path from 'node:path';
 let fixture: string;
+let fixtureStyles: string;
 test.beforeAll(async () => {
- const result = await build({ entryPoints: ['tests/browser/fixtures/controls.tsx'], bundle: true, write: false, jsx: 'automatic', platform: 'browser',
+ const result = await build({ entryPoints: ['tests/browser/fixtures/controls.tsx'], bundle: true, write: false, outdir: 'browser-fixture', jsx: 'automatic', platform: 'browser',
    define: { 'process.env.NODE_ENV': '"production"' },
    alias: Object.fromEntries(['navigation', 'image', 'dynamic', 'link'].map(name => [`next/${name}`, path.resolve(`tests/browser/fixtures/${name}.${name === 'navigation' ? 'ts' : 'tsx'}`)])),
  });
- fixture = result.outputFiles[0].text;
+ fixture = result.outputFiles.find(file => file.path.endsWith('.js'))!.text;
+ fixtureStyles = result.outputFiles.find(file => file.path.endsWith('.css'))?.text ?? '';
 });
 async function controls(page: Page) {
  await page.route('**/__audit_fixture', route => route.fulfill({ contentType: 'text/html', body: '<!doctype html><html lang="en" data-theme="light" data-accent="blue"><head><title>Controls test</title></head><body><div id="fixture"></div></body></html>' }));
  await page.goto('/__audit_fixture');
  for (const file of ['app/styles/shared.css','app/styles/ui-components.css','app/blog/blog.css']) await page.addStyleTag({ content: fs.readFileSync(file, 'utf8') });
+ if (fixtureStyles) await page.addStyleTag({ content: fixtureStyles });
  await page.addScriptTag({ content: fixture });
  await expect(page.getByRole('button', { name: 'Expand image: Landscape preview' })).toBeVisible();
 }

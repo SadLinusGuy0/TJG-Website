@@ -2187,6 +2187,10 @@ border-color: rgba(255, 255, 255, 0.1);
 background-color: var(--navigation-hover);
 }
 
+.desktop-nav .icon-container a[data-hover-suppressed="true"] {
+background-color: transparent;
+}
+
 .desktop-nav-indicator[data-direction="1"] .desktop-nav-indicator-pill {
 transform-origin: center top;
 }
@@ -2409,10 +2413,6 @@ mask-image: linear-gradient(to bottom, black 0%, transparent 100%) !important;
 -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%) !important;
 }
 
-.settings-page .main-content {
-padding-top: 80px !important;
-}
-
 .settings-layout,
 .card-columns-layout {
   display: grid;
@@ -2484,7 +2484,7 @@ padding-top: 80px !important;
 @media screen and (max-width: 699px) {
   .settings-page .main-content {
     width: 100% !important;
-    padding: 80px 20px 0 !important;
+    padding: 28px 20px 0 !important;
     margin: 0 auto !important;
     box-sizing: border-box !important;
     overflow-x: visible !important;

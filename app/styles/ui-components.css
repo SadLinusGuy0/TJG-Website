@@ -467,9 +467,12 @@ html[data-theme="light"] .dialogue-btn-separator {
 }
 
 .top-app-bar-hero {
+    /* Keep the expanded heading below the 120px desktop toolbar overlay,
+       even when a short viewport makes 25vh smaller than that overlay. */
+    --top-app-bar-expanded-min-height: 280px;
     position: relative;
     width: 100%;
-    min-height: 25vh;
+    min-height: max(25vh, var(--top-app-bar-expanded-min-height));
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -477,6 +480,12 @@ html[data-theme="light"] .dialogue-btn-separator {
     justify-content: center;
     text-align: center;
     pointer-events: none;
+}
+
+@media (max-width: 699px) {
+    .top-app-bar-hero {
+        --top-app-bar-expanded-min-height: 180px;
+    }
 }
 
 .top-app-bar-hero-title {
