@@ -2,10 +2,10 @@
 import { localPreferences } from '../../lib/browserStorage';
 
 import { useTheme, ACCENT_COLORS, ACCENT_LIGHT_BACKGROUNDS, ACCENT_LIGHT_CONTAINER_BACKGROUNDS, ACCENT_DARK_BACKGROUNDS, ACCENT_DARK_CONTAINER_BACKGROUNDS, AccentColor } from '../components/ThemeProvider';
-import { useEffect, useState, Suspense, type KeyboardEvent } from 'react';
+import { useEffect, useState, Suspense, Fragment, type KeyboardEvent } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Education, Labs, SecurityOutline } from '@thatjoshguy/oneui-icons';
+import { Home, Education, Labs, SecurityOutline, Selected } from '@thatjoshguy/oneui-icons';
 import { LoadingDots } from '../components/LoadingAnim';
 import TopAppBar from '../components/TopAppBar';
 import ReadingLayoutMenu from './ReadingLayoutMenu';
@@ -15,11 +15,27 @@ import { useReadingPreferences } from '../blog/useReadingPreferences';
 const THEME_OPTIONS = ['auto', 'light', 'dark'] as const;
 type ThemeOption = (typeof THEME_OPTIONS)[number];
 
-const DEVELOPER_SITE_LINKS = [
-  { label: 'College site', href: 'https://college.tjg.gg', icon: Education },
-  { label: 'Beta site', href: 'https://beta.tjg.gg', icon: Labs },
-  { label: 'College beta site', href: 'https://college.beta.tjg.gg', icon: Education, badge: Labs },
-  { label: 'Admin site', href: 'https://admin.tjg.gg', icon: SecurityOutline },
+type DeveloperSiteLink = {
+  label: string;
+  href: string;
+  icon: typeof Home;
+  badge?: typeof Labs;
+};
+
+const DEVELOPER_SITE_GROUPS: { id: string; links: DeveloperSiteLink[] }[] = [
+  {
+    id: 'sites',
+    links: [
+      { label: 'Main site', href: 'https://tjg.gg', icon: Home },
+      { label: 'College site', href: 'https://college.tjg.gg', icon: Education },
+      { label: 'Beta site', href: 'https://beta.tjg.gg', icon: Labs },
+      { label: 'College beta site', href: 'https://college.beta.tjg.gg', icon: Education, badge: Labs },
+    ],
+  },
+  {
+    id: 'admin',
+    links: [{ label: 'Admin site', href: 'https://admin.tjg.gg', icon: SecurityOutline }],
+  },
 ];
 
 function ThemePreviewLight({ accent }: { accent: AccentColor }) {
@@ -89,6 +105,7 @@ function ThemePreviewAuto({ accent }: { accent: AccentColor }) {
 function SettingsContent() {
   const { theme, setTheme, accentColor, setAccentColor, blurEnabled, setBlurEnabled, cornerSmoothing, setCornerSmoothing, cornerSmoothingSupported, cornerSmoothingAvailable } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [currentHostname, setCurrentHostname] = useState('');
   const [devOptionsEnabled, setDevOptionsEnabled] = useState(false);
   const { preferences, setPreferences } = useReadingPreferences();
   const searchParams = useSearchParams();
@@ -123,6 +140,7 @@ function SettingsContent() {
 
   useEffect(() => {
     setMounted(true);
+    setCurrentHostname(window.location.hostname);
   }, []);
 
   useEffect(() => {
@@ -338,7 +356,7 @@ function SettingsContent() {
                 <div className="information-wrapper">
                   <div className="information">
                     {cornerSmoothingSupported
-                      ? 'Use smooth, squircle-shaped corners across browsers'
+                      ? 'Smooth the corners of cards, buttons, and other rounded elements'
                       : 'Not supported on this browser'}
                   </div>
                 </div>
@@ -405,33 +423,40 @@ function SettingsContent() {
                 </svg>
               </Link>
             </div>
-            <div className="section-header" />
-            <div className="list-group">
-              {DEVELOPER_SITE_LINKS.map(({ label, href, icon: Icon, badge: Badge }) => (
-                <a key={href} href={href} className="list">
-                  <div className="list-item-icon" style={{ flexShrink: 0 }} aria-hidden="true">
-                    <Icon size={24} color="currentColor" />
-                    {Badge && (
-                      <Badge size={14} color="currentColor" style={{
-                        position: 'absolute', right: -5, bottom: -5,
-                        background: 'var(--container-background)', borderRadius: 4,
-                        padding: 2, boxSizing: 'content-box',
-                      }} />
-                    )}
-                  </div>
-                  <div className="list-item-content">
-                    <div className="body-text">{label}</div>
-                    <div className="information-wrapper">
-                      <div className="information">{new URL(href).hostname}</div>
-                    </div>
-                  </div>
-                  <div className="list-item-separator" />
-                  <svg width="8" height="14" viewBox="0 0 8 14" fill="none" aria-hidden="true">
-                    <path d="M1 1L7 7L1 13" stroke="var(--secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </a>
-              ))}
-            </div>
+            {DEVELOPER_SITE_GROUPS.map(({ id, links }) => (
+              <Fragment key={id}>
+                <div className="section-header" />
+                <div className="list-group">
+                  {links.map(({ label, href, icon: Icon, badge: Badge }) => {
+                    const hostname = new URL(href).hostname;
+                    const isCurrentSite = currentHostname === hostname;
+                    return (
+                      <a key={href} href={href} className="list" aria-current={isCurrentSite ? 'true' : undefined}>
+                        <div className="list-item-icon" style={{ flexShrink: 0 }} aria-hidden="true">
+                          <Icon size={24} color="currentColor" />
+                          {Badge && (
+                            <Badge size={14} color="currentColor" style={{
+                              position: 'absolute', right: -5, bottom: -5,
+                              background: 'var(--container-background)', borderRadius: 4,
+                              padding: 2, boxSizing: 'content-box',
+                            }} />
+                          )}
+                        </div>
+                        <div className="list-item-content">
+                          <div className="body-text">{label}</div>
+                          <div className="information-wrapper">
+                            <div className="information">{hostname}</div>
+                          </div>
+                        </div>
+                        {isCurrentSite && (
+                          <Selected size={24} color="var(--accent)" style={{ flexShrink: 0 }} aria-hidden="true" />
+                        )}
+                      </a>
+                    );
+                  })}
+                </div>
+              </Fragment>
+            ))}
           </>
         )}
 
