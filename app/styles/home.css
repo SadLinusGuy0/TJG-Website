@@ -2106,7 +2106,7 @@ html[data-theme="dark"] .hero-theme-asset-dark {
 @media screen and (min-width: 901px) {
   .about-aside {
     position: sticky;
-    top: 120px;
+    top: 48px;
     align-self: start;
   }
 
@@ -2249,7 +2249,7 @@ html[data-theme="dark"] .home-fact-icon-f1 img {
 @media screen and (min-width: 901px) {
   .about-aside {
     position: sticky;
-    top: 120px;
+    top: 48px;
     align-self: start;
   }
 
