@@ -20,3 +20,25 @@ export function embedTitle(src: string): string {
   try { const u = new URL(src); return `${u.hostname} embedded content — ${u.pathname.split('/').filter(Boolean).at(-1) || 'media'}`; }
   catch { return 'Embedded content'; }
 }
+
+/** Normalize migrated website canonicals without rewriting external publishers. */
+export function canonicalContentHref(value: string): string {
+  const href = safeContentHref(value);
+  if (!href) return '';
+  try {
+    const url = new URL(href);
+    const migratedHosts: Record<string, string> = {
+      'thatjoshguy.me': 'tjg.gg',
+      'www.thatjoshguy.me': 'tjg.gg',
+      'college.thatjoshguy.me': 'college.tjg.gg',
+      'beta.thatjoshguy.me': 'tjg.gg',
+      'college.beta.thatjoshguy.me': 'college.tjg.gg',
+    };
+    if (['http:', 'https:'].includes(url.protocol) && Object.hasOwn(migratedHosts, url.hostname) && !url.port) {
+      url.protocol = 'https:';
+      url.hostname = migratedHosts[url.hostname];
+      return url.href;
+    }
+  } catch { /* Relative references retain their existing metadata behavior. */ }
+  return href;
+}

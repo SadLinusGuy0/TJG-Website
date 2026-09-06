@@ -8,6 +8,17 @@
   },
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "discord.thatjoshguy.me"
+        }
+      ],
+      "destination": "https://tjg.gg/discord",
+      "permanent": true
+    },
+    {
       "source": "/discord",
       "destination": "https://discord.gg/dRhJ78YH6M",
       "permanent": false

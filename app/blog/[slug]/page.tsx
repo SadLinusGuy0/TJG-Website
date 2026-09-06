@@ -1,4 +1,4 @@
-import { safeContentHref } from '../../../lib/contentUrls';
+import { canonicalContentHref } from '../../../lib/contentUrls';
 import { extractPostSections } from '../../../lib/fmpSections';
 import type { Metadata } from "next";
 import { cache, Suspense } from "react";
@@ -72,7 +72,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     const imageAlt = content.seo?.openGraphImageAlt || getFeaturedImageAltText(content) || seoTitle;
     const site = await getSiteContext();
     const siteUrl = site.canonicalOrigin;
-    const canonical = safeContentHref(content.seo?.canonicalUrl || "") || `${siteUrl}/blog/${slug}`;
+    const canonical = canonicalContentHref(content.seo?.canonicalUrl || "") || `${siteUrl}/blog/${slug}`;
 
     return {
       title: `${seoTitle} | That Josh Guy`,
