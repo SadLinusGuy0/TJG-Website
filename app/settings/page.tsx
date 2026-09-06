@@ -401,9 +401,6 @@ function SettingsContent() {
 
             </div>
 
-            {devOptionsEnabled && <SiteLinkGroup links={DEVELOPER_SITE_GROUPS.sites} currentHostname={currentHostname} />}
-          </div>
-          <div className="settings-column">
             <div className="section-header"><h2 className="title">Blog</h2></div>
             <div className="list-group">
               <div className="list">
@@ -429,6 +426,8 @@ function SettingsContent() {
               </label>
             </div>
 
+          </div>
+          <div className="settings-column">
             {devOptionsEnabled && (
               <>
                 <div className="section-header">
@@ -462,6 +461,7 @@ function SettingsContent() {
                 </div>
               </>
             )}
+            {devOptionsEnabled && <SiteLinkGroup links={DEVELOPER_SITE_GROUPS.sites} currentHostname={currentHostname} />}
             {devOptionsEnabled && <SiteLinkGroup links={DEVELOPER_SITE_GROUPS.admin} currentHostname={currentHostname} />}
             <div className="section-header" />
             <div className="list-group">

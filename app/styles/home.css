@@ -1770,7 +1770,8 @@ html[data-theme="dark"] .hero-theme-asset-dark {
   padding-block: 36px;
 }
 
-.project-app-card {
+/* Override shared carousel-card sizing regardless of stylesheet load order. */
+.design-project-card.project-app-card {
   --project-card-panel-start: rgba(0, 0, 0, 0);
   --project-card-panel-mid: rgba(10, 8, 16, 0.4);
   --project-card-panel-end: rgba(10, 8, 16, 0.9);

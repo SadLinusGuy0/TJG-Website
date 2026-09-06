@@ -1,6 +1,24 @@
 "use client";
 import Footer from '../components/Footer';
 import TopAppBar from "../components/TopAppBar";
+import { Discord, Telegram } from '@thatjoshguy/oneui-icons';
+
+function ContactLink({ href, label, detail, icon: Icon }: { href: string; label: string; detail: string; icon: typeof Discord }) {
+  return (
+    <a href={href} className="list" target="_blank" rel="noopener noreferrer">
+      <div className="list-item-icon" aria-hidden="true"><Icon size={24} color="var(--accent)" /></div>
+      <div className="list-item-content">
+        <div className="body-text">{label}</div>
+        <div className="information-wrapper"><div className="information">{detail}</div></div>
+      </div>
+      <div className="list-item-chevron" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M8.80005 20L15.3858 13.4142C16.1669 12.6332 16.1669 11.3668 15.3858 10.5858L8.80005 4" stroke="#ACACB1" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </div>
+    </a>
+  );
+}
 
 export default function Contact() {
   return (
@@ -84,6 +102,7 @@ export default function Contact() {
                       </svg>
                     </div>
                   </a>
+                  <ContactLink href="https://discord.gg/dRhJ78YH6M" label="Discord" detail="Join the TJG Discord server" icon={Discord} />
                 </div>
               </div>
             </div>
@@ -153,6 +172,7 @@ export default function Contact() {
                       </svg>
                     </div>
                   </a>
+                  <ContactLink href="https://t.me/ThatJoshGuy" label="Telegram" detail="@ThatJoshGuy" icon={Telegram} />
                 </div>
               </div>
             </div>

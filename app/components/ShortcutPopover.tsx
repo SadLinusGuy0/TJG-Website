@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import useKeyboardHints from './useKeyboardHints';
 import { createPortal } from 'react-dom';
 
@@ -25,7 +25,7 @@ function surfacePath(width: number, height: number, arrow: number, placement: 't
 }
 
 export default function ShortcutPopover({ title, content, placement = 'top', keyboardOnly = true, children }: {
-  title: string;
+  title: ReactNode;
   content: ReactNode;
   placement?: 'top' | 'right';
   keyboardOnly?: boolean;
@@ -37,13 +37,28 @@ export default function ShortcutPopover({ title, content, placement = 'top', key
   const anchor = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const exitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const [position, setPosition] = useState<{ left: number; top: number; arrow: number; width: number; height: number } | null>(null);
   const cancelClose = () => { if (timer.current) clearTimeout(timer.current); };
-  const show = () => { cancelClose(); if (enabled) setOpen(true); };
-  const close = () => { cancelClose(); timer.current = setTimeout(() => setOpen(false), 120); };
+  const dismiss = useCallback(() => {
+    if (timer.current) clearTimeout(timer.current);
+    if (exitTimer.current) clearTimeout(exitTimer.current);
+    setClosing(true);
+    exitTimer.current = setTimeout(() => setOpen(false), 140);
+  }, []);
+  const show = () => {
+    cancelClose();
+    if (exitTimer.current) clearTimeout(exitTimer.current);
+    if (enabled) { setClosing(false); setOpen(true); }
+  };
+  const close = () => { cancelClose(); timer.current = setTimeout(dismiss, 120); };
 
-  useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+    if (exitTimer.current) clearTimeout(exitTimer.current);
+  }, []);
   useLayoutEffect(() => {
     if (!open || !enabled) return;
     const update = () => {
@@ -60,29 +75,30 @@ export default function ShortcutPopover({ title, content, placement = 'top', key
         ? Math.max(edgeInset, Math.min(box.height - edgeInset, rect.top + rect.height / 2 - top))
         : Math.max(edgeInset, Math.min(box.width - edgeInset, rect.left + rect.width / 2 - left)) });
     };
-    const dismiss = (event: KeyboardEvent) => { if (event.key === 'Escape') setOpen(false); };
+    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') dismiss(); };
     update();
     const resize = new ResizeObserver(update);
     if (panel.current) resize.observe(panel.current);
     window.addEventListener('resize', update);
     window.addEventListener('scroll', update, true);
-    window.addEventListener('keydown', dismiss);
+    window.addEventListener('keydown', onKeyDown);
     return () => {
       resize.disconnect();
       window.removeEventListener('resize', update);
       window.removeEventListener('scroll', update, true);
-      window.removeEventListener('keydown', dismiss);
+      window.removeEventListener('keydown', onKeyDown);
     };
-  }, [open, placement, enabled]);
+  }, [open, placement, enabled, dismiss]);
 
   const outline = position ? surfacePath(position.width, position.height, position.arrow, placement) : '';
 
   return <div ref={anchor} className="shortcut-popover-anchor"
     onMouseEnter={show} onMouseLeave={close} onFocus={show} onBlur={close}
-    onClickCapture={() => setOpen(false)}>
-    {children(open && enabled ? id : undefined)}
+    onClickCapture={dismiss}>
+    {children(open && enabled && !closing ? id : undefined)}
     {open && enabled && createPortal(<div ref={panel} id={id} role="tooltip"
-      className={`shortcut-popover shortcut-popover--${placement}`}
+      aria-hidden={closing || undefined}
+      className={`shortcut-popover shortcut-popover--${placement}${closing ? ' shortcut-popover--closing' : ''}`}
       style={{ left: position?.left ?? 0, top: position?.top ?? 0, visibility: position ? 'visible' : 'hidden' }}
       onMouseEnter={show} onMouseLeave={close}>
       {position && <div className="shortcut-popover-surface" aria-hidden="true">

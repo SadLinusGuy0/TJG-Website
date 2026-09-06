@@ -73,11 +73,13 @@ export default function TopAppBar({
   mobileSettingsHref,
 }: TopAppBarProps) {
   const anchorRef = useRef<HTMLSpanElement>(null);
+  const heroTitleRef = useRef<HTMLHeadingElement>(null);
   const touchStartY = useRef(0);
   const pullProgressRef = useRef(0);
   const isPullingRef = useRef(false);
   const [mounted, setMounted] = useState(false);
   const [progress, setProgress] = useState(defaultCollapsed ? 1 : 0);
+  const [headingReveal, setHeadingReveal] = useState(0);
   const [pullProgress, setPullProgress] = useState(0);
   const [pullExpanded, setPullExpanded] = useState(false);
   const [barLayout, setBarLayout] = useState({
@@ -151,6 +153,20 @@ export default function TopAppBar({
         const scrollProgress = Math.min(1, Math.max(0, window.scrollY / SCROLL_RANGE));
         setProgress(defaultCollapsed && !pullExpanded ? 1 : scrollProgress);
 
+        if (!defaultCollapsed && heroTitleRef.current) {
+          const heading = heroTitleRef.current.getBoundingClientRect();
+          const blur = document.querySelector('.progressive-blur-overlay--top');
+          const bar = document.querySelector('.top-app-bar');
+          const boundary = blur && window.getComputedStyle(blur).display !== 'none'
+            ? blur.getBoundingClientRect().bottom
+            : bar?.getBoundingClientRect().bottom ?? 0;
+          // Crossfade while the actual heading enters the top overlay, rather
+          // than waiting for a fixed scroll distance on every viewport.
+          setHeadingReveal(Math.min(1, Math.max(0,
+            (boundary - heading.top) / Math.max(1, heading.height),
+          )));
+        }
+
         if (defaultCollapsed && window.scrollY > 8 && pullExpanded) {
           setPullExpanded(false);
         }
@@ -159,12 +175,15 @@ export default function TopAppBar({
 
     window.addEventListener("scroll", updateProgress, { passive: true });
     window.addEventListener("resize", updateProgress, { passive: true });
+    const observer = new ResizeObserver(updateProgress);
+    if (heroTitleRef.current) observer.observe(heroTitleRef.current);
     updateProgress();
 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("scroll", updateProgress);
       window.removeEventListener("resize", updateProgress);
+      observer.disconnect();
     };
   }, [collapseTarget, defaultCollapsed, pullExpanded]);
 
@@ -216,8 +235,9 @@ export default function TopAppBar({
     };
   }, [collapseTarget, defaultCollapsed]);
 
-  const heroOpacity = Math.max(0, 1 - progress / 0.7);
-  const titleOpacity = Math.min(1, Math.max(0, (progress - 0.4) / 0.4));
+  const usesHeadingPosition = !defaultCollapsed && !collapseTarget;
+  const heroOpacity = usesHeadingPosition ? 1 - headingReveal : Math.max(0, 1 - progress / 0.7);
+  const titleOpacity = usesHeadingPosition ? headingReveal : Math.min(1, Math.max(0, (progress - 0.4) / 0.4));
   const titleHidden = titleOpacity < 0.1;
   const expandProgress = 1 - progress;
   const heroStyle: CSSProperties | undefined = defaultCollapsed
@@ -250,7 +270,7 @@ export default function TopAppBar({
 
       {title && !collapseTarget && (
         <div className="top-app-bar-hero" style={heroStyle}>
-          <h1 className="top-app-bar-hero-title" style={{ opacity: heroOpacity }}>
+          <h1 ref={heroTitleRef} className="top-app-bar-hero-title" style={{ opacity: heroOpacity }}>
             {title}
           </h1>
         </div>

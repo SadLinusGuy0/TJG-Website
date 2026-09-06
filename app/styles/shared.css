@@ -2115,6 +2115,13 @@ z-index: 1;
 background: transparent;
 }
 
+/* Keep keyboard focus inside the smoothed link's clip path. */
+.desktop-nav a.nav-icon-container:focus-visible,
+.desktop-nav a.nav-icon-container-selected:focus-visible {
+outline: 2px solid var(--accent-control);
+outline-offset: -4px;
+}
+
 .desktop-nav-indicator {
 position: absolute;
 top: 0;
@@ -2172,6 +2179,12 @@ box-sizing: border-box;
 html[data-theme="dark"] .desktop-nav .nav-footer .nav-icon-container-selected {
 background: #2e2e30;
 border-color: rgba(255, 255, 255, 0.1);
+}
+
+.desktop-nav .icon-container > a:hover,
+.desktop-nav .nav-footer > a.nav-icon-container:hover,
+.desktop-nav .nav-footer > a.nav-icon-container-selected:hover {
+background-color: var(--navigation-hover);
 }
 
 .desktop-nav-indicator[data-direction="1"] .desktop-nav-indicator-pill {
@@ -2403,13 +2416,21 @@ padding-top: 80px !important;
 .settings-layout,
 .card-columns-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 560px));
+  grid-template-columns: minmax(0, 560px);
   column-gap: 24px;
   align-items: start;
   justify-content: center;
   align-self: center;
   width: 100%;
   max-width: 1144px;
+}
+
+/* Match the desktop navigation breakpoint. */
+@media (min-width: 700px) {
+  .settings-layout,
+  .card-columns-layout {
+    grid-template-columns: repeat(2, minmax(0, 560px));
+  }
 }
 
 .settings-column,
@@ -2748,6 +2769,12 @@ justify-content: flex-start;
 .shortcut-popover-row + .shortcut-popover-row { margin-top: 8px; }
 .shortcut-popover .keyboard-shortcut-chip { display: inline-flex; }
 @keyframes shortcut-popover-in { from { opacity: 0; } to { opacity: 1; } }
+.shortcut-popover--closing {
+  opacity: 0;
+  pointer-events: none;
+  animation: shortcut-popover-out 140ms ease-out forwards;
+}
+@keyframes shortcut-popover-out { from { opacity: 1; } to { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .shortcut-popover { animation: none; } }
 
 .top-app-bar-title-text { display: inline-block; padding-inline: 6px; }

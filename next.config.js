@@ -21,6 +21,9 @@ const nextConfig = {
   outputFileTracingRoot: path.join(__dirname),
   experimental: {
     inlineCss: false,
+    // Work around negative dev profiling timestamps (Next.js issue #86060)
+    // by keeping React debug info in the RSC stream instead of the WebSocket.
+    reactDebugChannel: false,
   },
   images: {
     qualities: [75, 90],

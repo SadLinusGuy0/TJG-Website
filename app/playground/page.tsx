@@ -13,13 +13,14 @@ import Switch from "../components/Switch";
 import ColorSwatch from "./ColorSwatch";
 import { ContentCardsDemo, MenusDemo, PopoverDemo, SkeletonDemo } from "./AdditionalDemos";
 import { BlogSearchControl } from "../blog/FloatingSearchBar";
+import { NotificationOutline, MessageOutline } from '@thatjoshguy/oneui-icons';
 
 /* ------------------------------------------------------------------ */
 /*  Section wrapper – keeps each demo visually grouped                */
 /* ------------------------------------------------------------------ */
-function Section({ title, description, bare, children }: { title: string; description?: string; bare?: boolean; children: React.ReactNode }) {
+function Section({ title, description, bare, split, children }: { title: string; description?: string; bare?: boolean; split?: boolean; children: React.ReactNode }) {
   return (
-    <>
+    <div className={`playground-section${split ? ' playground-section--split' : ''}`}>
       <div className="section-header">
         <h2 className="title" style={{ fontSize: 'var(--subheading-size)' }}>{title}</h2>
         {description && (
@@ -33,7 +34,7 @@ function Section({ title, description, bare, children }: { title: string; descri
           {children}
         </div>
       )}
-    </>
+    </div>
   );
 }
 
@@ -84,7 +85,8 @@ function DemoChips() {
         WebkitOverflowScrolling: "touch",
         scrollbarWidth: "none",
         width: "100%",
-        padding: "4px 0",
+        padding: "4px",
+        boxSizing: "border-box",
       }}
     >
       {chips.map((chip) => {
@@ -132,7 +134,6 @@ function DemoRadioGroup() {
     <div className="list-group" role="radiogroup" aria-label="Example options">
       {options.map(opt => (
         <label key={opt.value} className="list playground-radio-row">
-          <span className="list-item-content body-text">{opt.label}</span>
           <input
             type="radio"
             name="playground-example-option"
@@ -141,6 +142,7 @@ function DemoRadioGroup() {
             onChange={() => setValue(opt.value)}
             className="playground-radio"
           />
+          <span className="list-item-content body-text">{opt.label}</span>
         </label>
       ))}
     </div>
@@ -230,6 +232,7 @@ function DemoBadges() {
     <div className="playground-demo-centered" style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
       <span className="beta-chip">Beta</span>
       <span
+        className="playground-badge"
         style={{
           padding: "4px 12px",
           borderRadius: 999,
@@ -243,6 +246,7 @@ function DemoBadges() {
         New
       </span>
       <span
+        className="playground-badge"
         style={{
           padding: "4px 12px",
           borderRadius: 999,
@@ -256,6 +260,7 @@ function DemoBadges() {
         Info
       </span>
       <span
+        className="playground-badge"
         style={{
           padding: "4px 12px",
           borderRadius: 999,
@@ -269,6 +274,7 @@ function DemoBadges() {
         Success
       </span>
       <span
+        className="playground-badge"
         style={{
           padding: "4px 12px",
           borderRadius: 999,
@@ -282,6 +288,7 @@ function DemoBadges() {
         Error
       </span>
       <span
+        className="playground-badge"
         style={{
           padding: "4px 12px",
           borderRadius: 999,
@@ -371,7 +378,7 @@ function DemoColourPalette() {
       '--background', '--container-background', '--foreground', '--primary', '--secondary',
       '--selected', '--accent', '--on-accent', '--accent-control', '--accent-link',
       '--divider', '--button-divider', '--press-highlight',
-      '--container-background-hover', '--container-background-active', '--skeleton-base', '--skeleton-highlight',
+      '--container-background-hover', '--container-background-active', '--navigation-hover', '--skeleton-base', '--skeleton-highlight',
     ]),
     ...(['light', 'dark'] as const).map(theme => tokenGroup(`${theme} theme base`, [
       `--${theme}-primary`, `--${theme}-secondary`, `--${theme}-selected`,
@@ -380,8 +387,11 @@ function DemoColourPalette() {
     { title: 'Accent palette · decoration and dark-theme links', swatches: accentNames.map(name => ({
       label: name, color: ACCENT_COLORS[name], detail: ACCENT_COLORS[name], active: name === accentColor,
     })) },
-    { title: 'Accent controls · also used for light-theme links', swatches: accentNames.map(name => ({
+    { title: 'Accent controls · white labels', swatches: accentNames.map(name => ({
       label: name, color: `var(--accent-control-${name})`, detail: `--accent-control-${name}`, active: name === accentColor,
+    })) },
+    { title: 'Light-theme links', swatches: accentNames.map(name => ({
+      label: name, color: `var(--accent-link-${name})`, detail: `--accent-link-${name}`, active: name === accentColor,
     })) },
     ...([
       ['Light backgrounds', ACCENT_LIGHT_BACKGROUNDS],
@@ -439,10 +449,10 @@ function PlaygroundContent() {
           backHref={from}
         />
 
-        <div className="card-columns-layout">
+        <div className="card-columns-layout playground-columns">
           <div className="card-column">
             {/* ---- Colour Palette ---- */}
-            <Section title="Colour Palette" description="Theme tokens and every accent, background, container, control and link variant" bare>
+            <Section title="Colour Palette" description="Theme tokens and every accent, background, container, control and link variant" bare split>
               <DemoColourPalette />
             </Section>
 
@@ -522,8 +532,9 @@ function PlaygroundContent() {
             <Section title="Toast Notification" description="Tap the button to show a toast">
               <button
                 onClick={() => fireToast("This is a demo toast notification")}
-                className="blog-button"
+                className="blog-button playground-action-button"
               >
+                <NotificationOutline size={20} color="currentColor" aria-hidden="true" />
                 Show Toast
               </button>
             </Section>
@@ -532,8 +543,9 @@ function PlaygroundContent() {
             <Section title="Dialog" description="Confirmation prompt with cancel and apply actions">
               <button
                 onClick={() => setShowDialog(true)}
-                className="blog-button"
+                className="blog-button playground-action-button"
               >
+                <MessageOutline size={20} color="currentColor" aria-hidden="true" />
                 Show Dialog
               </button>
             </Section>

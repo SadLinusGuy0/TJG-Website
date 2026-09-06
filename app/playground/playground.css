@@ -1,3 +1,44 @@
+.playground-columns {
+  display: block;
+  columns: 1;
+  column-gap: 24px;
+}
+
+@media (min-width: 700px) {
+  .playground-columns {
+    column-count: 2;
+  }
+}
+
+.playground-columns > .card-column,
+.playground-section--split,
+.playground-columns .palette-groups {
+  display: contents;
+}
+
+.playground-section:not(.playground-section--split),
+.playground-columns .palette-group-card {
+  break-inside: avoid;
+}
+
+.playground-columns .section-header {
+  break-after: avoid;
+}
+
+.playground-columns .palette-group-card {
+  margin-bottom: 10px;
+}
+
+.blog-button.playground-action-button {
+  width: fit-content;
+  align-self: center;
+  justify-content: center;
+}
+
+.playground-action-button svg {
+  flex-shrink: 0;
+}
+
 .playground-demo-actions {
   display: flex;
   flex-wrap: wrap;
@@ -58,6 +99,7 @@
   line-height: 20px;
   white-space: nowrap;
   cursor: pointer;
+  transition: transform 160ms ease-out, filter 160ms ease-out;
 }
 
 .playground-chip[aria-pressed="true"] {
@@ -72,6 +114,10 @@
   outline-offset: 3px;
 }
 
+html[data-corner-smoothing="true"] .playground-chip:focus-visible {
+  outline-offset: -4px;
+}
+
 .palette-swatch {
   display: flex;
   flex-direction: column;
@@ -84,6 +130,22 @@
   text-align: left;
   font-family: 'One UI Sans', sans-serif;
   cursor: pointer;
+}
+
+.shortcut-popover-title:has(.palette-hex-chip) {
+  text-align: center;
+}
+
+.palette-hex-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border: 1px solid var(--divider);
+  border-radius: 999px;
+  background: var(--selected);
+  color: var(--primary);
+  font: 500 13px/1.5 var(--font-mono), monospace;
+  white-space: nowrap;
 }
 
 .palette-groups {
@@ -116,6 +178,7 @@
   border-radius: 50%;
   background: transparent;
   cursor: pointer;
+  transition: transform 160ms ease-out, filter 160ms ease-out, background-color 160ms ease-out;
 }
 
 .playground-radio:checked {
@@ -126,6 +189,27 @@
 .playground-radio:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .playground-chip:is(:hover, :focus-visible) {
+    transform: scale(1.04);
+    filter: brightness(0.94);
+  }
+
+  .playground-radio-row:is(:hover, :focus-within) .playground-radio {
+    transform: scale(1.1);
+    filter: brightness(0.9);
+    background-color: color-mix(in srgb, var(--primary) 5%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playground-chip,
+  .playground-radio-row .playground-radio {
+    transition: none;
+    transform: none;
+  }
 }
 
 .palette-group-title {

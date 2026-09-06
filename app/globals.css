@@ -172,6 +172,7 @@ code, pre, kbd, samp, tt {
     --light-selected: #EFEFEF;
     --accent: #387aff;
     --on-accent: #fff;
+    --navigation-hover: color-mix(in srgb, var(--background) 92%, var(--primary) 8%);
     --gap-xl: 10px;
     --gap-xll: 20px;
     --gap-11xs: 2px;
@@ -216,16 +217,23 @@ code, pre, kbd, samp, tt {
 
 /* Decoration, readable links and filled controls have separate contrast roles. */
 :root {
-    --accent-control-blue: #1f54c7;
-    --accent-control-coral: #a82735;
-    --accent-control-mint: #126861;
-    --accent-control-lilac: #633fad;
-    --accent-control-mono: #595959;
+    /* Filled controls retain at least 4.65:1 contrast with white labels. */
+    --accent-control-blue: #2f6deb;
+    --accent-control-coral: #cc434c;
+    --accent-control-mint: #21817a;
+    --accent-control-lilac: #8160cf;
+    --accent-control-mono: #747474;
+    /* Text links also need contrast against tinted light-theme surfaces. */
+    --accent-link-blue: #1f54c7;
+    --accent-link-coral: #a82735;
+    --accent-link-mint: #126861;
+    --accent-link-lilac: #633fad;
+    --accent-link-mono: #595959;
 }
-:root, html[data-accent="blue"] { --accent-control: var(--accent-control-blue); --accent-link: var(--accent-control-blue); }
-html[data-accent="coral"] { --accent-control: var(--accent-control-coral); --accent-link: var(--accent-control-coral); }
-html[data-accent="mint"] { --accent-control: var(--accent-control-mint); --accent-link: var(--accent-control-mint); }
-html[data-accent="lilac"] { --accent-control: var(--accent-control-lilac); --accent-link: var(--accent-control-lilac); }
-html[data-accent="mono"] { --accent-control: var(--accent-control-mono); --accent-link: var(--accent-control-mono); }
+:root, html[data-accent="blue"] { --accent-control: var(--accent-control-blue); --accent-link: var(--accent-link-blue); }
+html[data-accent="coral"] { --accent-control: var(--accent-control-coral); --accent-link: var(--accent-link-coral); }
+html[data-accent="mint"] { --accent-control: var(--accent-control-mint); --accent-link: var(--accent-link-mint); }
+html[data-accent="lilac"] { --accent-control: var(--accent-control-lilac); --accent-link: var(--accent-link-lilac); }
+html[data-accent="mono"] { --accent-control: var(--accent-control-mono); --accent-link: var(--accent-link-mono); }
 html[data-theme="dark"] { --accent-link: var(--accent); }
-.discord-banner-text:any-link { color: inherit; text-decoration: underline; }
+.discord-banner-text:any-link { color: #fff; text-decoration: none; }

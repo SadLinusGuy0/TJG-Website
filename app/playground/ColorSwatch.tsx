@@ -44,7 +44,9 @@ export default function ColorSwatch({ color, label, detail, active = false, seco
 
   return (
     <>
-      <ShortcutPopover keyboardOnly={false} title={hex || label} content="Click to copy the hex code">
+      <ShortcutPopover keyboardOnly={false}
+        title={hex ? <code className="palette-hex-chip">{hex}</code> : label}
+        content="Click to copy the hex code">
         {descriptionId => (
           <button type="button" className="palette-swatch" aria-label={`Copy ${label} colour`} aria-describedby={descriptionId} onMouseEnter={resolveHex} onFocus={resolveHex} onClick={copy}>
             <span ref={surface} className="palette-swatch-color" data-active={active} style={{ backgroundColor: color }}>

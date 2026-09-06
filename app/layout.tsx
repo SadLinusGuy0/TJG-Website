@@ -198,7 +198,7 @@ export default async function RootLayout({
             <main className="site-main" id="main-content">
               {children}
             </main>
-            <DiscordPopup />
+            {site.edition !== 'college' && <DiscordPopup />}
           </BlogFlagProvider>
         </ThemeProvider>
         <Analytics />
