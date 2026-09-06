@@ -1,12 +1,13 @@
 "use client";
 
-import { More, Selected, Copy } from "@thatjoshguy/oneui-icons";
+import { More, Selected, Copy, Edit } from "@thatjoshguy/oneui-icons";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import ForceRefreshButton from "./[slug]/ForceRefreshButton";
 
 import { useReadingPreferences, useFmpCombinedView } from "./useReadingPreferences";
 import { FMP_SLUG } from "../../lib/fmpSections";
+import { localPreferences } from "../../lib/browserStorage";
 import { useTheme } from "../components/ThemeProvider";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -20,10 +21,24 @@ export default function PostActions({ slug }: { slug: string }) {
   const [open, setOpen] = useState(false);
   const [present, setPresent] = useState(false);
   const [notice, setNotice] = useState("");
+  const [devOptionsEnabled, setDevOptionsEnabled] = useState(false);
   const [position, setPosition] = useState({ top: 80, right: 20 });
   const trigger = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
   const id = useId();
+
+  useEffect(() => {
+    const checkDevOptions = () => {
+      setDevOptionsEnabled(localPreferences.getItem("developer-options-enabled") === "true");
+    };
+    checkDevOptions();
+    window.addEventListener("developer-options-changed", checkDevOptions);
+    window.addEventListener("storage", checkDevOptions);
+    return () => {
+      window.removeEventListener("developer-options-changed", checkDevOptions);
+      window.removeEventListener("storage", checkDevOptions);
+    };
+  }, []);
 
   useEffect(() => {
     if (open || !present) return;
@@ -89,8 +104,8 @@ export default function PostActions({ slug }: { slug: string }) {
         <div ref={menu} id={id} className="post-options-menu" data-state={open ? "open" : "closed"} inert={!open} aria-hidden={!open} onAnimationEnd={event => {
           if (event.target === event.currentTarget && !open) setPresent(false);
         }} role="menu" aria-label="Post options" style={position} onKeyDown={event => {
-          const items = Array.from(menu.current?.querySelectorAll<HTMLButtonElement>("button") || []).filter(item => item.getClientRects().length > 0);
-          const index = items.indexOf(document.activeElement as HTMLButtonElement);
+          const items = Array.from(menu.current?.querySelectorAll<HTMLElement>('button, a[role="menuitem"]') || []).filter(item => item.getClientRects().length > 0);
+          const index = items.indexOf(document.activeElement as HTMLElement);
           if (event.key === "Escape") { event.preventDefault(); setOpen(false); trigger.current?.focus(); }
           if (event.key === "Tab") setOpen(false);
           if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
@@ -118,6 +133,11 @@ export default function PostActions({ slug }: { slug: string }) {
             </>
           )}
           <button role="menuitem" onClick={copyLink}><span className="post-options-action-label"><Copy size={20} color="var(--primary)" aria-hidden="true" />Copy link</span></button>
+          {devOptionsEnabled && (
+            <a role="menuitem" href={`https://admin.tjg.gg/content/posts/${encodeURIComponent(slug)}`} onClick={() => setOpen(false)}>
+              <span className="post-options-action-label"><Edit size={20} color="var(--primary)" aria-hidden="true" />Edit</span>
+            </a>
+          )}
           <div role="status" className="post-options-status">{notice}</div>
         </div>, document.body,
       )}

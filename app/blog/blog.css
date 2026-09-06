@@ -1771,8 +1771,8 @@ html[data-theme="dark"] .post-search-bar {
   max-height: calc(100dvh - 110px);
   overflow-y: auto;
   box-sizing: border-box;
-  padding: 16px 8px;
-  border-radius: 32px;
+  padding: 16px 8px 8px;
+  border-radius: 28px;
   border: 1px solid color-mix(in srgb, var(--primary) 10%, transparent);
   background: color-mix(in srgb, var(--container-background) 60%, transparent 40%);
   -webkit-backdrop-filter: blur(10px);
@@ -1780,7 +1780,7 @@ html[data-theme="dark"] .post-search-bar {
   box-shadow: 0 12px 36px rgb(0 0 0 / 18%);
   color: var(--primary);
 }
-.post-options-menu button {
+.post-options-menu :is(button, a[role="menuitem"]) {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1795,13 +1795,15 @@ html[data-theme="dark"] .post-search-bar {
   font: inherit;
   font-size: 18px;
   text-align: left;
+  text-decoration: none;
+  box-sizing: border-box;
   cursor: pointer;
 }
-.post-options-menu button:hover,
-.post-options-menu button:focus-visible {
+.post-options-menu :is(button, a[role="menuitem"]):hover,
+.post-options-menu :is(button, a[role="menuitem"]):focus-visible {
   background: color-mix(in srgb, var(--primary) 8%, transparent);
 }
-.post-options-menu button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.post-options-menu :is(button, a[role="menuitem"]):focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .post-options-label { padding: 4px 20px 6px; }
 .post-options-separator { height: 1px; margin: 8px 20px; background: color-mix(in srgb, var(--primary) 12%, transparent); }
 .post-options-switch { width: 34px; height: 20px; flex-shrink: 0; border-radius: 12px; background: var(--secondary); position: relative; }
